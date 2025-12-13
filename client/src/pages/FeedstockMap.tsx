@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Layers, Search, Download, Target } from "lucide-react";
+import { Layers, Search, Download, Target, Save, Trash2, FolderOpen } from "lucide-react";
 import { createPopupHTML } from "@/lib/popupTemplates";
 import { buildLayerFilter } from "@/lib/mapFilters";
 import { analyzeRadius, type AnalysisResults } from "@/lib/radiusAnalysis";
@@ -850,8 +850,29 @@ export default function FeedstockMap() {
           {/* Filters */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Filters</CardTitle>
-              <CardDescription>Refine by location and capacity</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    Filters
+                    {(() => {
+                      const activeFilters = [
+                        selectedStates.length < 6, // Not all states selected
+                        sugarMillCapacity[0] > 0 || sugarMillCapacity[1] < 4000000,
+                        biogasCapacity[0] > 0 || biogasCapacity[1] < 50,
+                        biofuelCapacity[0] > 0 || biofuelCapacity[1] < 500,
+                        portThroughput[0] > 0 || portThroughput[1] < 200,
+                      ].filter(Boolean).length;
+                      
+                      return activeFilters > 0 ? (
+                        <Badge variant="secondary" className="ml-2">
+                          {activeFilters}
+                        </Badge>
+                      ) : null;
+                    })()}
+                  </CardTitle>
+                  <CardDescription>Refine by location and capacity</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* State Filter */}
@@ -963,6 +984,69 @@ export default function FeedstockMap() {
               >
                 Reset Filters
               </Button>
+            </CardContent>
+          </Card>
+          
+          {/* Saved Analyses */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <FolderOpen className="h-5 w-5" />
+                Saved Analyses
+              </CardTitle>
+              <CardDescription>
+                {savedAnalyses?.length || 0} saved analysis
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {savedAnalyses && savedAnalyses.length > 0 ? (
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {savedAnalyses.map((analysis: any) => (
+                    <div
+                      key={analysis.id}
+                      className="border rounded-lg p-3 hover:bg-accent/50 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-sm truncate">{analysis.name}</div>
+                          {analysis.description && (
+                            <div className="text-xs text-muted-foreground truncate">
+                              {analysis.description}
+                            </div>
+                          )}
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {analysis.radiusKm}km radius • {new Date(analysis.createdAt).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0"
+                            onClick={() => handleLoadAnalysis(analysis)}
+                          >
+                            <Target className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                            onClick={() => deleteAnalysisMutation.mutate({ id: analysis.id })}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6 text-sm text-muted-foreground">
+                  No saved analyses yet.
+                  <br />
+                  Run a radius analysis and save it.
+                </div>
+              )}
             </CardContent>
           </Card>
 

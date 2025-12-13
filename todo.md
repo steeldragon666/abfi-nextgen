@@ -180,14 +180,14 @@
 - [x] Implement capacity range sliders for ports (annual throughput)
 - [x] Build filter logic to update map layer visibility
 - [x] Add "Reset Filters" button
-- [ ] Show active filter count badge
+- [x] Show active filter count badge
 
 ## Save Analysis Feature (Session 3 - TODO 3)
 - [x] Create saved_analyses database table (user_id, name, radius_km, center_coords, results_json, created_at)
 - [x] Add tRPC endpoints for save/list/delete analyses
 - [x] Build "Save Analysis" dialog with name input
-- [ ] Create "Saved Analyses" panel in sidebar
-- [ ] Add "Load Analysis" functionality to restore saved state
+- [x] Create "Saved Analyses" panel in sidebar
+- [x] Add "Load Analysis" functionality to restore saved state
 - [ ] Implement analysis comparison view
 
 ## Enhanced 50km Radius Analysis (Session 3)
