@@ -1,8 +1,9 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { getLoginUrl } from "@/const";
-import { ArrowRight, Award, BarChart3, Leaf, Search, Shield, TrendingUp } from "lucide-react";
+import { ArrowRight, Award, BarChart3, Leaf, Search, Shield, TrendingUp, MapPin, FileCheck, Zap } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
@@ -11,130 +12,176 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b bg-white">
+      <header className="border-b bg-white/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Leaf className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold text-primary">ABFI</span>
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
+              <Leaf className="h-6 w-6 text-primary-foreground" />
+            </div>
+            <span className="text-2xl font-bold text-primary" style={{ fontFamily: 'Playfair Display, serif' }}>ABFI</span>
           </div>
-          <nav className="flex items-center gap-4">
+          <nav className="flex items-center gap-6">
             <Link href="/browse">
-              <Button variant="ghost">Browse Feedstocks</Button>
+              <Button variant="ghost" className="text-base">Marketplace</Button>
+            </Link>
+            <Link href="/feedstock-map">
+              <Button variant="ghost" className="text-base">Data</Button>
             </Link>
             {isAuthenticated ? (
               <Link href="/dashboard">
-                <Button>Dashboard</Button>
+                <Button className="bg-primary hover:bg-primary/90">Dashboard</Button>
               </Link>
             ) : (
               <a href={getLoginUrl()}>
-                <Button>Sign In</Button>
+                <Button className="bg-primary hover:bg-primary/90">Sign In</Button>
               </a>
             )}
           </nav>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-green-50 to-green-100 py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold text-primary mb-6">
-            Australian Biofuel Feedstock Index
-          </h1>
-          <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
-            The trusted B2B marketplace connecting verified biofuel feedstock suppliers
-            with buyers across Australia. Transparent ratings, certified quality, and
-            sustainable sourcing.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/browse">
-              <Button size="lg" className="text-lg px-8 py-6">
-                Browse Feedstocks
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/feedstock-map">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
-                Interactive Map
-              </Button>
-            </Link>
-            {!isAuthenticated && (
-              <a href={getLoginUrl()}>
-                <Button size="lg" variant="outline">
-                  Get Started
+      {/* Hero Section - Inspired by mockup with organic texture */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-green-50 via-amber-50/30 to-green-50 py-24">
+        {/* Organic texture overlay */}
+        <div className="absolute inset-0 opacity-10">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="organic-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <path d="M20,50 Q30,30 50,40 T80,50" stroke="#1B4332" strokeWidth="0.5" fill="none" opacity="0.3"/>
+                <path d="M10,70 Q40,60 60,75 T90,80" stroke="#DAA520" strokeWidth="0.5" fill="none" opacity="0.3"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#organic-pattern)" />
+          </svg>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl">
+            <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+              <span className="text-primary">Australian</span>
+              <br />
+              <span className="text-[#DAA520]">Biofuel Feedstock</span>
+              <br />
+              <span className="text-primary">Index</span>
+            </h1>
+            <p className="text-xl text-gray-700 mb-8 max-w-2xl leading-relaxed">
+              Your trusted source for sustainable energy data.
+            </p>
+            <div className="flex gap-4 mb-12">
+              <Link href="/browse">
+                <Button size="lg" className="text-lg px-8 py-6 bg-primary hover:bg-primary/90 shadow-lg">
+                  Browse Feedstocks
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-              </a>
-            )}
+              </Link>
+              <Link href="/feedstock-map">
+                <Button size="lg" variant="outline" className="text-lg px-8 py-6 border-2 border-primary text-primary hover:bg-primary/5">
+                  Interactive Map
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Floating metric cards - inspired by mockup */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
+            <Card className="border-2 border-[#DAA520]/20 shadow-lg hover:shadow-xl transition-shadow bg-white/90 backdrop-blur">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <TrendingUp className="h-4 w-4 text-[#DAA520]" />
+                  Weekly Index
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-primary">1,245.50</div>
+                <div className="text-sm text-emerald-600 font-medium">+2.3%</div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-[#DAA520]/20 shadow-lg hover:shadow-xl transition-shadow bg-white/90 backdrop-blur">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Leaf className="h-4 w-4 text-[#DAA520]" />
+                  Sustainability Score
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-primary">92/100</div>
+                <div className="text-sm text-muted-foreground">Platform average</div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-[#DAA520]/20 shadow-lg hover:shadow-xl transition-shadow bg-white/90 backdrop-blur">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <BarChart3 className="h-4 w-4 text-[#DAA520]" />
+                  Feedstock Availability
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-primary">1,246.79</div>
+                <div className="text-sm text-emerald-600 font-medium">+2.3%</div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-[#DAA520]/20 shadow-lg hover:shadow-xl transition-shadow bg-white/90 backdrop-blur">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Zap className="h-4 w-4 text-[#DAA520]" />
+                  Production Volume
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-primary">1.2M</div>
+                <div className="text-sm text-emerald-600 font-medium">+0.1% tonnes</div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-16 bg-white">
+      {/* Why Choose ABFI - Redesigned */}
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Choose ABFI?</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Why Choose ABFI?</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              The trusted B2B marketplace for verified biofuel feedstock suppliers and buyers
+            </p>
+          </div>
+
           <div className="grid md:grid-cols-3 gap-8">
-            <Card>
+            <Card className="border-2 hover:border-[#DAA520]/50 transition-all hover:shadow-lg">
               <CardHeader>
-                <Award className="h-10 w-10 text-primary mb-4" />
-                <CardTitle>ABFI Rating System</CardTitle>
-                <CardDescription>
-                  Comprehensive 4-pillar scoring: Sustainability (30%), Carbon Intensity (30%),
-                  Quality (25%), Supply Reliability (15%)
+                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Award className="h-8 w-8 text-primary" />
+                </div>
+                <CardTitle className="text-2xl">ABFI Rating System</CardTitle>
+                <CardDescription className="text-base mt-2">
+                  Comprehensive 4-pillar assessment framework evaluating sustainability, carbon intensity, quality, and reliability for transparent decision-making.
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card>
+            <Card className="border-2 hover:border-[#DAA520]/50 transition-all hover:shadow-lg">
               <CardHeader>
-                <Shield className="h-10 w-10 text-primary mb-4" />
-                <CardTitle>Verified Suppliers</CardTitle>
-                <CardDescription>
-                  All suppliers undergo ABN validation and verification. Track ISCC, RSB,
-                  RED II, and ABFI certifications.
+                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Shield className="h-8 w-8 text-primary" />
+                </div>
+                <CardTitle className="text-2xl">Verified Suppliers</CardTitle>
+                <CardDescription className="text-base mt-2">
+                  All suppliers undergo rigorous verification including ABN validation, quality testing, and certification checks before listing.
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card>
+            <Card className="border-2 hover:border-[#DAA520]/50 transition-all hover:shadow-lg">
               <CardHeader>
-                <Search className="h-10 w-10 text-primary mb-4" />
-                <CardTitle>Advanced Search</CardTitle>
-                <CardDescription>
-                  Filter by feedstock type, location, ABFI score, carbon intensity,
-                  certifications, and volume requirements.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <Leaf className="h-10 w-10 text-primary mb-4" />
-                <CardTitle>Carbon Tracking</CardTitle>
-                <CardDescription>
-                  Transparent carbon intensity values (gCO2e/MJ) with lifecycle assessment
-                  and grade ratings from A+ to F.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <BarChart3 className="h-10 w-10 text-primary mb-4" />
-                <CardTitle>Market Intelligence</CardTitle>
-                <CardDescription>
-                  Access supply heatmaps, availability trends, and regional analytics
-                  to inform procurement decisions.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <TrendingUp className="h-10 w-10 text-primary mb-4" />
-                <CardTitle>Quality Assurance</CardTitle>
-                <CardDescription>
-                  Type-specific quality parameters for oilseeds, UCO, tallow, lignocellulosic,
-                  and waste feedstocks.
+                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Search className="h-8 w-8 text-primary" />
+                </div>
+                <CardTitle className="text-2xl">Advanced Search</CardTitle>
+                <CardDescription className="text-base mt-2">
+                  Filter by feedstock type, location, ABFI score, carbon intensity, certifications, and more to find exactly what you need.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -142,74 +189,97 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Feedstock Categories */}
-      <section className="py-16 bg-gray-50">
+      {/* Stats Section */}
+      <section className="py-16 bg-gradient-to-br from-primary to-primary/90 text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Feedstock Categories</h2>
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { name: "Oilseed Crops", desc: "Canola, sunflower, soybean" },
-              { name: "Used Cooking Oil", desc: "Post-consumer UCO" },
-              { name: "Tallow & Fats", desc: "Animal fats and tallow" },
-              { name: "Lignocellulosic", desc: "Agricultural residues, forestry" },
-              { name: "Bamboo", desc: "P-Grade biomass, sustainable" },
-              { name: "Waste Streams", desc: "Organic waste, municipal" },
-              { name: "Algae", desc: "Microalgae and macroalgae" },
-            ].map((cat) => (
-              <Card key={cat.name} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-lg">{cat.name}</CardTitle>
-                  <CardDescription>{cat.desc}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
+          <div className="grid md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-5xl font-bold mb-2 text-[#DAA520]">500+</div>
+              <div className="text-lg opacity-90">Verified Suppliers</div>
+            </div>
+            <div>
+              <div className="text-5xl font-bold mb-2 text-[#DAA520]">1,200+</div>
+              <div className="text-lg opacity-90">Active Listings</div>
+            </div>
+            <div>
+              <div className="text-5xl font-bold mb-2 text-[#DAA520]">2.5M</div>
+              <div className="text-lg opacity-90">Tonnes Traded</div>
+            </div>
+            <div>
+              <div className="text-5xl font-bold mb-2 text-[#DAA520]">92/100</div>
+              <div className="text-lg opacity-90">Avg. ABFI Score</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-primary text-white">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join Australia's leading biofuel feedstock marketplace. Connect with verified
-            suppliers or list your feedstocks today.
+          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+            Ready to Get Started?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Join Australia's leading biofuel feedstock marketplace today
           </p>
-          <div className="flex gap-4 justify-center">
-            {!isAuthenticated ? (
-              <>
-                <a href={getLoginUrl()}>
-                  <Button size="lg" variant="secondary">
-                    Register as Supplier
-                  </Button>
-                </a>
-                <a href={getLoginUrl()}>
-                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
-                    Register as Buyer
-                  </Button>
-                </a>
-              </>
-            ) : (
-              <Link href="/dashboard">
-                <Button size="lg" variant="secondary">
-                  Go to Dashboard
-                </Button>
-              </Link>
-            )}
-          </div>
+          {!isAuthenticated ? (
+            <a href={getLoginUrl()}>
+              <Button size="lg" className="text-lg px-12 py-7 bg-primary hover:bg-primary/90 shadow-lg">
+                Create Account
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </a>
+          ) : (
+            <Link href="/dashboard">
+              <Button size="lg" className="text-lg px-12 py-7 bg-primary hover:bg-primary/90 shadow-lg">
+                Go to Dashboard
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          )}
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-8">
-        <div className="container mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Leaf className="h-6 w-6" />
-            <span className="text-xl font-bold">ABFI</span>
+      <footer className="bg-primary text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Leaf className="h-6 w-6" />
+                <span className="text-xl font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>ABFI</span>
+              </div>
+              <p className="text-sm opacity-80">
+                Australian Biofuel Feedstock Institute - Your trusted source for sustainable energy data.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Marketplace</h3>
+              <ul className="space-y-2 text-sm opacity-80">
+                <li><Link href="/browse">Browse Feedstocks</Link></li>
+                <li><Link href="/feedstock-map">Interactive Map</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Resources</h3>
+              <ul className="space-y-2 text-sm opacity-80">
+                <li>About ABFI Rating</li>
+                <li>Documentation</li>
+                <li>API Access</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Company</h3>
+              <ul className="space-y-2 text-sm opacity-80">
+                <li>About Us</li>
+                <li>Contact</li>
+                <li>Terms of Service</li>
+              </ul>
+            </div>
           </div>
-          <p className="text-sm">
-            Australian Biofuel Feedstock Index © 2024. All rights reserved.
-          </p>
+          <div className="border-t border-white/20 pt-8 text-center text-sm opacity-70">
+            © 2024 Australian Biofuel Feedstock Institute. All rights reserved.
+          </div>
         </div>
       </footer>
     </div>

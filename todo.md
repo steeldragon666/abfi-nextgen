@@ -237,3 +237,21 @@
 - [ ] Add forward indicators (availability curves, price bands)
 - [ ] Create governance documentation (methodology disclosure, independence framework)
 - [ ] Implement data anonymization layer for aggregated market intelligence
+
+## Seed Data Script (Session 5)
+- [ ] Create comprehensive seed data script with realistic Australian data
+- [ ] Generate suppliers (10-15 diverse companies across states)
+- [ ] Generate buyers (8-12 bioenergy facilities)
+- [ ] Generate feedstocks (30-50 listings with ABFI ratings)
+- [ ] Generate certificates, quality tests, and inquiries
+- [ ] Run seed script and verify data population
+
+## Design Reimagination (Session 5 - Nano Banana Pro)
+- [x] Generate AI mockups for homepage layout
+- [x] Generate AI mockups for browse/search page
+- [x] Generate AI mockups for dashboard interface
+- [x] Define new color palette and design tokens
+- [x] Update typography and spacing system
+- [x] Implement new homepage design
+- [ ] Update browse feedstocks page design
+- [ ] Refresh dashboard aesthetics
