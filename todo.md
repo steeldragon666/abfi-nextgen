@@ -284,3 +284,17 @@
 - [ ] Apply new colors to browse page
 - [ ] Apply new colors to dashboard
 - [ ] Apply new colors to map interface
+
+## Seed Data Creation (Session 8)
+- [x] Create seed data script with Australian suppliers
+- [ ] Add realistic feedstock data with ABFI ratings (schema mismatch - needs manual entry via UI)
+- [ ] Add buyer accounts
+- [ ] Execute seed script
+- [ ] Test map performance with seed data
+- [ ] Verify Browse page shows feedstocks
+- [ ] Test certificate generation with seed data
+
+Note: Seed script encounters schema mismatches. Recommend using UI workflows to add data:
+- Supplier registration flow
+- Feedstock creation form
+- Buyer registration
