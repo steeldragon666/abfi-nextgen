@@ -1,0 +1,197 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [150.93, -33.75] },
+      "properties": {
+        "name": "Manildra Ethanol Plant",
+        "type": "biofuel_plant",
+        "fuel_type": "ethanol",
+        "town": "Bomaderry",
+        "state": "NSW",
+        "capacity_ml_yr": 100,
+        "feedstock": "wheat starch",
+        "operator": "Manildra Group",
+        "status": "operational",
+        "year_commissioned": 2006
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [146.91, -19.32] },
+      "properties": {
+        "name": "Wilmar Sarina Ethanol Plant",
+        "type": "biofuel_plant",
+        "fuel_type": "ethanol",
+        "town": "Sarina",
+        "state": "QLD",
+        "capacity_ml_yr": 60,
+        "feedstock": "molasses",
+        "operator": "Wilmar Sugar",
+        "status": "operational",
+        "year_commissioned": 2008
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [145.75, -16.92] },
+      "properties": {
+        "name": "MSF Sugar Ethanol Plant",
+        "type": "biofuel_plant",
+        "fuel_type": "ethanol",
+        "town": "Cairns",
+        "state": "QLD",
+        "capacity_ml_yr": 30,
+        "feedstock": "molasses",
+        "operator": "MSF Sugar",
+        "status": "operational",
+        "year_commissioned": 2011
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [149.13, -21.15] },
+      "properties": {
+        "name": "Mackay Sugar Ethanol Plant",
+        "type": "biofuel_plant",
+        "fuel_type": "ethanol",
+        "town": "Mackay",
+        "state": "QLD",
+        "capacity_ml_yr": 25,
+        "feedstock": "molasses",
+        "operator": "Mackay Sugar",
+        "status": "operational",
+        "year_commissioned": 2009
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [145.45, -38.15] },
+      "properties": {
+        "name": "Gippsland Biodiesel Plant",
+        "type": "biofuel_plant",
+        "fuel_type": "biodiesel",
+        "town": "Morwell",
+        "state": "VIC",
+        "capacity_ml_yr": 150,
+        "feedstock": "tallow, used cooking oil",
+        "operator": "Australian Renewable Fuels",
+        "status": "operational",
+        "year_commissioned": 2007
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [138.60, -34.93] },
+      "properties": {
+        "name": "Adelaide Biodiesel Plant",
+        "type": "biofuel_plant",
+        "fuel_type": "biodiesel",
+        "town": "Adelaide",
+        "state": "SA",
+        "capacity_ml_yr": 80,
+        "feedstock": "tallow, canola oil",
+        "operator": "Australian Renewable Fuels",
+        "status": "operational",
+        "year_commissioned": 2005
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [115.86, -31.95] },
+      "properties": {
+        "name": "Perth Biodiesel Plant",
+        "type": "biofuel_plant",
+        "fuel_type": "biodiesel",
+        "town": "Perth",
+        "state": "WA",
+        "capacity_ml_yr": 140,
+        "feedstock": "tallow, used cooking oil",
+        "operator": "Australian Renewable Fuels",
+        "status": "operational",
+        "year_commissioned": 2006
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [153.03, -27.47] },
+      "properties": {
+        "name": "Brisbane Biodiesel Plant",
+        "type": "biofuel_plant",
+        "fuel_type": "biodiesel",
+        "town": "Brisbane",
+        "state": "QLD",
+        "capacity_ml_yr": 50,
+        "feedstock": "used cooking oil",
+        "operator": "Biodiesel Industries Australia",
+        "status": "operational",
+        "year_commissioned": 2008
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [151.78, -32.93] },
+      "properties": {
+        "name": "Newcastle Biodiesel Plant",
+        "type": "biofuel_plant",
+        "fuel_type": "biodiesel",
+        "town": "Newcastle",
+        "state": "NSW",
+        "capacity_ml_yr": 60,
+        "feedstock": "tallow",
+        "operator": "Biodiesel Producers Ltd",
+        "status": "operational",
+        "year_commissioned": 2007
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [146.81, -19.26] },
+      "properties": {
+        "name": "Townsville Biodiesel Pilot",
+        "type": "biofuel_plant",
+        "fuel_type": "biodiesel",
+        "town": "Townsville",
+        "state": "QLD",
+        "capacity_ml_yr": 5,
+        "feedstock": "algae oil (experimental)",
+        "operator": "James Cook University",
+        "status": "pilot",
+        "year_commissioned": 2015
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [149.13, -35.28] },
+      "properties": {
+        "name": "Canberra Biodiesel Facility",
+        "type": "biofuel_plant",
+        "fuel_type": "biodiesel",
+        "town": "Canberra",
+        "state": "ACT",
+        "capacity_ml_yr": 20,
+        "feedstock": "used cooking oil",
+        "operator": "ACT Government",
+        "status": "operational",
+        "year_commissioned": 2010
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [147.12, -42.88] },
+      "properties": {
+        "name": "Hobart Biodiesel Plant",
+        "type": "biofuel_plant",
+        "fuel_type": "biodiesel",
+        "town": "Hobart",
+        "state": "TAS",
+        "capacity_ml_yr": 15,
+        "feedstock": "used cooking oil",
+        "operator": "Tasmanian Biodiesel",
+        "status": "operational",
+        "year_commissioned": 2009
+      }
+    }
+  ]
+}

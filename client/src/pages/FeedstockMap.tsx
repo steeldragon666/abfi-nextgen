@@ -33,11 +33,19 @@ export default function FeedstockMap() {
   const [layers, setLayers] = useState<LayerConfig[]>([
     { id: "sugar-mills", name: "Sugar Mills", type: "circle", source: "/geojson/sugar_mills.json", color: "#8B4513", visible: true },
     { id: "grain-regions", name: "Grain Regions", type: "fill", source: "/geojson/grain_regions.json", color: "#DAA520", visible: true },
+    { id: "forestry-regions", name: "Forestry Regions", type: "fill", source: "/geojson/forestry_regions.json", color: "#228B22", visible: false },
+    { id: "biogas-facilities", name: "Biogas Facilities", type: "circle", source: "/geojson/biogas_facilities.json", color: "#FF6347", visible: false },
+    { id: "biofuel-plants", name: "Biofuel Plants", type: "circle", source: "/geojson/biofuel_plants.json", color: "#4169E1", visible: false },
+    { id: "transport-ports", name: "Ports & Transport", type: "circle", source: "/geojson/transport_infrastructure.json", color: "#9370DB", visible: false },
   ]);
 
   const [layerOpacity, setLayerOpacity] = useState<Record<string, number>>({
     "sugar-mills": 100,
     "grain-regions": 30,
+    "forestry-regions": 30,
+    "biogas-facilities": 100,
+    "biofuel-plants": 100,
+    "transport-ports": 100,
   });
 
   // Initialize map

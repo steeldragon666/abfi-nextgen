@@ -1,0 +1,229 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[140.0, -37.0], [141.5, -37.0], [141.5, -38.5], [140.0, -38.5], [140.0, -37.0]]]
+      },
+      "properties": {
+        "name": "Green Triangle",
+        "type": "forestry_region",
+        "state": "SA/VIC",
+        "area_hectares": 328000,
+        "annual_residue_tonnes": 425000,
+        "primary_species": ["Pinus radiata", "Pinus elliottii"],
+        "key_facilities": ["OneFortyOne Mount Gambier", "Timberlink Tarpeena", "Midway Myamyn"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[146.0, -41.0], [148.0, -41.0], [148.0, -43.0], [146.0, -43.0], [146.0, -41.0]]]
+      },
+      "properties": {
+        "name": "Tasmania",
+        "type": "forestry_region",
+        "state": "TAS",
+        "area_hectares": 281000,
+        "annual_residue_tonnes": 325000,
+        "primary_species": ["Eucalyptus nitens", "Eucalyptus globulus"],
+        "key_facilities": ["Forico Long Reach", "Midway Bell Bay", "Timberlink Bell Bay"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[147.5, -35.0], [148.5, -35.0], [148.5, -36.0], [147.5, -36.0], [147.5, -35.0]]]
+      },
+      "properties": {
+        "name": "Tumut-Tumbarumba",
+        "type": "forestry_region",
+        "state": "NSW",
+        "area_hectares": 90000,
+        "annual_residue_tonnes": 375000,
+        "primary_species": ["Pinus radiata"],
+        "key_facilities": ["AKD Sawmills Tumut", "Hyne Timber Tumbarumba", "Visy Pulp Mill"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[145.5, -37.5], [147.5, -37.5], [147.5, -38.5], [145.5, -38.5], [145.5, -37.5]]]
+      },
+      "properties": {
+        "name": "Gippsland",
+        "type": "forestry_region",
+        "state": "VIC",
+        "area_hectares": 90000,
+        "annual_residue_tonnes": 275000,
+        "primary_species": ["Eucalyptus nitens", "Pinus radiata"],
+        "key_facilities": ["HVP Plantations Gelliondale", "Australian Paper Maryvale"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[115.0, -33.0], [118.0, -33.0], [118.0, -35.5], [115.0, -35.5], [115.0, -33.0]]]
+      },
+      "properties": {
+        "name": "Southwest WA",
+        "type": "forestry_region",
+        "state": "WA",
+        "area_hectares": 292000,
+        "annual_residue_tonnes": 375000,
+        "primary_species": ["Pinus pinaster", "Eucalyptus globulus"],
+        "key_facilities": ["WAPRES Bunbury", "FPC Dardanup", "Laminex Dardanup"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [140.78, -37.83] },
+      "properties": {
+        "name": "OneFortyOne Mount Gambier",
+        "type": "forestry_facility",
+        "facility_type": "sawmill",
+        "town": "Mount Gambier",
+        "state": "SA",
+        "region": "Green Triangle",
+        "managed_hectares": 80000,
+        "annual_output_tonnes": 120000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [140.62, -37.77] },
+      "properties": {
+        "name": "Timberlink Tarpeena",
+        "type": "forestry_facility",
+        "facility_type": "sawmill",
+        "town": "Tarpeena",
+        "state": "SA",
+        "region": "Green Triangle",
+        "annual_output_tonnes": 100000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [141.61, -38.34] },
+      "properties": {
+        "name": "Portland Chip Terminal",
+        "type": "forestry_facility",
+        "facility_type": "woodchip_export",
+        "town": "Portland",
+        "state": "VIC",
+        "region": "Green Triangle",
+        "annual_capacity_gmt": 800000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [141.60, -38.00] },
+      "properties": {
+        "name": "Midway Myamyn",
+        "type": "forestry_facility",
+        "facility_type": "chip_processing",
+        "town": "Myamyn",
+        "state": "VIC",
+        "region": "Green Triangle",
+        "annual_capacity_gmt": 1800000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [146.87, -41.11] },
+      "properties": {
+        "name": "Forico Long Reach",
+        "type": "forestry_facility",
+        "facility_type": "plantation",
+        "town": "Bell Bay",
+        "state": "TAS",
+        "region": "Tasmania",
+        "managed_hectares": 90000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [146.87, -41.11] },
+      "properties": {
+        "name": "Midway Bell Bay",
+        "type": "forestry_facility",
+        "facility_type": "woodchip_export",
+        "town": "Bell Bay",
+        "state": "TAS",
+        "region": "Tasmania",
+        "annual_capacity_gmt": 600000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [148.23, -35.30] },
+      "properties": {
+        "name": "AKD Sawmills Tumut",
+        "type": "forestry_facility",
+        "facility_type": "sawmill",
+        "town": "Tumut",
+        "state": "NSW",
+        "region": "Tumut-Tumbarumba",
+        "annual_output_tonnes": 150000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [148.01, -35.78] },
+      "properties": {
+        "name": "Hyne Timber Tumbarumba",
+        "type": "forestry_facility",
+        "facility_type": "sawmill",
+        "town": "Tumbarumba",
+        "state": "NSW",
+        "region": "Tumut-Tumbarumba",
+        "annual_capacity_m3": 800000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [146.41, -38.22] },
+      "properties": {
+        "name": "Australian Paper Maryvale",
+        "type": "forestry_facility",
+        "facility_type": "pulp_mill",
+        "town": "Morwell",
+        "state": "VIC",
+        "region": "Gippsland",
+        "annual_output_tonnes": 500000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [115.66, -33.33] },
+      "properties": {
+        "name": "WAPRES Bunbury",
+        "type": "forestry_facility",
+        "facility_type": "woodchip_export",
+        "town": "Bunbury",
+        "state": "WA",
+        "region": "Southwest WA",
+        "annual_capacity_tonnes": 1000000
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [115.75, -33.40] },
+      "properties": {
+        "name": "FPC Dardanup",
+        "type": "forestry_facility",
+        "facility_type": "sawmill",
+        "town": "Dardanup",
+        "state": "WA",
+        "region": "Southwest WA",
+        "products": ["particleboard", "sawlogs"]
+      }
+    }
+  ]
+}

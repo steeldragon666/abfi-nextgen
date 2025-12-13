@@ -1,0 +1,293 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [153.17, -27.38] },
+      "properties": {
+        "name": "Port of Brisbane",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Brisbane",
+        "state": "QLD",
+        "annual_throughput_mt": 34.5,
+        "bulk_handling": true,
+        "container_terminal": true,
+        "rail_connected": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [151.78, -32.93] },
+      "properties": {
+        "name": "Port of Newcastle",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Newcastle",
+        "state": "NSW",
+        "annual_throughput_mt": 164.0,
+        "bulk_handling": true,
+        "container_terminal": true,
+        "rail_connected": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [151.21, -33.87] },
+      "properties": {
+        "name": "Port Botany",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Sydney",
+        "state": "NSW",
+        "annual_throughput_mt": 2.8,
+        "bulk_handling": false,
+        "container_terminal": true,
+        "rail_connected": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [144.93, -37.84] },
+      "properties": {
+        "name": "Port of Melbourne",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Melbourne",
+        "state": "VIC",
+        "annual_throughput_mt": 3.2,
+        "bulk_handling": true,
+        "container_terminal": true,
+        "rail_connected": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [146.41, -38.37] },
+      "properties": {
+        "name": "Port of Geelong",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Geelong",
+        "state": "VIC",
+        "annual_throughput_mt": 12.0,
+        "bulk_handling": true,
+        "container_terminal": false,
+        "rail_connected": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [141.61, -38.34] },
+      "properties": {
+        "name": "Port of Portland",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Portland",
+        "state": "VIC",
+        "annual_throughput_mt": 3.5,
+        "bulk_handling": true,
+        "container_terminal": false,
+        "rail_connected": true,
+        "woodchip_terminal": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [138.48, -34.79] },
+      "properties": {
+        "name": "Port Adelaide",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Adelaide",
+        "state": "SA",
+        "annual_throughput_mt": 10.5,
+        "bulk_handling": true,
+        "container_terminal": true,
+        "rail_connected": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [115.74, -32.05] },
+      "properties": {
+        "name": "Fremantle Port",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Fremantle",
+        "state": "WA",
+        "annual_throughput_mt": 32.0,
+        "bulk_handling": true,
+        "container_terminal": true,
+        "rail_connected": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [115.66, -33.33] },
+      "properties": {
+        "name": "Port of Bunbury",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Bunbury",
+        "state": "WA",
+        "annual_throughput_mt": 15.5,
+        "bulk_handling": true,
+        "container_terminal": false,
+        "rail_connected": true,
+        "woodchip_terminal": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [146.81, -19.26] },
+      "properties": {
+        "name": "Port of Townsville",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Townsville",
+        "state": "QLD",
+        "annual_throughput_mt": 9.0,
+        "bulk_handling": true,
+        "container_terminal": true,
+        "rail_connected": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [145.78, -16.92] },
+      "properties": {
+        "name": "Port of Cairns",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Cairns",
+        "state": "QLD",
+        "annual_throughput_mt": 2.5,
+        "bulk_handling": true,
+        "container_terminal": false,
+        "rail_connected": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [147.44, -42.88] },
+      "properties": {
+        "name": "Port of Hobart",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "port",
+        "town": "Hobart",
+        "state": "TAS",
+        "annual_throughput_mt": 1.5,
+        "bulk_handling": true,
+        "container_terminal": false,
+        "rail_connected": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [146.91, -19.32] },
+      "properties": {
+        "name": "Sarina Grain Hub",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "grain_hub",
+        "town": "Sarina",
+        "state": "QLD",
+        "storage_capacity_tonnes": 50000,
+        "rail_connected": true,
+        "road_access": "highway"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [148.60, -20.31] },
+      "properties": {
+        "name": "Bowen Grain Terminal",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "grain_hub",
+        "town": "Bowen",
+        "state": "QLD",
+        "storage_capacity_tonnes": 120000,
+        "rail_connected": true,
+        "road_access": "highway"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [149.13, -21.15] },
+      "properties": {
+        "name": "Mackay Grain Terminal",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "grain_hub",
+        "town": "Mackay",
+        "state": "QLD",
+        "storage_capacity_tonnes": 80000,
+        "rail_connected": true,
+        "road_access": "highway"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[153.03, -27.47], [151.78, -32.93], [151.21, -33.87]]
+      },
+      "properties": {
+        "name": "North Coast Rail Line",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "rail_line",
+        "state": "QLD/NSW",
+        "gauge": "standard",
+        "freight_capacity": "high",
+        "electrified": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[151.21, -33.87], [144.96, -37.81]]
+      },
+      "properties": {
+        "name": "Sydney-Melbourne Rail Corridor",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "rail_line",
+        "state": "NSW/VIC",
+        "gauge": "standard",
+        "freight_capacity": "high",
+        "electrified": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[144.96, -37.81], [138.60, -34.93]]
+      },
+      "properties": {
+        "name": "Melbourne-Adelaide Rail Line",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "rail_line",
+        "state": "VIC/SA",
+        "gauge": "standard",
+        "freight_capacity": "high",
+        "electrified": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[138.60, -34.93], [115.86, -31.95]]
+      },
+      "properties": {
+        "name": "Trans-Australian Railway",
+        "type": "transport_infrastructure",
+        "infrastructure_type": "rail_line",
+        "state": "SA/WA",
+        "gauge": "standard",
+        "freight_capacity": "medium",
+        "electrified": false
+      }
+    }
+  ]
+}

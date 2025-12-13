@@ -156,7 +156,7 @@
 - [x] Add clustering for point layers
 - [x] Create interactive popups with facility details
 - [x] Add search functionality placeholder
-- [ ] Complete remaining GeoJSON layers (forestry, biogas, biofuel, transport)
+- [x] Complete remaining GeoJSON layers (forestry, biogas, biofuel, transport)
 - [ ] Implement advanced filtering by state and capacity
 - [ ] Add data export (GeoJSON/CSV)
 - [ ] Integrate with existing feedstock database

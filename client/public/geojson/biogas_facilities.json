@@ -1,0 +1,232 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [153.02, -27.47] },
+      "properties": {
+        "name": "Brisbane Wastewater Treatment Plant",
+        "type": "biogas_facility",
+        "facility_type": "wastewater",
+        "town": "Brisbane",
+        "state": "QLD",
+        "capacity_mw": 4.5,
+        "feedstock": "sewage sludge",
+        "operator": "Urban Utilities",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [151.21, -33.87] },
+      "properties": {
+        "name": "Malabar Wastewater Plant",
+        "type": "biogas_facility",
+        "facility_type": "wastewater",
+        "town": "Sydney",
+        "state": "NSW",
+        "capacity_mw": 3.2,
+        "feedstock": "sewage sludge",
+        "operator": "Sydney Water",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [144.96, -37.81] },
+      "properties": {
+        "name": "Western Treatment Plant",
+        "type": "biogas_facility",
+        "facility_type": "wastewater",
+        "town": "Werribee",
+        "state": "VIC",
+        "capacity_mw": 8.0,
+        "feedstock": "sewage sludge",
+        "operator": "Melbourne Water",
+        "status": "operational",
+        "annual_generation_gwh": 60
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [138.60, -34.93] },
+      "properties": {
+        "name": "Bolivar Wastewater Plant",
+        "type": "biogas_facility",
+        "facility_type": "wastewater",
+        "town": "Adelaide",
+        "state": "SA",
+        "capacity_mw": 2.5,
+        "feedstock": "sewage sludge",
+        "operator": "SA Water",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [115.86, -31.95] },
+      "properties": {
+        "name": "Subiaco Wastewater Plant",
+        "type": "biogas_facility",
+        "facility_type": "wastewater",
+        "town": "Perth",
+        "state": "WA",
+        "capacity_mw": 1.8,
+        "feedstock": "sewage sludge",
+        "operator": "Water Corporation",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [153.03, -27.38] },
+      "properties": {
+        "name": "Richlands Organics Processing Facility",
+        "type": "biogas_facility",
+        "facility_type": "food_waste",
+        "town": "Brisbane",
+        "state": "QLD",
+        "capacity_tonnes_yr": 50000,
+        "feedstock": "food and garden organics",
+        "operator": "Remondis",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [144.75, -37.72] },
+      "properties": {
+        "name": "EarthPower Recycling Facility",
+        "type": "biogas_facility",
+        "facility_type": "food_waste",
+        "town": "Bulla",
+        "state": "VIC",
+        "capacity_tonnes_yr": 120000,
+        "feedstock": "food and garden organics",
+        "operator": "Veolia",
+        "status": "operational",
+        "capacity_mw": 2.5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [150.90, -34.48] },
+      "properties": {
+        "name": "Lucas Heights Landfill Gas",
+        "type": "biogas_facility",
+        "facility_type": "landfill_gas",
+        "town": "Sydney",
+        "state": "NSW",
+        "capacity_mw": 6.5,
+        "feedstock": "landfill gas",
+        "operator": "Veolia",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [144.89, -37.67] },
+      "properties": {
+        "name": "Tullamarine Landfill Gas",
+        "type": "biogas_facility",
+        "facility_type": "landfill_gas",
+        "town": "Melbourne",
+        "state": "VIC",
+        "capacity_mw": 4.8,
+        "feedstock": "landfill gas",
+        "operator": "Cleanaway",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [153.13, -27.55] },
+      "properties": {
+        "name": "Swanbank Landfill Gas",
+        "type": "biogas_facility",
+        "facility_type": "landfill_gas",
+        "town": "Brisbane",
+        "state": "QLD",
+        "capacity_mw": 5.2,
+        "feedstock": "landfill gas",
+        "operator": "Cleanaway",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [138.52, -34.85] },
+      "properties": {
+        "name": "Wingfield Landfill Gas",
+        "type": "biogas_facility",
+        "facility_type": "landfill_gas",
+        "town": "Adelaide",
+        "state": "SA",
+        "capacity_mw": 3.5,
+        "feedstock": "landfill gas",
+        "operator": "Veolia",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [146.04, -34.29] },
+      "properties": {
+        "name": "Australian Lamb Company Biogas",
+        "type": "biogas_facility",
+        "facility_type": "meat_processing",
+        "town": "Griffith",
+        "state": "NSW",
+        "capacity_mw": 1.2,
+        "feedstock": "abattoir waste",
+        "operator": "Australian Lamb Company",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [147.36, -35.11] },
+      "properties": {
+        "name": "JBS Beef City Biogas",
+        "type": "biogas_facility",
+        "facility_type": "meat_processing",
+        "town": "Wagga Wagga",
+        "state": "NSW",
+        "capacity_mw": 2.0,
+        "feedstock": "abattoir waste",
+        "operator": "JBS Australia",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [151.66, -32.93] },
+      "properties": {
+        "name": "Teys Australia Biogas",
+        "type": "biogas_facility",
+        "facility_type": "meat_processing",
+        "town": "Tamworth",
+        "state": "NSW",
+        "capacity_mw": 1.5,
+        "feedstock": "abattoir waste",
+        "operator": "Teys Australia",
+        "status": "operational"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [145.78, -16.92] },
+      "properties": {
+        "name": "Cairns Wastewater Plant",
+        "type": "biogas_facility",
+        "facility_type": "wastewater",
+        "town": "Cairns",
+        "state": "QLD",
+        "capacity_mw": 1.0,
+        "feedstock": "sewage sludge",
+        "operator": "Cairns Regional Council",
+        "status": "operational"
+      }
+    }
+  ]
+}
