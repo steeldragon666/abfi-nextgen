@@ -1927,6 +1927,125 @@ export const appRouter = router({
         return await getRetentionPolicy(input.entityType);
       }),
   }),
+  
+  // Compliance Reporting
+  complianceReporting: router({
+    // Get current quarter
+    getCurrentQuarter: protectedProcedure
+      .query(async () => {
+        const { getCurrentQuarter } = await import("./complianceReporting.js");
+        return getCurrentQuarter();
+      }),
+    
+    // Generate report for specific period
+    generateReport: protectedProcedure
+      .input(z.object({
+        quarter: z.number().min(1).max(4),
+        year: z.number(),
+      }))
+      .query(async ({ input }) => {
+        const { generateComplianceReport } = await import("./complianceReporting.js");
+        const startMonth = (input.quarter - 1) * 3;
+        const startDate = new Date(input.year, startMonth, 1);
+        const endDate = new Date(input.year, startMonth + 3, 0, 23, 59, 59, 999);
+        const period = {
+          startDate,
+          endDate,
+          quarter: input.quarter,
+          year: input.year,
+        };
+        return await generateComplianceReport(period);
+      }),
+    
+    // Generate report for current quarter
+    generateCurrentReport: protectedProcedure
+      .query(async () => {
+        const { getCurrentQuarter, generateComplianceReport } = await import("./complianceReporting.js");
+        const period = getCurrentQuarter();
+        return await generateComplianceReport(period);
+      }),
+    
+    // Get report summary as text
+    getReportSummary: protectedProcedure
+      .input(z.object({
+        quarter: z.number().min(1).max(4),
+        year: z.number(),
+      }))
+      .query(async ({ input }) => {
+        const { generateComplianceReport, formatReportSummary } = await import("./complianceReporting.js");
+        const startMonth = (input.quarter - 1) * 3;
+        const startDate = new Date(input.year, startMonth, 1);
+        const endDate = new Date(input.year, startMonth + 3, 0, 23, 59, 59, 999);
+        const period = {
+          startDate,
+          endDate,
+          quarter: input.quarter,
+          year: input.year,
+        };
+        const report = await generateComplianceReport(period);
+        return formatReportSummary(report);
+      }),
+    
+    // Get audit metrics only
+    getAuditMetrics: protectedProcedure
+      .input(z.object({
+        quarter: z.number().min(1).max(4),
+        year: z.number(),
+      }))
+      .query(async ({ input }) => {
+        const { getAuditMetrics } = await import("./complianceReporting.js");
+        const startMonth = (input.quarter - 1) * 3;
+        const startDate = new Date(input.year, startMonth, 1);
+        const endDate = new Date(input.year, startMonth + 3, 0, 23, 59, 59, 999);
+        const period = {
+          startDate,
+          endDate,
+          quarter: input.quarter,
+          year: input.year,
+        };
+        return await getAuditMetrics(period);
+      }),
+    
+    // Get override metrics only
+    getOverrideMetrics: protectedProcedure
+      .input(z.object({
+        quarter: z.number().min(1).max(4),
+        year: z.number(),
+      }))
+      .query(async ({ input }) => {
+        const { getOverrideMetrics } = await import("./complianceReporting.js");
+        const startMonth = (input.quarter - 1) * 3;
+        const startDate = new Date(input.year, startMonth, 1);
+        const endDate = new Date(input.year, startMonth + 3, 0, 23, 59, 59, 999);
+        const period = {
+          startDate,
+          endDate,
+          quarter: input.quarter,
+          year: input.year,
+        };
+        return await getOverrideMetrics(period);
+      }),
+    
+    // Get dispute metrics only
+    getDisputeMetrics: protectedProcedure
+      .input(z.object({
+        quarter: z.number().min(1).max(4),
+        year: z.number(),
+      }))
+      .query(async ({ input }) => {
+        const { getDisputeMetrics } = await import("./complianceReporting.js");
+        const startMonth = (input.quarter - 1) * 3;
+        const startDate = new Date(input.year, startMonth, 1);
+        const endDate = new Date(input.year, startMonth + 3, 0, 23, 59, 59, 999);
+        const period = {
+          startDate,
+          endDate,
+          quarter: input.quarter,
+          year: input.year,
+        };
+        return await getDisputeMetrics(period);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
