@@ -205,10 +205,12 @@ export default function BankabilityDashboard() {
 
                   {/* Actions */}
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
-                      <FileText className="h-4 w-4 mr-2" />
-                      View Agreements
-                    </Button>
+                    <Link href={`/dashboard/projects/${project.id}/agreements`}>
+                      <Button variant="outline" size="sm">
+                        <FileText className="h-4 w-4 mr-2" />
+                        View Agreements
+                      </Button>
+                    </Link>
                     <Button variant="outline" size="sm">
                       <Users className="h-4 w-4 mr-2" />
                       Manage Suppliers

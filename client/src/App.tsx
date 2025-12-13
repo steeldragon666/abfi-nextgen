@@ -25,6 +25,9 @@ import SupplierProfile from "@/pages/SupplierProfile";
 import BuyerProfile from "@/pages/BuyerProfile";
 import Notifications from "./pages/Notifications";
 import QualityTestUpload from "./pages/QualityTestUpload";
+import SupplyAgreements from "./pages/SupplyAgreements";
+import InquiryResponse from "./pages/InquiryResponse";
+import GrowerQualification from "./pages/GrowerQualification";
 
 function Router() {
   return (
@@ -47,6 +50,9 @@ function Router() {
       <Route path="/buyer/profile" component={BuyerProfile} />
       <Route path="/notifications" component={Notifications} />
       <Route path="/quality-test/upload" component={QualityTestUpload} />
+      <Route path="/dashboard/projects/:projectId/agreements" component={SupplyAgreements} />
+      <Route path="/inquiries/respond/:inquiryId" component={InquiryResponse} />
+      <Route path="/bankability/qualify/:supplierId" component={GrowerQualification} />
       <Route path="/map" component={MapView} />
       <Route path="/certificate/upload" component={CertificateUpload} />
       <Route path="/404" component={NotFound} />

@@ -29,6 +29,13 @@
       "when": 1765621640469,
       "tag": "0003_fixed_blackheart",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1765626032478,
+      "tag": "0004_crazy_rocket_racer",
+      "breakpoints": true
     }
   ]
 }

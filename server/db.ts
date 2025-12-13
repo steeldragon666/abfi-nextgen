@@ -344,6 +344,13 @@ export async function createInquiry(inquiry: InsertInquiry) {
   return Number((result as any).insertId);
 }
 
+export async function getInquiryById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(inquiries).where(eq(inquiries.id, id)).limit(1);
+  return result[0];
+}
+
 export async function getInquiriesByBuyerId(buyerId: number) {
   const db = await getDb();
   if (!db) return [];
@@ -620,7 +627,20 @@ export async function getSupplyAgreementsByProjectId(projectId: number) {
   const db = await getDb();
   if (!db) return [];
   
-  return await db.select().from(supplyAgreements).where(eq(supplyAgreements.projectId, projectId));
+  const agreements = await db.select().from(supplyAgreements).where(eq(supplyAgreements.projectId, projectId));
+  
+  // Fetch supplier information for each agreement
+  const agreementsWithSuppliers = await Promise.all(
+    agreements.map(async (agreement) => {
+      const supplier = await db.select().from(suppliers).where(eq(suppliers.id, agreement.supplierId)).limit(1);
+      return {
+        ...agreement,
+        supplier: supplier[0] || null,
+      };
+    })
+  );
+  
+  return agreementsWithSuppliers;
 }
 
 export async function updateSupplyAgreement(id: number, updates: Partial<InsertSupplyAgreement>) {

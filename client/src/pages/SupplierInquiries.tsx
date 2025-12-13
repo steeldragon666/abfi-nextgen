@@ -30,11 +30,10 @@ export default function SupplierInquiries() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "pending": return "bg-yellow-100 text-yellow-800";
+      case "open": return "bg-yellow-100 text-yellow-800";
       case "responded": return "bg-blue-100 text-blue-800";
-      case "accepted": return "bg-green-100 text-green-800";
-      case "declined": return "bg-red-100 text-red-800";
       case "closed": return "bg-gray-100 text-gray-800";
+      case "cancelled": return "bg-red-100 text-red-800";
       default: return "bg-gray-100 text-gray-800";
     }
   };
@@ -92,12 +91,12 @@ export default function SupplierInquiries() {
                         <div className="font-medium">{inquiry.feedstockId ? `ABFI-${inquiry.feedstockId}` : "General"}</div>
                       </div>
                     </div>
-                    {inquiry.requiredVolume && (
+                      {inquiry.volumeRequired && (
                       <div className="flex items-center gap-2">
                         <Package className="h-4 w-4 text-muted-foreground" />
                         <div>
                           <div className="text-muted-foreground">Volume Needed</div>
-                          <div className="font-medium">{inquiry.requiredVolume.toLocaleString()} tonnes</div>
+                          <div className="font-medium">{inquiry.volumeRequired.toLocaleString()} tonnes</div>
                         </div>
                       </div>
                     )}
@@ -119,10 +118,10 @@ export default function SupplierInquiries() {
                     </div>
                   )}
 
-                  {inquiry.response && (
+                  {inquiry.responseMessage && (
                     <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
                       <div className="text-sm font-medium mb-1 text-green-900">Your Response:</div>
-                      <p className="text-sm text-green-800">{inquiry.response}</p>
+                      <p className="text-sm text-green-800">{inquiry.responseMessage}</p>
                       {inquiry.respondedAt && (
                         <div className="text-xs text-green-600 mt-2">
                           Responded on {formatDate(inquiry.respondedAt)}
@@ -132,10 +131,12 @@ export default function SupplierInquiries() {
                   )}
 
                   <div className="flex gap-2">
-                    {inquiry.status === "pending" && (
-                      <Button size="sm">
-                        Respond to Inquiry
-                      </Button>
+                    {inquiry.status === "open" && (
+                      <Link href={`/inquiries/respond/${inquiry.id}`}>
+                        <Button size="sm">
+                          Respond to Inquiry
+                        </Button>
+                      </Link>
                     )}
                     <Button variant="outline" size="sm">
                       View Details

@@ -1,0 +1,1 @@
+ALTER TABLE `inquiries` ADD `responseDetails` json;

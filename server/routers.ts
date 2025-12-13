@@ -94,6 +94,12 @@ export const appRouter = router({
         return supplier;
       }),
     
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getSupplierById(input.id);
+      }),
+    
     create: protectedProcedure
       .input(z.object({
         abn: z.string().length(11),
@@ -600,7 +606,13 @@ export const appRouter = router({
     respond: supplierProcedure
       .input(z.object({
         inquiryId: z.number(),
-        responseMessage: z.string().min(1),
+        response: z.string().min(1),
+        pricePerTonne: z.number().optional(),
+        availableVolume: z.number().optional(),
+        deliveryTimeframe: z.string().optional(),
+        deliveryTerms: z.string().optional(),
+        minimumOrder: z.number().optional(),
+        status: z.enum(["responded", "closed"]).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
         const inquiry = await db.getInquiriesBySupplierId(ctx.supplier.id);
@@ -613,10 +625,19 @@ export const appRouter = router({
           });
         }
         
+        // Build response details object
+        const responseDetails: any = {};
+        if (input.pricePerTonne) responseDetails.pricePerTonne = input.pricePerTonne;
+        if (input.availableVolume) responseDetails.availableVolume = input.availableVolume;
+        if (input.deliveryTimeframe) responseDetails.deliveryTimeframe = input.deliveryTimeframe;
+        if (input.deliveryTerms) responseDetails.deliveryTerms = input.deliveryTerms;
+        if (input.minimumOrder) responseDetails.minimumOrder = input.minimumOrder;
+        
         await db.updateInquiry(input.inquiryId, {
-          responseMessage: input.responseMessage,
+          responseMessage: input.response,
+          responseDetails: Object.keys(responseDetails).length > 0 ? responseDetails : undefined,
           respondedAt: new Date(),
-          status: 'responded',
+          status: input.status || 'responded',
         });
         
         // Create notification for buyer
@@ -633,6 +654,12 @@ export const appRouter = router({
         }
         
         return { success: true };
+      }),
+    
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getInquiryById(input.id);
       }),
     
     listForBuyer: buyerProcedure.query(async ({ ctx }) => {
@@ -923,17 +950,63 @@ export const appRouter = router({
       .input(z.object({
         supplierId: z.number(),
         level: z.enum(["GQ1", "GQ2", "GQ3", "GQ4"]),
+        levelName: z.string().optional(),
         compositeScore: z.number(),
-        assessmentDate: z.date(),
+        assessmentDate: z.date().optional(),
         validFrom: z.date(),
         validUntil: z.date(),
+        operatingHistoryScore: z.number().optional(),
         financialStrengthScore: z.number().optional(),
-        productionCapacityScore: z.number().optional(),
         landTenureScore: z.number().optional(),
+        productionCapacityScore: z.number().optional(),
         creditScore: z.number().optional(),
+        insuranceScore: z.number().optional(),
+        assessmentNotes: z.string().optional(),
+        status: z.enum(["pending", "approved", "expired", "revoked"]).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
-        const qualificationId = await db.createGrowerQualification(input);
+        const qualificationData = {
+          ...input,
+          assessedBy: ctx.user.id,
+          assessmentDate: input.assessmentDate || new Date(),
+        };
+        const qualificationId = await db.createGrowerQualification(qualificationData);
+        
+        await createAuditLog({
+          userId: ctx.user.id,
+          action: 'create_qualification',
+          entityType: 'grower_qualification',
+          entityId: qualificationId,
+        });
+        
+        return { qualificationId };
+      }),
+    
+    createGrowerQualification: protectedProcedure
+      .input(z.object({
+        supplierId: z.number(),
+        level: z.enum(["GQ1", "GQ2", "GQ3", "GQ4"]),
+        levelName: z.string().optional(),
+        compositeScore: z.number(),
+        assessmentDate: z.date().optional(),
+        validFrom: z.date(),
+        validUntil: z.date(),
+        operatingHistoryScore: z.number().optional(),
+        financialStrengthScore: z.number().optional(),
+        landTenureScore: z.number().optional(),
+        productionCapacityScore: z.number().optional(),
+        creditScore: z.number().optional(),
+        insuranceScore: z.number().optional(),
+        assessmentNotes: z.string().optional(),
+        status: z.enum(["pending", "approved", "expired", "revoked"]).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const qualificationData = {
+          ...input,
+          assessedBy: ctx.user.id,
+          assessmentDate: input.assessmentDate || new Date(),
+        };
+        const qualificationId = await db.createGrowerQualification(qualificationData);
         
         await createAuditLog({
           userId: ctx.user.id,

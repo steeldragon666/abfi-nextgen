@@ -276,6 +276,13 @@ export const inquiries = mysqlTable("inquiries", {
   
   // Response
   responseMessage: text("responseMessage"),
+  responseDetails: json("responseDetails").$type<{
+    pricePerTonne?: number;
+    availableVolume?: number;
+    deliveryTimeframe?: string;
+    deliveryTerms?: string;
+    minimumOrder?: number;
+  }>(),
   respondedAt: timestamp("respondedAt"),
   
   createdAt: timestamp("createdAt").defaultNow().notNull(),
