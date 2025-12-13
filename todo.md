@@ -255,3 +255,21 @@
 - [x] Implement new homepage design
 - [ ] Update browse feedstocks page design
 - [ ] Refresh dashboard aesthetics
+
+## Navigation Bugs (Session 5)
+- [x] Fix Browse/Marketplace button - shows 404link to /map not /browse)
+- [ ] Fix Data button in header (should link to /feedstock-map)
+- [ ] Verify all navigation links work correctly
+
+## Comprehensive Functionality Audit (Session 6)
+- [ ] Test all navigation buttons and links
+- [ ] Test Browse/Marketplace page functionality
+- [ ] Test Feedstock Map page functionality
+- [ ] Test Dashboard page and all sub-pages
+- [ ] Test data input forms (feedstock creation, registration, inquiries)
+- [ ] Test data output (listings, search, filters)
+- [ ] Test charts and visualizations
+- [ ] Create comprehensive seed data
+- [ ] Verify supplier workflows (create feedstock, respond to inquiries)
+- [ ] Verify buyer workflows (browse, send inquiries)
+- [ ] Verify admin workflows (verification, compliance)

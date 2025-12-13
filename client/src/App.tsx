@@ -38,6 +38,7 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path="/browse" component={Browse} />
       <Route path="/feedstock/:id" component={FeedstockDetail} />
       <Route path="/feedstock/edit/:id" component={FeedstockEdit} />
       <Route path="/dashboard" component={Dashboard} />
