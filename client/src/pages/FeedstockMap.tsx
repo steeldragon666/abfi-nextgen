@@ -12,6 +12,8 @@ import { Layers, Search, Download, Target } from "lucide-react";
 import { createPopupHTML } from "@/lib/popupTemplates";
 import { buildLayerFilter } from "@/lib/mapFilters";
 import { analyzeRadius, type AnalysisResults } from "@/lib/radiusAnalysis";
+import { exportAsGeoJSON, exportAsCSV } from "@/lib/mapExport";
+import { exportAnalysisAsPDF, captureMapScreenshot } from "@/lib/pdfExport";
 
 // Mapbox access token (using Manus proxy)
 mapboxgl.accessToken = "pk.eyJ1Ijoic3RlZWxkcmFnb242NjYiLCJhIjoiY21keGFwNmxjMmM1MjJscTM0NHMwMWo5aSJ9.3mvzNah-7rzwxCZ2L81-YA";
@@ -35,6 +37,7 @@ export default function FeedstockMap() {
   const [radiusKm, setRadiusKm] = useState(50);
   const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   
   const [layers, setLayers] = useState<LayerConfig[]>([
     { id: "sugar-mills", name: "Sugar Mills", type: "circle", source: "/geojson/sugar_mills.json", color: "#8B4513", visible: true },
@@ -376,6 +379,81 @@ export default function FeedstockMap() {
     }
   };
 
+  // Export data handlers
+  const handleExportGeoJSON = async () => {
+    setIsExporting(true);
+    try {
+      const visibleLayers = layers.filter((l) => l.visible).map((l) => l.id);
+      const count = await exportAsGeoJSON({
+        layers: visibleLayers,
+        stateFilter: selectedStates,
+        capacityRanges: {
+          "sugar-mills": { min: sugarMillCapacity[0], max: sugarMillCapacity[1] },
+          "biogas-facilities": { min: biogasCapacity[0], max: biogasCapacity[1] },
+          "biofuel-plants": { min: biofuelCapacity[0], max: biofuelCapacity[1] },
+          "transport-infrastructure": { min: portThroughput[0], max: portThroughput[1] },
+        },
+      });
+      alert(`Exported ${count} facilities as GeoJSON`);
+    } catch (error) {
+      console.error("Export failed:", error);
+      alert("Export failed. Please try again.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportCSV = async () => {
+    setIsExporting(true);
+    try {
+      const visibleLayers = layers.filter((l) => l.visible).map((l) => l.id);
+      const count = await exportAsCSV({
+        layers: visibleLayers,
+        stateFilter: selectedStates,
+        capacityRanges: {
+          "sugar-mills": { min: sugarMillCapacity[0], max: sugarMillCapacity[1] },
+          "biogas-facilities": { min: biogasCapacity[0], max: biogasCapacity[1] },
+          "biofuel-plants": { min: biofuelCapacity[0], max: biofuelCapacity[1] },
+          "transport-infrastructure": { min: portThroughput[0], max: portThroughput[1] },
+        },
+      });
+      alert(`Exported ${count} facilities as CSV`);
+    } catch (error) {
+      console.error("Export failed:", error);
+      alert("Export failed. Please try again.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  // Export analysis as PDF
+  const handleExportPDF = async () => {
+    if (!analysisResults || !radiusCenter || !map.current) {
+      alert("Please run a radius analysis first before exporting PDF.");
+      return;
+    }
+
+    setIsExporting(true);
+    try {
+      // Capture map screenshot
+      const mapScreenshot = await captureMapScreenshot(map.current);
+
+      // Generate PDF
+      await exportAnalysisAsPDF({
+        analysisResults,
+        radiusKm,
+        centerCoords: radiusCenter,
+        mapScreenshot,
+        projectName: "Bioenergy Site Assessment",
+      });
+    } catch (error) {
+      console.error("PDF export failed:", error);
+      alert("PDF export failed. Please try again.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   // Clear radius and analysis
   const clearRadius = () => {
     if (!map.current) return;
@@ -573,6 +651,19 @@ export default function FeedstockMap() {
                     </ul>
                   </div>
                 )}
+
+                {/* Download Report Button */}
+                <div className="pt-4 border-t">
+                  <Button
+                    onClick={handleExportPDF}
+                    disabled={isExporting}
+                    className="w-full"
+                    variant="default"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    {isExporting ? "Generating PDF..." : "Download Report (PDF)"}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -758,6 +849,40 @@ export default function FeedstockMap() {
                   )}
                 </div>
               ))}
+            </CardContent>
+          </Card>
+
+          {/* Export Data */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Download className="h-5 w-5" />
+                Export Data
+              </CardTitle>
+              <CardDescription>Download filtered facilities</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button
+                onClick={handleExportGeoJSON}
+                disabled={isExporting}
+                variant="outline"
+                className="w-full justify-start"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                {isExporting ? "Exporting..." : "Export as GeoJSON"}
+              </Button>
+              <Button
+                onClick={handleExportCSV}
+                disabled={isExporting}
+                variant="outline"
+                className="w-full justify-start"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                {isExporting ? "Exporting..." : "Export as CSV"}
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2">
+                Exports currently visible facilities based on active filters and layer toggles.
+              </p>
             </CardContent>
           </Card>
 
