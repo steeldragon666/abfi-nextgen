@@ -64,10 +64,11 @@ export default function SupplyAgreements() {
     .filter(a => a.status === "active" || a.status === "executed")
     .reduce((sum, a) => sum + a.annualVolume, 0);
 
-  const tier1Percent = (tier1Volume / project.nameplateCapacity) * 100;
-  const tier2Percent = (tier2Volume / project.nameplateCapacity) * 100;
-  const optionPercent = (optionVolume / project.nameplateCapacity) * 100;
-  const rofrPercent = (rofrVolume / project.nameplateCapacity) * 100;
+  const capacity = project.nameplateCapacity || 1;
+  const tier1Percent = (tier1Volume / capacity) * 100;
+  const tier2Percent = (tier2Volume / capacity) * 100;
+  const optionPercent = (optionVolume / capacity) * 100;
+  const rofrPercent = (rofrVolume / capacity) * 100;
   const totalPercent = tier1Percent + tier2Percent + optionPercent + rofrPercent;
 
   const getTierBadgeColor = (tier: string) => {
@@ -221,7 +222,7 @@ export default function SupplyAgreements() {
         <CardHeader>
           <CardTitle>Supply Position Overview</CardTitle>
           <CardDescription>
-            Nameplate Capacity: {project.nameplateCapacity.toLocaleString()} tonnes/year
+            Nameplate Capacity: {(project.nameplateCapacity || 0).toLocaleString()} tonnes/year
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -238,7 +239,7 @@ export default function SupplyAgreements() {
                 />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                {tier1Volume.toLocaleString()} / {(project.nameplateCapacity * (project.tier1Target || 80) / 100).toLocaleString()} tonnes
+                {tier1Volume.toLocaleString()} / {((project.nameplateCapacity || 0) * (project.tier1Target || 80) / 100).toLocaleString()} tonnes
               </p>
             </div>
 
@@ -254,7 +255,7 @@ export default function SupplyAgreements() {
                 />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                {tier2Volume.toLocaleString()} / {(project.nameplateCapacity * (project.tier2Target || 40) / 100).toLocaleString()} tonnes
+                {tier2Volume.toLocaleString()} / {((project.nameplateCapacity || 0) * (project.tier2Target || 40) / 100).toLocaleString()} tonnes
               </p>
             </div>
 
@@ -270,7 +271,7 @@ export default function SupplyAgreements() {
                 />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                {optionVolume.toLocaleString()} / {(project.nameplateCapacity * (project.optionsTarget || 15) / 100).toLocaleString()} tonnes
+                {optionVolume.toLocaleString()} / {((project.nameplateCapacity || 0) * (project.optionsTarget || 15) / 100).toLocaleString()} tonnes
               </p>
             </div>
 
@@ -286,7 +287,7 @@ export default function SupplyAgreements() {
                 />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                {rofrVolume.toLocaleString()} / {(project.nameplateCapacity * (project.rofrTarget || 15) / 100).toLocaleString()} tonnes
+                {rofrVolume.toLocaleString()} / {((project.nameplateCapacity || 0) * (project.rofrTarget || 15) / 100).toLocaleString()} tonnes
               </p>
             </div>
           </div>

@@ -160,7 +160,7 @@ export default function LenderPortal() {
                             <div>
                               <CardTitle>{project.name}</CardTitle>
                               <CardDescription className="mt-1">
-                                {project.facilityLocation} • {project.nameplateCapacity.toLocaleString()} tonnes/year capacity
+                                {project.facilityLocation} • {(project.nameplateCapacity || 0).toLocaleString()} tonnes/year capacity
                               </CardDescription>
                             </div>
                             <Button variant="outline" size="sm">

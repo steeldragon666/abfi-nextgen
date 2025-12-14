@@ -850,8 +850,22 @@ export const projects = mysqlTable("projects", {
   
   userId: int("userId").notNull().references(() => users.id), // Project developer
   
+  // Step 1: Project Overview
   name: varchar("name", { length: 255 }).notNull(),
+  developerName: varchar("developerName", { length: 255 }),
+  abn: varchar("abn", { length: 11 }),
+  website: varchar("website", { length: 255 }),
   description: text("description"),
+  region: varchar("region", { length: 100 }),
+  siteAddress: varchar("siteAddress", { length: 500 }),
+  developmentStage: mysqlEnum("developmentStage", [
+    "concept",
+    "prefeasibility",
+    "feasibility",
+    "fid",
+    "construction",
+    "operational"
+  ]),
   
   // Facility details
   facilityLocation: varchar("facilityLocation", { length: 255 }),
@@ -859,26 +873,90 @@ export const projects = mysqlTable("projects", {
   latitude: varchar("latitude", { length: 20 }),
   longitude: varchar("longitude", { length: 20 }),
   
-  // Capacity
-  nameplateCapacity: int("nameplateCapacity").notNull(), // tonnes per annum
+  // Step 2: Technology Details
+  conversionTechnology: varchar("conversionTechnology", { length: 100 }),
+  technologyProvider: varchar("technologyProvider", { length: 255 }),
+  primaryOutput: varchar("primaryOutput", { length: 100 }),
+  secondaryOutputs: text("secondaryOutputs"),
+  nameplateCapacity: int("nameplateCapacity"), // tonnes per annum
+  outputCapacity: int("outputCapacity"), // Output product capacity
+  outputUnit: varchar("outputUnit", { length: 50 }),
+  
+  // Step 3: Feedstock Requirements
   feedstockType: varchar("feedstockType", { length: 100 }), // Primary feedstock type
+  secondaryFeedstocks: text("secondaryFeedstocks"),
+  annualFeedstockVolume: int("annualFeedstockVolume"), // tonnes per annum
+  feedstockQualitySpecs: text("feedstockQualitySpecs"),
+  supplyRadius: int("supplyRadius"), // km
+  logisticsRequirements: text("logisticsRequirements"),
+  
+  // Step 4: Funding Status
+  totalCapex: int("totalCapex"), // $M
+  fundingSecured: int("fundingSecured"), // $M
+  fundingSources: text("fundingSources"),
+  investmentStage: mysqlEnum("investmentStage", [
+    "seed",
+    "series_a",
+    "series_b",
+    "pre_fid",
+    "post_fid",
+    "operational"
+  ]),
+  seekingInvestment: boolean("seekingInvestment").default(false),
+  investmentAmount: int("investmentAmount"), // $M
   
   // Project timeline
   targetCOD: timestamp("targetCOD"), // Commercial Operation Date
   financialCloseTarget: timestamp("financialCloseTarget"),
+  constructionStart: timestamp("constructionStart"),
   
   // Debt structure
   debtTenor: int("debtTenor"), // years
   
+  // Step 5: Approvals & Permits
+  environmentalApproval: boolean("environmentalApproval").default(false),
+  planningPermit: boolean("planningPermit").default(false),
+  epaLicense: boolean("epaLicense").default(false),
+  otherApprovals: text("otherApprovals"),
+  approvalsNotes: text("approvalsNotes"),
+  
+  // Step 6: Verification
+  verificationStatus: mysqlEnum("verificationStatus", [
+    "pending",
+    "documents_submitted",
+    "under_review",
+    "verified",
+    "rejected"
+  ]).default("pending"),
+  verificationDocuments: json("verificationDocuments").$type<string[]>(),
+  verificationNotes: text("verificationNotes"),
+  
+  // Step 7: Opportunities
+  feedstockMatchingEnabled: boolean("feedstockMatchingEnabled").default(true),
+  financingInterest: boolean("financingInterest").default(false),
+  partnershipInterest: boolean("partnershipInterest").default(false),
+  publicVisibility: mysqlEnum("publicVisibility", [
+    "private",
+    "investors_only",
+    "suppliers_only",
+    "public"
+  ]).default("private"),
+  
   // Status
   status: mysqlEnum("status", [
+    "draft",
+    "submitted",
     "planning",
     "development",
     "financing",
     "construction",
     "operational",
     "suspended"
-  ]).default("planning").notNull(),
+  ]).default("draft").notNull(),
+  
+  // Registration progress
+  registrationStep: int("registrationStep").default(1),
+  registrationComplete: boolean("registrationComplete").default(false),
   
   // Supply targets (percentages)
   tier1Target: int("tier1Target").default(80), // % of capacity
@@ -891,6 +969,7 @@ export const projects = mysqlTable("projects", {
 }, (table) => ({
   userIdIdx: index("projects_userId_idx").on(table.userId),
   statusIdx: index("projects_status_idx").on(table.status),
+  verificationIdx: index("projects_verification_idx").on(table.verificationStatus),
 }));
 
 export type Project = typeof projects.$inferSelect;

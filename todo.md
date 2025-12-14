@@ -434,3 +434,17 @@ Note: Seed script encounters schema mismatches. Recommend using UI workflows to 
 - [x] Identify nested anchor tags in producer registration page
 - [x] Remove nested <a> tags inside Link components
 - [x] Test producer registration page for errors
+
+## Configure ABR API Key and myGovID Integration (Session 18)
+- [x] Register for ABR Web Services GUID at abr.business.gov.au
+- [ ] Add ABR_GUID environment variable to project
+- [x] Research myGovID API integration requirements
+- [x] Document myGovID OAuth setup process
+- [ ] Test ABN validation with real company name lookup
+- [x] Review refinery/processor registration page design
+- [x] Create separate onboarding section for refinery/processor projects
+- [x] Design database schema for project registration
+- [x] Create project registration landing page
+- [x] Build 7-step project registration flow components
+- [x] Add backend tRPC procedures for project data
+- [x] Test complete project registration flow

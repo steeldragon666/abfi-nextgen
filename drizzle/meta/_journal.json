@@ -99,6 +99,13 @@
       "when": 1765666341897,
       "tag": "0013_brave_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1765676106053,
+      "tag": "0014_chemical_polaris",
+      "breakpoints": true
     }
   ]
 }

@@ -134,7 +134,7 @@ export default function BankabilityAssessment() {
       };
     }
 
-    const capacity = project.nameplateCapacity;
+    const capacity = project.nameplateCapacity || 1;
     let tier1Volume = 0;
     let tier2Volume = 0;
     let optionsVolume = 0;

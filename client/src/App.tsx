@@ -46,6 +46,8 @@ import ProducerSuccess from "./pages/ProducerSuccess";
 import FinancialOnboarding from "./pages/FinancialOnboarding";
 import BankabilityExplainer from "./pages/BankabilityExplainer";
 import GrowerBenefits from "./pages/GrowerBenefits";
+import ProjectRegistration from "./pages/ProjectRegistration";
+import ProjectRegistrationFlow from "./pages/ProjectRegistrationFlow";
 
 function Router() {
   return (
@@ -54,6 +56,8 @@ function Router() {
       <Route path="/financial-onboarding" component={FinancialOnboarding} />
       <Route path="/bankability-explainer" component={BankabilityExplainer} />
       <Route path="/grower-benefits" component={GrowerBenefits} />
+      <Route path="/project-registration" component={ProjectRegistration} />
+      <Route path="/project-registration/overview" component={ProjectRegistrationFlow} />
       <Route path="/browse" component={Browse} />
       <Route path="/feedstock/:id" component={FeedstockDetail} />
       <Route path="/feedstock/edit/:id" component={FeedstockEdit} />

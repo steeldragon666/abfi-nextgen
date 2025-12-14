@@ -1129,6 +1129,117 @@ export const appRouter = router({
         return { projectId };
       }),
     
+    // Project Registration Flow (7 steps)
+    registerProject: protectedProcedure
+      .input(z.object({
+        // Step 1: Project Overview
+        projectName: z.string(),
+        developerName: z.string().optional(),
+        abn: z.string().optional(),
+        website: z.string().optional(),
+        region: z.string().optional(),
+        siteAddress: z.string().optional(),
+        developmentStage: z.enum(["concept", "prefeasibility", "feasibility", "fid", "construction", "operational"]).optional(),
+        
+        // Step 2: Technology Details
+        conversionTechnology: z.string().optional(),
+        technologyProvider: z.string().optional(),
+        primaryOutput: z.string().optional(),
+        secondaryOutputs: z.string().optional(),
+        nameplateCapacity: z.string().optional(),
+        outputCapacity: z.string().optional(),
+        outputUnit: z.string().optional(),
+        
+        // Step 3: Feedstock Requirements
+        feedstockType: z.string().optional(),
+        secondaryFeedstocks: z.string().optional(),
+        annualFeedstockVolume: z.string().optional(),
+        feedstockQualitySpecs: z.string().optional(),
+        supplyRadius: z.string().optional(),
+        logisticsRequirements: z.string().optional(),
+        
+        // Step 4: Funding Status
+        totalCapex: z.string().optional(),
+        fundingSecured: z.string().optional(),
+        fundingSources: z.string().optional(),
+        investmentStage: z.enum(["seed", "series_a", "series_b", "pre_fid", "post_fid", "operational"]).optional(),
+        seekingInvestment: z.boolean().optional(),
+        investmentAmount: z.string().optional(),
+        
+        // Step 5: Approvals & Permits
+        environmentalApproval: z.boolean().optional(),
+        planningPermit: z.boolean().optional(),
+        epaLicense: z.boolean().optional(),
+        otherApprovals: z.string().optional(),
+        approvalsNotes: z.string().optional(),
+        
+        // Step 6: Verification
+        verificationDocuments: z.array(z.string()).optional(),
+        verificationNotes: z.string().optional(),
+        
+        // Step 7: Opportunities
+        feedstockMatchingEnabled: z.boolean().optional(),
+        financingInterest: z.boolean().optional(),
+        partnershipInterest: z.boolean().optional(),
+        publicVisibility: z.enum(["private", "investors_only", "suppliers_only", "public"]).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        // Convert string numbers to integers where needed
+        const projectData: any = {
+          userId: ctx.user.id,
+          name: input.projectName,
+          developerName: input.developerName,
+          abn: input.abn,
+          website: input.website,
+          region: input.region,
+          siteAddress: input.siteAddress,
+          developmentStage: input.developmentStage,
+          conversionTechnology: input.conversionTechnology,
+          technologyProvider: input.technologyProvider,
+          primaryOutput: input.primaryOutput,
+          secondaryOutputs: input.secondaryOutputs,
+          nameplateCapacity: input.nameplateCapacity ? parseInt(input.nameplateCapacity) : null,
+          outputCapacity: input.outputCapacity ? parseInt(input.outputCapacity) : null,
+          outputUnit: input.outputUnit,
+          feedstockType: input.feedstockType,
+          secondaryFeedstocks: input.secondaryFeedstocks,
+          annualFeedstockVolume: input.annualFeedstockVolume ? parseInt(input.annualFeedstockVolume) : null,
+          feedstockQualitySpecs: input.feedstockQualitySpecs,
+          supplyRadius: input.supplyRadius ? parseInt(input.supplyRadius) : null,
+          logisticsRequirements: input.logisticsRequirements,
+          totalCapex: input.totalCapex ? parseInt(input.totalCapex) : null,
+          fundingSecured: input.fundingSecured ? parseInt(input.fundingSecured) : null,
+          fundingSources: input.fundingSources,
+          investmentStage: input.investmentStage,
+          seekingInvestment: input.seekingInvestment,
+          investmentAmount: input.investmentAmount ? parseInt(input.investmentAmount) : null,
+          environmentalApproval: input.environmentalApproval,
+          planningPermit: input.planningPermit,
+          epaLicense: input.epaLicense,
+          otherApprovals: input.otherApprovals,
+          approvalsNotes: input.approvalsNotes,
+          verificationDocuments: input.verificationDocuments,
+          verificationNotes: input.verificationNotes,
+          feedstockMatchingEnabled: input.feedstockMatchingEnabled,
+          financingInterest: input.financingInterest,
+          partnershipInterest: input.partnershipInterest,
+          publicVisibility: input.publicVisibility,
+          registrationComplete: true,
+          status: 'submitted',
+        };
+        
+        const projectId = await db.createProject(projectData);
+        
+        await createAuditLog({
+          userId: ctx.user.id,
+          action: 'register_project',
+          entityType: 'project',
+          entityId: projectId,
+        });
+        
+        return { projectId };
+      }),
+    
     getMyProjects: protectedProcedure
       .query(async ({ ctx }) => {
         return await db.getProjectsByUserId(ctx.user.id);
