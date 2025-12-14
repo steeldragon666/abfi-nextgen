@@ -497,3 +497,6 @@ Note: Seed script encounters schema mismatches. Recommend using UI workflows to 
 - [x] Add dashboard navigation links for admin features (assessor workflow, monitoring jobs, concentration analysis)
 - [x] Implement automated job scheduling with cron (daily covenant checks, weekly supply recalc)
 - [x] Build lender email notification system for covenant breaches and contract renewals
+
+## Session 8 - Landing Page User Groups
+- [x] Redesign landing page to clearly represent three user groups (Growers, Project Developers, Lenders)

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getLoginUrl } from "@/const";
-import { ArrowRight, Award, BarChart3, Leaf, Search, Shield, TrendingUp, MapPin, FileCheck, Zap } from "lucide-react";
+import { ArrowRight, Award, BarChart3, Leaf, Search, Shield, TrendingUp, MapPin, FileCheck, Zap, Users, Building2, Banknote } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
@@ -40,110 +40,139 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section - Grower-Focused CTA */}
+      {/* Hero Section */}
       <section className="relative overflow-hidden py-20" style={{ background: 'linear-gradient(135deg, #faf8f3 0%, #f5f0e6 100%)' }}>
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-block mb-6">
-              <Badge className="px-4 py-2 text-xs font-semibold uppercase tracking-wide" style={{ 
-                background: '#fef3c7', 
-                color: '#b8860b',
-                border: 'none'
-              }}>
-                🌾 Grower Registration
-              </Badge>
-            </div>
-
-            {/* Main Heading */}
+          <div className="max-w-4xl mx-auto text-center mb-16">
             <h1 className="text-5xl md:text-6xl font-normal mb-6 leading-tight" style={{ 
               fontFamily: "'DM Serif Display', serif",
               color: '#1a2e1a'
             }}>
-              Register Your Planned or<br />
-              <span style={{ color: '#2d5a27' }}>Projected Feedstocks Today</span>
+              Australian Bioenergy<br />
+              <span style={{ color: '#2d5a27' }}>Feedstock Institute</span>
             </h1>
-
-            {/* Subtext */}
-            <p className="text-lg md:text-xl mb-10 max-w-2xl mx-auto" style={{ 
+            <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto" style={{ 
               color: '#4a5a4a',
               fontWeight: 300,
               lineHeight: 1.7
             }}>
-              Add your plantation or projected supply to receive market signals, connect with verified offtakers, and secure fair prices based on real demand.
+              Connecting the bioenergy supply chain through verified data, transparent markets, and bankability assessments
             </p>
+          </div>
 
-            {/* Large CTA Button */}
-            <Link href="/producer-registration">
-              <Button 
-                size="lg" 
-                className="text-xl px-12 py-8 font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-                style={{
-                  background: 'linear-gradient(135deg, #2d5a27, #4a7c43)',
-                  color: 'white',
-                  borderRadius: '12px'
-                }}
-              >
-                Start Registration Now
-                <ArrowRight className="ml-3 h-6 w-6" />
-              </Button>
-            </Link>
+          {/* Three User Groups */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* Growers/Producers */}
+            <Card className="border-2 hover:border-[#2d5a27] transition-all hover:shadow-xl bg-white">
+              <CardHeader className="text-center pb-4">
+                <div className="h-16 w-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: '#e8f5e8' }}>
+                  <Users className="h-8 w-8" style={{ color: '#2d5a27' }} />
+                </div>
+                <CardTitle className="text-2xl mb-2">Growers & Producers</CardTitle>
+                <CardDescription className="text-base">
+                  Register your feedstock supply and connect with verified buyers
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <FileCheck className="h-4 w-4 mt-0.5 shrink-0" style={{ color: '#2d5a27' }} />
+                    <span>Register planned or existing feedstock supply</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <TrendingUp className="h-4 w-4 mt-0.5 shrink-0" style={{ color: '#2d5a27' }} />
+                    <span>Receive market signals and fair price discovery</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Shield className="h-4 w-4 mt-0.5 shrink-0" style={{ color: '#2d5a27' }} />
+                    <span>Get verified through ABFI qualification system</span>
+                  </li>
+                </ul>
+                <Link href="/producer-registration">
+                  <Button className="w-full mt-4" style={{ background: '#2d5a27' }}>
+                    Register as Producer
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
 
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap justify-center gap-8 mt-12 text-sm" style={{ color: '#6b7c6b' }}>
-              <div className="flex items-center gap-2">
-                <Shield className="h-5 w-5" style={{ color: '#2d5a27' }} />
-                <span>Verified Data</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" style={{ color: '#2d5a27' }} />
-                <span>Fair Market Prices</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Zap className="h-5 w-5" style={{ color: '#2d5a27' }} />
-                <span>Fast Approval</span>
-              </div>
-            </div>
+            {/* Project Developers/Offtakers */}
+            <Card className="border-2 hover:border-[#b8860b] transition-all hover:shadow-xl bg-white">
+              <CardHeader className="text-center pb-4">
+                <div className="h-16 w-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: '#fef3c7' }}>
+                  <Building2 className="h-8 w-8" style={{ color: '#b8860b' }} />
+                </div>
+                <CardTitle className="text-2xl mb-2">Project Developers</CardTitle>
+                <CardDescription className="text-base">
+                  Secure feedstock supply and assess project bankability
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <Search className="h-4 w-4 mt-0.5 shrink-0" style={{ color: '#b8860b' }} />
+                    <span>Browse verified feedstock suppliers by location</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Award className="h-4 w-4 mt-0.5 shrink-0" style={{ color: '#b8860b' }} />
+                    <span>Assess supply chain bankability with ABFI rating</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <FileCheck className="h-4 w-4 mt-0.5 shrink-0" style={{ color: '#b8860b' }} />
+                    <span>Generate compliance certificates for lenders</span>
+                  </li>
+                </ul>
+                <Link href="/bankability">
+                  <Button className="w-full mt-4" style={{ background: '#b8860b' }}>
+                    Start Assessment
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Lenders/Financial Institutions */}
+            <Card className="border-2 hover:border-[#1e3a5f] transition-all hover:shadow-xl bg-white">
+              <CardHeader className="text-center pb-4">
+                <div className="h-16 w-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: '#e3f2fd' }}>
+                  <Banknote className="h-8 w-8" style={{ color: '#1e3a5f' }} />
+                </div>
+                <CardTitle className="text-2xl mb-2">Lenders & Financiers</CardTitle>
+                <CardDescription className="text-base">
+                  Monitor project covenants and supply chain risk
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <BarChart3 className="h-4 w-4 mt-0.5 shrink-0" style={{ color: '#1e3a5f' }} />
+                    <span>Real-time covenant compliance monitoring</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Shield className="h-4 w-4 mt-0.5 shrink-0" style={{ color: '#1e3a5f' }} />
+                    <span>Automated breach alerts and renewal notices</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <FileCheck className="h-4 w-4 mt-0.5 shrink-0" style={{ color: '#1e3a5f' }} />
+                    <span>Independent bankability assessments</span>
+                  </li>
+                </ul>
+                <Link href="/lender-portal">
+                  <Button className="w-full mt-4" style={{ background: '#1e3a5f' }}>
+                    Access Portal
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* Secondary CTAs */}
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/grower-benefits">
-              <Button size="lg" variant="outline" className="text-base px-6 py-3 border-2" style={{
-                borderColor: '#2d5a27',
-                color: '#2d5a27'
-              }}>
-                See Grower Benefits
-              </Button>
-            </Link>
-            <Link href="/browse">
-              <Button size="lg" variant="outline" className="text-base px-6 py-3 border-2" style={{
-                borderColor: '#2d5a27',
-                color: '#2d5a27'
-              }}>
-                Browse Feedstocks
-              </Button>
-            </Link>
-            <Link href="/feedstock-map">
-              <Button size="lg" variant="outline" className="text-base px-6 py-3 border-2" style={{
-                borderColor: '#2d5a27',
-                color: '#2d5a27'
-              }}>
-                Interactive Map
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Original Metrics Section */}
+      {/* Platform Metrics */}
       <section className="py-12" style={{ background: '#faf8f3' }}>
         <div className="container mx-auto px-4">
-
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="border-2 border-[#F4C430] shadow-lg hover:shadow-xl transition-shadow bg-white/90 backdrop-blur">
               <CardHeader className="pb-3">
@@ -200,13 +229,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Choose ABFI - Redesigned */}
+      {/* Why Choose ABFI */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Why Choose ABFI?</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              The trusted B2B marketplace for verified biofuel feedstock suppliers and buyers
+              The trusted platform connecting Australia's bioenergy supply chain
             </p>
           </div>
 
@@ -218,7 +247,7 @@ export default function Home() {
                 </div>
                 <CardTitle className="text-2xl">ABFI Rating System</CardTitle>
                 <CardDescription className="text-base mt-2">
-                  Comprehensive 4-pillar assessment framework evaluating sustainability, carbon intensity, quality, and reliability for transparent decision-making.
+                  Comprehensive 5-pillar bankability assessment framework evaluating volume security, counterparty quality, contract structure, concentration risk, and operational readiness.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -230,7 +259,7 @@ export default function Home() {
                 </div>
                 <CardTitle className="text-2xl">Verified Suppliers</CardTitle>
                 <CardDescription className="text-base mt-2">
-                  All suppliers undergo rigorous verification including ABN validation, quality testing, and certification checks before listing.
+                  All suppliers undergo rigorous verification including ABN validation, grower qualification (GQ1-GQ4), quality testing, and certification checks before listing.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -238,11 +267,11 @@ export default function Home() {
             <Card className="border-2 hover:border-[#DAA520]/50 transition-all hover:shadow-lg">
               <CardHeader>
                 <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-                  <Search className="h-8 w-8 text-primary" />
+                  <BarChart3 className="h-8 w-8 text-primary" />
                 </div>
-                <CardTitle className="text-2xl">Advanced Search</CardTitle>
+                <CardTitle className="text-2xl">Covenant Monitoring</CardTitle>
                 <CardDescription className="text-base mt-2">
-                  Filter by feedstock type, location, ABFI score, carbon intensity, certifications, and more to find exactly what you need.
+                  Automated daily covenant checks, weekly supply recalculation, and contract renewal alerts keep lenders informed of project health and compliance status.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -253,22 +282,18 @@ export default function Home() {
       {/* Stats Section */}
       <section className="py-16 bg-gradient-to-br from-primary to-primary/90 text-white">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
+          <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-5xl font-bold mb-2 text-[#DAA520]">500+</div>
-              <div className="text-lg opacity-90">Verified Suppliers</div>
+              <div className="text-5xl font-bold mb-2">250+</div>
+              <div className="text-lg opacity-90">Registered Producers</div>
             </div>
             <div>
-              <div className="text-5xl font-bold mb-2 text-[#DAA520]">1,200+</div>
-              <div className="text-lg opacity-90">Active Listings</div>
+              <div className="text-5xl font-bold mb-2">45+</div>
+              <div className="text-lg opacity-90">Active Projects</div>
             </div>
             <div>
-              <div className="text-5xl font-bold mb-2 text-[#DAA520]">2.5M</div>
-              <div className="text-lg opacity-90">Tonnes Traded</div>
-            </div>
-            <div>
-              <div className="text-5xl font-bold mb-2 text-[#DAA520]">92/100</div>
-              <div className="text-lg opacity-90">Avg. ABFI Score</div>
+              <div className="text-5xl font-bold mb-2">$2.5B</div>
+              <div className="text-lg opacity-90">Financed Volume</div>
             </div>
           </div>
         </div>
@@ -277,69 +302,69 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
-            Ready to Get Started?
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join Australia's leading biofuel feedstock marketplace today
+          <h2 className="text-4xl font-bold text-primary mb-6">Ready to Get Started?</h2>
+          <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+            Join Australia's leading bioenergy feedstock platform today
           </p>
-          {!isAuthenticated ? (
-            <a href={getLoginUrl()}>
-              <Button size="lg" className="text-lg px-12 py-7 bg-primary hover:bg-primary/90 shadow-lg">
-                Create Account
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </a>
-          ) : (
-            <Link href="/dashboard">
-              <Button size="lg" className="text-lg px-12 py-7 bg-primary hover:bg-primary/90 shadow-lg">
-                Go to Dashboard
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link href="/producer-registration">
+              <Button size="lg" className="text-lg px-8 py-6" style={{ background: '#2d5a27' }}>
+                Register as Producer
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-          )}
+            <Link href="/browse">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6 border-2" style={{
+                borderColor: '#2d5a27',
+                color: '#2d5a27'
+              }}>
+                Browse Marketplace
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-primary text-white py-12">
+      <footer className="border-t bg-gray-50 py-12">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Leaf className="h-6 w-6" />
-                <span className="text-xl font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>ABFI</span>
+                <Leaf className="h-6 w-6 text-primary" />
+                <span className="text-xl font-bold text-primary">ABFI</span>
               </div>
-              <p className="text-sm opacity-80">
-                Australian Biofuel Feedstock Institute - Your trusted source for sustainable energy data.
+              <p className="text-sm text-muted-foreground">
+                Australian Bioenergy Feedstock Institute - Connecting the bioenergy supply chain
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">Marketplace</h3>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li><Link href="/browse">Browse Feedstocks</Link></li>
+              <h3 className="font-semibold mb-4">For Producers</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/producer-registration">Register Supply</Link></li>
+                <li><Link href="/grower-benefits">Grower Benefits</Link></li>
                 <li><Link href="/feedstock-map">Interactive Map</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li>About ABFI Rating</li>
-                <li>Documentation</li>
-                <li>API Access</li>
+              <h3 className="font-semibold mb-4">For Developers</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/browse">Browse Feedstocks</Link></li>
+                <li><Link href="/bankability">Bankability Assessment</Link></li>
+                <li><Link href="/certificates">Certificates</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li>About Us</li>
-                <li>Contact</li>
-                <li>Terms of Service</li>
+              <h3 className="font-semibold mb-4">For Lenders</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/lender-portal">Lender Portal</Link></li>
+                <li><Link href="/compliance-dashboard">Compliance Dashboard</Link></li>
+                <li><Link href="/admin">Admin Access</Link></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-white/20 pt-8 text-center text-sm opacity-70">
-            © 2024 Australian Biofuel Feedstock Institute. All rights reserved.
+          <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
+            <p>&copy; 2024 Australian Bioenergy Feedstock Institute. All rights reserved.</p>
           </div>
         </div>
       </footer>
