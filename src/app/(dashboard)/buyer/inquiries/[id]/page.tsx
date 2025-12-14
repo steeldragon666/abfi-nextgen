@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { AbfiScoreBadge } from "@/components/rating/AbfiScoreCard";
+import { MessageThread } from "@/components/inquiry/MessageThread";
 
 export async function generateMetadata({
   params,
@@ -311,31 +312,35 @@ export default async function BuyerInquiryDetailPage({
             </CardContent>
           </Card>
 
-          {/* Supplier Response */}
+          {/* Communication Thread */}
+          <MessageThread
+            inquiryId={inquiry.id}
+            initialMessage={inquiry.initial_message}
+            userRole="buyer"
+            inquiryStatus={inquiry.status}
+          />
+
+          {/* Status Messages */}
           {inquiry.status === "responded" && (
             <Card className="border-blue-200 bg-blue-50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MessageSquare className="h-5 w-5 text-blue-600" />
-                  Supplier Response
+                  Response Received
                 </CardTitle>
                 <CardDescription>
-                  Received{" "}
+                  The supplier responded on{" "}
                   {inquiry.responded_at
                     ? format(new Date(inquiry.responded_at), "dd MMM yyyy")
                     : "-"}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm">
-                  The supplier has responded to your inquiry. You can now contact
-                  them directly using the information above.
-                </p>
-                <div className="flex gap-2 mt-4">
+                <div className="flex gap-2">
                   <Button asChild>
                     <a href={`mailto:${inquiry.supplier?.contact_email}`}>
                       <Mail className="mr-2 h-4 w-4" />
-                      Contact Supplier
+                      Email Supplier
                     </a>
                   </Button>
                 </div>

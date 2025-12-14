@@ -18,6 +18,9 @@ import {
   LogOut,
   TrendingUp,
   Database,
+  Bell,
+  ClipboardList,
+  Megaphone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -37,6 +40,7 @@ const supplierNavItems: NavItem[] = [
   { title: "CI Reports", href: "/supplier/ci-reports", icon: Leaf },
   { title: "Documents", href: "/supplier/documents", icon: FileText },
   { title: "Inquiries", href: "/supplier/inquiries", icon: MessageSquare },
+  { title: "Notifications", href: "/supplier/notifications", icon: Bell },
   { title: "Settings", href: "/supplier/settings", icon: Settings },
 ];
 
@@ -46,6 +50,7 @@ const buyerNavItems: NavItem[] = [
   { title: "Shortlist", href: "/buyer/shortlist", icon: Star },
   { title: "Bankability", href: "/buyer/bankability", icon: TrendingUp },
   { title: "My Inquiries", href: "/buyer/inquiries", icon: MessageSquare },
+  { title: "Notifications", href: "/buyer/notifications", icon: Bell },
   { title: "Settings", href: "/buyer/settings", icon: Settings },
 ];
 
@@ -54,6 +59,8 @@ const adminNavItems: NavItem[] = [
   { title: "Verification Queue", href: "/admin/verification", icon: CheckCircle },
   { title: "Users", href: "/admin/users", icon: Users },
   { title: "ABBA Import", href: "/admin/abba-import", icon: Database },
+  { title: "Announcements", href: "/admin/announcements", icon: Megaphone },
+  { title: "Audit Logs", href: "/admin/audit-logs", icon: ClipboardList },
   { title: "Analytics", href: "/admin/analytics", icon: BarChart3 },
   { title: "Settings", href: "/admin/settings", icon: Settings },
 ];

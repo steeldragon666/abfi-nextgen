@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { InquiryResponseForm } from "./response-form";
+import { MessageThread } from "@/components/inquiry/MessageThread";
 
 export async function generateMetadata({
   params,
@@ -316,21 +317,13 @@ export default async function SupplierInquiryDetailPage({
             <InquiryResponseForm inquiryId={inquiry.id} />
           )}
 
-          {/* Response History */}
-          {inquiry.responded_at && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Response History</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  Responded on{" "}
-                  {format(new Date(inquiry.responded_at), "dd MMM yyyy 'at' HH:mm")}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          {/* Communication Thread */}
+          <MessageThread
+            inquiryId={inquiry.id}
+            initialMessage={inquiry.initial_message}
+            userRole="supplier"
+            inquiryStatus={inquiry.status}
+          />
         </div>
 
         {/* Sidebar */}
