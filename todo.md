@@ -317,8 +317,9 @@ Note: Seed script encounters schema mismatches. Recommend using UI workflows to 
 
 ### Phase 2: Welcome & Account Creation (Screens 1.1-1.2)
 - [x] Create producer landing page with value propositions
-- [x] Build ABN validation with ABR API integration
+- [x] Build ABN validation with ABR API integration (checksum validation + ABR API ready, needs ABR_GUID)
 - [ ] Implement SMS/email verification flow
+- [x] Add myGovID OAuth integration placeholder (informational button, full OAuth pending)
 - [x] Add trust indicators (CANEGROWERS logo, certifications)
 
 ### Phase 3: Property Registration (Screens 2.1-2.3)

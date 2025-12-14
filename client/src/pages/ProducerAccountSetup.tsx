@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Leaf, ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
 
 export default function ProducerAccountSetup() {
   const [, setLocation] = useLocation();
@@ -22,11 +23,30 @@ export default function ProducerAccountSetup() {
   const [abnValidated, setAbnValidated] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
 
+  const utils = trpc.useUtils();
+  
   const handleAbnValidation = async () => {
-    // TODO: Integrate with ABR API for ABN validation
-    if (formData.abn.length === 11) {
-      setAbnValidated(true);
-      setFormData(prev => ({ ...prev, companyName: "Auto-populated Company Name" }));
+    if (formData.abn.length !== 11) return;
+    
+    try {
+      const data = await utils.client.utils.validateABN.query({ abn: formData.abn });
+      
+      if (data?.success) {
+        setAbnValidated(true);
+        setFormData(prev => ({ 
+          ...prev, 
+          companyName: data.entityName || data.businessName || "" 
+        }));
+        
+        if (data.message) {
+          alert(data.message);
+        }
+      } else {
+        alert(data?.message || "Invalid ABN. Please check and try again.");
+      }
+    } catch (error) {
+      console.error('ABN validation error:', error);
+      alert("Error validating ABN. Please try again.");
     }
   };
 
@@ -56,11 +76,9 @@ export default function ProducerAccountSetup() {
       {/* Header */}
       <header className="border-b bg-white">
         <div className="container mx-auto flex h-16 items-center justify-between">
-          <Link href="/">
-            <a className="flex items-center gap-2 text-[#0F3A5C] hover:opacity-80">
-              <Leaf className="h-6 w-6" />
-              <span className="text-xl font-semibold">ABFI</span>
-            </a>
+          <Link href="/" className="flex items-center gap-2 text-[#0F3A5C] hover:opacity-80">
+            <Leaf className="h-6 w-6" />
+            <span className="text-xl font-semibold">ABFI</span>
           </Link>
           <div className="text-sm text-gray-600">
             Step 1 of 7: Account Setup
@@ -211,19 +229,28 @@ export default function ProducerAccountSetup() {
                   <p className="mb-3 text-sm text-blue-700">
                     Link your myGovID for faster identity verification and reduced paperwork.
                   </p>
-                  <Button type="button" variant="outline" size="sm" className="border-blue-300 text-blue-700">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-blue-300 text-blue-700"
+                    onClick={() => alert("myGovID integration coming soon.\n\nThis will allow you to verify your identity using your existing myGovID account, streamlining the registration process.")}
+                  >
                     Link myGovID (Optional)
                   </Button>
                 </div>
 
                 {/* Navigation Buttons */}
                 <div className="flex items-center justify-between pt-6">
-                  <Link href="/producer-registration">
-                    <Button type="button" variant="ghost" className="gap-2">
-                      <ArrowLeft className="h-4 w-4" />
-                      Back
-                    </Button>
-                  </Link>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="gap-2"
+                    onClick={() => setLocation("/producer-registration")}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
+                  </Button>
 
                   <Button
                     type="submit"

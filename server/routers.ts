@@ -8,6 +8,7 @@ import * as db from "./db";
 import { calculateAbfiScore, generateRatingImprovements } from "./rating";
 import { generateAbfiId, validateABN } from "./utils";
 import { createAuditLog } from "./db";
+import { lookupABN } from "./abnValidation";
 
 // ============================================================================
 // HELPER PROCEDURES
@@ -55,6 +56,19 @@ export const appRouter = router({
   // ============================================================================
   // AUTH
   // ============================================================================
+  
+  // ============================================================================
+  // UTILITIES
+  // ============================================================================
+  
+  utils: router({
+    validateABN: publicProcedure
+      .input(z.object({ abn: z.string().length(11) }))
+      .query(async ({ input }) => {
+        const result = await lookupABN(input.abn);
+        return result;
+      }),
+  }),
   
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
