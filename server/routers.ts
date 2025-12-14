@@ -2,7 +2,8 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { router, publicProcedure, protectedProcedure } from './_core/trpc.js';
-import { monitoringJobsRouter } from './monitoringJobsRouter.js';
+import { monitoringJobsRouter } from "./monitoringJobsRouter";
+import { demandSignalsRouter } from "./demandSignalsRouter";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import * as db from "./db";
@@ -54,6 +55,7 @@ const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
 export const appRouter = router({
   system: systemRouter,
   monitoringJobs: monitoringJobsRouter,
+  demandSignals: demandSignalsRouter,
   
   // ============================================================================
   // AUTH

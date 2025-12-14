@@ -552,13 +552,14 @@ Note: Seed script encounters schema mismatches. Recommend using UI workflows to 
 ## Session 11 - Strategic Roadmap Implementation
 
 ### Immediate Commercial Priorities
-- [ ] Build Demand Signal Registry (RFQ/matching system)
+- [x] Build Demand Signal Registry (RFQ/matching system)
   - [x] Create demand signals schema and database tables (demandSignals, supplierResponses, platformTransactions)
   - [x] Add database helper functions for CRUD operations
-  - [ ] Build buyer-side UI for posting requirements (feedstock type, volume, quality, delivery window, price range)
-  - [ ] Create grower-side UI showing aggregated demand signals (no buyer identity)
-  - [ ] Implement matching logic between demand signals and supplier capabilities
-  - [ ] Add transaction fee tracking when agreements signed through platform
+  - [x] Build buyer-side UI for posting requirements (feedstock type, volume, quality, delivery window, price range)
+  - [x] Create grower-side UI showing aggregated demand signals (no buyer identity)
+  - [x] Implement matching logic between demand signals and supplier capabilities (automated match scoring)
+  - [x] Add tRPC router with response submission and status management
+  - [ ] Add transaction fee tracking when agreements signed through platform (infrastructure ready)
 
 - [ ] Implement Certificate Verification API
   - [ ] Create public API endpoint GET /api/verify/{certificate_hash}

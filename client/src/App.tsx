@@ -56,6 +56,9 @@ import AdminAssessorWorkflow from "@/pages/AdminAssessorWorkflow";
 import AdminUserManagement from "@/pages/AdminUserManagement";
 import MonitoringJobsScheduler from "./pages/MonitoringJobsScheduler";
 import ConcentrationAnalysis from "./pages/ConcentrationAnalysis";
+import CreateDemandSignal from "./pages/CreateDemandSignal";
+import BrowseDemandSignals from "./pages/BrowseDemandSignals";
+import DemandSignalDetail from "./pages/DemandSignalDetail";
 
 function Router() {
   return (
@@ -98,6 +101,9 @@ function Router() {
           <Route path="/admin/users" component={AdminUserManagement} />
       <Route path="/admin/monitoring-jobs" component={MonitoringJobsScheduler} />
       <Route path="/bankability/concentration/:projectId" component={ConcentrationAnalysis} />
+      <Route path="/demand-signals/create" component={CreateDemandSignal} />
+      <Route path="/demand-signals" component={BrowseDemandSignals} />
+      <Route path="/demand-signals/:id" component={DemandSignalDetail} />
       <Route path="/map" component={MapView} />
       <Route path="/feedstock-map" component={FeedstockMap} />
       <Route path="/producer-registration" component={ProducerRegistration} />
