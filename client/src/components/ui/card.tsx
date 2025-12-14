@@ -4,22 +4,26 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const cardVariants = cva(
-  "bg-card text-card-foreground flex flex-col rounded-xl border transition-all duration-200",
+  "bg-card text-card-foreground flex flex-col rounded-xl border",
   {
     variants: {
       variant: {
-        default: "shadow-sm",
-        elevated: "shadow-lg border-transparent",
-        outlined: "shadow-none border-2",
-        glass: "bg-card/80 backdrop-blur-md shadow-lg border-white/10",
+        default: "shadow-sm transition-shadow duration-200",
+        elevated: "shadow-lg border-transparent transition-shadow duration-200",
+        outlined: "shadow-none border-2 transition-colors duration-200",
+        glass: "bg-card/80 backdrop-blur-md shadow-lg border-white/10 transition-all duration-200",
+        premium: "shadow-md border-primary/10 bg-gradient-to-br from-card to-card/95 transition-all duration-200",
+        stats: "stats-card",
       },
       padding: {
         default: "gap-6 py-6",
         compact: "gap-4 py-4",
+        relaxed: "gap-8 py-8",
         none: "",
       },
       hover: {
-        true: "card-hover cursor-pointer",
+        true: "hover:shadow-lg hover:border-primary/20 hover:-translate-y-0.5 cursor-pointer transition-[transform,box-shadow,border-color] duration-150",
+        subtle: "hover:shadow-md hover:border-border/80 cursor-pointer transition-[box-shadow,border-color] duration-150",
         false: "",
       },
     },
@@ -115,6 +119,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
 
 /**
  * StatsCard - Specialized card for dashboard metrics
+ * Premium design with gradient accent on hover
  */
 export interface StatsCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
@@ -125,16 +130,26 @@ export interface StatsCardProps extends React.HTMLAttributes<HTMLDivElement> {
     value: number;
     direction: "up" | "down" | "neutral";
   };
-  variant?: "default" | "success" | "warning" | "info";
+  variant?: "default" | "success" | "warning" | "info" | "premium";
+  size?: "default" | "compact" | "large";
 }
 
 const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
-  ({ title, value, description, icon, trend, variant = "default", className, ...props }, ref) => {
+  ({ title, value, description, icon, trend, variant = "default", size = "default", className, ...props }, ref) => {
     const variantStyles = {
-      default: "border-border",
-      success: "border-success/30 bg-success/5",
-      warning: "border-warning/30 bg-warning/5",
-      info: "border-info/30 bg-info/5",
+      default: "border-border hover:border-primary/20",
+      success: "border-success/30 bg-success/5 hover:border-success/40",
+      warning: "border-warning/30 bg-warning/5 hover:border-warning/40",
+      info: "border-info/30 bg-info/5 hover:border-info/40",
+      premium: "border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 hover:border-primary/30",
+    };
+
+    const iconVariantStyles = {
+      default: "bg-primary/10 text-primary",
+      success: "bg-success/10 text-success",
+      warning: "bg-warning/10 text-warning",
+      info: "bg-info/10 text-info",
+      premium: "bg-gradient-to-br from-primary/20 to-primary/10 text-primary",
     };
 
     const trendColors = {
@@ -143,24 +158,53 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
       neutral: "text-muted-foreground",
     };
 
+    const trendArrows = {
+      up: "↑",
+      down: "↓",
+      neutral: "→",
+    };
+
+    const sizeStyles = {
+      compact: { card: "p-3", value: "text-xl", icon: "p-1.5" },
+      default: { card: "p-5", value: "text-2xl", icon: "p-2.5" },
+      large: { card: "p-6", value: "text-3xl", icon: "p-3" },
+    };
+
+    const sizes = sizeStyles[size];
+
     return (
       <Card
         ref={ref}
-        padding="compact"
-        className={cn(variantStyles[variant], className)}
+        padding="none"
+        hover="subtle"
+        className={cn(
+          "relative overflow-hidden transition-all duration-200",
+          variantStyles[variant],
+          className
+        )}
         {...props}
       >
-        <CardContent className="p-4">
-          <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-muted-foreground">{title}</p>
-              <div className="flex items-baseline gap-2">
-                <p className="metric-lg text-foreground">{value}</p>
+        {/* Gradient accent line on top */}
+        <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+
+        <CardContent className={sizes.card}>
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1.5 min-w-0 flex-1">
+              <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <p className={cn(
+                  "font-semibold text-foreground tracking-tight tabular-nums",
+                  sizes.value
+                )}>
+                  {value}
+                </p>
                 {trend && (
-                  <span className={cn("text-sm font-medium", trendColors[trend.direction])}>
-                    {trend.direction === "up" && "↑"}
-                    {trend.direction === "down" && "↓"}
-                    {trend.value}%
+                  <span className={cn(
+                    "inline-flex items-center gap-0.5 text-sm font-semibold tabular-nums",
+                    trendColors[trend.direction]
+                  )}>
+                    <span className="text-xs">{trendArrows[trend.direction]}</span>
+                    {Math.abs(trend.value)}%
                   </span>
                 )}
               </div>
@@ -169,7 +213,11 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
               )}
             </div>
             {icon && (
-              <div className="rounded-lg bg-primary/10 p-2.5 text-primary">
+              <div className={cn(
+                "rounded-lg shrink-0 transition-transform duration-200 hover:scale-105",
+                iconVariantStyles[variant],
+                sizes.icon
+              )}>
                 {icon}
               </div>
             )}

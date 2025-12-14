@@ -94,9 +94,11 @@ export default function BankabilityDashboard() {
               </p>
             </div>
           </div>
-          <Button rightIcon={<Plus className="h-4 w-4" />}>
-            New Project
-          </Button>
+          <Link href="/project-registration/flow">
+            <Button rightIcon={<Plus className="h-4 w-4" />}>
+              New Project
+            </Button>
+          </Link>
         </div>
 
         {projectsLoading ? (
@@ -269,9 +271,11 @@ export default function BankabilityDashboard() {
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                 Create your first bioenergy project to start managing supply agreements and tracking bankability
               </p>
-              <Button size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                Create Your First Project
-              </Button>
+              <Link href="/project-registration/flow">
+                <Button size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                  Create Your First Project
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         )}

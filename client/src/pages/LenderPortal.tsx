@@ -13,9 +13,8 @@ export default function LenderPortal() {
   const { user, loading: authLoading } = useAuth();
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
 
-  // In a real implementation, lenders would have access to specific projects
-  // For now, we'll show all projects (this should be filtered by lender permissions)
-  const { data: projects, isLoading: projectsLoading } = trpc.bankability.listProjects.useQuery();
+  // Get projects the lender has been granted access to
+  const { data: projects, isLoading: projectsLoading } = trpc.bankability.getMyLenderProjects.useQuery();
 
   if (authLoading || !user) {
     return (

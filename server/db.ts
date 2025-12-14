@@ -824,8 +824,48 @@ export async function getLenderAccessByProjectId(projectId: number) {
 export async function getLenderAccessByGrantedBy(userId: number) {
   const db = await getDb();
   if (!db) return [];
-  
+
   return await db.select().from(lenderAccess).where(eq(lenderAccess.grantedBy, userId));
+}
+
+export async function getLenderAccessByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const now = new Date();
+  return await db.select().from(lenderAccess)
+    .where(
+      and(
+        eq(lenderAccess.lenderEmail, email),
+        lte(lenderAccess.validFrom, now),
+        gte(lenderAccess.validUntil, now)
+      )
+    );
+}
+
+export async function getProjectsForLender(email: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const now = new Date();
+  // Get all active lender access records for this email
+  const accessRecords = await db.select().from(lenderAccess)
+    .where(
+      and(
+        eq(lenderAccess.lenderEmail, email),
+        lte(lenderAccess.validFrom, now),
+        gte(lenderAccess.validUntil, now)
+      )
+    );
+
+  if (accessRecords.length === 0) return [];
+
+  // Get projects for each access record
+  const projectIds = accessRecords.map(a => a.projectId);
+  const projectResults = await db.select().from(projects)
+    .where(inArray(projects.id, projectIds));
+
+  return projectResults;
 }
 
 export async function updateLenderAccess(id: number, updates: Partial<InsertLenderAccess>) {

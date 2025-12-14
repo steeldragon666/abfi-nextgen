@@ -1877,6 +1877,20 @@ export const appRouter = router({
         }
         return await db.getLenderAccessByProjectId(input.projectId);
       }),
+
+    // Get projects that the current user has lender access to (by email)
+    getMyLenderProjects: protectedProcedure
+      .query(async ({ ctx }) => {
+        // Get projects the current user has lender access to
+        const lenderProjects = await db.getProjectsForLender(ctx.user.email);
+        return lenderProjects;
+      }),
+
+    // Get lender access records for the current user
+    getMyLenderAccess: protectedProcedure
+      .query(async ({ ctx }) => {
+        return await db.getLenderAccessByEmail(ctx.user.email);
+      }),
     
     // Download Certificate
     downloadCertificate: protectedProcedure
