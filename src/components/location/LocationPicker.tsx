@@ -1,17 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Dialog,
@@ -24,10 +20,9 @@ import {
 import { MapPin, Search, Loader2, X, Navigation } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Set Mapbox access token from environment variable
-if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_MAPBOX_TOKEN) {
-  mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-}
+// Google Maps API Key
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ||
+  (typeof window !== "undefined" ? (window as any).VITE_GOOGLE_MAPS_API_KEY : "") || "";
 
 export interface LocationCoordinates {
   latitude: number;
@@ -38,7 +33,7 @@ export interface LocationCoordinates {
 interface LocationPickerProps {
   value?: LocationCoordinates | null;
   onChange?: (location: LocationCoordinates | null) => void;
-  defaultCenter?: [number, number]; // [lng, lat]
+  defaultCenter?: { lat: number; lng: number };
   defaultZoom?: number;
   placeholder?: string;
   label?: string;
@@ -49,8 +44,13 @@ interface LocationPickerProps {
 }
 
 // Australian center coordinates
-const AUSTRALIA_CENTER: [number, number] = [133.7751, -25.2744];
+const AUSTRALIA_CENTER = { lat: -25.2744, lng: 133.7751 };
 const DEFAULT_ZOOM = 4;
+
+const containerStyle = {
+  width: "100%",
+  height: "350px",
+};
 
 export function LocationPicker({
   value,
@@ -64,97 +64,73 @@ export function LocationPicker({
   required = false,
   disabled = false,
 }: LocationPickerProps) {
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: ["places"],
+  });
+
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<LocationCoordinates | null>(
     value || null
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<google.maps.places.AutocompletePrediction[]>([]);
 
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const marker = useRef<mapboxgl.Marker | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
+  const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
+  const placesService = useRef<google.maps.places.PlacesService | null>(null);
+  const geocoder = useRef<google.maps.Geocoder | null>(null);
 
-  // Initialize map
-  const initializeMap = useCallback(() => {
-    if (!mapContainer.current || map.current) return;
-
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v12",
-      center: selectedLocation
-        ? [selectedLocation.longitude, selectedLocation.latitude]
-        : defaultCenter,
-      zoom: selectedLocation ? 12 : defaultZoom,
-    });
-
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
-
-    // Add marker if location exists
-    if (selectedLocation) {
-      marker.current = new mapboxgl.Marker({ color: "#1B4332" })
-        .setLngLat([selectedLocation.longitude, selectedLocation.latitude])
-        .addTo(map.current);
-    }
-
-    // Handle map click
-    map.current.on("click", async (e) => {
-      const { lng, lat } = e.lngLat;
-
-      // Update marker
-      if (marker.current) {
-        marker.current.setLngLat([lng, lat]);
-      } else {
-        marker.current = new mapboxgl.Marker({ color: "#1B4332" })
-          .setLngLat([lng, lat])
-          .addTo(map.current!);
-      }
-
-      // Reverse geocode to get address
-      const address = await reverseGeocode(lat, lng);
-
-      setSelectedLocation({
-        latitude: lat,
-        longitude: lng,
-        address,
-      });
-    });
-  }, [defaultCenter, defaultZoom, selectedLocation]);
-
-  // Cleanup map on unmount
+  // Initialize services when loaded
   useEffect(() => {
-    return () => {
-      if (map.current) {
-        map.current.remove();
-        map.current = null;
-      }
-    };
+    if (isLoaded && typeof google !== "undefined") {
+      autocompleteService.current = new google.maps.places.AutocompleteService();
+      geocoder.current = new google.maps.Geocoder();
+    }
+  }, [isLoaded]);
+
+  // Map load callback
+  const onLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
+    if (typeof google !== "undefined") {
+      placesService.current = new google.maps.places.PlacesService(map);
+    }
   }, []);
 
-  // Initialize map when dialog opens
-  useEffect(() => {
-    if (isOpen) {
-      // Small delay to ensure DOM is ready
-      setTimeout(() => {
-        initializeMap();
-      }, 100);
-    }
-  }, [isOpen, initializeMap]);
+  const onUnmount = useCallback(() => {
+    mapRef.current = null;
+  }, []);
+
+  // Handle map click
+  const handleMapClick = async (e: google.maps.MapMouseEvent) => {
+    if (!e.latLng) return;
+
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+
+    // Reverse geocode to get address
+    const address = await reverseGeocode(lat, lng);
+
+    setSelectedLocation({
+      latitude: lat,
+      longitude: lng,
+      address,
+    });
+  };
 
   // Reverse geocode coordinates to address
   const reverseGeocode = async (lat: number, lng: number): Promise<string | undefined> => {
-    if (!process.env.NEXT_PUBLIC_MAPBOX_TOKEN) return undefined;
+    if (!geocoder.current) return undefined;
 
     try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&country=AU`
-      );
-      const data = await response.json();
+      const response = await geocoder.current.geocode({
+        location: { lat, lng },
+      });
 
-      if (data.features && data.features.length > 0) {
-        return data.features[0].place_name;
+      if (response.results && response.results.length > 0) {
+        return response.results[0].formatted_address;
       }
     } catch (error) {
       console.error("Reverse geocoding error:", error);
@@ -164,52 +140,58 @@ export function LocationPicker({
 
   // Search for locations
   const handleSearch = async () => {
-    if (!searchQuery.trim() || !process.env.NEXT_PUBLIC_MAPBOX_TOKEN) return;
+    if (!searchQuery.trim() || !autocompleteService.current) return;
 
     setIsSearching(true);
     try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          searchQuery
-        )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&country=AU&limit=5`
+      autocompleteService.current.getPlacePredictions(
+        {
+          input: searchQuery,
+          componentRestrictions: { country: "au" },
+        },
+        (predictions, status) => {
+          setIsSearching(false);
+          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+            setSearchResults(predictions);
+          } else {
+            setSearchResults([]);
+          }
+        }
       );
-      const data = await response.json();
-      setSearchResults(data.features || []);
     } catch (error) {
       console.error("Search error:", error);
       setSearchResults([]);
-    } finally {
       setIsSearching(false);
     }
   };
 
   // Select a search result
-  const selectSearchResult = (result: any) => {
-    const [lng, lat] = result.center;
+  const selectSearchResult = (result: google.maps.places.AutocompletePrediction) => {
+    if (!placesService.current) return;
 
-    if (map.current) {
-      map.current.flyTo({
-        center: [lng, lat],
-        zoom: 14,
-      });
-    }
+    placesService.current.getDetails(
+      { placeId: result.place_id },
+      (place, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && place?.geometry?.location) {
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
 
-    if (marker.current) {
-      marker.current.setLngLat([lng, lat]);
-    } else if (map.current) {
-      marker.current = new mapboxgl.Marker({ color: "#1B4332" })
-        .setLngLat([lng, lat])
-        .addTo(map.current);
-    }
+          if (mapRef.current) {
+            mapRef.current.panTo({ lat, lng });
+            mapRef.current.setZoom(14);
+          }
 
-    setSelectedLocation({
-      latitude: lat,
-      longitude: lng,
-      address: result.place_name,
-    });
+          setSelectedLocation({
+            latitude: lat,
+            longitude: lng,
+            address: place.formatted_address,
+          });
 
-    setSearchResults([]);
-    setSearchQuery("");
+          setSearchResults([]);
+          setSearchQuery("");
+        }
+      }
+    );
   };
 
   // Confirm selection
@@ -222,10 +204,6 @@ export function LocationPicker({
   const handleClear = () => {
     setSelectedLocation(null);
     onChange?.(null);
-    if (marker.current) {
-      marker.current.remove();
-      marker.current = null;
-    }
   };
 
   // Use current location
@@ -236,19 +214,9 @@ export function LocationPicker({
       async (position) => {
         const { latitude, longitude } = position.coords;
 
-        if (map.current) {
-          map.current.flyTo({
-            center: [longitude, latitude],
-            zoom: 14,
-          });
-        }
-
-        if (marker.current) {
-          marker.current.setLngLat([longitude, latitude]);
-        } else if (map.current) {
-          marker.current = new mapboxgl.Marker({ color: "#1B4332" })
-            .setLngLat([longitude, latitude])
-            .addTo(map.current);
+        if (mapRef.current) {
+          mapRef.current.panTo({ lat: latitude, lng: longitude });
+          mapRef.current.setZoom(14);
         }
 
         const address = await reverseGeocode(latitude, longitude);
@@ -337,15 +305,15 @@ export function LocationPicker({
               <Card>
                 <CardContent className="p-2">
                   <ul className="space-y-1">
-                    {searchResults.map((result, index) => (
-                      <li key={index}>
+                    {searchResults.map((result) => (
+                      <li key={result.place_id}>
                         <button
                           onClick={() => selectSearchResult(result)}
                           className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
                         >
                           <div className="flex items-start gap-2">
                             <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-muted-foreground" />
-                            <span className="line-clamp-2">{result.place_name}</span>
+                            <span className="line-clamp-2">{result.description}</span>
                           </div>
                         </button>
                       </li>
@@ -356,10 +324,40 @@ export function LocationPicker({
             )}
 
             {/* Map Container */}
-            <div
-              ref={mapContainer}
-              className="w-full h-[350px] rounded-lg border overflow-hidden"
-            />
+            {isLoaded ? (
+              <div className="rounded-lg border overflow-hidden">
+                <GoogleMap
+                  mapContainerStyle={containerStyle}
+                  center={
+                    selectedLocation
+                      ? { lat: selectedLocation.latitude, lng: selectedLocation.longitude }
+                      : defaultCenter
+                  }
+                  zoom={selectedLocation ? 12 : defaultZoom}
+                  onLoad={onLoad}
+                  onUnmount={onUnmount}
+                  onClick={handleMapClick}
+                  options={{
+                    streetViewControl: false,
+                    mapTypeControl: true,
+                    fullscreenControl: true,
+                  }}
+                >
+                  {selectedLocation && (
+                    <Marker
+                      position={{
+                        lat: selectedLocation.latitude,
+                        lng: selectedLocation.longitude,
+                      }}
+                    />
+                  )}
+                </GoogleMap>
+              </div>
+            ) : (
+              <div className="w-full h-[350px] rounded-lg border flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin" />
+              </div>
+            )}
 
             {/* Selected Location Info */}
             {selectedLocation && (
@@ -415,38 +413,44 @@ export function LocationDisplay({
   className,
   height = 200,
 }: LocationDisplayProps) {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+  });
 
-  useEffect(() => {
-    if (!mapContainer.current || map.current) return;
+  const containerStyle = {
+    width: "100%",
+    height: `${height}px`,
+  };
 
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v12",
-      center: [location.longitude, location.latitude],
-      zoom: 12,
-      interactive: false,
-    });
-
-    new mapboxgl.Marker({ color: "#1B4332" })
-      .setLngLat([location.longitude, location.latitude])
-      .addTo(map.current);
-
-    return () => {
-      if (map.current) {
-        map.current.remove();
-        map.current = null;
-      }
-    };
-  }, [location]);
+  if (!isLoaded) {
+    return (
+      <div
+        className={cn("rounded-lg border overflow-hidden flex items-center justify-center", className)}
+        style={{ height }}
+      >
+        <Loader2 className="h-6 w-6 animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <div
-      ref={mapContainer}
-      className={cn("rounded-lg border overflow-hidden", className)}
-      style={{ height }}
-    />
+    <div className={cn("rounded-lg border overflow-hidden", className)}>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={{ lat: location.latitude, lng: location.longitude }}
+        zoom={12}
+        options={{
+          disableDefaultUI: true,
+          draggable: false,
+          zoomControl: false,
+          scrollwheel: false,
+          disableDoubleClickZoom: true,
+        }}
+      >
+        <Marker position={{ lat: location.latitude, lng: location.longitude }} />
+      </GoogleMap>
+    </div>
   );
 }
 

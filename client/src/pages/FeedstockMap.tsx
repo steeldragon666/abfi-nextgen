@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+"use client";
+
+import { useEffect, useRef, useState, useCallback } from "react";
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow, Polygon, MarkerClusterer } from "@react-google-maps/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -9,34 +10,60 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Layers, Search, Download, Target, Save, Trash2, FolderOpen } from "lucide-react";
-import { createPopupHTML } from "@/lib/popupTemplates";
-import { buildLayerFilter } from "@/lib/mapFilters";
+import { Layers, Search, Download, Target, Save, Trash2, FolderOpen, Loader2 } from "lucide-react";
 import { analyzeRadius, type AnalysisResults } from "@/lib/radiusAnalysis";
 import { exportAsGeoJSON, exportAsCSV } from "@/lib/mapExport";
-import { exportAnalysisAsPDF, captureMapScreenshot } from "@/lib/pdfExport";
 import { trpc } from "@/lib/trpc";
 import { Textarea } from "@/components/ui/textarea";
 
-// Mapbox access token (using Manus proxy)
-mapboxgl.accessToken = "pk.eyJ1Ijoic3RlZWxkcmFnb242NjYiLCJhIjoiY21keGFwNmxjMmM1MjJscTM0NHMwMWo5aSJ9.3mvzNah-7rzwxCZ2L81-YA";
+// Google Maps API Key
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
+
+// Map container style
+const containerStyle = {
+  width: "100%",
+  height: "600px",
+};
+
+// Australia center
+const defaultCenter = {
+  lat: -25.2744,
+  lng: 133.7751,
+};
 
 interface LayerConfig {
   id: string;
   name: string;
-  type: "circle" | "fill" | "symbol";
+  type: "marker" | "polygon";
   source: string;
   color: string;
   visible: boolean;
 }
 
+interface GeoJSONFeature {
+  type: string;
+  geometry: {
+    type: string;
+    coordinates: number[] | number[][] | number[][][];
+  };
+  properties: Record<string, any>;
+}
+
+interface GeoJSONData {
+  type: string;
+  features: GeoJSONFeature[];
+}
+
 export default function FeedstockMap() {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+  });
+
+  const mapRef = useRef<google.maps.Map | null>(null);
   const [selectedStates, setSelectedStates] = useState<string[]>(["QLD", "NSW", "VIC", "SA", "WA", "TAS"]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [radiusCenter, setRadiusCenter] = useState<[number, number] | null>(null);
+  const [radiusCenter, setRadiusCenter] = useState<{ lat: number; lng: number } | null>(null);
   const [radiusKm, setRadiusKm] = useState(50);
   const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -44,7 +71,11 @@ export default function FeedstockMap() {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [savedAnalysisName, setSavedAnalysisName] = useState("");
   const [savedAnalysisDescription, setSavedAnalysisDescription] = useState("");
-  const [showSavedAnalyses, setShowSavedAnalyses] = useState(false);
+  const [selectedMarker, setSelectedMarker] = useState<GeoJSONFeature | null>(null);
+  const [radiusCircle, setRadiusCircle] = useState<google.maps.Circle | null>(null);
+
+  // GeoJSON data storage
+  const [layerData, setLayerData] = useState<Record<string, GeoJSONData>>({});
 
   // Fetch saved analyses
   const { data: savedAnalyses, refetch: refetchSavedAnalyses } = trpc.savedAnalyses.list.useQuery();
@@ -53,14 +84,14 @@ export default function FeedstockMap() {
       refetchSavedAnalyses();
     },
   });
-  
+
   const [layers, setLayers] = useState<LayerConfig[]>([
-    { id: "sugar-mills", name: "Sugar Mills", type: "circle", source: "/geojson/sugar_mills.json", color: "#8B4513", visible: true },
-    { id: "grain-regions", name: "Grain Regions", type: "fill", source: "/geojson/grain_regions.json", color: "#DAA520", visible: true },
-    { id: "forestry-regions", name: "Forestry Regions", type: "fill", source: "/geojson/forestry_regions.json", color: "#228B22", visible: false },
-    { id: "biogas-facilities", name: "Biogas Facilities", type: "circle", source: "/geojson/biogas_facilities.json", color: "#FF6347", visible: false },
-    { id: "biofuel-plants", name: "Biofuel Plants", type: "circle", source: "/geojson/biofuel_plants.json", color: "#4169E1", visible: false },
-    { id: "transport-ports", name: "Ports & Transport", type: "circle", source: "/geojson/transport_infrastructure.json", color: "#9370DB", visible: false },
+    { id: "sugar-mills", name: "Sugar Mills", type: "marker", source: "/geojson/sugar_mills.json", color: "#8B4513", visible: true },
+    { id: "grain-regions", name: "Grain Regions", type: "polygon", source: "/geojson/grain_regions.json", color: "#DAA520", visible: true },
+    { id: "forestry-regions", name: "Forestry Regions", type: "polygon", source: "/geojson/forestry_regions.json", color: "#228B22", visible: false },
+    { id: "biogas-facilities", name: "Biogas Facilities", type: "marker", source: "/geojson/biogas_facilities.json", color: "#FF6347", visible: false },
+    { id: "biofuel-plants", name: "Biofuel Plants", type: "marker", source: "/geojson/biofuel_plants.json", color: "#4169E1", visible: false },
+    { id: "transport-ports", name: "Ports & Transport", type: "marker", source: "/geojson/transport_infrastructure.json", color: "#9370DB", visible: false },
   ]);
 
   const [layerOpacity, setLayerOpacity] = useState<Record<string, number>>({
@@ -78,314 +109,183 @@ export default function FeedstockMap() {
   const [biofuelCapacity, setBiofuelCapacity] = useState<[number, number]>([0, 500]);
   const [portThroughput, setPortThroughput] = useState<[number, number]>([0, 200]);
 
-  // Apply filters when filter state changes
+  // Load GeoJSON data on mount
   useEffect(() => {
-    if (!map.current || !mapLoaded) return;
-
-    layers.forEach((layer) => {
-      const filter = buildLayerFilter(
-        layer.id,
-        selectedStates,
-        sugarMillCapacity,
-        biogasCapacity,
-        biofuelCapacity,
-        portThroughput
-      );
-
-      // Apply filter to main layer
-      if (map.current!.getLayer(layer.id)) {
-        map.current!.setFilter(layer.id, [...filter, ["!", ["has", "point_count"]]]);
+    const loadData = async () => {
+      const data: Record<string, GeoJSONData> = {};
+      for (const layer of layers) {
+        try {
+          const response = await fetch(layer.source);
+          const geojson = await response.json();
+          data[layer.id] = geojson;
+        } catch (error) {
+          console.error(`Failed to load ${layer.id}:`, error);
+        }
       }
-
-      // Apply filter to clusters (exclude the point_count filter)
-      if (map.current!.getLayer(`${layer.id}-clusters`)) {
-        map.current!.setFilter(`${layer.id}-clusters`, [["has", "point_count"]]);
-      }
-    });
-  }, [selectedStates, sugarMillCapacity, biogasCapacity, biofuelCapacity, portThroughput, mapLoaded, layers]);
-
-  // Initialize map
-  useEffect(() => {
-    if (!mapContainer.current || map.current) return;
-
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/light-v11",
-      center: [133.7751, -25.2744], // Australia center
-      zoom: 4,
-    });
-
-    map.current.on("load", () => {
-      setMapLoaded(true);
-      loadLayers();
-    });
-
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
-
-    // Add scale
-    map.current.addControl(new mapboxgl.ScaleControl(), "bottom-left");
-
-    return () => {
-      map.current?.remove();
+      setLayerData(data);
     };
+    loadData();
   }, []);
 
-  // Load GeoJSON layers
-  const loadLayers = async () => {
-    if (!map.current) return;
+  // Map load callback
+  const onLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
+  }, []);
 
-    for (const layer of layers) {
-      try {
-        const response = await fetch(layer.source);
-        const data = await response.json();
-
-        // Add source
-        map.current.addSource(layer.id, {
-          type: "geojson",
-          data: data,
-          cluster: layer.type === "circle",
-          clusterMaxZoom: 8,
-          clusterRadius: 50,
-        });
-
-        // Add layer based on type
-        if (layer.type === "circle") {
-          // Add clusters
-          map.current.addLayer({
-            id: `${layer.id}-clusters`,
-            type: "circle",
-            source: layer.id,
-            filter: ["has", "point_count"],
-            paint: {
-              "circle-color": [
-                "step",
-                ["get", "point_count"],
-                layer.color,
-                10,
-                "#f28cb1",
-                20,
-                "#f1f075",
-              ],
-              "circle-radius": ["step", ["get", "point_count"], 20, 10, 30, 20, 40],
-              "circle-opacity": layerOpacity[layer.id] / 100,
-            },
-          });
-
-          // Add cluster count
-          map.current.addLayer({
-            id: `${layer.id}-cluster-count`,
-            type: "symbol",
-            source: layer.id,
-            filter: ["has", "point_count"],
-            layout: {
-              "text-field": "{point_count_abbreviated}",
-              "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-              "text-size": 12,
-            },
-          });
-
-          // Add unclustered points
-          map.current.addLayer({
-            id: layer.id,
-            type: "circle",
-            source: layer.id,
-            filter: ["!", ["has", "point_count"]],
-            paint: {
-              "circle-color": layer.color,
-              "circle-radius": [
-                "interpolate",
-                ["linear"],
-                ["get", "crushing_capacity_tonnes"],
-                500000,
-                8,
-                4000000,
-                20,
-              ],
-              "circle-stroke-width": 2,
-              "circle-stroke-color": "#ffffff",
-              "circle-opacity": layerOpacity[layer.id] / 100,
-            },
-          });
-
-          // Add click handler for popups
-          map.current.on("click", layer.id, (e: mapboxgl.MapMouseEvent) => {
-            if (!e.features || e.features.length === 0) return;
-            const feature = e.features[0];
-            const props = feature.properties;
-
-            const html = createPopupHTML(layer.id, props);
-
-            new mapboxgl.Popup()
-              .setLngLat((e.lngLat as any))
-              .setHTML(html)
-              .addTo(map.current!);
-          });
-
-          // Change cursor on hover
-          map.current.on("mouseenter", layer.id, () => {
-            if (map.current) map.current.getCanvas().style.cursor = "pointer";
-          });
-          map.current.on("mouseleave", layer.id, () => {
-            if (map.current) map.current.getCanvas().style.cursor = "";
-          });
-        } else if (layer.type === "fill") {
-          // Add polygon fill
-          map.current.addLayer({
-            id: layer.id,
-            type: "fill",
-            source: layer.id,
-            paint: {
-              "fill-color": layer.color,
-              "fill-opacity": layerOpacity[layer.id] / 100,
-            },
-          });
-
-          // Add polygon outline
-          map.current.addLayer({
-            id: `${layer.id}-outline`,
-            type: "line",
-            source: layer.id,
-            paint: {
-              "line-color": layer.color,
-              "line-width": 2,
-            },
-          });
-
-          // Add click handler for popups
-          map.current.on("click", layer.id, (e: mapboxgl.MapMouseEvent) => {
-            if (!e.features || e.features.length === 0) return;
-            const feature = e.features[0];
-            const props = feature.properties;
-
-            const html = createPopupHTML(layer.id, props);
-
-            new mapboxgl.Popup()
-              .setLngLat((e.lngLat as any))
-              .setHTML(html)
-              .addTo(map.current!);
-          });
-
-          // Change cursor on hover
-          map.current.on("mouseenter", layer.id, () => {
-            if (map.current) map.current.getCanvas().style.cursor = "pointer";
-          });
-          map.current.on("mouseleave", layer.id, () => {
-            if (map.current) map.current.getCanvas().style.cursor = "";
-          });
-        }
-      } catch (error) {
-        console.error(`Failed to load layer ${layer.id}:`, error);
-      }
-    }
-  };
+  const onUnmount = useCallback(() => {
+    mapRef.current = null;
+  }, []);
 
   // Toggle layer visibility
   const toggleLayer = (layerId: string) => {
-    if (!map.current) return;
-
-    const layer = layers.find((l) => l.id === layerId);
-    if (!layer) return;
-
-    const newVisibility = !layer.visible;
-
-    // Update state
-    setLayers(layers.map((l) => (l.id === layerId ? { ...l, visible: newVisibility } : l)));
-
-    // Update map
-    const visibility = newVisibility ? "visible" : "none";
-    if (map.current.getLayer(layerId)) {
-      map.current.setLayoutProperty(layerId, "visibility", visibility);
-    }
-    if (map.current.getLayer(`${layerId}-clusters`)) {
-      map.current.setLayoutProperty(`${layerId}-clusters`, "visibility", visibility);
-    }
-    if (map.current.getLayer(`${layerId}-cluster-count`)) {
-      map.current.setLayoutProperty(`${layerId}-cluster-count`, "visibility", visibility);
-    }
-    if (map.current.getLayer(`${layerId}-outline`)) {
-      map.current.setLayoutProperty(`${layerId}-outline`, "visibility", visibility);
-    }
+    setLayers(layers.map((l) => (l.id === layerId ? { ...l, visible: !l.visible } : l)));
   };
 
   // Update layer opacity
   const updateOpacity = (layerId: string, opacity: number) => {
-    if (!map.current) return;
-
     setLayerOpacity({ ...layerOpacity, [layerId]: opacity });
+  };
 
-    const layer = layers.find((l) => l.id === layerId);
-    if (!layer) return;
+  // Filter features by state
+  const filterByState = (feature: GeoJSONFeature): boolean => {
+    const state = feature.properties?.state || feature.properties?.STATE;
+    if (!state) return true;
+    return selectedStates.includes(state);
+  };
 
-    if (layer.type === "circle") {
-      if (map.current.getLayer(layerId)) {
-        map.current.setPaintProperty(layerId, "circle-opacity", opacity / 100);
-      }
-      if (map.current.getLayer(`${layerId}-clusters`)) {
-        map.current.setPaintProperty(`${layerId}-clusters`, "circle-opacity", opacity / 100);
-      }
-    } else if (layer.type === "fill") {
-      if (map.current.getLayer(layerId)) {
-        map.current.setPaintProperty(layerId, "fill-opacity", opacity / 100);
-      }
+  // Get marker positions from GeoJSON
+  const getMarkerPositions = (layerId: string): { position: google.maps.LatLngLiteral; feature: GeoJSONFeature }[] => {
+    const data = layerData[layerId];
+    if (!data) return [];
+
+    return data.features
+      .filter(filterByState)
+      .filter((feature) => feature.geometry.type === "Point")
+      .map((feature) => ({
+        position: {
+          lat: (feature.geometry.coordinates as number[])[1],
+          lng: (feature.geometry.coordinates as number[])[0],
+        },
+        feature,
+      }));
+  };
+
+  // Get polygon paths from GeoJSON
+  const getPolygonPaths = (layerId: string): { paths: google.maps.LatLngLiteral[][]; feature: GeoJSONFeature }[] => {
+    const data = layerData[layerId];
+    if (!data) return [];
+
+    return data.features
+      .filter(filterByState)
+      .filter((feature) => feature.geometry.type === "Polygon" || feature.geometry.type === "MultiPolygon")
+      .map((feature) => {
+        let paths: google.maps.LatLngLiteral[][] = [];
+
+        if (feature.geometry.type === "Polygon") {
+          const coords = feature.geometry.coordinates as number[][][];
+          paths = coords.map((ring) =>
+            ring.map((coord) => ({ lat: coord[1], lng: coord[0] }))
+          );
+        } else if (feature.geometry.type === "MultiPolygon") {
+          const coords = feature.geometry.coordinates as number[][][][];
+          coords.forEach((polygon) => {
+            polygon.forEach((ring) => {
+              paths.push(ring.map((coord) => ({ lat: coord[1], lng: coord[0] })));
+            });
+          });
+        }
+
+        return { paths, feature };
+      });
+  };
+
+  // Create popup content
+  const createPopupContent = (layerId: string, properties: Record<string, any>): string => {
+    switch (layerId) {
+      case "sugar-mills":
+        return `
+          <div style="padding: 8px; max-width: 250px;">
+            <h3 style="margin: 0 0 8px; font-weight: bold;">${properties.name || "Sugar Mill"}</h3>
+            <p style="margin: 4px 0;"><strong>Owner:</strong> ${properties.owner || "N/A"}</p>
+            <p style="margin: 4px 0;"><strong>Capacity:</strong> ${(properties.crushing_capacity_tonnes || 0).toLocaleString()} tonnes</p>
+            <p style="margin: 4px 0;"><strong>State:</strong> ${properties.state || "N/A"}</p>
+            <p style="margin: 4px 0;"><strong>Bagasse Available:</strong> ${(properties.bagasse_tonnes_available || 0).toLocaleString()} tonnes</p>
+          </div>
+        `;
+      case "biogas-facilities":
+        return `
+          <div style="padding: 8px; max-width: 250px;">
+            <h3 style="margin: 0 0 8px; font-weight: bold;">${properties.name || "Biogas Facility"}</h3>
+            <p style="margin: 4px 0;"><strong>Capacity:</strong> ${properties.capacity_mw || "N/A"} MW</p>
+            <p style="margin: 4px 0;"><strong>Feedstock:</strong> ${properties.feedstock_type || "N/A"}</p>
+            <p style="margin: 4px 0;"><strong>State:</strong> ${properties.state || "N/A"}</p>
+          </div>
+        `;
+      case "biofuel-plants":
+        return `
+          <div style="padding: 8px; max-width: 250px;">
+            <h3 style="margin: 0 0 8px; font-weight: bold;">${properties.name || "Biofuel Plant"}</h3>
+            <p style="margin: 4px 0;"><strong>Type:</strong> ${properties.fuel_type || "N/A"}</p>
+            <p style="margin: 4px 0;"><strong>Capacity:</strong> ${properties.capacity_ml_year || "N/A"} ML/year</p>
+            <p style="margin: 4px 0;"><strong>State:</strong> ${properties.state || "N/A"}</p>
+          </div>
+        `;
+      case "transport-ports":
+        return `
+          <div style="padding: 8px; max-width: 250px;">
+            <h3 style="margin: 0 0 8px; font-weight: bold;">${properties.name || "Port"}</h3>
+            <p style="margin: 4px 0;"><strong>Type:</strong> ${properties.type || "N/A"}</p>
+            <p style="margin: 4px 0;"><strong>Throughput:</strong> ${properties.throughput_mt || "N/A"} MT/year</p>
+            <p style="margin: 4px 0;"><strong>State:</strong> ${properties.state || "N/A"}</p>
+          </div>
+        `;
+      case "grain-regions":
+      case "forestry-regions":
+        return `
+          <div style="padding: 8px; max-width: 250px;">
+            <h3 style="margin: 0 0 8px; font-weight: bold;">${properties.name || properties.REGION_NAME || "Region"}</h3>
+            <p style="margin: 4px 0;"><strong>State:</strong> ${properties.state || properties.STATE || "N/A"}</p>
+            <p style="margin: 4px 0;"><strong>Area:</strong> ${(properties.area_ha || properties.AREA_HA || 0).toLocaleString()} ha</p>
+          </div>
+        `;
+      default:
+        return `<div style="padding: 8px;">${JSON.stringify(properties, null, 2)}</div>`;
     }
   };
 
   // Draw radius and analyze
   const drawRadius = async () => {
-    if (!map.current) return;
+    if (!mapRef.current) return;
 
-    const center = map.current.getCenter();
-    setRadiusCenter([center.lng, center.lat]);
+    const center = mapRef.current.getCenter();
+    if (!center) return;
+
+    const centerPos = { lat: center.lat(), lng: center.lng() };
+    setRadiusCenter(centerPos);
     setIsAnalyzing(true);
 
-    // Remove existing radius if any
-    if (map.current.getLayer("radius-circle")) {
-      map.current.removeLayer("radius-circle");
-    }
-    if (map.current.getSource("radius-circle")) {
-      map.current.removeSource("radius-circle");
+    // Remove existing circle
+    if (radiusCircle) {
+      radiusCircle.setMap(null);
     }
 
-    // Create circle (convert km to degrees, approximate)
-    const radius = radiusKm / 111; // Convert km to degrees (approximate)
-    const points = 64;
-    const coordinates: [number, number][] = [];
-
-    for (let i = 0; i < points; i++) {
-      const angle = (i / points) * 2 * Math.PI;
-      const lng = center.lng + radius * Math.cos(angle);
-      const lat = center.lat + radius * Math.sin(angle);
-      coordinates.push([lng, lat]);
-    }
-    coordinates.push(coordinates[0]); // Close the circle
-
-    map.current.addSource("radius-circle", {
-      type: "geojson",
-      data: {
-        type: "Feature",
-        geometry: {
-          type: "Polygon",
-          coordinates: [coordinates],
-        },
-        properties: {},
-      },
+    // Create new circle
+    const circle = new google.maps.Circle({
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#FF0000",
+      fillOpacity: 0.1,
+      map: mapRef.current,
+      center: centerPos,
+      radius: radiusKm * 1000, // Convert km to meters
     });
 
-    map.current.addLayer({
-      id: "radius-circle",
-      type: "line",
-      source: "radius-circle",
-      paint: {
-        "line-color": "#FF0000",
-        "line-width": 2,
-        "line-dasharray": [2, 2],
-      },
-    });
+    setRadiusCircle(circle);
 
     // Run analysis
     try {
-      const results = await analyzeRadius(center.lat, center.lng, radiusKm);
+      const results = await analyzeRadius(centerPos.lat, centerPos.lng, radiusKm);
       setAnalysisResults(results);
     } catch (error) {
       console.error("Analysis failed:", error);
@@ -394,7 +294,17 @@ export default function FeedstockMap() {
     }
   };
 
-  // Export data handlers
+  // Clear radius
+  const clearRadius = () => {
+    if (radiusCircle) {
+      radiusCircle.setMap(null);
+      setRadiusCircle(null);
+    }
+    setRadiusCenter(null);
+    setAnalysisResults(null);
+  };
+
+  // Export handlers
   const handleExportGeoJSON = async () => {
     setIsExporting(true);
     try {
@@ -441,34 +351,6 @@ export default function FeedstockMap() {
     }
   };
 
-  // Export analysis as PDF
-  const handleExportPDF = async () => {
-    if (!analysisResults || !radiusCenter || !map.current) {
-      alert("Please run a radius analysis first before exporting PDF.");
-      return;
-    }
-
-    setIsExporting(true);
-    try {
-      // Capture map screenshot
-      const mapScreenshot = await captureMapScreenshot(map.current);
-
-      // Generate PDF
-      await exportAnalysisAsPDF({
-        analysisResults,
-        radiusKm,
-        centerCoords: radiusCenter,
-        mapScreenshot,
-        projectName: "Bioenergy Site Assessment",
-      });
-    } catch (error) {
-      console.error("PDF export failed:", error);
-      alert("PDF export failed. Please try again.");
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
   // Save analysis mutation
   const saveAnalysisMutation = trpc.savedAnalyses.save.useMutation({
     onSuccess: () => {
@@ -499,8 +381,8 @@ export default function FeedstockMap() {
       name: savedAnalysisName,
       description: savedAnalysisDescription || undefined,
       radiusKm,
-      centerLat: radiusCenter[1].toString(),
-      centerLng: radiusCenter[0].toString(),
+      centerLat: radiusCenter.lat.toString(),
+      centerLng: radiusCenter.lng.toString(),
       results: analysisResults,
       filterState: {
         selectedStates,
@@ -517,107 +399,79 @@ export default function FeedstockMap() {
 
   // Load saved analysis
   const handleLoadAnalysis = (analysis: any) => {
-    if (!map.current) return;
-
-    // Clear existing radius
     clearRadius();
 
-    // Parse coordinates
     const centerLat = parseFloat(analysis.centerLat);
     const centerLng = parseFloat(analysis.centerLng);
-    const center: [number, number] = [centerLng, centerLat];
 
-    // Set state
-    setRadiusCenter(center);
+    setRadiusCenter({ lat: centerLat, lng: centerLng });
     setRadiusKm(analysis.radiusKm);
     setAnalysisResults(analysis.results);
 
-    // Restore filter state if available
     if (analysis.filterState) {
       setSelectedStates(analysis.filterState.selectedStates);
-      
-      // Update layer visibility
-      setLayers(prev => prev.map(layer => ({
-        ...layer,
-        visible: analysis.filterState.visibleLayers.includes(layer.id)
-      })));
+      setLayers((prev) =>
+        prev.map((layer) => ({
+          ...layer,
+          visible: analysis.filterState.visibleLayers.includes(layer.id),
+        }))
+      );
 
-      // Restore capacity ranges
       const ranges = analysis.filterState.capacityRanges;
-      if (ranges['sugar-mills']) setSugarMillCapacity([ranges['sugar-mills'].min, ranges['sugar-mills'].max]);
-      if (ranges['biogas-facilities']) setBiogasCapacity([ranges['biogas-facilities'].min, ranges['biogas-facilities'].max]);
-      if (ranges['biofuel-plants']) setBiofuelCapacity([ranges['biofuel-plants'].min, ranges['biofuel-plants'].max]);
-      if (ranges['transport-infrastructure']) setPortThroughput([ranges['transport-infrastructure'].min, ranges['transport-infrastructure'].max]);
+      if (ranges["sugar-mills"]) setSugarMillCapacity([ranges["sugar-mills"].min, ranges["sugar-mills"].max]);
+      if (ranges["biogas-facilities"]) setBiogasCapacity([ranges["biogas-facilities"].min, ranges["biogas-facilities"].max]);
+      if (ranges["biofuel-plants"]) setBiofuelCapacity([ranges["biofuel-plants"].min, ranges["biofuel-plants"].max]);
+      if (ranges["transport-infrastructure"]) setPortThroughput([ranges["transport-infrastructure"].min, ranges["transport-infrastructure"].max]);
     }
 
-    // Center map on analysis location
-    map.current.flyTo({
-      center: center,
-      zoom: 9,
-      duration: 1500
-    });
+    // Pan to analysis location
+    if (mapRef.current) {
+      mapRef.current.panTo({ lat: centerLat, lng: centerLng });
+      mapRef.current.setZoom(9);
 
-    // Draw radius circle
-    setTimeout(() => {
-      if (!map.current) return;
-
-      const radiusInMeters = analysis.radiusKm * 1000;
-      const circleGeoJSON = {
-        type: "Feature" as const,
-        geometry: {
-          type: "Point" as const,
-          coordinates: center
-        },
-        properties: {}
-      };
-
-      if (map.current.getSource("radius-circle")) {
-        (map.current.getSource("radius-circle") as mapboxgl.GeoJSONSource).setData(circleGeoJSON);
-      } else {
-        map.current.addSource("radius-circle", {
-          type: "geojson",
-          data: circleGeoJSON
-        });
-
-        map.current.addLayer({
-          id: "radius-circle",
-          type: "circle",
-          source: "radius-circle",
-          paint: {
-            "circle-radius": {
-              stops: [
-                [0, 0],
-                [20, radiusInMeters * 0.075]
-              ],
-              base: 2
-            },
-            "circle-color": "#3b82f6",
-            "circle-opacity": 0.1,
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#3b82f6",
-            "circle-stroke-opacity": 0.8
-          }
-        });
-      }
-    }, 1600);
-
-    setShowSavedAnalyses(false);
+      // Draw circle
+      setTimeout(() => {
+        if (mapRef.current) {
+          const circle = new google.maps.Circle({
+            strokeColor: "#3b82f6",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#3b82f6",
+            fillOpacity: 0.1,
+            map: mapRef.current,
+            center: { lat: centerLat, lng: centerLng },
+            radius: analysis.radiusKm * 1000,
+          });
+          setRadiusCircle(circle);
+        }
+      }, 500);
+    }
   };
 
-  // Clear radius and analysis
-  const clearRadius = () => {
-    if (!map.current) return;
+  if (loadError) {
+    return (
+      <div className="container py-8">
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-destructive">Failed to load Google Maps. Please check your API key.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-    if (map.current.getLayer("radius-circle")) {
-      map.current.removeLayer("radius-circle");
-    }
-    if (map.current.getSource("radius-circle")) {
-      map.current.removeSource("radius-circle");
-    }
-
-    setRadiusCenter(null);
-    setAnalysisResults(null);
-  };
+  if (!isLoaded) {
+    return (
+      <div className="container py-8">
+        <Card>
+          <CardContent className="py-12 text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p>Loading map...</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-8">
@@ -633,7 +487,88 @@ export default function FeedstockMap() {
         <div className="md:col-span-3">
           <Card>
             <CardContent className="p-0">
-              <div ref={mapContainer} className="w-full h-[600px] rounded-lg" />
+              <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={defaultCenter}
+                zoom={4}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
+                options={{
+                  mapTypeControl: true,
+                  streetViewControl: false,
+                  fullscreenControl: true,
+                }}
+              >
+                {/* Render polygon layers */}
+                {layers
+                  .filter((l) => l.visible && l.type === "polygon")
+                  .map((layer) =>
+                    getPolygonPaths(layer.id).map((item, idx) => (
+                      <Polygon
+                        key={`${layer.id}-${idx}`}
+                        paths={item.paths}
+                        options={{
+                          fillColor: layer.color,
+                          fillOpacity: (layerOpacity[layer.id] || 100) / 100 * 0.3,
+                          strokeColor: layer.color,
+                          strokeOpacity: 0.8,
+                          strokeWeight: 2,
+                        }}
+                        onClick={() => setSelectedMarker(item.feature)}
+                      />
+                    ))
+                  )}
+
+                {/* Render marker layers with clustering */}
+                {layers
+                  .filter((l) => l.visible && l.type === "marker")
+                  .map((layer) => (
+                    <MarkerClusterer key={layer.id}>
+                      {(clusterer) =>
+                        getMarkerPositions(layer.id).map((item, idx) => (
+                          <Marker
+                            key={`${layer.id}-${idx}`}
+                            position={item.position}
+                            clusterer={clusterer}
+                            icon={{
+                              path: google.maps.SymbolPath.CIRCLE,
+                              fillColor: layer.color,
+                              fillOpacity: (layerOpacity[layer.id] || 100) / 100,
+                              strokeColor: "#ffffff",
+                              strokeWeight: 2,
+                              scale: 8,
+                            }}
+                            onClick={() => setSelectedMarker(item.feature)}
+                          />
+                        )) as any
+                      }
+                    </MarkerClusterer>
+                  ))}
+
+                {/* Info Window */}
+                {selectedMarker && (
+                  <InfoWindow
+                    position={
+                      selectedMarker.geometry.type === "Point"
+                        ? {
+                            lat: (selectedMarker.geometry.coordinates as number[])[1],
+                            lng: (selectedMarker.geometry.coordinates as number[])[0],
+                          }
+                        : undefined
+                    }
+                    onCloseClick={() => setSelectedMarker(null)}
+                  >
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: createPopupContent(
+                          layers.find((l) => l.visible)?.id || "",
+                          selectedMarker.properties
+                        ),
+                      }}
+                    />
+                  </InfoWindow>
+                )}
+              </GoogleMap>
             </CardContent>
           </Card>
 
@@ -672,10 +607,6 @@ export default function FeedstockMap() {
                 Clear Radius
               </Button>
             )}
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export GeoJSON
-            </Button>
           </div>
 
           {/* Analysis Results */}
@@ -683,9 +614,7 @@ export default function FeedstockMap() {
             <Card className="mt-4">
               <CardHeader>
                 <CardTitle>{radiusKm}km Radius Analysis</CardTitle>
-                <CardDescription>
-                  Supply chain feasibility assessment for selected area
-                </CardDescription>
+                <CardDescription>Supply chain feasibility assessment for selected area</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Feasibility Score */}
@@ -693,7 +622,13 @@ export default function FeedstockMap() {
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-medium">Feasibility Score</span>
                     <Badge
-                      variant={analysisResults.feasibilityScore >= 70 ? "default" : analysisResults.feasibilityScore >= 40 ? "secondary" : "destructive"}
+                      variant={
+                        analysisResults.feasibilityScore >= 70
+                          ? "default"
+                          : analysisResults.feasibilityScore >= 40
+                          ? "secondary"
+                          : "destructive"
+                      }
                     >
                       {analysisResults.feasibilityScore}/100
                     </Badge>
@@ -726,10 +661,6 @@ export default function FeedstockMap() {
                       <span className="text-muted-foreground">Ports:</span>
                       <span className="font-medium">{analysisResults.facilities.ports}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Grain Hubs:</span>
-                      <span className="font-medium">{analysisResults.facilities.grainHubs}</span>
-                    </div>
                   </div>
                 </div>
 
@@ -745,14 +676,6 @@ export default function FeedstockMap() {
                       <span className="text-muted-foreground">Grain Stubble:</span>
                       <span className="font-medium">{analysisResults.feedstockTonnes.grainStubble.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Forestry Residue:</span>
-                      <span className="font-medium">{analysisResults.feedstockTonnes.forestryResidue.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Biogas:</span>
-                      <span className="font-medium">{analysisResults.feedstockTonnes.biogas.toLocaleString()}</span>
-                    </div>
                     <div className="flex justify-between text-sm font-bold pt-2 border-t">
                       <span>Total:</span>
                       <span>{analysisResults.feedstockTonnes.total.toLocaleString()}</span>
@@ -760,67 +683,11 @@ export default function FeedstockMap() {
                   </div>
                 </div>
 
-                {/* Infrastructure */}
-                {(analysisResults.infrastructure.ports.length > 0 || analysisResults.infrastructure.railLines.length > 0) && (
-                  <div>
-                    <h4 className="text-sm font-medium mb-3">Transport Infrastructure</h4>
-                    {analysisResults.infrastructure.ports.length > 0 && (
-                      <div className="mb-2">
-                        <span className="text-xs text-muted-foreground">Ports:</span>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {analysisResults.infrastructure.ports.map((port) => (
-                            <Badge key={port} variant="outline" className="text-xs">{port}</Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {analysisResults.infrastructure.railLines.length > 0 && (
-                      <div>
-                        <span className="text-xs text-muted-foreground">Rail Lines:</span>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {analysisResults.infrastructure.railLines.map((rail) => (
-                            <Badge key={rail} variant="outline" className="text-xs">{rail}</Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Recommendations */}
-                {analysisResults.recommendations.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium mb-2">Recommendations</h4>
-                    <ul className="space-y-1">
-                      {analysisResults.recommendations.map((rec, idx) => (
-                        <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                          <span className="text-primary mt-0.5">•</span>
-                          <span>{rec}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
                 {/* Action Buttons */}
                 <div className="pt-4 border-t space-y-2">
-                  <Button
-                    onClick={() => setShowSaveDialog(true)}
-                    disabled={isExporting}
-                    className="w-full"
-                    variant="outline"
-                  >
-                    <Target className="h-4 w-4 mr-2" />
+                  <Button onClick={() => setShowSaveDialog(true)} className="w-full" variant="outline">
+                    <Save className="h-4 w-4 mr-2" />
                     Save Analysis
-                  </Button>
-                  <Button
-                    onClick={handleExportPDF}
-                    disabled={isExporting}
-                    className="w-full"
-                    variant="default"
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    {isExporting ? "Generating PDF..." : "Download Report (PDF)"}
                   </Button>
                 </div>
               </CardContent>
@@ -850,29 +717,8 @@ export default function FeedstockMap() {
           {/* Filters */}
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    Filters
-                    {(() => {
-                      const activeFilters = [
-                        selectedStates.length < 6, // Not all states selected
-                        sugarMillCapacity[0] > 0 || sugarMillCapacity[1] < 4000000,
-                        biogasCapacity[0] > 0 || biogasCapacity[1] < 50,
-                        biofuelCapacity[0] > 0 || biofuelCapacity[1] < 500,
-                        portThroughput[0] > 0 || portThroughput[1] < 200,
-                      ].filter(Boolean).length;
-                      
-                      return activeFilters > 0 ? (
-                        <Badge variant="secondary" className="ml-2">
-                          {activeFilters}
-                        </Badge>
-                      ) : null;
-                    })()}
-                  </CardTitle>
-                  <CardDescription>Refine by location and capacity</CardDescription>
-                </div>
-              </div>
+              <CardTitle className="text-lg">Filters</CardTitle>
+              <CardDescription>Refine by location and capacity</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* State Filter */}
@@ -897,78 +743,6 @@ export default function FeedstockMap() {
                 </div>
               </div>
 
-              {/* Sugar Mill Capacity */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <Label>Sugar Mill Capacity</Label>
-                  <span className="text-xs text-muted-foreground">
-                    {(sugarMillCapacity[0] / 1000).toFixed(0)}-{(sugarMillCapacity[1] / 1000).toFixed(0)}k t
-                  </span>
-                </div>
-                <Slider
-                  value={sugarMillCapacity}
-                  onValueChange={(value) => setSugarMillCapacity(value as [number, number])}
-                  min={0}
-                  max={4000000}
-                  step={100000}
-                  className="w-full"
-                />
-              </div>
-
-              {/* Biogas Capacity */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <Label>Biogas Capacity (MW)</Label>
-                  <span className="text-xs text-muted-foreground">
-                    {biogasCapacity[0]}-{biogasCapacity[1]} MW
-                  </span>
-                </div>
-                <Slider
-                  value={biogasCapacity}
-                  onValueChange={(value) => setBiogasCapacity(value as [number, number])}
-                  min={0}
-                  max={50}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
-
-              {/* Biofuel Capacity */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <Label>Biofuel Capacity (ML/yr)</Label>
-                  <span className="text-xs text-muted-foreground">
-                    {biofuelCapacity[0]}-{biofuelCapacity[1]} ML/yr
-                  </span>
-                </div>
-                <Slider
-                  value={biofuelCapacity}
-                  onValueChange={(value) => setBiofuelCapacity(value as [number, number])}
-                  min={0}
-                  max={500}
-                  step={10}
-                  className="w-full"
-                />
-              </div>
-
-              {/* Port Throughput */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <Label>Port Throughput (MT/yr)</Label>
-                  <span className="text-xs text-muted-foreground">
-                    {portThroughput[0]}-{portThroughput[1]} MT
-                  </span>
-                </div>
-                <Slider
-                  value={portThroughput}
-                  onValueChange={(value) => setPortThroughput(value as [number, number])}
-                  min={0}
-                  max={200}
-                  step={5}
-                  className="w-full"
-                />
-              </div>
-
               {/* Reset Button */}
               <Button
                 variant="outline"
@@ -986,7 +760,7 @@ export default function FeedstockMap() {
               </Button>
             </CardContent>
           </Card>
-          
+
           {/* Saved Analyses */}
           <Card>
             <CardHeader>
@@ -994,43 +768,28 @@ export default function FeedstockMap() {
                 <FolderOpen className="h-5 w-5" />
                 Saved Analyses
               </CardTitle>
-              <CardDescription>
-                {savedAnalyses?.length || 0} saved analysis
-              </CardDescription>
+              <CardDescription>{savedAnalyses?.length || 0} saved</CardDescription>
             </CardHeader>
             <CardContent>
               {savedAnalyses && savedAnalyses.length > 0 ? (
                 <div className="space-y-2 max-h-64 overflow-y-auto">
                   {savedAnalyses.map((analysis: any) => (
-                    <div
-                      key={analysis.id}
-                      className="border rounded-lg p-3 hover:bg-accent/50 transition-colors"
-                    >
+                    <div key={analysis.id} className="border rounded-lg p-3 hover:bg-accent/50 transition-colors">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-sm truncate">{analysis.name}</div>
-                          {analysis.description && (
-                            <div className="text-xs text-muted-foreground truncate">
-                              {analysis.description}
-                            </div>
-                          )}
                           <div className="text-xs text-muted-foreground mt-1">
-                            {analysis.radiusKm}km radius • {new Date(analysis.createdAt).toLocaleDateString()}
+                            {analysis.radiusKm}km radius
                           </div>
                         </div>
                         <div className="flex gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 w-7 p-0"
-                            onClick={() => handleLoadAnalysis(analysis)}
-                          >
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => handleLoadAnalysis(analysis)}>
                             <Target className="h-3.5 w-3.5" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                            className="h-7 w-7 p-0 text-destructive"
                             onClick={() => deleteAnalysisMutation.mutate({ id: analysis.id })}
                           >
                             <Trash2 className="h-3.5 w-3.5" />
@@ -1043,8 +802,6 @@ export default function FeedstockMap() {
               ) : (
                 <div className="text-center py-6 text-sm text-muted-foreground">
                   No saved analyses yet.
-                  <br />
-                  Run a radius analysis and save it.
                 </div>
               )}
             </CardContent>
@@ -1064,16 +821,10 @@ export default function FeedstockMap() {
                 <div key={layer.id} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Checkbox
-                        checked={layer.visible}
-                        onCheckedChange={() => toggleLayer(layer.id)}
-                      />
+                      <Checkbox checked={layer.visible} onCheckedChange={() => toggleLayer(layer.id)} />
                       <Label className="text-sm font-medium">{layer.name}</Label>
                     </div>
-                    <div
-                      className="w-4 h-4 rounded-full border"
-                      style={{ backgroundColor: layer.color }}
-                    />
+                    <div className="w-4 h-4 rounded-full border" style={{ backgroundColor: layer.color }} />
                   </div>
                   {layer.visible && (
                     <div className="ml-6 space-y-1">
@@ -1105,27 +856,14 @@ export default function FeedstockMap() {
               <CardDescription>Download filtered facilities</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button
-                onClick={handleExportGeoJSON}
-                disabled={isExporting}
-                variant="outline"
-                className="w-full justify-start"
-              >
+              <Button onClick={handleExportGeoJSON} disabled={isExporting} variant="outline" className="w-full justify-start">
                 <Download className="h-4 w-4 mr-2" />
                 {isExporting ? "Exporting..." : "Export as GeoJSON"}
               </Button>
-              <Button
-                onClick={handleExportCSV}
-                disabled={isExporting}
-                variant="outline"
-                className="w-full justify-start"
-              >
+              <Button onClick={handleExportCSV} disabled={isExporting} variant="outline" className="w-full justify-start">
                 <Download className="h-4 w-4 mr-2" />
                 {isExporting ? "Exporting..." : "Export as CSV"}
               </Button>
-              <p className="text-xs text-muted-foreground mt-2">
-                Exports currently visible facilities based on active filters and layer toggles.
-              </p>
             </CardContent>
           </Card>
 
@@ -1137,7 +875,7 @@ export default function FeedstockMap() {
             <CardContent className="space-y-2">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#8B4513" }} />
-                <span className="text-sm">Sugar Mills (size = capacity)</span>
+                <span className="text-sm">Sugar Mills</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4" style={{ backgroundColor: "#DAA520", opacity: 0.3 }} />
@@ -1145,21 +883,6 @@ export default function FeedstockMap() {
               </div>
             </CardContent>
           </Card>
-
-          {/* Stats */}
-          {radiusCenter && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">50km Radius Analysis</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Center: {radiusCenter[1].toFixed(2)}°, {radiusCenter[0].toFixed(2)}°
-                </p>
-                <Badge>Analysis feature coming soon</Badge>
-              </CardContent>
-            </Card>
-          )}
         </div>
       </div>
 
@@ -1168,11 +891,9 @@ export default function FeedstockMap() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Save Radius Analysis</DialogTitle>
-            <DialogDescription>
-              Save this analysis to your account for future reference and comparison.
-            </DialogDescription>
+            <DialogDescription>Save this analysis to your account for future reference.</DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4 py-4">
             <div>
               <Label htmlFor="analysis-name">Analysis Name *</Label>
@@ -1184,7 +905,7 @@ export default function FeedstockMap() {
                 className="mt-1"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="analysis-description">Description (Optional)</Label>
               <Textarea
@@ -1196,35 +917,13 @@ export default function FeedstockMap() {
                 rows={3}
               />
             </div>
-
-            {analysisResults && (
-              <div className="bg-muted p-3 rounded-md text-sm">
-                <p className="font-medium mb-1">Analysis Summary:</p>
-                <ul className="space-y-1 text-muted-foreground">
-                  <li>• Radius: {radiusKm} km</li>
-                  <li>• Feasibility Score: {analysisResults.feasibilityScore}/100</li>
-                  <li>• Total Feedstock: {analysisResults.feedstockTonnes.total.toLocaleString()} tonnes/year</li>
-                  <li>• Facilities: {Object.values(analysisResults.facilities).reduce((a, b) => a + b, 0)} total</li>
-                </ul>
-              </div>
-            )}
           </div>
 
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowSaveDialog(false);
-                setSavedAnalysisName("");
-                setSavedAnalysisDescription("");
-              }}
-            >
+            <Button variant="outline" onClick={() => setShowSaveDialog(false)}>
               Cancel
             </Button>
-            <Button
-              onClick={handleSaveAnalysis}
-              disabled={saveAnalysisMutation.isPending || !savedAnalysisName.trim()}
-            >
+            <Button onClick={handleSaveAnalysis} disabled={saveAnalysisMutation.isPending || !savedAnalysisName.trim()}>
               {saveAnalysisMutation.isPending ? "Saving..." : "Save Analysis"}
             </Button>
           </DialogFooter>

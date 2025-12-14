@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import {
   Card,
   CardContent,
@@ -24,7 +23,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import {
@@ -42,10 +40,8 @@ import {
 import { cn } from "@/lib/utils";
 import type { Buyer } from "@/types/database";
 
-// Set Mapbox access token
-if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_MAPBOX_TOKEN) {
-  mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-}
+// Google Maps API Key
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
 interface FacilitiesFormProps {
   buyer: Buyer | null;
@@ -53,7 +49,12 @@ interface FacilitiesFormProps {
 
 const STATES = ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "NT", "ACT"];
 
-const AUSTRALIA_CENTER: [number, number] = [133.7751, -25.2744];
+const AUSTRALIA_CENTER = { lat: -25.2744, lng: 133.7751 };
+
+const containerStyle = {
+  width: "100%",
+  height: "400px",
+};
 
 interface FacilityData {
   facility_name: string;
@@ -73,11 +74,18 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
   const [saving, setSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<google.maps.places.AutocompletePrediction[]>([]);
 
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const marker = useRef<mapboxgl.Marker | null>(null);
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: ["places"],
+  });
+
+  const mapRef = useRef<google.maps.Map | null>(null);
+  const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
+  const placesService = useRef<google.maps.places.PlacesService | null>(null);
+  const geocoder = useRef<google.maps.Geocoder | null>(null);
 
   // Parse existing facility data from buyer
   const [formData, setFormData] = useState<FacilityData>(() => {
@@ -107,6 +115,14 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
     };
   });
 
+  // Initialize Google services when loaded
+  useEffect(() => {
+    if (isLoaded && typeof google !== "undefined") {
+      autocompleteService.current = new google.maps.places.AutocompleteService();
+      geocoder.current = new google.maps.Geocoder();
+    }
+  }, [isLoaded]);
+
   const updateField = <K extends keyof FacilityData>(
     field: K,
     value: FacilityData[K]
@@ -114,58 +130,19 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Initialize map
-  useEffect(() => {
-    if (!mapContainer.current || map.current) return;
-
-    const initialCenter: [number, number] =
-      formData.facility_latitude && formData.facility_longitude
-        ? [formData.facility_longitude, formData.facility_latitude]
-        : AUSTRALIA_CENTER;
-
-    const initialZoom =
-      formData.facility_latitude && formData.facility_longitude ? 14 : 4;
-
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v12",
-      center: initialCenter,
-      zoom: initialZoom,
-    });
-
-    map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
-
-    // Add marker if location exists
-    if (formData.facility_latitude && formData.facility_longitude) {
-      marker.current = new mapboxgl.Marker({ color: "#1B4332" })
-        .setLngLat([formData.facility_longitude, formData.facility_latitude])
-        .addTo(map.current);
+  // Map load callback
+  const onLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
+    if (typeof google !== "undefined") {
+      placesService.current = new google.maps.places.PlacesService(map);
     }
+  }, []);
 
-    // Handle map click
-    map.current.on("click", async (e) => {
-      const { lng, lat } = e.lngLat;
-      handleLocationSelect(lat, lng);
-    });
-
-    return () => {
-      if (map.current) {
-        map.current.remove();
-        map.current = null;
-      }
-    };
+  const onUnmount = useCallback(() => {
+    mapRef.current = null;
   }, []);
 
   const handleLocationSelect = async (lat: number, lng: number) => {
-    // Update marker
-    if (marker.current) {
-      marker.current.setLngLat([lng, lat]);
-    } else if (map.current) {
-      marker.current = new mapboxgl.Marker({ color: "#1B4332" })
-        .setLngLat([lng, lat])
-        .addTo(map.current);
-    }
-
     // Update form data
     setFormData((prev) => ({
       ...prev,
@@ -177,47 +154,70 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
     await reverseGeocode(lat, lng);
   };
 
+  // Handle map click
+  const handleMapClick = async (e: google.maps.MapMouseEvent) => {
+    if (!e.latLng) return;
+
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+
+    handleLocationSelect(lat, lng);
+  };
+
   const reverseGeocode = async (lat: number, lng: number) => {
-    if (!process.env.NEXT_PUBLIC_MAPBOX_TOKEN) return;
+    if (!geocoder.current) return;
 
     try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&country=AU&types=address,locality,place`
-      );
-      const data = await response.json();
+      const response = await geocoder.current.geocode({
+        location: { lat, lng },
+      });
 
-      if (data.features && data.features.length > 0) {
-        const feature = data.features[0];
-        const context = feature.context || [];
+      if (response.results && response.results.length > 0) {
+        const result = response.results[0];
+        const components = result.address_components;
 
-        // Parse address components
+        let streetNumber = "";
+        let route = "";
         let city = "";
         let state = "";
         let postcode = "";
 
-        for (const item of context) {
-          if (item.id.startsWith("place")) city = item.text;
-          if (item.id.startsWith("locality") && !city) city = item.text;
-          if (item.id.startsWith("region")) {
-            // Convert full state name to abbreviation
-            const stateMap: Record<string, string> = {
-              "New South Wales": "NSW",
-              "Victoria": "VIC",
-              "Queensland": "QLD",
-              "Western Australia": "WA",
-              "South Australia": "SA",
-              "Tasmania": "TAS",
-              "Northern Territory": "NT",
-              "Australian Capital Territory": "ACT",
-            };
-            state = stateMap[item.text] || item.text;
+        // State abbreviation mapping
+        const stateMap: Record<string, string> = {
+          "New South Wales": "NSW",
+          "Victoria": "VIC",
+          "Queensland": "QLD",
+          "Western Australia": "WA",
+          "South Australia": "SA",
+          "Tasmania": "TAS",
+          "Northern Territory": "NT",
+          "Australian Capital Territory": "ACT",
+        };
+
+        for (const component of components) {
+          const types = component.types;
+          if (types.includes("street_number")) {
+            streetNumber = component.long_name;
           }
-          if (item.id.startsWith("postcode")) postcode = item.text;
+          if (types.includes("route")) {
+            route = component.long_name;
+          }
+          if (types.includes("locality")) {
+            city = component.long_name;
+          }
+          if (types.includes("administrative_area_level_1")) {
+            state = stateMap[component.long_name] || component.short_name;
+          }
+          if (types.includes("postal_code")) {
+            postcode = component.long_name;
+          }
         }
+
+        const address = streetNumber && route ? `${streetNumber} ${route}` : route || "";
 
         setFormData((prev) => ({
           ...prev,
-          facility_address: feature.place_name?.split(",")[0] || prev.facility_address,
+          facility_address: address || prev.facility_address,
           facility_city: city || prev.facility_city,
           facility_state: state || prev.facility_state,
           facility_postcode: postcode || prev.facility_postcode,
@@ -229,38 +229,53 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
   };
 
   const handleSearch = async () => {
-    if (!searchQuery.trim() || !process.env.NEXT_PUBLIC_MAPBOX_TOKEN) return;
+    if (!searchQuery.trim() || !autocompleteService.current) return;
 
     setIsSearching(true);
     try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          searchQuery
-        )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&country=AU&limit=5`
+      autocompleteService.current.getPlacePredictions(
+        {
+          input: searchQuery,
+          componentRestrictions: { country: "au" },
+        },
+        (predictions, status) => {
+          setIsSearching(false);
+          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+            setSearchResults(predictions);
+          } else {
+            setSearchResults([]);
+          }
+        }
       );
-      const data = await response.json();
-      setSearchResults(data.features || []);
     } catch (error) {
       console.error("Search error:", error);
       setSearchResults([]);
-    } finally {
       setIsSearching(false);
     }
   };
 
-  const selectSearchResult = (result: any) => {
-    const [lng, lat] = result.center;
+  const selectSearchResult = (result: google.maps.places.AutocompletePrediction) => {
+    if (!placesService.current) return;
 
-    if (map.current) {
-      map.current.flyTo({
-        center: [lng, lat],
-        zoom: 14,
-      });
-    }
+    placesService.current.getDetails(
+      { placeId: result.place_id },
+      (place, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && place?.geometry?.location) {
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
 
-    handleLocationSelect(lat, lng);
-    setSearchResults([]);
-    setSearchQuery("");
+          if (mapRef.current) {
+            mapRef.current.panTo({ lat, lng });
+            mapRef.current.setZoom(14);
+          }
+
+          handleLocationSelect(lat, lng);
+
+          setSearchResults([]);
+          setSearchQuery("");
+        }
+      }
+    );
   };
 
   const handleUseCurrentLocation = () => {
@@ -273,11 +288,9 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
       (position) => {
         const { latitude, longitude } = position.coords;
 
-        if (map.current) {
-          map.current.flyTo({
-            center: [longitude, latitude],
-            zoom: 14,
-          });
+        if (mapRef.current) {
+          mapRef.current.panTo({ lat: latitude, lng: longitude });
+          mapRef.current.setZoom(14);
         }
 
         handleLocationSelect(latitude, longitude);
@@ -296,16 +309,9 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
       facility_longitude: null,
     }));
 
-    if (marker.current) {
-      marker.current.remove();
-      marker.current = null;
-    }
-
-    if (map.current) {
-      map.current.flyTo({
-        center: AUSTRALIA_CENTER,
-        zoom: 4,
-      });
+    if (mapRef.current) {
+      mapRef.current.panTo(AUSTRALIA_CENTER);
+      mapRef.current.setZoom(4);
     }
   };
 
@@ -428,8 +434,8 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
             <Card className="border-2">
               <CardContent className="p-2">
                 <ul className="space-y-1">
-                  {searchResults.map((result, index) => (
-                    <li key={index}>
+                  {searchResults.map((result) => (
+                    <li key={result.place_id}>
                       <button
                         onClick={() => selectSearchResult(result)}
                         className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
@@ -437,7 +443,7 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
                         <div className="flex items-start gap-2">
                           <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-muted-foreground" />
                           <span className="line-clamp-2">
-                            {result.place_name}
+                            {result.description}
                           </span>
                         </div>
                       </button>
@@ -449,10 +455,40 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
           )}
 
           {/* Map Container */}
-          <div
-            ref={mapContainer}
-            className="w-full h-[400px] rounded-lg border overflow-hidden"
-          />
+          {isLoaded ? (
+            <div className="rounded-lg border overflow-hidden">
+              <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={
+                  hasLocation
+                    ? { lat: formData.facility_latitude!, lng: formData.facility_longitude! }
+                    : AUSTRALIA_CENTER
+                }
+                zoom={hasLocation ? 14 : 4}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
+                onClick={handleMapClick}
+                options={{
+                  streetViewControl: false,
+                  mapTypeControl: true,
+                  fullscreenControl: true,
+                }}
+              >
+                {hasLocation && (
+                  <Marker
+                    position={{
+                      lat: formData.facility_latitude!,
+                      lng: formData.facility_longitude!,
+                    }}
+                  />
+                )}
+              </GoogleMap>
+            </div>
+          ) : (
+            <div className="w-full h-[400px] rounded-lg border flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          )}
 
           {/* Current Coordinates */}
           {hasLocation && (
@@ -600,18 +636,18 @@ export function FacilitiesForm({ buyer }: FacilitiesFormProps) {
               </p>
               <ul className="text-sm text-blue-800 space-y-1">
                 <li>
-                  • Suppliers can calculate accurate delivery distances and
+                  - Suppliers can calculate accurate delivery distances and
                   costs
                 </li>
                 <li>
-                  • Enables route optimization for feedstock logistics
+                  - Enables route optimization for feedstock logistics
                 </li>
                 <li>
-                  • Helps match you with nearby suppliers for lower transport
+                  - Helps match you with nearby suppliers for lower transport
                   costs
                 </li>
                 <li>
-                  • Required for bankability assessments and supply chain
+                  - Required for bankability assessments and supply chain
                   analysis
                 </li>
               </ul>
