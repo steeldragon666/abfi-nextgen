@@ -3,6 +3,9 @@ import { Badge, RatingBadge as RatingBadgeComponent } from "@/components/ui/badg
 import { Progress } from "@/components/ui/progress";
 import { Award, TrendingUp, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion, useMotionValue, useTransform, animate, useInView } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { easeOut } from "@/lib/motion";
 
 // Score tier configuration matching the design system
 type ScoreTier = {
@@ -167,13 +170,15 @@ export function ScoreCard({
 }
 
 /**
- * ScoreGauge - Circular gauge for scores
+ * ScoreGauge - Animated circular gauge for scores
  */
 interface ScoreGaugeProps {
   score: number;
   size?: "sm" | "md" | "lg" | "xl";
   showTier?: boolean;
   className?: string;
+  animated?: boolean;
+  duration?: number;
 }
 
 export function ScoreGauge({
@@ -181,8 +186,16 @@ export function ScoreGauge({
   size = "md",
   showTier = true,
   className,
+  animated = true,
+  duration = 1.5,
 }: ScoreGaugeProps) {
   const tier = getScoreTier(score);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  // Motion values for animation
+  const progressValue = useMotionValue(0);
+  const displayScore = useMotionValue(0);
 
   const sizeConfig = {
     sm: { outer: 48, inner: 40, stroke: 4, fontSize: "text-sm", tierSize: "text-[8px]" },
@@ -194,11 +207,43 @@ export function ScoreGauge({
   const config = sizeConfig[size];
   const radius = (config.inner - config.stroke) / 2;
   const circumference = 2 * Math.PI * radius;
-  const progress = (score / 100) * circumference;
-  const offset = circumference - progress;
+
+  // Transform progress value to stroke offset
+  const strokeDashoffset = useTransform(
+    progressValue,
+    [0, 100],
+    [circumference, 0]
+  );
+
+  // Transform display score to rounded integer
+  const roundedScore = useTransform(displayScore, (v) => Math.round(v));
+
+  // Animate when in view
+  useEffect(() => {
+    if (isInView && animated) {
+      const progressControls = animate(progressValue, score, {
+        duration,
+        ease: easeOut,
+      });
+      const scoreControls = animate(displayScore, score, {
+        duration,
+        ease: easeOut,
+      });
+      return () => {
+        progressControls.stop();
+        scoreControls.stop();
+      };
+    } else if (!animated) {
+      progressValue.set(score);
+      displayScore.set(score);
+    }
+  }, [isInView, score, animated, duration, progressValue, displayScore]);
 
   return (
-    <div className={cn("relative inline-flex items-center justify-center mx-auto", className)}>
+    <div
+      ref={ref}
+      className={cn("relative inline-flex items-center justify-center mx-auto", className)}
+    >
       <svg
         width={config.outer}
         height={config.outer}
@@ -215,8 +260,8 @@ export function ScoreGauge({
           strokeWidth={config.stroke}
           className="text-muted/20"
         />
-        {/* Progress circle */}
-        <circle
+        {/* Animated progress circle */}
+        <motion.circle
           cx={config.outer / 2}
           cy={config.outer / 2}
           r={radius}
@@ -225,18 +270,25 @@ export function ScoreGauge({
           strokeWidth={config.stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          className={cn(tier.colorClass, "transition-all duration-1000 ease-out")}
+          style={{ strokeDashoffset }}
+          className={tier.colorClass}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className={cn("font-mono font-bold", config.fontSize, tier.colorClass)}>
-          {score}
-        </span>
+        <motion.span
+          className={cn("font-mono font-bold", config.fontSize, tier.colorClass)}
+        >
+          {roundedScore}
+        </motion.span>
         {showTier && (
-          <span className={cn("font-medium text-muted-foreground", config.tierSize)}>
+          <motion.span
+            className={cn("font-medium text-muted-foreground", config.tierSize)}
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ delay: duration * 0.5, duration: 0.3 }}
+          >
             {tier.tier}
-          </span>
+          </motion.span>
         )}
       </div>
     </div>

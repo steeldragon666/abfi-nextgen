@@ -6,6 +6,7 @@ import { getLoginUrl } from "@/const";
 import { ArrowRight, Award, BarChart3, Leaf, Search, Shield, TrendingUp, MapPin, FileCheck, Zap, Users, Building2, Banknote, CheckCircle } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
+import { FadeInUp, StaggerContainer, StaggerItem, HoverCard, AnimatedCounter, Floating } from "@/components/ui/motion";
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
@@ -49,9 +50,11 @@ export default function Home() {
           <div className="absolute -bottom-1/2 -left-1/4 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center mb-16">
+          <FadeInUp className="max-w-4xl mx-auto text-center mb-16">
             <Badge variant="outline" className="mb-6 px-4 py-1.5">
-              <Leaf className="h-3.5 w-3.5 mr-1.5" />
+              <Floating amplitude={3} duration={2}>
+                <Leaf className="h-3.5 w-3.5 mr-1.5" />
+              </Floating>
               Australia's Bioenergy Platform
             </Badge>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-normal mb-6 leading-tight text-foreground">
@@ -73,12 +76,14 @@ export default function Home() {
                 </Button>
               </Link>
             </div>
-          </div>
+          </FadeInUp>
 
           {/* Three User Groups */}
-          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <StaggerContainer className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {/* Growers/Producers */}
-            <Card hover variant="elevated" className="group border-2 border-transparent hover:border-success/30">
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <Card variant="elevated" className="group border-2 border-transparent hover:border-success/30 h-full">
               <CardHeader className="text-center pb-4">
                 <div className="h-16 w-16 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-success/10 group-hover:bg-success/20 transition-colors">
                   <Users className="h-8 w-8 text-success" />
@@ -115,88 +120,98 @@ export default function Home() {
                   </Button>
                 </Link>
               </CardContent>
-            </Card>
+                </Card>
+              </HoverCard>
+            </StaggerItem>
 
             {/* Project Developers/Offtakers */}
-            <Card hover variant="elevated" className="group border-2 border-transparent hover:border-warning/30">
-              <CardHeader className="text-center pb-4">
-                <div className="h-16 w-16 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-warning/10 group-hover:bg-warning/20 transition-colors">
-                  <Building2 className="h-8 w-8 text-warning" />
-                </div>
-                <CardTitle className="heading-3 mb-2">Project Developers</CardTitle>
-                <CardDescription className="body-lg">
-                  Secure feedstock supply and assess project bankability
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <ul className="space-y-3 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-3">
-                    <div className="p-1 rounded-full bg-warning/10 shrink-0 mt-0.5">
-                      <CheckCircle className="h-3.5 w-3.5 text-warning" />
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <Card variant="elevated" className="group border-2 border-transparent hover:border-warning/30 h-full">
+                  <CardHeader className="text-center pb-4">
+                    <div className="h-16 w-16 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-warning/10 group-hover:bg-warning/20 transition-colors">
+                      <Building2 className="h-8 w-8 text-warning" />
                     </div>
-                    <span>Browse verified feedstock suppliers by location</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="p-1 rounded-full bg-warning/10 shrink-0 mt-0.5">
-                      <CheckCircle className="h-3.5 w-3.5 text-warning" />
-                    </div>
-                    <span>Assess supply chain bankability with ABFI rating</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="p-1 rounded-full bg-warning/10 shrink-0 mt-0.5">
-                      <CheckCircle className="h-3.5 w-3.5 text-warning" />
-                    </div>
-                    <span>Generate compliance certificates for lenders</span>
-                  </li>
-                </ul>
-                <Link href="/bankability">
-                  <Button className="w-full mt-4 bg-warning hover:bg-warning/90 text-warning-foreground" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                    Start Assessment
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                    <CardTitle className="heading-3 mb-2">Project Developers</CardTitle>
+                    <CardDescription className="body-lg">
+                      Secure feedstock supply and assess project bankability
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <ul className="space-y-3 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-3">
+                        <div className="p-1 rounded-full bg-warning/10 shrink-0 mt-0.5">
+                          <CheckCircle className="h-3.5 w-3.5 text-warning" />
+                        </div>
+                        <span>Browse verified feedstock suppliers by location</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <div className="p-1 rounded-full bg-warning/10 shrink-0 mt-0.5">
+                          <CheckCircle className="h-3.5 w-3.5 text-warning" />
+                        </div>
+                        <span>Assess supply chain bankability with ABFI rating</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <div className="p-1 rounded-full bg-warning/10 shrink-0 mt-0.5">
+                          <CheckCircle className="h-3.5 w-3.5 text-warning" />
+                        </div>
+                        <span>Generate compliance certificates for lenders</span>
+                      </li>
+                    </ul>
+                    <Link href="/bankability">
+                      <Button className="w-full mt-4 bg-warning hover:bg-warning/90 text-warning-foreground" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                        Start Assessment
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </HoverCard>
+            </StaggerItem>
 
             {/* Lenders/Financial Institutions */}
-            <Card hover variant="elevated" className="group border-2 border-transparent hover:border-info/30">
-              <CardHeader className="text-center pb-4">
-                <div className="h-16 w-16 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-info/10 group-hover:bg-info/20 transition-colors">
-                  <Banknote className="h-8 w-8 text-info" />
-                </div>
-                <CardTitle className="heading-3 mb-2">Lenders & Financiers</CardTitle>
-                <CardDescription className="body-lg">
-                  Monitor project covenants and supply chain risk
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <ul className="space-y-3 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-3">
-                    <div className="p-1 rounded-full bg-info/10 shrink-0 mt-0.5">
-                      <CheckCircle className="h-3.5 w-3.5 text-info" />
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <Card variant="elevated" className="group border-2 border-transparent hover:border-info/30 h-full">
+                  <CardHeader className="text-center pb-4">
+                    <div className="h-16 w-16 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-info/10 group-hover:bg-info/20 transition-colors">
+                      <Banknote className="h-8 w-8 text-info" />
                     </div>
-                    <span>Real-time covenant compliance monitoring</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="p-1 rounded-full bg-info/10 shrink-0 mt-0.5">
-                      <CheckCircle className="h-3.5 w-3.5 text-info" />
-                    </div>
-                    <span>Automated breach alerts and renewal notices</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="p-1 rounded-full bg-info/10 shrink-0 mt-0.5">
-                      <CheckCircle className="h-3.5 w-3.5 text-info" />
-                    </div>
-                    <span>Independent bankability assessments</span>
-                  </li>
-                </ul>
-                <Link href="/lender-portal">
-                  <Button className="w-full mt-4 bg-info hover:bg-info/90 text-info-foreground" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                    Access Portal
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
+                    <CardTitle className="heading-3 mb-2">Lenders & Financiers</CardTitle>
+                    <CardDescription className="body-lg">
+                      Monitor project covenants and supply chain risk
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <ul className="space-y-3 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-3">
+                        <div className="p-1 rounded-full bg-info/10 shrink-0 mt-0.5">
+                          <CheckCircle className="h-3.5 w-3.5 text-info" />
+                        </div>
+                        <span>Real-time covenant compliance monitoring</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <div className="p-1 rounded-full bg-info/10 shrink-0 mt-0.5">
+                          <CheckCircle className="h-3.5 w-3.5 text-info" />
+                        </div>
+                        <span>Automated breach alerts and renewal notices</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <div className="p-1 rounded-full bg-info/10 shrink-0 mt-0.5">
+                          <CheckCircle className="h-3.5 w-3.5 text-info" />
+                        </div>
+                        <span>Independent bankability assessments</span>
+                      </li>
+                    </ul>
+                    <Link href="/lender-portal">
+                      <Button className="w-full mt-4 bg-info hover:bg-info/90 text-info-foreground" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                        Access Portal
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </HoverCard>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -293,27 +308,33 @@ export default function Home() {
       {/* Stats Section */}
       <section className="py-20 bg-gradient-to-br from-primary via-primary to-primary/80 text-primary-foreground">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-12 text-center">
-            <div>
-              <div className="metric-xl mb-3 text-primary-foreground">250+</div>
+          <StaggerContainer className="grid md:grid-cols-3 gap-12 text-center">
+            <StaggerItem>
+              <div className="metric-xl mb-3 text-primary-foreground">
+                <AnimatedCounter value={250} suffix="+" className="font-mono" />
+              </div>
               <div className="text-lg opacity-90 font-medium">Registered Producers</div>
-            </div>
-            <div>
-              <div className="metric-xl mb-3 text-primary-foreground">45+</div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="metric-xl mb-3 text-primary-foreground">
+                <AnimatedCounter value={45} suffix="+" className="font-mono" />
+              </div>
               <div className="text-lg opacity-90 font-medium">Active Projects</div>
-            </div>
-            <div>
-              <div className="metric-xl mb-3 text-primary-foreground">$2.5B</div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="metric-xl mb-3 text-primary-foreground">
+                <AnimatedCounter value={2.5} prefix="$" suffix="B" decimals={1} className="font-mono" />
+              </div>
               <div className="text-lg opacity-90 font-medium">Financed Volume</div>
-            </div>
-          </div>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto">
+          <FadeInUp className="max-w-3xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-display text-foreground mb-6">Ready to Get Started?</h2>
             <p className="text-xl text-muted-foreground mb-10">
               Join Australia's leading bioenergy feedstock platform today
@@ -330,7 +351,7 @@ export default function Home() {
                 </Button>
               </Link>
             </div>
-          </div>
+          </FadeInUp>
         </div>
       </section>
 

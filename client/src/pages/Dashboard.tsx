@@ -8,6 +8,7 @@ import { trpc } from "@/lib/trpc";
 import { Award, Building2, Leaf, Package, ShoppingCart, Shield, TrendingUp, CheckCircle, Clock, FileText, Search, Bell, ArrowRight } from "lucide-react";
 import { Link, Redirect } from "wouter";
 import { cn } from "@/lib/utils";
+import { PageWrapper, FadeInUp, StaggerContainer, StaggerItem, HoverCard } from "@/components/ui/motion";
 
 export default function Dashboard() {
   const { user, isAuthenticated, loading } = useAuth();
@@ -74,14 +75,14 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <PageWrapper className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
-        <div className="mb-8">
+        <FadeInUp className="mb-8">
           <h1 className="heading-1 text-foreground mb-2">Dashboard</h1>
           <p className="text-muted-foreground body-lg">
             Welcome back, <span className="font-medium text-foreground">{user?.name || 'User'}</span>
           </p>
-        </div>
+        </FadeInUp>
 
         {/* Admin Section */}
         {isAdmin && (
@@ -161,85 +162,93 @@ export default function Dashboard() {
 
         {/* Profile Selection */}
         {!hasSupplier && !hasBuyer ? (
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Card hover variant="elevated" className="group">
-              <CardHeader className="pb-4">
-                <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4 group-hover:bg-primary/20 transition-colors">
-                  <Building2 className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="heading-3">Register as Supplier</CardTitle>
-                <CardDescription className="body-lg">
-                  List your biofuel feedstocks and connect with buyers across Australia
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3 text-sm text-muted-foreground mb-6">
-                  <li className="flex items-center gap-3">
-                    <div className="p-1 rounded-full bg-success/10">
-                      <CheckCircle className="h-4 w-4 text-success" />
+          <StaggerContainer className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <Card variant="elevated" className="group h-full">
+                  <CardHeader className="pb-4">
+                    <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4 group-hover:bg-primary/20 transition-colors">
+                      <Building2 className="h-8 w-8 text-primary" />
                     </div>
-                    Get ABFI-rated for your feedstocks
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="p-1 rounded-full bg-success/10">
-                      <CheckCircle className="h-4 w-4 text-success" />
-                    </div>
-                    Manage multiple feedstock listings
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="p-1 rounded-full bg-success/10">
-                      <CheckCircle className="h-4 w-4 text-success" />
-                    </div>
-                    Receive buyer inquiries
-                  </li>
-                </ul>
-                <Link href="/supplier/register">
-                  <Button className="w-full" size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                    Create Supplier Profile
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                    <CardTitle className="heading-3">Register as Supplier</CardTitle>
+                    <CardDescription className="body-lg">
+                      List your biofuel feedstocks and connect with buyers across Australia
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3 text-sm text-muted-foreground mb-6">
+                      <li className="flex items-center gap-3">
+                        <div className="p-1 rounded-full bg-success/10">
+                          <CheckCircle className="h-4 w-4 text-success" />
+                        </div>
+                        Get ABFI-rated for your feedstocks
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="p-1 rounded-full bg-success/10">
+                          <CheckCircle className="h-4 w-4 text-success" />
+                        </div>
+                        Manage multiple feedstock listings
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="p-1 rounded-full bg-success/10">
+                          <CheckCircle className="h-4 w-4 text-success" />
+                        </div>
+                        Receive buyer inquiries
+                      </li>
+                    </ul>
+                    <Link href="/supplier/register">
+                      <Button className="w-full" size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                        Create Supplier Profile
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </HoverCard>
+            </StaggerItem>
 
-            <Card hover variant="elevated" className="group">
-              <CardHeader className="pb-4">
-                <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4 group-hover:bg-primary/20 transition-colors">
-                  <ShoppingCart className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="heading-3">Register as Buyer</CardTitle>
-                <CardDescription className="body-lg">
-                  Source verified biofuel feedstocks from trusted suppliers
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3 text-sm text-muted-foreground mb-6">
-                  <li className="flex items-center gap-3">
-                    <div className="p-1 rounded-full bg-success/10">
-                      <CheckCircle className="h-4 w-4 text-success" />
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <Card variant="elevated" className="group h-full">
+                  <CardHeader className="pb-4">
+                    <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4 group-hover:bg-primary/20 transition-colors">
+                      <ShoppingCart className="h-8 w-8 text-primary" />
                     </div>
-                    Access ABFI-rated feedstocks
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="p-1 rounded-full bg-success/10">
-                      <CheckCircle className="h-4 w-4 text-success" />
-                    </div>
-                    Advanced search and filtering
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="p-1 rounded-full bg-success/10">
-                      <CheckCircle className="h-4 w-4 text-success" />
-                    </div>
-                    Send RFQs to suppliers
-                  </li>
-                </ul>
-                <Link href="/buyer/register">
-                  <Button className="w-full" size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                    Create Buyer Profile
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
+                    <CardTitle className="heading-3">Register as Buyer</CardTitle>
+                    <CardDescription className="body-lg">
+                      Source verified biofuel feedstocks from trusted suppliers
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3 text-sm text-muted-foreground mb-6">
+                      <li className="flex items-center gap-3">
+                        <div className="p-1 rounded-full bg-success/10">
+                          <CheckCircle className="h-4 w-4 text-success" />
+                        </div>
+                        Access ABFI-rated feedstocks
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="p-1 rounded-full bg-success/10">
+                          <CheckCircle className="h-4 w-4 text-success" />
+                        </div>
+                        Advanced search and filtering
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="p-1 rounded-full bg-success/10">
+                          <CheckCircle className="h-4 w-4 text-success" />
+                        </div>
+                        Send RFQs to suppliers
+                      </li>
+                    </ul>
+                    <Link href="/buyer/register">
+                      <Button className="w-full" size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                        Create Buyer Profile
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </HoverCard>
+            </StaggerItem>
+          </StaggerContainer>
         ) : (
           <div className="grid md:grid-cols-3 gap-6">
             {/* Supplier Dashboard */}
@@ -373,7 +382,7 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </PageWrapper>
     </div>
   );
 }
