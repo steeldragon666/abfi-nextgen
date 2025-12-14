@@ -52,6 +52,9 @@ import ProjectRegistrationSuccess from "./pages/ProjectRegistrationSuccess";
 import CertificateVerification from "./pages/CertificateVerification";
 import ProducerRegistrationSuccess from "./pages/ProducerRegistrationSuccess";
 import FinancialOnboardingSuccess from "./pages/FinancialOnboardingSuccess";
+import AdminAssessorWorkflow from "./pages/AdminAssessorWorkflow";
+import MonitoringJobsScheduler from "./pages/MonitoringJobsScheduler";
+import ConcentrationAnalysis from "./pages/ConcentrationAnalysis";
 
 function Router() {
   return (
@@ -90,6 +93,9 @@ function Router() {
       <Route path="/lender-portal" component={LenderPortal} />
       <Route path="/compliance-dashboard" component={ComplianceDashboard} />
       <Route path="/admin/evidence" component={EvidenceManagement} />
+      <Route path="/admin/assessor-workflow" component={AdminAssessorWorkflow} />
+      <Route path="/admin/monitoring-jobs" component={MonitoringJobsScheduler} />
+      <Route path="/bankability/concentration/:projectId" component={ConcentrationAnalysis} />
       <Route path="/map" component={MapView} />
       <Route path="/feedstock-map" component={FeedstockMap} />
       <Route path="/producer-registration" component={ProducerRegistration} />
