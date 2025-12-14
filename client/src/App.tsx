@@ -43,11 +43,13 @@ import ProducerContracts from "./pages/ProducerContracts";
 import ProducerMarketplaceListing from "./pages/ProducerMarketplaceListing";
 import ProducerReview from "./pages/ProducerReview";
 import ProducerSuccess from "./pages/ProducerSuccess";
+import FinancialOnboarding from "./pages/FinancialOnboarding";
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path="/financial-onboarding" component={FinancialOnboarding} />
       <Route path="/browse" component={Browse} />
       <Route path="/feedstock/:id" component={FeedstockDetail} />
       <Route path="/feedstock/edit/:id" component={FeedstockEdit} />

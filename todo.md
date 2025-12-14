@@ -387,3 +387,12 @@ Note: Seed script encounters schema mismatches. Recommend using UI workflows to 
 - [ ] Update carbon calculator UI text to British spelling
 - [ ] Update all UI labels and descriptions to British spelling (optimise, colour, organisation, etc.)
 - [ ] Update documentation and help text to British spelling
+
+## Financial Sector Onboarding Redesign (Session 12)
+- [x] Extract design system from reference (dark theme, gold accents, serif typography)
+- [x] Update global CSS with financial sector color palette and typography
+- [x] Redesign producer registration as "Lender/Financier Onboarding"
+- [x] Update form styling to match reference design
+- [x] Add progress indicator with step visualization
+- [x] Implement dark theme with gold gradient accents
+- [x] Test complete onboarding flow with new design

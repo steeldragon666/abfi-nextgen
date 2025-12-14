@@ -43,11 +43,29 @@
 }
 
 :root {
-  /* BioFeed AU Colors - Navy Blue & Golden Yellow */
-  --color-navy-blue: #0F3A5C; /* Primary brand color */
-  --color-golden-yellow: #F4C430; /* Accent color */
-  --color-light-navy: #1E5A7D; /* Secondary navy */
-  --color-cream: #F5F3EE; /* Soft background */
+  /* Financial Sector Theme - Dark with Gold Accents */
+  --bg-primary: #0a0f14;
+  --bg-secondary: #111820;
+  --bg-tertiary: #1a222d;
+  --bg-elevated: #212b38;
+  --accent-gold: #c9a962;
+  --accent-gold-dim: #8a7443;
+  --accent-copper: #b87333;
+  --accent-green: #3d8b5f;
+  --accent-green-bright: #4ade80;
+  --text-primary: #f0f2f5;
+  --text-secondary: #9ca3af;
+  --text-tertiary: #6b7280;
+  --border-subtle: rgba(201, 169, 98, 0.15);
+  --border-active: rgba(201, 169, 98, 0.4);
+  --gradient-gold: linear-gradient(135deg, #c9a962 0%, #8a7443 100%);
+  --shadow-glow: 0 0 40px rgba(201, 169, 98, 0.1);
+  
+  /* Legacy colors for compatibility */
+  --color-navy-blue: #0F3A5C;
+  --color-golden-yellow: #F4C430;
+  --color-light-navy: #1E5A7D;
+  --color-cream: #F5F3EE;
   
   --primary: oklch(0.29 0.08 230); /* Navy Blue #0F3A5C */
   --primary-foreground: oklch(1 0 0);
@@ -133,12 +151,35 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'IBM Plex Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
   }
+  
+  /* Subtle background texture for financial theme */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(ellipse at 20% 20%, rgba(201, 169, 98, 0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(61, 139, 95, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-family: 'DM Serif Display', 'Montserrat', serif;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+  }
+  
+  code, pre, .font-mono {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
