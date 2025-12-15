@@ -1,12 +1,26 @@
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { trpc } from "@/lib/trpc";
-import { Shield, TrendingUp, AlertCircle, CheckCircle, FileText, Download, Eye } from "lucide-react";
+import {
+  Shield,
+  TrendingUp,
+  AlertCircle,
+  CheckCircle,
+  FileText,
+  Download,
+  Eye,
+} from "lucide-react";
 import { RatingBadge, ScoreBreakdown } from "@/components/ScoreCard";
 
 export default function LenderPortal() {
@@ -14,7 +28,8 @@ export default function LenderPortal() {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
 
   // Get projects the lender has been granted access to
-  const { data: projects, isLoading: projectsLoading } = trpc.bankability.getMyLenderProjects.useQuery();
+  const { data: projects, isLoading: projectsLoading } =
+    trpc.bankability.getMyLenderProjects.useQuery();
 
   if (authLoading || !user) {
     return (
@@ -60,16 +75,24 @@ export default function LenderPortal() {
     }
   };
 
-  const getCovenantStatus = (project: any): { status: "compliant" | "warning" | "breach"; message: string } => {
+  const getCovenantStatus = (
+    project: any
+  ): { status: "compliant" | "warning" | "breach"; message: string } => {
     // Check Tier 1 covenant (typically 80% minimum)
     const tier1Target = project.tier1Target || 80;
     const tier1Actual = 0; // TODO: Calculate from agreements
-    
+
     if (tier1Actual < tier1Target * 0.9) {
-      return { status: "breach", message: `Tier 1 coverage below threshold (${tier1Actual}% vs ${tier1Target}% target)` };
+      return {
+        status: "breach",
+        message: `Tier 1 coverage below threshold (${tier1Actual}% vs ${tier1Target}% target)`,
+      };
     }
     if (tier1Actual < tier1Target) {
-      return { status: "warning", message: `Tier 1 coverage approaching threshold (${tier1Actual}% vs ${tier1Target}% target)` };
+      return {
+        status: "warning",
+        message: `Tier 1 coverage approaching threshold (${tier1Actual}% vs ${tier1Target}% target)`,
+      };
     }
     return { status: "compliant", message: "All covenants compliant" };
   };
@@ -91,9 +114,12 @@ export default function LenderPortal() {
           <Card>
             <CardContent className="py-12 text-center">
               <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No Projects Available</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                No Projects Available
+              </h3>
               <p className="text-sm text-muted-foreground">
-                You don't have access to any projects yet. Contact your relationship manager.
+                You don't have access to any projects yet. Contact your
+                relationship manager.
               </p>
             </CardContent>
           </Card>
@@ -103,8 +129,12 @@ export default function LenderPortal() {
             <div className="lg:col-span-1 space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Monitored Projects</CardTitle>
-                  <CardDescription>Select a project to view details</CardDescription>
+                  <CardTitle className="text-base">
+                    Monitored Projects
+                  </CardTitle>
+                  <CardDescription>
+                    Select a project to view details
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {projects.map((project: any) => {
@@ -120,7 +150,9 @@ export default function LenderPortal() {
                         }`}
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <div className="font-medium text-sm">{project.name}</div>
+                          <div className="font-medium text-sm">
+                            {project.name}
+                          </div>
                           {covenant.status === "breach" && (
                             <AlertCircle className="h-4 w-4 text-red-600" />
                           )}
@@ -131,9 +163,12 @@ export default function LenderPortal() {
                             <CheckCircle className="h-4 w-4 text-green-600" />
                           )}
                         </div>
-                          <Badge variant="outline" className={getStatusColor(project.status)}>
-                            {project.status}
-                          </Badge>
+                        <Badge
+                          variant="outline"
+                          className={getStatusColor(project.status)}
+                        >
+                          {project.status}
+                        </Badge>
                       </button>
                     );
                   })}
@@ -145,9 +180,11 @@ export default function LenderPortal() {
             <div className="lg:col-span-2 space-y-6">
               {selectedProject ? (
                 (() => {
-                  const project = projects.find((p: any) => p.id === selectedProject);
+                  const project = projects.find(
+                    (p: any) => p.id === selectedProject
+                  );
                   if (!project) return null;
-                  
+
                   const covenant = getCovenantStatus(project);
 
                   return (
@@ -159,7 +196,11 @@ export default function LenderPortal() {
                             <div>
                               <CardTitle>{project.name}</CardTitle>
                               <CardDescription className="mt-1">
-                                {project.facilityLocation} • {(project.nameplateCapacity || 0).toLocaleString()} tonnes/year capacity
+                                {project.facilityLocation} •{" "}
+                                {(
+                                  project.nameplateCapacity || 0
+                                ).toLocaleString()}{" "}
+                                tonnes/year capacity
                               </CardDescription>
                             </div>
                             <Button variant="outline" size="sm">
@@ -171,24 +212,32 @@ export default function LenderPortal() {
                         <CardContent className="space-y-4">
                           <div className="grid grid-cols-3 gap-4">
                             <div>
-                              <div className="text-sm text-muted-foreground mb-1">Status</div>
+                              <div className="text-sm text-muted-foreground mb-1">
+                                Status
+                              </div>
                               <Badge className={getStatusColor(project.status)}>
                                 {project.status}
                               </Badge>
                             </div>
                             <div>
-                              <div className="text-sm text-muted-foreground mb-1">Bankability Rating</div>
+                              <div className="text-sm text-muted-foreground mb-1">
+                                Bankability Rating
+                              </div>
                               <span className="text-sm">Not assessed</span>
                             </div>
                             <div>
-                              <div className="text-sm text-muted-foreground mb-1">Technology</div>
+                              <div className="text-sm text-muted-foreground mb-1">
+                                Technology
+                              </div>
                               <div className="text-sm font-medium">N/A</div>
                             </div>
                           </div>
 
                           {project.description && (
                             <div>
-                              <div className="text-sm text-muted-foreground mb-1">Description</div>
+                              <div className="text-sm text-muted-foreground mb-1">
+                                Description
+                              </div>
                               <p className="text-sm">{project.description}</p>
                             </div>
                           )}
@@ -209,32 +258,42 @@ export default function LenderPortal() {
                               covenant.status === "breach"
                                 ? "bg-red-50 border border-red-200"
                                 : covenant.status === "warning"
-                                ? "bg-yellow-50 border border-yellow-200"
-                                : "bg-green-50 border border-green-200"
+                                  ? "bg-yellow-50 border border-yellow-200"
+                                  : "bg-green-50 border border-green-200"
                             }`}
                           >
-                            {covenant.status === "breach" && <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />}
-                            {covenant.status === "warning" && <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />}
-                            {covenant.status === "compliant" && <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />}
+                            {covenant.status === "breach" && (
+                              <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                            )}
+                            {covenant.status === "warning" && (
+                              <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                            )}
+                            {covenant.status === "compliant" && (
+                              <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                            )}
                             <div>
                               <div
                                 className={`font-medium mb-1 ${
                                   covenant.status === "breach"
                                     ? "text-red-900"
                                     : covenant.status === "warning"
-                                    ? "text-yellow-900"
-                                    : "text-green-900"
+                                      ? "text-yellow-900"
+                                      : "text-green-900"
                                 }`}
                               >
-                                {covenant.status === "breach" ? "Covenant Breach" : covenant.status === "warning" ? "Covenant Warning" : "Covenants Compliant"}
+                                {covenant.status === "breach"
+                                  ? "Covenant Breach"
+                                  : covenant.status === "warning"
+                                    ? "Covenant Warning"
+                                    : "Covenants Compliant"}
                               </div>
                               <p
                                 className={`text-sm ${
                                   covenant.status === "breach"
                                     ? "text-red-700"
                                     : covenant.status === "warning"
-                                    ? "text-yellow-700"
-                                    : "text-green-700"
+                                      ? "text-yellow-700"
+                                      : "text-green-700"
                                 }`}
                               >
                                 {covenant.message}
@@ -245,7 +304,9 @@ export default function LenderPortal() {
                           <div className="space-y-3">
                             <div>
                               <div className="flex justify-between text-sm mb-1">
-                                <span className="text-muted-foreground">Tier 1 Coverage</span>
+                                <span className="text-muted-foreground">
+                                  Tier 1 Coverage
+                                </span>
                                 <span className="font-medium">
                                   0% / {project.tier1Target || 80}%
                                 </span>
@@ -254,7 +315,9 @@ export default function LenderPortal() {
                             </div>
                             <div>
                               <div className="flex justify-between text-sm mb-1">
-                                <span className="text-muted-foreground">Total Primary Coverage</span>
+                                <span className="text-muted-foreground">
+                                  Total Primary Coverage
+                                </span>
                                 <span className="font-medium">0%</span>
                               </div>
                               <Progress value={0} className="h-2" />
@@ -308,15 +371,27 @@ export default function LenderPortal() {
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
-                          <Button variant="outline" className="w-full justify-start" size="sm">
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start"
+                            size="sm"
+                          >
                             <Eye className="h-4 w-4 mr-2" />
                             Latest Bankability Certificate
                           </Button>
-                          <Button variant="outline" className="w-full justify-start" size="sm">
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start"
+                            size="sm"
+                          >
                             <Eye className="h-4 w-4 mr-2" />
                             Supply Agreement Summary
                           </Button>
-                          <Button variant="outline" className="w-full justify-start" size="sm">
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start"
+                            size="sm"
+                          >
                             <Eye className="h-4 w-4 mr-2" />
                             Covenant Compliance Report
                           </Button>
@@ -329,7 +404,9 @@ export default function LenderPortal() {
                 <Card>
                   <CardContent className="py-12 text-center">
                     <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Select a project to view details</p>
+                    <p className="text-muted-foreground">
+                      Select a project to view details
+                    </p>
                   </CardContent>
                 </Card>
               )}

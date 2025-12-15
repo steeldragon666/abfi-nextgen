@@ -3,8 +3,8 @@
  * Sends automated emails to lenders for covenant breaches and contract renewals
  */
 
-import { notifyOwner } from './_core/notification';
-import * as db from './db';
+import { notifyOwner } from "./_core/notification";
+import * as db from "./db";
 
 export interface LenderContact {
   id: number;
@@ -19,7 +19,7 @@ export interface CovenantBreachNotification {
   projectId: number;
   projectName: string;
   breachType: string;
-  severity: 'info' | 'warning' | 'breach' | 'critical';
+  severity: "info" | "warning" | "breach" | "critical";
   currentValue: number;
   thresholdValue: number;
   impactNarrative: string;
@@ -35,7 +35,7 @@ export interface ContractRenewalNotification {
   daysUntilExpiry: number;
   annualVolume: number;
   tier: string;
-  impactLevel: 'low' | 'medium' | 'high';
+  impactLevel: "low" | "medium" | "high";
 }
 
 /**
@@ -48,17 +48,19 @@ export async function notifyLendersOfCovenantBreach(
     // Get project details to find associated lenders
     const project = await db.getProjectById(notification.projectId);
     if (!project) {
-      console.error(`[LenderNotifications] Project ${notification.projectId} not found`);
+      console.error(
+        `[LenderNotifications] Project ${notification.projectId} not found`
+      );
       return { success: false, notifiedCount: 0 };
     }
 
     // For now, use the owner notification system as a fallback
     // In production, this would query a lenders table and send individual emails
     const severityEmoji = {
-      info: 'ℹ️',
-      warning: '⚠️',
-      breach: '🚨',
-      critical: '🔴',
+      info: "ℹ️",
+      warning: "⚠️",
+      breach: "🚨",
+      critical: "🔴",
     };
 
     const emailContent = `
@@ -74,7 +76,7 @@ Threshold: ${notification.thresholdValue}
 Impact Assessment:
 ${notification.impactNarrative}
 
-Detected: ${notification.detectedAt.toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })}
+Detected: ${notification.detectedAt.toLocaleString("en-AU", { timeZone: "Australia/Sydney" })}
 
 Action Required: Review project covenant compliance and contact project sponsor if necessary.
     `.trim();
@@ -86,14 +88,21 @@ Action Required: Review project covenant compliance and contact project sponsor 
     });
 
     if (sent) {
-      console.log(`[LenderNotifications] Covenant breach notification sent for project ${notification.projectId}`);
+      console.log(
+        `[LenderNotifications] Covenant breach notification sent for project ${notification.projectId}`
+      );
       return { success: true, notifiedCount: 1 };
     } else {
-      console.error(`[LenderNotifications] Failed to send covenant breach notification for project ${notification.projectId}`);
+      console.error(
+        `[LenderNotifications] Failed to send covenant breach notification for project ${notification.projectId}`
+      );
       return { success: false, notifiedCount: 0 };
     }
   } catch (error) {
-    console.error('[LenderNotifications] Error sending covenant breach notification:', error);
+    console.error(
+      "[LenderNotifications] Error sending covenant breach notification:",
+      error
+    );
     return { success: false, notifiedCount: 0 };
   }
 }
@@ -108,14 +117,16 @@ export async function notifyLendersOfContractRenewal(
     // Get project details
     const project = await db.getProjectById(notification.projectId);
     if (!project) {
-      console.error(`[LenderNotifications] Project ${notification.projectId} not found`);
+      console.error(
+        `[LenderNotifications] Project ${notification.projectId} not found`
+      );
       return { success: false, notifiedCount: 0 };
     }
 
     const impactEmoji = {
-      low: '📋',
-      medium: '⚠️',
-      high: '🚨',
+      low: "📋",
+      medium: "⚠️",
+      high: "🚨",
     };
 
     const emailContent = `
@@ -125,19 +136,19 @@ Project: ${notification.projectName}
 Supplier: ${notification.supplierName}
 Agreement Tier: ${notification.tier}
 
-Expiry Date: ${notification.expiryDate.toLocaleDateString('en-AU')}
+Expiry Date: ${notification.expiryDate.toLocaleDateString("en-AU")}
 Days Until Expiry: ${notification.daysUntilExpiry}
 
 Annual Volume: ${notification.annualVolume.toLocaleString()} tonnes
 Impact Level: ${notification.impactLevel.toUpperCase()}
 
 Action Required: ${
-  notification.impactLevel === 'high'
-    ? 'Immediate attention required. This is a Tier 1 agreement critical to project bankability.'
-    : notification.impactLevel === 'medium'
-    ? 'Review renewal status and coordinate with project sponsor.'
-    : 'Monitor renewal progress.'
-}
+      notification.impactLevel === "high"
+        ? "Immediate attention required. This is a Tier 1 agreement critical to project bankability."
+        : notification.impactLevel === "medium"
+          ? "Review renewal status and coordinate with project sponsor."
+          : "Monitor renewal progress."
+    }
 
 Please coordinate with the project sponsor to ensure timely contract renewal.
     `.trim();
@@ -149,14 +160,21 @@ Please coordinate with the project sponsor to ensure timely contract renewal.
     });
 
     if (sent) {
-      console.log(`[LenderNotifications] Contract renewal notification sent for project ${notification.projectId}, agreement ${notification.agreementId}`);
+      console.log(
+        `[LenderNotifications] Contract renewal notification sent for project ${notification.projectId}, agreement ${notification.agreementId}`
+      );
       return { success: true, notifiedCount: 1 };
     } else {
-      console.error(`[LenderNotifications] Failed to send contract renewal notification for project ${notification.projectId}`);
+      console.error(
+        `[LenderNotifications] Failed to send contract renewal notification for project ${notification.projectId}`
+      );
       return { success: false, notifiedCount: 0 };
     }
   } catch (error) {
-    console.error('[LenderNotifications] Error sending contract renewal notification:', error);
+    console.error(
+      "[LenderNotifications] Error sending contract renewal notification:",
+      error
+    );
     return { success: false, notifiedCount: 0 };
   }
 }

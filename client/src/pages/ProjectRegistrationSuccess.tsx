@@ -29,8 +29,9 @@ export default function ProjectRegistrationSuccess() {
             Project Registration Complete
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Your biorefinery/processor project has been successfully submitted for review. 
-            Our team will assess your application and contact you within 3-5 business days.
+            Your biorefinery/processor project has been successfully submitted
+            for review. Our team will assess your application and contact you
+            within 3-5 business days.
           </p>
         </div>
 
@@ -40,20 +41,26 @@ export default function ProjectRegistrationSuccess() {
             <CardContent className="p-8">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <p className="text-sm text-gray-400 mb-1">Application Reference</p>
+                  <p className="text-sm text-gray-400 mb-1">
+                    Application Reference
+                  </p>
                   <p className="text-2xl font-mono font-bold text-[#c9a962]">
-                    PRJ-{new Date().getFullYear()}-{Math.random().toString(36).substr(2, 6).toUpperCase()}
+                    PRJ-{new Date().getFullYear()}-
+                    {Math.random().toString(36).substr(2, 6).toUpperCase()}
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-gray-400 mb-1">Submitted</p>
-                  <p className="text-lg font-semibold">{new Date().toLocaleDateString()}</p>
+                  <p className="text-lg font-semibold">
+                    {new Date().toLocaleDateString()}
+                  </p>
                 </div>
               </div>
-              
+
               <div className="border-t border-gray-700 pt-6">
                 <p className="text-sm text-gray-400 mb-4">
-                  Save this reference number for tracking your application status.
+                  Save this reference number for tracking your application
+                  status.
                 </p>
               </div>
             </CardContent>
@@ -62,7 +69,9 @@ export default function ProjectRegistrationSuccess() {
 
         {/* Next Steps */}
         <div className="max-w-3xl mx-auto mb-12">
-          <h2 className="text-2xl font-serif font-bold mb-6 text-center">What Happens Next?</h2>
+          <h2 className="text-2xl font-serif font-bold mb-6 text-center">
+            What Happens Next?
+          </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="bg-[#111820]/60 border-[#c9a962]/10 backdrop-blur-sm">
               <CardContent className="p-6">
@@ -71,7 +80,8 @@ export default function ProjectRegistrationSuccess() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Review Process</h3>
                 <p className="text-sm text-gray-400">
-                  Our team will review your project details, technology specifications, and documentation.
+                  Our team will review your project details, technology
+                  specifications, and documentation.
                 </p>
               </CardContent>
             </Card>
@@ -81,9 +91,12 @@ export default function ProjectRegistrationSuccess() {
                 <div className="w-12 h-12 bg-[#c9a962]/10 rounded-lg flex items-center justify-center mb-4">
                   <Clock className="w-6 h-6 text-[#c9a962]" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Assessment Timeline</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  Assessment Timeline
+                </h3>
                 <p className="text-sm text-gray-400">
-                  Expect feedback within 3-5 business days. Complex projects may require additional review time.
+                  Expect feedback within 3-5 business days. Complex projects may
+                  require additional review time.
                 </p>
               </CardContent>
             </Card>
@@ -95,7 +108,8 @@ export default function ProjectRegistrationSuccess() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Notification</h3>
                 <p className="text-sm text-gray-400">
-                  You'll receive an email with next steps, including feedstock matching opportunities.
+                  You'll receive an email with next steps, including feedstock
+                  matching opportunities.
                 </p>
               </CardContent>
             </Card>
@@ -105,7 +119,7 @@ export default function ProjectRegistrationSuccess() {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/">
-            <Button 
+            <Button
               size="lg"
               variant="outline"
               className="bg-transparent border-[#c9a962] text-[#c9a962] hover:bg-[#c9a962]/10"
@@ -114,7 +128,7 @@ export default function ProjectRegistrationSuccess() {
             </Button>
           </Link>
           <Link href="/browse">
-            <Button 
+            <Button
               size="lg"
               className="bg-gradient-to-r from-[#c9a962] to-[#a88a4a] hover:from-[#a88a4a] hover:to-[#8a6e3a] text-white"
             >
@@ -126,9 +140,11 @@ export default function ProjectRegistrationSuccess() {
 
         {/* Support Information */}
         <div className="mt-16 text-center">
-          <p className="text-gray-400 mb-2">Questions about your application?</p>
-          <a 
-            href="mailto:projects@biofeedau.com.au" 
+          <p className="text-gray-400 mb-2">
+            Questions about your application?
+          </p>
+          <a
+            href="mailto:projects@biofeedau.com.au"
             className="text-[#c9a962] hover:underline font-semibold"
           >
             projects@biofeedau.com.au

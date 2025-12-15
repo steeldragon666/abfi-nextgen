@@ -45,56 +45,81 @@ const AUTH_REQUIRED_PAGES = [
 const REGISTRATION_FLOWS = [
   { path: "/supplier/register", name: "Supplier Registration" },
   { path: "/buyer/register", name: "Buyer Registration" },
-  { path: "/producer-registration/account-setup", name: "Producer Account Setup" },
-  { path: "/producer-registration/property-map", name: "Producer Property Map" },
-  { path: "/producer-registration/property-details", name: "Producer Property Details" },
-  { path: "/producer-registration/production-profile", name: "Producer Production Profile" },
-  { path: "/producer-registration/carbon-calculator", name: "Producer Carbon Calculator" },
+  {
+    path: "/producer-registration/account-setup",
+    name: "Producer Account Setup",
+  },
+  {
+    path: "/producer-registration/property-map",
+    name: "Producer Property Map",
+  },
+  {
+    path: "/producer-registration/property-details",
+    name: "Producer Property Details",
+  },
+  {
+    path: "/producer-registration/production-profile",
+    name: "Producer Production Profile",
+  },
+  {
+    path: "/producer-registration/carbon-calculator",
+    name: "Producer Carbon Calculator",
+  },
   { path: "/producer-registration/contracts", name: "Producer Contracts" },
-  { path: "/producer-registration/marketplace-listing", name: "Producer Marketplace Listing" },
+  {
+    path: "/producer-registration/marketplace-listing",
+    name: "Producer Marketplace Listing",
+  },
   { path: "/producer-registration/review", name: "Producer Review" },
   { path: "/project-registration/flow", name: "Project Registration Flow" },
 ];
 
 test.describe("Public Pages Load Tests", () => {
   for (const page of PUBLIC_PAGES) {
-    test(`${page.name} (${page.path}) loads successfully`, async ({ page: browserPage }) => {
+    test(`${page.name} (${page.path}) loads successfully`, async ({
+      page: browserPage,
+    }) => {
       const errors: string[] = [];
-      
+
       // Capture JavaScript errors
-      browserPage.on("pageerror", (error) => {
+      browserPage.on("pageerror", error => {
         errors.push(error.message);
       });
 
       // Capture console errors
-      browserPage.on("console", (msg) => {
+      browserPage.on("console", msg => {
         if (msg.type() === "error") {
           errors.push(msg.text());
         }
       });
 
-      const response = await browserPage.goto(page.path, { waitUntil: "networkidle" });
-      
+      const response = await browserPage.goto(page.path, {
+        waitUntil: "networkidle",
+      });
+
       // Check response status
       expect(response?.status()).toBeLessThan(400);
-      
+
       // Check page has content
       const content = await browserPage.content();
       expect(content.length).toBeGreaterThan(100);
-      
+
       // Check no critical errors (ignore some common benign errors)
-      const criticalErrors = errors.filter(e => 
-        !e.includes("ResizeObserver") && 
-        !e.includes("Failed to load resource") &&
-        !e.includes("net::ERR_")
+      const criticalErrors = errors.filter(
+        e =>
+          !e.includes("ResizeObserver") &&
+          !e.includes("Failed to load resource") &&
+          !e.includes("net::ERR_")
       );
-      
+
       if (criticalErrors.length > 0) {
         console.log(`Errors on ${page.path}:`, criticalErrors);
       }
-      
+
       // Check for React error boundary
-      const errorBoundary = await browserPage.locator("text=Something went wrong").count();
+      const errorBoundary = await browserPage
+        .locator("text=Something went wrong")
+        .count();
       expect(errorBoundary).toBe(0);
     });
   }
@@ -102,20 +127,26 @@ test.describe("Public Pages Load Tests", () => {
 
 test.describe("Auth-Required Pages Load Tests", () => {
   for (const page of AUTH_REQUIRED_PAGES) {
-    test(`${page.name} (${page.path}) loads without crashing`, async ({ page: browserPage }) => {
+    test(`${page.name} (${page.path}) loads without crashing`, async ({
+      page: browserPage,
+    }) => {
       const errors: string[] = [];
-      
-      browserPage.on("pageerror", (error) => {
+
+      browserPage.on("pageerror", error => {
         errors.push(error.message);
       });
 
-      const response = await browserPage.goto(page.path, { waitUntil: "networkidle" });
-      
+      const response = await browserPage.goto(page.path, {
+        waitUntil: "networkidle",
+      });
+
       // Should load (may show login prompt or redirect)
       expect(response?.status()).toBeLessThan(500);
-      
+
       // Check for React error boundary
-      const errorBoundary = await browserPage.locator("text=Something went wrong").count();
+      const errorBoundary = await browserPage
+        .locator("text=Something went wrong")
+        .count();
       expect(errorBoundary).toBe(0);
     });
   }
@@ -123,12 +154,18 @@ test.describe("Auth-Required Pages Load Tests", () => {
 
 test.describe("Registration Flow Pages Load Tests", () => {
   for (const page of REGISTRATION_FLOWS) {
-    test(`${page.name} (${page.path}) loads without crashing`, async ({ page: browserPage }) => {
-      const response = await browserPage.goto(page.path, { waitUntil: "networkidle" });
-      
+    test(`${page.name} (${page.path}) loads without crashing`, async ({
+      page: browserPage,
+    }) => {
+      const response = await browserPage.goto(page.path, {
+        waitUntil: "networkidle",
+      });
+
       expect(response?.status()).toBeLessThan(500);
-      
-      const errorBoundary = await browserPage.locator("text=Something went wrong").count();
+
+      const errorBoundary = await browserPage
+        .locator("text=Something went wrong")
+        .count();
       expect(errorBoundary).toBe(0);
     });
   }
@@ -137,11 +174,12 @@ test.describe("Registration Flow Pages Load Tests", () => {
 test.describe("404 Page Tests", () => {
   test("Non-existent page shows 404", async ({ page }) => {
     await page.goto("/this-page-does-not-exist-12345");
-    
+
     // Should show 404 content
-    const notFoundText = await page.locator("text=404").count() + 
-                         await page.locator("text=not found").count() +
-                         await page.locator("text=Not Found").count();
+    const notFoundText =
+      (await page.locator("text=404").count()) +
+      (await page.locator("text=not found").count()) +
+      (await page.locator("text=Not Found").count());
     expect(notFoundText).toBeGreaterThan(0);
   });
 });

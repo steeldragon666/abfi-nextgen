@@ -1,12 +1,31 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { Leaf, ArrowLeft, ArrowRight, Plus, Trash2, FileText } from "lucide-react";
+import {
+  Leaf,
+  ArrowLeft,
+  ArrowRight,
+  Plus,
+  Trash2,
+  FileText,
+} from "lucide-react";
 import { Link } from "wouter";
 
 interface Contract {
@@ -25,15 +44,18 @@ export default function ProducerContracts() {
   const [contracts, setContracts] = useState<Contract[]>([]);
 
   const addContract = () => {
-    setContracts([...contracts, {
-      id: Date.now().toString(),
-      buyerName: "",
-      volumeTonnes: "",
-      startDate: "",
-      endDate: "",
-      deliveryFrequency: "",
-      priceAUD: "",
-    }]);
+    setContracts([
+      ...contracts,
+      {
+        id: Date.now().toString(),
+        buyerName: "",
+        volumeTonnes: "",
+        startDate: "",
+        endDate: "",
+        deliveryFrequency: "",
+        priceAUD: "",
+      },
+    ]);
   };
 
   const removeContract = (id: string) => {
@@ -41,19 +63,27 @@ export default function ProducerContracts() {
   };
 
   const updateContract = (id: string, field: keyof Contract, value: string) => {
-    setContracts(contracts.map(c => c.id === id ? { ...c, [field]: value } : c));
+    setContracts(
+      contracts.map(c => (c.id === id ? { ...c, [field]: value } : c))
+    );
   };
 
   const calculateTotalCommitted = () => {
-    return contracts.reduce((sum, c) => sum + (parseFloat(c.volumeTonnes) || 0), 0);
+    return contracts.reduce(
+      (sum, c) => sum + (parseFloat(c.volumeTonnes) || 0),
+      0
+    );
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem("producerRegistration", JSON.stringify({
-      step: 6,
-      data: { hasContracts, contracts }
-    }));
+    localStorage.setItem(
+      "producerRegistration",
+      JSON.stringify({
+        step: 6,
+        data: { hasContracts, contracts },
+      })
+    );
     setLocation("/producer-registration/marketplace-listing");
   };
 
@@ -78,7 +108,9 @@ export default function ProducerContracts() {
       <div className="bg-white border-b">
         <div className="container mx-auto py-4">
           <Progress value={70} className="h-2" />
-          <p className="mt-2 text-sm text-gray-600">70% Complete • Estimated 4 minutes remaining</p>
+          <p className="mt-2 text-sm text-gray-600">
+            70% Complete • Estimated 4 minutes remaining
+          </p>
         </div>
       </div>
 
@@ -87,9 +119,12 @@ export default function ProducerContracts() {
         <div className="mx-auto max-w-4xl">
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl text-[#0F3A5C]">Existing Contracts</CardTitle>
+              <CardTitle className="text-2xl text-[#0F3A5C]">
+                Existing Contracts
+              </CardTitle>
               <CardDescription>
-                Tell buyers about your current commitments. This helps them understand your available supply.
+                Tell buyers about your current commitments. This helps them
+                understand your available supply.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -101,7 +136,8 @@ export default function ProducerContracts() {
                       Do you have existing supply contracts?
                     </h3>
                     <p className="text-sm text-gray-600">
-                      These are contracts you've already signed with buyers for future feedstock delivery.
+                      These are contracts you've already signed with buyers for
+                      future feedstock delivery.
                     </p>
                     <div className="flex gap-4">
                       <Button
@@ -135,7 +171,8 @@ export default function ProducerContracts() {
                       Great! Your full supply is available
                     </h3>
                     <p className="text-sm text-green-700">
-                      Buyers will see that all your feedstock is available for new contracts.
+                      Buyers will see that all your feedstock is available for
+                      new contracts.
                     </p>
                   </div>
                 )}
@@ -144,8 +181,16 @@ export default function ProducerContracts() {
                 {hasContracts === true && (
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-[#0F3A5C]">Contract Details</h3>
-                      <Button type="button" variant="outline" size="sm" onClick={addContract} className="gap-2">
+                      <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                        Contract Details
+                      </h3>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={addContract}
+                        className="gap-2"
+                      >
                         <Plus className="h-4 w-4" />
                         Add Contract
                       </Button>
@@ -153,9 +198,14 @@ export default function ProducerContracts() {
 
                     <div className="space-y-4">
                       {contracts.map((contract, index) => (
-                        <div key={contract.id} className="rounded-lg border border-gray-200 p-4">
+                        <div
+                          key={contract.id}
+                          className="rounded-lg border border-gray-200 p-4"
+                        >
                           <div className="mb-3 flex items-center justify-between">
-                            <span className="font-semibold text-[#0F3A5C]">Contract {index + 1}</span>
+                            <span className="font-semibold text-[#0F3A5C]">
+                              Contract {index + 1}
+                            </span>
                             {contracts.length > 1 && (
                               <Button
                                 type="button"
@@ -175,7 +225,13 @@ export default function ProducerContracts() {
                               <Input
                                 placeholder="e.g., ABC Biofuels Pty Ltd"
                                 value={contract.buyerName}
-                                onChange={(e) => updateContract(contract.id, "buyerName", e.target.value)}
+                                onChange={e =>
+                                  updateContract(
+                                    contract.id,
+                                    "buyerName",
+                                    e.target.value
+                                  )
+                                }
                                 required
                               />
                             </div>
@@ -186,7 +242,13 @@ export default function ProducerContracts() {
                                 type="number"
                                 placeholder="e.g., 5000"
                                 value={contract.volumeTonnes}
-                                onChange={(e) => updateContract(contract.id, "volumeTonnes", e.target.value)}
+                                onChange={e =>
+                                  updateContract(
+                                    contract.id,
+                                    "volumeTonnes",
+                                    e.target.value
+                                  )
+                                }
                                 required
                               />
                             </div>
@@ -196,7 +258,13 @@ export default function ProducerContracts() {
                               <Input
                                 type="date"
                                 value={contract.startDate}
-                                onChange={(e) => updateContract(contract.id, "startDate", e.target.value)}
+                                onChange={e =>
+                                  updateContract(
+                                    contract.id,
+                                    "startDate",
+                                    e.target.value
+                                  )
+                                }
                                 required
                               />
                             </div>
@@ -206,7 +274,13 @@ export default function ProducerContracts() {
                               <Input
                                 type="date"
                                 value={contract.endDate}
-                                onChange={(e) => updateContract(contract.id, "endDate", e.target.value)}
+                                onChange={e =>
+                                  updateContract(
+                                    contract.id,
+                                    "endDate",
+                                    e.target.value
+                                  )
+                                }
                                 required
                               />
                             </div>
@@ -215,18 +289,34 @@ export default function ProducerContracts() {
                               <Label>Delivery Frequency *</Label>
                               <Select
                                 value={contract.deliveryFrequency}
-                                onValueChange={(value) => updateContract(contract.id, "deliveryFrequency", value)}
+                                onValueChange={value =>
+                                  updateContract(
+                                    contract.id,
+                                    "deliveryFrequency",
+                                    value
+                                  )
+                                }
                               >
                                 <SelectTrigger>
                                   <SelectValue placeholder="Select frequency" />
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value="weekly">Weekly</SelectItem>
-                                  <SelectItem value="fortnightly">Fortnightly</SelectItem>
-                                  <SelectItem value="monthly">Monthly</SelectItem>
-                                  <SelectItem value="quarterly">Quarterly</SelectItem>
-                                  <SelectItem value="seasonal">Seasonal</SelectItem>
-                                  <SelectItem value="on_demand">On Demand</SelectItem>
+                                  <SelectItem value="fortnightly">
+                                    Fortnightly
+                                  </SelectItem>
+                                  <SelectItem value="monthly">
+                                    Monthly
+                                  </SelectItem>
+                                  <SelectItem value="quarterly">
+                                    Quarterly
+                                  </SelectItem>
+                                  <SelectItem value="seasonal">
+                                    Seasonal
+                                  </SelectItem>
+                                  <SelectItem value="on_demand">
+                                    On Demand
+                                  </SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>
@@ -237,9 +327,17 @@ export default function ProducerContracts() {
                                 type="number"
                                 placeholder="e.g., 85"
                                 value={contract.priceAUD}
-                                onChange={(e) => updateContract(contract.id, "priceAUD", e.target.value)}
+                                onChange={e =>
+                                  updateContract(
+                                    contract.id,
+                                    "priceAUD",
+                                    e.target.value
+                                  )
+                                }
                               />
-                              <p className="text-xs text-gray-600">Kept confidential</p>
+                              <p className="text-xs text-gray-600">
+                                Kept confidential
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -254,7 +352,8 @@ export default function ProducerContracts() {
                             Total Committed Volume:
                           </span>
                           <span className="text-lg font-bold text-[#0F3A5C]">
-                            {calculateTotalCommitted().toLocaleString()} tonnes/year
+                            {calculateTotalCommitted().toLocaleString()}{" "}
+                            tonnes/year
                           </span>
                         </div>
                       </div>
@@ -262,7 +361,10 @@ export default function ProducerContracts() {
 
                     <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
                       <p className="text-sm text-blue-900">
-                        <strong>Privacy Note:</strong> Contract details are kept confidential. Only the total committed volume is shown to potential buyers to help them understand your available supply.
+                        <strong>Privacy Note:</strong> Contract details are kept
+                        confidential. Only the total committed volume is shown
+                        to potential buyers to help them understand your
+                        available supply.
                       </p>
                     </div>
                   </div>

@@ -3,8 +3,21 @@
  * Built on Framer Motion for premium micro-interactions
  */
 
-import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from "framer-motion";
-import { useRef, useEffect, forwardRef, type ReactNode, type ComponentPropsWithoutRef } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useInView,
+  useMotionValue,
+  useTransform,
+  animate,
+} from "framer-motion";
+import {
+  useRef,
+  useEffect,
+  forwardRef,
+  type ReactNode,
+  type ComponentPropsWithoutRef,
+} from "react";
 import {
   fadeIn,
   fadeInUp,
@@ -58,7 +71,13 @@ interface FadeInProps {
   once?: boolean;
 }
 
-export function FadeIn({ children, className, delay = 0, duration = 0.5, once = true }: FadeInProps) {
+export function FadeIn({
+  children,
+  className,
+  delay = 0,
+  duration = 0.5,
+  once = true,
+}: FadeInProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once, margin: "-50px" });
 
@@ -86,7 +105,13 @@ interface FadeInUpProps {
   once?: boolean;
 }
 
-export function FadeInUp({ children, className, delay = 0, distance = 24, once = true }: FadeInUpProps) {
+export function FadeInUp({
+  children,
+  className,
+  delay = 0,
+  distance = 24,
+  once = true,
+}: FadeInUpProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once, margin: "-50px" });
 
@@ -113,7 +138,12 @@ interface ScaleInProps {
   once?: boolean;
 }
 
-export function ScaleIn({ children, className, delay = 0, once = true }: ScaleInProps) {
+export function ScaleIn({
+  children,
+  className,
+  delay = 0,
+  once = true,
+}: ScaleInProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once, margin: "-50px" });
 
@@ -146,7 +176,7 @@ export function StaggerContainer({
   className,
   delay = 0.1,
   staggerDelay = 0.08,
-  once = true
+  once = true,
 }: StaggerContainerProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once, margin: "-50px" });
@@ -206,7 +236,11 @@ interface HoverCardProps {
   subtle?: boolean;
 }
 
-export function HoverCard({ children, className, subtle = false }: HoverCardProps) {
+export function HoverCard({
+  children,
+  className,
+  subtle = false,
+}: HoverCardProps) {
   return (
     <motion.div
       initial="rest"
@@ -238,12 +272,12 @@ export function AnimatedCounter({
   className,
   prefix = "",
   suffix = "",
-  decimals = 0
+  decimals = 0,
 }: AnimatedCounterProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => {
+  const rounded = useTransform(count, latest => {
     if (decimals > 0) {
       return latest.toFixed(decimals);
     }
@@ -393,7 +427,12 @@ const presenceVariants = {
   slideDown: fadeInDown,
 };
 
-export function Presence({ children, show, className, variant = "fade" }: PresenceProps) {
+export function Presence({
+  children,
+  show,
+  className,
+  variant = "fade",
+}: PresenceProps) {
   return (
     <AnimatePresence mode="wait">
       {show && (
@@ -490,7 +529,12 @@ interface FloatingProps {
   duration?: number;
 }
 
-export function Floating({ children, className, amplitude = 10, duration = 3 }: FloatingProps) {
+export function Floating({
+  children,
+  className,
+  amplitude = 10,
+  duration = 3,
+}: FloatingProps) {
   return (
     <motion.div
       animate={{ y: [-amplitude, amplitude, -amplitude] }}
@@ -512,7 +556,12 @@ interface PulseProps {
   duration?: number;
 }
 
-export function Pulse({ children, className, scale = 1.05, duration = 2 }: PulseProps) {
+export function Pulse({
+  children,
+  className,
+  scale = 1.05,
+  duration = 2,
+}: PulseProps) {
   return (
     <motion.div
       animate={{ scale: [1, scale, 1] }}

@@ -2,7 +2,9 @@ import { test, expect } from "@playwright/test";
 
 test.describe("API Endpoints", () => {
   test.describe("Calculate Score API", () => {
-    test("should calculate carbon intensity score via GET", async ({ request }) => {
+    test("should calculate carbon intensity score via GET", async ({
+      request,
+    }) => {
       const response = await request.get("/api/calculate-score?ci=25");
 
       expect(response.ok()).toBeTruthy();
@@ -77,7 +79,9 @@ test.describe("API Endpoints", () => {
       expect([401, 404, 400]).toContain(response.status());
     });
 
-    test("should return 401 for unauthenticated DELETE", async ({ request }) => {
+    test("should return 401 for unauthenticated DELETE", async ({
+      request,
+    }) => {
       const response = await request.delete("/api/feedstocks/test-id");
 
       // Should fail without auth

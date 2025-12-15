@@ -1,17 +1,40 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AlertCircle, CheckCircle2, TrendingUp, TrendingDown, FileText, Download } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  TrendingUp,
+  TrendingDown,
+  FileText,
+  Download,
+} from "lucide-react";
 
 export default function ComplianceDashboard() {
   const currentQuarter = trpc.complianceReporting.getCurrentQuarter.useQuery();
-  
-  const [selectedQuarter, setSelectedQuarter] = useState<number>(currentQuarter.data?.quarter || 1);
-  const [selectedYear, setSelectedYear] = useState<number>(currentQuarter.data?.year || new Date().getFullYear());
+
+  const [selectedQuarter, setSelectedQuarter] = useState<number>(
+    currentQuarter.data?.quarter || 1
+  );
+  const [selectedYear, setSelectedYear] = useState<number>(
+    currentQuarter.data?.year || new Date().getFullYear()
+  );
 
   const report = trpc.complianceReporting.generateReport.useQuery({
     quarter: selectedQuarter,
@@ -62,7 +85,9 @@ export default function ComplianceDashboard() {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>Report Period</CardTitle>
-          <CardDescription>Select quarter and year to view compliance metrics</CardDescription>
+          <CardDescription>
+            Select quarter and year to view compliance metrics
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4 items-end">
@@ -70,7 +95,7 @@ export default function ComplianceDashboard() {
               <label className="text-sm font-medium mb-2 block">Quarter</label>
               <Select
                 value={selectedQuarter.toString()}
-                onValueChange={(value) => setSelectedQuarter(parseInt(value))}
+                onValueChange={value => setSelectedQuarter(parseInt(value))}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -87,13 +112,13 @@ export default function ComplianceDashboard() {
               <label className="text-sm font-medium mb-2 block">Year</label>
               <Select
                 value={selectedYear.toString()}
-                onValueChange={(value) => setSelectedYear(parseInt(value))}
+                onValueChange={value => setSelectedYear(parseInt(value))}
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {[2024, 2025, 2026].map((year) => (
+                  {[2024, 2025, 2026].map(year => (
                     <SelectItem key={year} value={year.toString()}>
                       {year}
                     </SelectItem>
@@ -111,7 +136,9 @@ export default function ComplianceDashboard() {
 
       {report.isLoading && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">Generating compliance report...</p>
+          <p className="text-muted-foreground">
+            Generating compliance report...
+          </p>
         </div>
       )}
 
@@ -138,7 +165,9 @@ export default function ComplianceDashboard() {
                     Key Findings
                   </h3>
                   {report.data.summary.keyFindings.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No significant findings</p>
+                    <p className="text-sm text-muted-foreground">
+                      No significant findings
+                    </p>
                   ) : (
                     <ul className="space-y-2">
                       {report.data.summary.keyFindings.map((finding, i) => (
@@ -156,7 +185,9 @@ export default function ComplianceDashboard() {
                     Recommendations
                   </h3>
                   {report.data.summary.recommendations.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No recommendations</p>
+                    <p className="text-sm text-muted-foreground">
+                      No recommendations
+                    </p>
                   ) : (
                     <ul className="space-y-2">
                       {report.data.summary.recommendations.map((rec, i) => (
@@ -187,7 +218,9 @@ export default function ComplianceDashboard() {
               <Card>
                 <CardHeader>
                   <CardTitle>Audit Activity</CardTitle>
-                  <CardDescription>Audit log events and user activity</CardDescription>
+                  <CardDescription>
+                    Audit log events and user activity
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid md:grid-cols-3 gap-6 mb-6">
@@ -198,7 +231,9 @@ export default function ComplianceDashboard() {
                     />
                     <MetricCard
                       title="Unique Actions"
-                      value={report.data.auditMetrics?.eventsByAction.length || 0}
+                      value={
+                        report.data.auditMetrics?.eventsByAction.length || 0
+                      }
                       icon={<TrendingUp className="h-5 w-5" />}
                     />
                     <MetricCard
@@ -212,24 +247,36 @@ export default function ComplianceDashboard() {
                     <div>
                       <h4 className="font-semibold mb-3">Top Actions</h4>
                       <div className="space-y-2">
-                        {report.data.auditMetrics?.eventsByAction.slice(0, 5).map((action, i) => (
-                          <div key={i} className="flex justify-between items-center">
-                            <span className="text-sm">{action.action}</span>
-                            <Badge variant="outline">{action.count}</Badge>
-                          </div>
-                        ))}
+                        {report.data.auditMetrics?.eventsByAction
+                          .slice(0, 5)
+                          .map((action, i) => (
+                            <div
+                              key={i}
+                              className="flex justify-between items-center"
+                            >
+                              <span className="text-sm">{action.action}</span>
+                              <Badge variant="outline">{action.count}</Badge>
+                            </div>
+                          ))}
                       </div>
                     </div>
 
                     <div>
                       <h4 className="font-semibold mb-3">Top Entity Types</h4>
                       <div className="space-y-2">
-                        {report.data.auditMetrics?.eventsByEntity.slice(0, 5).map((entity, i) => (
-                          <div key={i} className="flex justify-between items-center">
-                            <span className="text-sm">{entity.entityType}</span>
-                            <Badge variant="outline">{entity.count}</Badge>
-                          </div>
-                        ))}
+                        {report.data.auditMetrics?.eventsByEntity
+                          .slice(0, 5)
+                          .map((entity, i) => (
+                            <div
+                              key={i}
+                              className="flex justify-between items-center"
+                            >
+                              <span className="text-sm">
+                                {entity.entityType}
+                              </span>
+                              <Badge variant="outline">{entity.count}</Badge>
+                            </div>
+                          ))}
                       </div>
                     </div>
                   </div>
@@ -242,7 +289,9 @@ export default function ComplianceDashboard() {
               <Card>
                 <CardHeader>
                   <CardTitle>Admin Overrides</CardTitle>
-                  <CardDescription>Override activity and revocations</CardDescription>
+                  <CardDescription>
+                    Override activity and revocations
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid md:grid-cols-3 gap-6 mb-6">
@@ -267,24 +316,40 @@ export default function ComplianceDashboard() {
                     <div>
                       <h4 className="font-semibold mb-3">Overrides by Type</h4>
                       <div className="space-y-2">
-                        {report.data.overrideMetrics?.overridesByType.map((type, i) => (
-                          <div key={i} className="flex justify-between items-center">
-                            <span className="text-sm">{type.overrideType}</span>
-                            <Badge variant="outline">{type.count}</Badge>
-                          </div>
-                        ))}
+                        {report.data.overrideMetrics?.overridesByType.map(
+                          (type, i) => (
+                            <div
+                              key={i}
+                              className="flex justify-between items-center"
+                            >
+                              <span className="text-sm">
+                                {type.overrideType}
+                              </span>
+                              <Badge variant="outline">{type.count}</Badge>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold mb-3">Overrides by Entity</h4>
+                      <h4 className="font-semibold mb-3">
+                        Overrides by Entity
+                      </h4>
                       <div className="space-y-2">
-                        {report.data.overrideMetrics?.overridesByEntity.map((entity, i) => (
-                          <div key={i} className="flex justify-between items-center">
-                            <span className="text-sm">{entity.entityType}</span>
-                            <Badge variant="outline">{entity.count}</Badge>
-                          </div>
-                        ))}
+                        {report.data.overrideMetrics?.overridesByEntity.map(
+                          (entity, i) => (
+                            <div
+                              key={i}
+                              className="flex justify-between items-center"
+                            >
+                              <span className="text-sm">
+                                {entity.entityType}
+                              </span>
+                              <Badge variant="outline">{entity.count}</Badge>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
                   </div>
@@ -297,7 +362,9 @@ export default function ComplianceDashboard() {
               <Card>
                 <CardHeader>
                   <CardTitle>Consent Management</CardTitle>
-                  <CardDescription>User consent tracking and withdrawals</CardDescription>
+                  <CardDescription>
+                    User consent tracking and withdrawals
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid md:grid-cols-2 gap-6 mb-6">
@@ -317,27 +384,45 @@ export default function ComplianceDashboard() {
                     <div>
                       <h4 className="font-semibold mb-3">Consents by Type</h4>
                       <div className="space-y-2">
-                        {report.data.consentMetrics?.consentsByType.map((consent, i) => (
-                          <div key={i} className="flex justify-between items-center">
-                            <span className="text-sm">
-                              {consent.consentType} ({consent.granted ? "Granted" : "Denied"})
-                            </span>
-                            <Badge variant="outline">{consent.count}</Badge>
-                          </div>
-                        ))}
+                        {report.data.consentMetrics?.consentsByType.map(
+                          (consent, i) => (
+                            <div
+                              key={i}
+                              className="flex justify-between items-center"
+                            >
+                              <span className="text-sm">
+                                {consent.consentType} (
+                                {consent.granted ? "Granted" : "Denied"})
+                              </span>
+                              <Badge variant="outline">{consent.count}</Badge>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
 
-                    {(report.data.consentMetrics?.withdrawalsByType?.length || 0) > 0 && (
+                    {(report.data.consentMetrics?.withdrawalsByType?.length ||
+                      0) > 0 && (
                       <div>
-                        <h4 className="font-semibold mb-3">Withdrawals by Type</h4>
+                        <h4 className="font-semibold mb-3">
+                          Withdrawals by Type
+                        </h4>
                         <div className="space-y-2">
-                          {report.data.consentMetrics?.withdrawalsByType?.map((withdrawal, i) => (
-                            <div key={i} className="flex justify-between items-center">
-                              <span className="text-sm">{withdrawal.consentType}</span>
-                              <Badge variant="outline">{withdrawal.count}</Badge>
-                            </div>
-                          ))}
+                          {report.data.consentMetrics?.withdrawalsByType?.map(
+                            (withdrawal, i) => (
+                              <div
+                                key={i}
+                                className="flex justify-between items-center"
+                              >
+                                <span className="text-sm">
+                                  {withdrawal.consentType}
+                                </span>
+                                <Badge variant="outline">
+                                  {withdrawal.count}
+                                </Badge>
+                              </div>
+                            )
+                          )}
                         </div>
                       </div>
                     )}
@@ -351,7 +436,9 @@ export default function ComplianceDashboard() {
               <Card>
                 <CardHeader>
                   <CardTitle>Dispute Resolution</CardTitle>
-                  <CardDescription>Dispute tracking and resolution metrics</CardDescription>
+                  <CardDescription>
+                    Dispute tracking and resolution metrics
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid md:grid-cols-3 gap-6 mb-6">
@@ -376,37 +463,59 @@ export default function ComplianceDashboard() {
                     <div>
                       <h4 className="font-semibold mb-3">Disputes by Type</h4>
                       <div className="space-y-2">
-                        {report.data.disputeMetrics?.disputesByType.map((type, i) => (
-                          <div key={i} className="flex justify-between items-center">
-                            <span className="text-sm">{type.disputeType}</span>
-                            <Badge variant="outline">{type.count}</Badge>
-                          </div>
-                        ))}
+                        {report.data.disputeMetrics?.disputesByType.map(
+                          (type, i) => (
+                            <div
+                              key={i}
+                              className="flex justify-between items-center"
+                            >
+                              <span className="text-sm">
+                                {type.disputeType}
+                              </span>
+                              <Badge variant="outline">{type.count}</Badge>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
 
                     <div>
                       <h4 className="font-semibold mb-3">Disputes by Status</h4>
                       <div className="space-y-2">
-                        {report.data.disputeMetrics?.disputesByStatus.map((status, i) => (
-                          <div key={i} className="flex justify-between items-center">
-                            <span className="text-sm">{status.status}</span>
-                            <Badge variant="outline">{status.count}</Badge>
-                          </div>
-                        ))}
+                        {report.data.disputeMetrics?.disputesByStatus.map(
+                          (status, i) => (
+                            <div
+                              key={i}
+                              className="flex justify-between items-center"
+                            >
+                              <span className="text-sm">{status.status}</span>
+                              <Badge variant="outline">{status.count}</Badge>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
 
-                    {(report.data.disputeMetrics?.resolutionOutcomes?.length || 0) > 0 && (
+                    {(report.data.disputeMetrics?.resolutionOutcomes?.length ||
+                      0) > 0 && (
                       <div>
-                        <h4 className="font-semibold mb-3">Resolution Outcomes</h4>
+                        <h4 className="font-semibold mb-3">
+                          Resolution Outcomes
+                        </h4>
                         <div className="space-y-2">
-                          {report.data.disputeMetrics?.resolutionOutcomes?.map((outcome, i) => (
-                            <div key={i} className="flex justify-between items-center">
-                              <span className="text-sm">{outcome.outcome}</span>
-                              <Badge variant="outline">{outcome.count}</Badge>
-                            </div>
-                          ))}
+                          {report.data.disputeMetrics?.resolutionOutcomes?.map(
+                            (outcome, i) => (
+                              <div
+                                key={i}
+                                className="flex justify-between items-center"
+                              >
+                                <span className="text-sm">
+                                  {outcome.outcome}
+                                </span>
+                                <Badge variant="outline">{outcome.count}</Badge>
+                              </div>
+                            )
+                          )}
                         </div>
                       </div>
                     )}
@@ -420,7 +529,9 @@ export default function ComplianceDashboard() {
               <Card>
                 <CardHeader>
                   <CardTitle>Platform Activity</CardTitle>
-                  <CardDescription>User growth and platform metrics</CardDescription>
+                  <CardDescription>
+                    User growth and platform metrics
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid md:grid-cols-3 gap-6 mb-6">
@@ -443,24 +554,34 @@ export default function ComplianceDashboard() {
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold mb-3">Certificates Issued</h4>
+                      <h4 className="font-semibold mb-3">
+                        Certificates Issued
+                      </h4>
                       <div className="text-3xl font-bold">
                         {report.data.certificateMetrics?.totalCertificates || 0}
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">
-                        {report.data.certificateMetrics?.expiringSoon || 0} expiring soon
+                        {report.data.certificateMetrics?.expiringSoon || 0}{" "}
+                        expiring soon
                       </p>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold mb-3">Certificates by Type</h4>
+                      <h4 className="font-semibold mb-3">
+                        Certificates by Type
+                      </h4>
                       <div className="space-y-2">
-                        {report.data.certificateMetrics?.certificatesByType.slice(0, 5).map((cert, i) => (
-                          <div key={i} className="flex justify-between items-center">
-                            <span className="text-sm">{cert.type}</span>
-                            <Badge variant="outline">{cert.count}</Badge>
-                          </div>
-                        ))}
+                        {report.data.certificateMetrics?.certificatesByType
+                          .slice(0, 5)
+                          .map((cert, i) => (
+                            <div
+                              key={i}
+                              className="flex justify-between items-center"
+                            >
+                              <span className="text-sm">{cert.type}</span>
+                              <Badge variant="outline">{cert.count}</Badge>
+                            </div>
+                          ))}
                       </div>
                     </div>
                   </div>

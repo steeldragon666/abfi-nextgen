@@ -1,10 +1,22 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageLayout } from "@/components/layout";
@@ -37,7 +49,11 @@ type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
 const CROP_TYPE_OPTIONS = [
   { value: "bamboo", label: "Bamboo", icon: Sprout },
-  { value: "rotation_forestry", label: "Rotation Forestry", icon: TreeDeciduous },
+  {
+    value: "rotation_forestry",
+    label: "Rotation Forestry",
+    icon: TreeDeciduous,
+  },
   { value: "eucalyptus", label: "Eucalyptus", icon: TreeDeciduous },
   { value: "poplar", label: "Poplar", icon: TreeDeciduous },
   { value: "willow", label: "Willow", icon: TreeDeciduous },
@@ -94,8 +110,12 @@ export default function FuturesCreate() {
   const [landStatus, setLandStatus] = useState("owned");
 
   // Step 3: Timeline
-  const [projectionStartYear, setProjectionStartYear] = useState(new Date().getFullYear().toString());
-  const [projectionEndYear, setProjectionEndYear] = useState((new Date().getFullYear() + 10).toString());
+  const [projectionStartYear, setProjectionStartYear] = useState(
+    new Date().getFullYear().toString()
+  );
+  const [projectionEndYear, setProjectionEndYear] = useState(
+    (new Date().getFullYear() + 10).toString()
+  );
   const [plantingDate, setPlantingDate] = useState("");
   const [firstHarvestYear, setFirstHarvestYear] = useState("");
 
@@ -111,10 +131,11 @@ export default function FuturesCreate() {
   const [expectedEnergyContent, setExpectedEnergyContent] = useState("");
 
   // Fetch existing futures if editing
-  const { data: existingFutures, isLoading: loadingExisting } = trpc.futures.getById.useQuery(
-    { id: parseInt(editId || "0") },
-    { enabled: !!editId }
-  );
+  const { data: existingFutures, isLoading: loadingExisting } =
+    trpc.futures.getById.useQuery(
+      { id: parseInt(editId || "0") },
+      { enabled: !!editId }
+    );
 
   // Load existing data when editing
   useEffect(() => {
@@ -160,7 +181,7 @@ export default function FuturesCreate() {
 
     const newProjections: YieldProjection[] = [];
     for (let year = startYear; year <= endYear; year++) {
-      const existing = projections.find((p) => p.projectionYear === year);
+      const existing = projections.find(p => p.projectionYear === year);
       newProjections.push(
         existing || {
           projectionYear: year,
@@ -176,15 +197,18 @@ export default function FuturesCreate() {
 
   // Calculate totals
   const totalProjectedTonnes = useMemo(() => {
-    return projections.reduce((sum, p) => sum + (parseFloat(p.projectedTonnes) || 0), 0);
+    return projections.reduce(
+      (sum, p) => sum + (parseFloat(p.projectedTonnes) || 0),
+      0
+    );
   }, [projections]);
 
   const createMutation = trpc.futures.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: data => {
       toast.success("Futures listing created successfully!");
       setLocation(`/supplier/futures/${data.id}`);
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to create futures listing");
       setIsSubmitting(false);
     },
@@ -195,7 +219,7 @@ export default function FuturesCreate() {
       toast.success("Futures listing updated successfully!");
       setLocation(`/supplier/futures/${editId}`);
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to update futures listing");
       setIsSubmitting(false);
     },
@@ -217,20 +241,34 @@ export default function FuturesCreate() {
       landStatus: landStatus as any,
       projectionStartYear: parseInt(projectionStartYear),
       projectionEndYear: parseInt(projectionEndYear),
-      firstHarvestYear: firstHarvestYear ? parseInt(firstHarvestYear) : undefined,
-      indicativePricePerTonne: indicativePricePerTonne ? parseFloat(indicativePricePerTonne) : undefined,
-      priceEscalationPercent: priceEscalationPercent ? parseFloat(priceEscalationPercent) : undefined,
+      firstHarvestYear: firstHarvestYear
+        ? parseInt(firstHarvestYear)
+        : undefined,
+      indicativePricePerTonne: indicativePricePerTonne
+        ? parseFloat(indicativePricePerTonne)
+        : undefined,
+      priceEscalationPercent: priceEscalationPercent
+        ? parseFloat(priceEscalationPercent)
+        : undefined,
       pricingNotes: pricingNotes || undefined,
-      expectedCarbonIntensity: expectedCarbonIntensity ? parseFloat(expectedCarbonIntensity) : undefined,
-      expectedMoistureContent: expectedMoistureContent ? parseFloat(expectedMoistureContent) : undefined,
-      expectedEnergyContent: expectedEnergyContent ? parseFloat(expectedEnergyContent) : undefined,
+      expectedCarbonIntensity: expectedCarbonIntensity
+        ? parseFloat(expectedCarbonIntensity)
+        : undefined,
+      expectedMoistureContent: expectedMoistureContent
+        ? parseFloat(expectedMoistureContent)
+        : undefined,
+      expectedEnergyContent: expectedEnergyContent
+        ? parseFloat(expectedEnergyContent)
+        : undefined,
       status: publishNow ? ("active" as const) : ("draft" as const),
       projections: projections
-        .filter((p) => p.projectedTonnes)
-        .map((p) => ({
+        .filter(p => p.projectedTonnes)
+        .map(p => ({
           projectionYear: p.projectionYear,
           projectedTonnes: parseFloat(p.projectedTonnes),
-          confidencePercent: p.confidencePercent ? parseInt(p.confidencePercent) : undefined,
+          confidencePercent: p.confidencePercent
+            ? parseInt(p.confidencePercent)
+            : undefined,
           harvestSeason: p.harvestSeason || undefined,
           notes: p.notes || undefined,
         })),
@@ -261,7 +299,11 @@ export default function FuturesCreate() {
     }
   };
 
-  const updateProjection = (index: number, field: keyof YieldProjection, value: string) => {
+  const updateProjection = (
+    index: number,
+    field: keyof YieldProjection,
+    value: string
+  ) => {
     const updated = [...projections];
     updated[index] = { ...updated[index], [field]: value };
     setProjections(updated);
@@ -271,11 +313,20 @@ export default function FuturesCreate() {
   const canProceedStep1 = cropType && title;
   const canProceedStep2 = state && landAreaHectares;
   const canProceedStep3 = projectionStartYear && projectionEndYear;
-  const canProceedStep4 = projections.some((p) => parseFloat(p.projectedTonnes) > 0);
+  const canProceedStep4 = projections.some(
+    p => parseFloat(p.projectedTonnes) > 0
+  );
   const canProceedStep5 = true; // All optional
 
   const stepIcons = [Leaf, MapPin, Calendar, TrendingUp, DollarSign, FileText];
-  const stepLabels = ["Crop Details", "Location", "Timeline", "Projections", "Pricing", "Review"];
+  const stepLabels = [
+    "Crop Details",
+    "Location",
+    "Timeline",
+    "Projections",
+    "Pricing",
+    "Review",
+  ];
 
   if (authLoading || !user) {
     return (
@@ -313,7 +364,10 @@ export default function FuturesCreate() {
 
         <div className="container mx-auto px-4 py-12 lg:py-16 relative z-10">
           <Link href="/supplier/futures">
-            <Button variant="ghost" className="mb-6 text-white/80 hover:text-white hover:bg-white/10">
+            <Button
+              variant="ghost"
+              className="mb-6 text-white/80 hover:text-white hover:bg-white/10"
+            >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to My Futures
             </Button>
@@ -331,7 +385,8 @@ export default function FuturesCreate() {
             </h1>
 
             <p className="text-lg text-emerald-100 max-w-xl">
-              Project your long-term perennial crop yields and connect with buyers seeking future supply agreements.
+              Project your long-term perennial crop yields and connect with
+              buyers seeking future supply agreements.
             </p>
           </div>
         </div>
@@ -341,12 +396,14 @@ export default function FuturesCreate() {
       <section className="bg-background border-b py-6">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="flex items-center justify-between">
-            {[1, 2, 3, 4, 5, 6].map((step) => {
+            {[1, 2, 3, 4, 5, 6].map(step => {
               const StepIcon = stepIcons[step - 1];
               return (
                 <div key={step} className="flex items-center flex-1">
                   <button
-                    onClick={() => step < currentStep && setCurrentStep(step as Step)}
+                    onClick={() =>
+                      step < currentStep && setCurrentStep(step as Step)
+                    }
                     className={cn(
                       "flex items-center justify-center w-12 h-12 rounded-xl border-2 transition-all",
                       currentStep >= step
@@ -380,7 +437,9 @@ export default function FuturesCreate() {
                 key={label}
                 className={cn(
                   "text-xs font-medium transition-colors text-center w-16",
-                  currentStep >= i + 1 ? "text-teal-600 font-semibold" : "text-muted-foreground"
+                  currentStep >= i + 1
+                    ? "text-teal-600 font-semibold"
+                    : "text-muted-foreground"
                 )}
               >
                 {label}
@@ -403,19 +462,23 @@ export default function FuturesCreate() {
                   </div>
                   <div>
                     <CardTitle className="text-2xl">Crop Details</CardTitle>
-                    <CardDescription>Select the perennial crop type and provide details</CardDescription>
+                    <CardDescription>
+                      Select the perennial crop type and provide details
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="cropType" className="text-base font-semibold">Crop Type *</Label>
+                  <Label htmlFor="cropType" className="text-base font-semibold">
+                    Crop Type *
+                  </Label>
                   <Select value={cropType} onValueChange={setCropType}>
                     <SelectTrigger id="cropType" className="h-12">
                       <SelectValue placeholder="Select crop type" />
                     </SelectTrigger>
                     <SelectContent>
-                      {CROP_TYPE_OPTIONS.map((crop) => (
+                      {CROP_TYPE_OPTIONS.map(crop => (
                         <SelectItem key={crop.value} value={crop.value}>
                           <div className="flex items-center gap-2">
                             <crop.icon className="h-4 w-4 text-teal-600" />
@@ -428,34 +491,46 @@ export default function FuturesCreate() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="cropVariety" className="text-base font-semibold">Variety / Cultivar</Label>
+                  <Label
+                    htmlFor="cropVariety"
+                    className="text-base font-semibold"
+                  >
+                    Variety / Cultivar
+                  </Label>
                   <Input
                     id="cropVariety"
                     placeholder="e.g., Moso, Madake, Clone 433"
                     value={cropVariety}
-                    onChange={(e) => setCropVariety(e.target.value)}
+                    onChange={e => setCropVariety(e.target.value)}
                     className="h-12"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="title" className="text-base font-semibold">Listing Title *</Label>
+                  <Label htmlFor="title" className="text-base font-semibold">
+                    Listing Title *
+                  </Label>
                   <Input
                     id="title"
                     placeholder="e.g., 500ha Eucalyptus Plantation - QLD"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value)}
                     className="h-12"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description" className="text-base font-semibold">Description</Label>
+                  <Label
+                    htmlFor="description"
+                    className="text-base font-semibold"
+                  >
+                    Description
+                  </Label>
                   <Textarea
                     id="description"
                     placeholder="Describe your plantation, growing conditions, sustainability practices..."
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={e => setDescription(e.target.value)}
                     rows={4}
                     className="resize-none"
                   />
@@ -486,20 +561,24 @@ export default function FuturesCreate() {
                   </div>
                   <div>
                     <CardTitle className="text-2xl">Location & Land</CardTitle>
-                    <CardDescription>Where is your plantation located?</CardDescription>
+                    <CardDescription>
+                      Where is your plantation located?
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="state" className="text-base font-semibold">State *</Label>
+                    <Label htmlFor="state" className="text-base font-semibold">
+                      State *
+                    </Label>
                     <Select value={state} onValueChange={setState}>
                       <SelectTrigger id="state" className="h-12">
                         <SelectValue placeholder="Select state" />
                       </SelectTrigger>
                       <SelectContent>
-                        {AUSTRALIAN_STATES.map((s) => (
+                        {AUSTRALIAN_STATES.map(s => (
                           <SelectItem key={s.value} value={s.value}>
                             {s.label}
                           </SelectItem>
@@ -509,12 +588,14 @@ export default function FuturesCreate() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="region" className="text-base font-semibold">Region</Label>
+                    <Label htmlFor="region" className="text-base font-semibold">
+                      Region
+                    </Label>
                     <Input
                       id="region"
                       placeholder="e.g., Darling Downs, Murray-Darling"
                       value={region}
-                      onChange={(e) => setRegion(e.target.value)}
+                      onChange={e => setRegion(e.target.value)}
                       className="h-12"
                     />
                   </div>
@@ -522,25 +603,35 @@ export default function FuturesCreate() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="landAreaHectares" className="text-base font-semibold">Land Area (hectares) *</Label>
+                    <Label
+                      htmlFor="landAreaHectares"
+                      className="text-base font-semibold"
+                    >
+                      Land Area (hectares) *
+                    </Label>
                     <Input
                       id="landAreaHectares"
                       type="number"
                       placeholder="e.g., 500"
                       value={landAreaHectares}
-                      onChange={(e) => setLandAreaHectares(e.target.value)}
+                      onChange={e => setLandAreaHectares(e.target.value)}
                       className="h-12 font-mono"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="landStatus" className="text-base font-semibold">Land Status</Label>
+                    <Label
+                      htmlFor="landStatus"
+                      className="text-base font-semibold"
+                    >
+                      Land Status
+                    </Label>
                     <Select value={landStatus} onValueChange={setLandStatus}>
                       <SelectTrigger id="landStatus" className="h-12">
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent>
-                        {LAND_STATUS_OPTIONS.map((status) => (
+                        {LAND_STATUS_OPTIONS.map(status => (
                           <SelectItem key={status.value} value={status.value}>
                             {status.label}
                           </SelectItem>
@@ -551,7 +642,11 @@ export default function FuturesCreate() {
                 </div>
 
                 <div className="flex justify-between gap-3 pt-6 border-t">
-                  <Button variant="outline" onClick={() => setCurrentStep(1)} size="lg">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentStep(1)}
+                    size="lg"
+                  >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Previous
                   </Button>
@@ -578,21 +673,36 @@ export default function FuturesCreate() {
                     <Calendar className="h-6 w-6 text-teal-600" />
                   </div>
                   <div>
-                    <CardTitle className="text-2xl">Projection Timeline</CardTitle>
-                    <CardDescription>Define the timeframe for your yield projections</CardDescription>
+                    <CardTitle className="text-2xl">
+                      Projection Timeline
+                    </CardTitle>
+                    <CardDescription>
+                      Define the timeframe for your yield projections
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="projectionStartYear" className="text-base font-semibold">Start Year *</Label>
-                    <Select value={projectionStartYear} onValueChange={setProjectionStartYear}>
+                    <Label
+                      htmlFor="projectionStartYear"
+                      className="text-base font-semibold"
+                    >
+                      Start Year *
+                    </Label>
+                    <Select
+                      value={projectionStartYear}
+                      onValueChange={setProjectionStartYear}
+                    >
                       <SelectTrigger id="projectionStartYear" className="h-12">
                         <SelectValue placeholder="Select year" />
                       </SelectTrigger>
                       <SelectContent>
-                        {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map((year) => (
+                        {Array.from(
+                          { length: 10 },
+                          (_, i) => new Date().getFullYear() + i
+                        ).map(year => (
                           <SelectItem key={year} value={year.toString()}>
                             {year}
                           </SelectItem>
@@ -602,13 +712,24 @@ export default function FuturesCreate() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="projectionEndYear" className="text-base font-semibold">End Year *</Label>
-                    <Select value={projectionEndYear} onValueChange={setProjectionEndYear}>
+                    <Label
+                      htmlFor="projectionEndYear"
+                      className="text-base font-semibold"
+                    >
+                      End Year *
+                    </Label>
+                    <Select
+                      value={projectionEndYear}
+                      onValueChange={setProjectionEndYear}
+                    >
                       <SelectTrigger id="projectionEndYear" className="h-12">
                         <SelectValue placeholder="Select year" />
                       </SelectTrigger>
                       <SelectContent>
-                        {Array.from({ length: 30 }, (_, i) => parseInt(projectionStartYear || "2025") + i).map((year) => (
+                        {Array.from(
+                          { length: 30 },
+                          (_, i) => parseInt(projectionStartYear || "2025") + i
+                        ).map(year => (
                           <SelectItem key={year} value={year.toString()}>
                             {year}
                           </SelectItem>
@@ -620,24 +741,40 @@ export default function FuturesCreate() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="plantingDate" className="text-base font-semibold">Planting Date</Label>
+                    <Label
+                      htmlFor="plantingDate"
+                      className="text-base font-semibold"
+                    >
+                      Planting Date
+                    </Label>
                     <Input
                       id="plantingDate"
                       type="date"
                       value={plantingDate}
-                      onChange={(e) => setPlantingDate(e.target.value)}
+                      onChange={e => setPlantingDate(e.target.value)}
                       className="h-12"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="firstHarvestYear" className="text-base font-semibold">First Harvest Year</Label>
-                    <Select value={firstHarvestYear} onValueChange={setFirstHarvestYear}>
+                    <Label
+                      htmlFor="firstHarvestYear"
+                      className="text-base font-semibold"
+                    >
+                      First Harvest Year
+                    </Label>
+                    <Select
+                      value={firstHarvestYear}
+                      onValueChange={setFirstHarvestYear}
+                    >
                       <SelectTrigger id="firstHarvestYear" className="h-12">
                         <SelectValue placeholder="Select year" />
                       </SelectTrigger>
                       <SelectContent>
-                        {Array.from({ length: 30 }, (_, i) => parseInt(projectionStartYear || "2025") + i).map((year) => (
+                        {Array.from(
+                          { length: 30 },
+                          (_, i) => parseInt(projectionStartYear || "2025") + i
+                        ).map(year => (
                           <SelectItem key={year} value={year.toString()}>
                             {year}
                           </SelectItem>
@@ -649,13 +786,23 @@ export default function FuturesCreate() {
 
                 <div className="bg-teal-50 border border-teal-100 rounded-xl p-5">
                   <p className="text-sm text-teal-700">
-                    Projection period: <strong className="text-teal-800">{parseInt(projectionEndYear) - parseInt(projectionStartYear) + 1} years</strong>
-                    {" "}({projectionStartYear} - {projectionEndYear})
+                    Projection period:{" "}
+                    <strong className="text-teal-800">
+                      {parseInt(projectionEndYear) -
+                        parseInt(projectionStartYear) +
+                        1}{" "}
+                      years
+                    </strong>{" "}
+                    ({projectionStartYear} - {projectionEndYear})
                   </p>
                 </div>
 
                 <div className="flex justify-between gap-3 pt-6 border-t">
-                  <Button variant="outline" onClick={() => setCurrentStep(2)} size="lg">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentStep(2)}
+                    size="lg"
+                  >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Previous
                   </Button>
@@ -685,18 +832,31 @@ export default function FuturesCreate() {
                     <TrendingUp className="h-6 w-6 text-teal-600" />
                   </div>
                   <div>
-                    <CardTitle className="text-2xl">Yield Projections</CardTitle>
-                    <CardDescription>Enter projected yields for each year</CardDescription>
+                    <CardTitle className="text-2xl">
+                      Yield Projections
+                    </CardTitle>
+                    <CardDescription>
+                      Enter projected yields for each year
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="bg-teal-50 border border-teal-100 rounded-xl p-5 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                   <div>
-                    <p className="text-sm text-teal-600 mb-1">Total Projected Volume</p>
-                    <p className="text-3xl font-bold text-teal-800 font-mono">{totalProjectedTonnes.toLocaleString()} tonnes</p>
+                    <p className="text-sm text-teal-600 mb-1">
+                      Total Projected Volume
+                    </p>
+                    <p className="text-3xl font-bold text-teal-800 font-mono">
+                      {totalProjectedTonnes.toLocaleString()} tonnes
+                    </p>
                   </div>
-                  <Button variant="outline" size="sm" onClick={generateProjections} className="border-teal-200 text-teal-700 hover:bg-teal-100">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={generateProjections}
+                    className="border-teal-200 text-teal-700 hover:bg-teal-100"
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Regenerate Years
                   </Button>
@@ -704,46 +864,79 @@ export default function FuturesCreate() {
 
                 <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                   {projections.map((projection, index) => (
-                    <div key={projection.projectionYear} className="border rounded-xl p-4 hover:border-teal-200 transition-colors">
+                    <div
+                      key={projection.projectionYear}
+                      className="border rounded-xl p-4 hover:border-teal-200 transition-colors"
+                    >
                       <div className="flex items-center justify-between mb-3">
-                        <h4 className="font-bold text-lg">{projection.projectionYear}</h4>
-                        <Badge variant="outline" className="border-teal-200 text-teal-700">Year {index + 1}</Badge>
+                        <h4 className="font-bold text-lg">
+                          {projection.projectionYear}
+                        </h4>
+                        <Badge
+                          variant="outline"
+                          className="border-teal-200 text-teal-700"
+                        >
+                          Year {index + 1}
+                        </Badge>
                       </div>
                       <div className="grid md:grid-cols-4 gap-4">
                         <div className="space-y-1.5">
-                          <Label className="text-xs text-muted-foreground">Projected Tonnes *</Label>
+                          <Label className="text-xs text-muted-foreground">
+                            Projected Tonnes *
+                          </Label>
                           <Input
                             type="number"
                             placeholder="0"
                             value={projection.projectedTonnes}
-                            onChange={(e) => updateProjection(index, "projectedTonnes", e.target.value)}
+                            onChange={e =>
+                              updateProjection(
+                                index,
+                                "projectedTonnes",
+                                e.target.value
+                              )
+                            }
                             className="font-mono h-10"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-xs text-muted-foreground">Confidence %</Label>
+                          <Label className="text-xs text-muted-foreground">
+                            Confidence %
+                          </Label>
                           <Input
                             type="number"
                             min="0"
                             max="100"
                             placeholder="80"
                             value={projection.confidencePercent}
-                            onChange={(e) => updateProjection(index, "confidencePercent", e.target.value)}
+                            onChange={e =>
+                              updateProjection(
+                                index,
+                                "confidencePercent",
+                                e.target.value
+                              )
+                            }
                             className="font-mono h-10"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-xs text-muted-foreground">Harvest Season</Label>
+                          <Label className="text-xs text-muted-foreground">
+                            Harvest Season
+                          </Label>
                           <Select
                             value={projection.harvestSeason}
-                            onValueChange={(v) => updateProjection(index, "harvestSeason", v)}
+                            onValueChange={v =>
+                              updateProjection(index, "harvestSeason", v)
+                            }
                           >
                             <SelectTrigger className="h-10">
                               <SelectValue placeholder="Select" />
                             </SelectTrigger>
                             <SelectContent>
-                              {HARVEST_SEASON_OPTIONS.map((season) => (
-                                <SelectItem key={season.value} value={season.value}>
+                              {HARVEST_SEASON_OPTIONS.map(season => (
+                                <SelectItem
+                                  key={season.value}
+                                  value={season.value}
+                                >
                                   {season.label}
                                 </SelectItem>
                               ))}
@@ -751,11 +944,15 @@ export default function FuturesCreate() {
                           </Select>
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-xs text-muted-foreground">Notes</Label>
+                          <Label className="text-xs text-muted-foreground">
+                            Notes
+                          </Label>
                           <Input
                             placeholder="Optional notes"
                             value={projection.notes}
-                            onChange={(e) => updateProjection(index, "notes", e.target.value)}
+                            onChange={e =>
+                              updateProjection(index, "notes", e.target.value)
+                            }
                             className="h-10"
                           />
                         </div>
@@ -765,7 +962,11 @@ export default function FuturesCreate() {
                 </div>
 
                 <div className="flex justify-between gap-3 pt-6 border-t">
-                  <Button variant="outline" onClick={() => setCurrentStep(3)} size="lg">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentStep(3)}
+                    size="lg"
+                  >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Previous
                   </Button>
@@ -792,87 +993,120 @@ export default function FuturesCreate() {
                     <DollarSign className="h-6 w-6 text-teal-600" />
                   </div>
                   <div>
-                    <CardTitle className="text-2xl">Pricing & Quality</CardTitle>
-                    <CardDescription>Set indicative pricing and quality parameters</CardDescription>
+                    <CardTitle className="text-2xl">
+                      Pricing & Quality
+                    </CardTitle>
+                    <CardDescription>
+                      Set indicative pricing and quality parameters
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="indicativePricePerTonne" className="text-base font-semibold">Indicative Price ($/tonne)</Label>
+                    <Label
+                      htmlFor="indicativePricePerTonne"
+                      className="text-base font-semibold"
+                    >
+                      Indicative Price ($/tonne)
+                    </Label>
                     <Input
                       id="indicativePricePerTonne"
                       type="number"
                       placeholder="e.g., 120"
                       value={indicativePricePerTonne}
-                      onChange={(e) => setIndicativePricePerTonne(e.target.value)}
+                      onChange={e => setIndicativePricePerTonne(e.target.value)}
                       className="h-12 font-mono"
                     />
-                    <p className="text-xs text-muted-foreground">Leave blank for "negotiable"</p>
+                    <p className="text-xs text-muted-foreground">
+                      Leave blank for "negotiable"
+                    </p>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="priceEscalationPercent" className="text-base font-semibold">Annual Price Escalation (%)</Label>
+                    <Label
+                      htmlFor="priceEscalationPercent"
+                      className="text-base font-semibold"
+                    >
+                      Annual Price Escalation (%)
+                    </Label>
                     <Input
                       id="priceEscalationPercent"
                       type="number"
                       step="0.1"
                       placeholder="2.5"
                       value={priceEscalationPercent}
-                      onChange={(e) => setPriceEscalationPercent(e.target.value)}
+                      onChange={e => setPriceEscalationPercent(e.target.value)}
                       className="h-12 font-mono"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pricingNotes" className="text-base font-semibold">Pricing Notes</Label>
+                  <Label
+                    htmlFor="pricingNotes"
+                    className="text-base font-semibold"
+                  >
+                    Pricing Notes
+                  </Label>
                   <Textarea
                     id="pricingNotes"
                     placeholder="Any special pricing considerations, volume discounts, etc."
                     value={pricingNotes}
-                    onChange={(e) => setPricingNotes(e.target.value)}
+                    onChange={e => setPricingNotes(e.target.value)}
                     rows={3}
                     className="resize-none"
                   />
                 </div>
 
                 <div className="pt-6 border-t">
-                  <h4 className="text-base font-semibold mb-4">Expected Quality Parameters</h4>
+                  <h4 className="text-base font-semibold mb-4">
+                    Expected Quality Parameters
+                  </h4>
                   <div className="grid md:grid-cols-3 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="expectedCarbonIntensity">Carbon Intensity (kg CO₂e/t)</Label>
+                      <Label htmlFor="expectedCarbonIntensity">
+                        Carbon Intensity (kg CO₂e/t)
+                      </Label>
                       <Input
                         id="expectedCarbonIntensity"
                         type="number"
                         placeholder="e.g., 15"
                         value={expectedCarbonIntensity}
-                        onChange={(e) => setExpectedCarbonIntensity(e.target.value)}
+                        onChange={e =>
+                          setExpectedCarbonIntensity(e.target.value)
+                        }
                         className="h-12 font-mono"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="expectedMoistureContent">Moisture Content (%)</Label>
+                      <Label htmlFor="expectedMoistureContent">
+                        Moisture Content (%)
+                      </Label>
                       <Input
                         id="expectedMoistureContent"
                         type="number"
                         placeholder="e.g., 12"
                         value={expectedMoistureContent}
-                        onChange={(e) => setExpectedMoistureContent(e.target.value)}
+                        onChange={e =>
+                          setExpectedMoistureContent(e.target.value)
+                        }
                         className="h-12 font-mono"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="expectedEnergyContent">Energy Content (GJ/t)</Label>
+                      <Label htmlFor="expectedEnergyContent">
+                        Energy Content (GJ/t)
+                      </Label>
                       <Input
                         id="expectedEnergyContent"
                         type="number"
                         placeholder="e.g., 18"
                         value={expectedEnergyContent}
-                        onChange={(e) => setExpectedEnergyContent(e.target.value)}
+                        onChange={e => setExpectedEnergyContent(e.target.value)}
                         className="h-12 font-mono"
                       />
                     </div>
@@ -880,11 +1114,19 @@ export default function FuturesCreate() {
                 </div>
 
                 <div className="flex justify-between gap-3 pt-6 border-t">
-                  <Button variant="outline" onClick={() => setCurrentStep(4)} size="lg">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentStep(4)}
+                    size="lg"
+                  >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Previous
                   </Button>
-                  <Button onClick={() => setCurrentStep(6)} size="lg" className="bg-teal-600 hover:bg-teal-700">
+                  <Button
+                    onClick={() => setCurrentStep(6)}
+                    size="lg"
+                    className="bg-teal-600 hover:bg-teal-700"
+                  >
                     Review
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
@@ -903,7 +1145,9 @@ export default function FuturesCreate() {
                   </div>
                   <div>
                     <CardTitle className="text-2xl">Review & Submit</CardTitle>
-                    <CardDescription>Review your futures listing before submitting</CardDescription>
+                    <CardDescription>
+                      Review your futures listing before submitting
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -911,41 +1155,66 @@ export default function FuturesCreate() {
                 {/* Summary Cards */}
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="bg-muted/50 rounded-xl p-5 space-y-2">
-                    <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">CROP</h4>
+                    <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
+                      CROP
+                    </h4>
                     <p className="font-bold text-lg">
-                      {CROP_TYPE_OPTIONS.find((c) => c.value === cropType)?.label}
+                      {CROP_TYPE_OPTIONS.find(c => c.value === cropType)?.label}
                       {cropVariety && ` - ${cropVariety}`}
                     </p>
                     <p className="text-sm text-muted-foreground">{title}</p>
                   </div>
 
                   <div className="bg-muted/50 rounded-xl p-5 space-y-2">
-                    <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">LOCATION</h4>
+                    <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
+                      LOCATION
+                    </h4>
                     <p className="font-bold text-lg">
-                      {AUSTRALIAN_STATES.find((s) => s.value === state)?.label}
+                      {AUSTRALIAN_STATES.find(s => s.value === state)?.label}
                       {region && `, ${region}`}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {parseFloat(landAreaHectares).toLocaleString()} ha ({LAND_STATUS_OPTIONS.find((l) => l.value === landStatus)?.label})
+                      {parseFloat(landAreaHectares).toLocaleString()} ha (
+                      {
+                        LAND_STATUS_OPTIONS.find(l => l.value === landStatus)
+                          ?.label
+                      }
+                      )
                     </p>
                   </div>
 
                   <div className="bg-muted/50 rounded-xl p-5 space-y-2">
-                    <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">TIMELINE</h4>
+                    <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
+                      TIMELINE
+                    </h4>
                     <p className="font-bold text-lg">
                       {projectionStartYear} - {projectionEndYear}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {parseInt(projectionEndYear) - parseInt(projectionStartYear) + 1} years
-                      {firstHarvestYear && `, first harvest ${firstHarvestYear}`}
+                      {parseInt(projectionEndYear) -
+                        parseInt(projectionStartYear) +
+                        1}{" "}
+                      years
+                      {firstHarvestYear &&
+                        `, first harvest ${firstHarvestYear}`}
                     </p>
                   </div>
 
                   <div className="bg-teal-50 border border-teal-100 rounded-xl p-5 space-y-2">
-                    <h4 className="font-semibold text-xs text-teal-600 uppercase tracking-wider">VOLUME</h4>
-                    <p className="font-bold text-2xl text-teal-800 font-mono">{totalProjectedTonnes.toLocaleString()} t</p>
+                    <h4 className="font-semibold text-xs text-teal-600 uppercase tracking-wider">
+                      VOLUME
+                    </h4>
+                    <p className="font-bold text-2xl text-teal-800 font-mono">
+                      {totalProjectedTonnes.toLocaleString()} t
+                    </p>
                     <p className="text-sm text-teal-600">
-                      ~{Math.round(totalProjectedTonnes / (parseInt(projectionEndYear) - parseInt(projectionStartYear) + 1)).toLocaleString()}{" "}
+                      ~
+                      {Math.round(
+                        totalProjectedTonnes /
+                          (parseInt(projectionEndYear) -
+                            parseInt(projectionStartYear) +
+                            1)
+                      ).toLocaleString()}{" "}
                       tonnes/year average
                     </p>
                   </div>
@@ -953,37 +1222,65 @@ export default function FuturesCreate() {
 
                 {/* Pricing Summary */}
                 <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-5">
-                  <h4 className="font-semibold mb-2 text-emerald-800">Pricing</h4>
+                  <h4 className="font-semibold mb-2 text-emerald-800">
+                    Pricing
+                  </h4>
                   <p className="text-lg font-mono">
-                    {indicativePricePerTonne
-                      ? <span className="font-bold text-emerald-700">${parseFloat(indicativePricePerTonne).toFixed(2)}/tonne</span>
-                      : <span className="text-emerald-600">Negotiable</span>}
-                    {priceEscalationPercent && <span className="text-emerald-600 ml-2">(+{priceEscalationPercent}% p.a.)</span>}
+                    {indicativePricePerTonne ? (
+                      <span className="font-bold text-emerald-700">
+                        ${parseFloat(indicativePricePerTonne).toFixed(2)}/tonne
+                      </span>
+                    ) : (
+                      <span className="text-emerald-600">Negotiable</span>
+                    )}
+                    {priceEscalationPercent && (
+                      <span className="text-emerald-600 ml-2">
+                        (+{priceEscalationPercent}% p.a.)
+                      </span>
+                    )}
                   </p>
-                  {pricingNotes && <p className="text-sm text-emerald-600 mt-2 italic">{pricingNotes}</p>}
+                  {pricingNotes && (
+                    <p className="text-sm text-emerald-600 mt-2 italic">
+                      {pricingNotes}
+                    </p>
+                  )}
                 </div>
 
                 {/* Quality Summary */}
-                {(expectedCarbonIntensity || expectedMoistureContent || expectedEnergyContent) && (
+                {(expectedCarbonIntensity ||
+                  expectedMoistureContent ||
+                  expectedEnergyContent) && (
                   <div className="border rounded-xl p-5">
                     <h4 className="font-semibold mb-3">Expected Quality</h4>
                     <div className="flex flex-wrap gap-6">
                       {expectedCarbonIntensity && (
                         <div className="text-center">
-                          <p className="text-2xl font-bold font-mono">{expectedCarbonIntensity}</p>
-                          <p className="text-xs text-muted-foreground">kg CO₂e/t</p>
+                          <p className="text-2xl font-bold font-mono">
+                            {expectedCarbonIntensity}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            kg CO₂e/t
+                          </p>
                         </div>
                       )}
                       {expectedMoistureContent && (
                         <div className="text-center">
-                          <p className="text-2xl font-bold font-mono">{expectedMoistureContent}%</p>
-                          <p className="text-xs text-muted-foreground">Moisture</p>
+                          <p className="text-2xl font-bold font-mono">
+                            {expectedMoistureContent}%
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Moisture
+                          </p>
                         </div>
                       )}
                       {expectedEnergyContent && (
                         <div className="text-center">
-                          <p className="text-2xl font-bold font-mono">{expectedEnergyContent}</p>
-                          <p className="text-xs text-muted-foreground">GJ/t Energy</p>
+                          <p className="text-2xl font-bold font-mono">
+                            {expectedEnergyContent}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            GJ/t Energy
+                          </p>
                         </div>
                       )}
                     </div>
@@ -991,7 +1288,11 @@ export default function FuturesCreate() {
                 )}
 
                 <div className="flex flex-col sm:flex-row justify-between gap-4 pt-6 border-t">
-                  <Button variant="outline" onClick={() => setCurrentStep(5)} size="lg">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentStep(5)}
+                    size="lg"
+                  >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Previous
                   </Button>

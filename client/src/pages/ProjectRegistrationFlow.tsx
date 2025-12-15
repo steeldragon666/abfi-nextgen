@@ -7,7 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -18,7 +24,7 @@ const STEPS = [
   { id: 4, label: "Funding", title: "Funding Status" },
   { id: 5, label: "Approvals", title: "Approvals & Permits" },
   { id: 6, label: "Verification", title: "Verification" },
-  { id: 7, label: "Opportunities", title: "Opportunities" }
+  { id: 7, label: "Opportunities", title: "Opportunities" },
 ];
 
 export default function ProjectRegistrationFlow() {
@@ -33,7 +39,7 @@ export default function ProjectRegistrationFlow() {
     region: "",
     siteAddress: "",
     developmentStage: "",
-    
+
     // Step 2: Technology Details
     conversionTechnology: "",
     technologyProvider: "",
@@ -42,7 +48,7 @@ export default function ProjectRegistrationFlow() {
     nameplateCapacity: "",
     outputCapacity: "",
     outputUnit: "",
-    
+
     // Step 3: Feedstock Requirements
     feedstockType: "",
     secondaryFeedstocks: "",
@@ -50,7 +56,7 @@ export default function ProjectRegistrationFlow() {
     feedstockQualitySpecs: "",
     supplyRadius: "",
     logisticsRequirements: "",
-    
+
     // Step 4: Funding Status
     totalCapex: "",
     fundingSecured: "",
@@ -58,23 +64,23 @@ export default function ProjectRegistrationFlow() {
     investmentStage: "",
     seekingInvestment: false,
     investmentAmount: "",
-    
+
     // Step 5: Approvals & Permits
     environmentalApproval: false,
     planningPermit: false,
     epaLicense: false,
     otherApprovals: "",
     approvalsNotes: "",
-    
+
     // Step 6: Verification
     verificationDocuments: [] as string[],
     verificationNotes: "",
-    
+
     // Step 7: Opportunities
     feedstockMatchingEnabled: true,
     financingInterest: false,
     partnershipInterest: false,
-    publicVisibility: "private"
+    publicVisibility: "private",
   });
 
   const updateFormData = (field: string, value: any) => {
@@ -95,10 +101,12 @@ export default function ProjectRegistrationFlow() {
 
   const registerProjectMutation = trpc.bankability.registerProject.useMutation({
     onSuccess: () => {
-      alert("Project registered successfully! Your application has been submitted for review.");
+      alert(
+        "Project registered successfully! Your application has been submitted for review."
+      );
       setLocation("/project-registration/success");
     },
-    onError: (error) => {
+    onError: error => {
       alert(`Registration failed: ${error.message || "Please try again."}`);
     },
   });
@@ -155,8 +163,12 @@ export default function ProjectRegistrationFlow() {
       <div className="relative max-w-4xl mx-auto px-6 py-12">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="font-serif text-3xl mb-2">{STEPS[currentStep - 1].title}</h1>
-          <p className="text-gray-400 text-sm">Step {currentStep} of {STEPS.length}</p>
+          <h1 className="font-serif text-3xl mb-2">
+            {STEPS[currentStep - 1].title}
+          </h1>
+          <p className="text-gray-400 text-sm">
+            Step {currentStep} of {STEPS.length}
+          </p>
         </div>
 
         {/* Progress Indicator */}
@@ -164,20 +176,34 @@ export default function ProjectRegistrationFlow() {
           <div className="flex items-center justify-between">
             {STEPS.map((step, idx) => (
               <div key={step.id} className="flex flex-col items-center flex-1">
-                <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-mono text-sm transition-colors ${
-                  step.id < currentStep 
-                    ? "bg-green-500 border-green-500 text-white" 
-                    : step.id === currentStep 
-                    ? "bg-[#c9a962] border-[#c9a962] text-[#0a0f14]" 
-                    : "bg-[#1a222d] border-[#1a222d] text-gray-500"
-                }`}>
-                  {step.id < currentStep ? <Check className="w-5 h-5" /> : step.id}
+                <div
+                  className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-mono text-sm transition-colors ${
+                    step.id < currentStep
+                      ? "bg-green-500 border-green-500 text-white"
+                      : step.id === currentStep
+                        ? "bg-[#c9a962] border-[#c9a962] text-[#0a0f14]"
+                        : "bg-[#1a222d] border-[#1a222d] text-gray-500"
+                  }`}
+                >
+                  {step.id < currentStep ? (
+                    <Check className="w-5 h-5" />
+                  ) : (
+                    step.id
+                  )}
                 </div>
-                <span className="text-[9px] uppercase tracking-wide text-gray-500 mt-2 text-center">{step.label}</span>
+                <span className="text-[9px] uppercase tracking-wide text-gray-500 mt-2 text-center">
+                  {step.label}
+                </span>
                 {idx < STEPS.length - 1 && (
-                  <div className={`absolute w-full h-0.5 top-5 left-1/2 -z-10 ${
-                    step.id < currentStep ? "bg-green-500" : "bg-[#1a222d]"
-                  }`} style={{ width: `calc(100% / ${STEPS.length} - 40px)`, marginLeft: "20px" }} />
+                  <div
+                    className={`absolute w-full h-0.5 top-5 left-1/2 -z-10 ${
+                      step.id < currentStep ? "bg-green-500" : "bg-[#1a222d]"
+                    }`}
+                    style={{
+                      width: `calc(100% / ${STEPS.length} - 40px)`,
+                      marginLeft: "20px",
+                    }}
+                  />
                 )}
               </div>
             ))}
@@ -186,13 +212,27 @@ export default function ProjectRegistrationFlow() {
 
         {/* Form Content */}
         <div className="bg-[#111820] border border-[#c9a962]/15 rounded-2xl p-8 mb-8">
-          {currentStep === 1 && <Step1 formData={formData} updateFormData={updateFormData} />}
-          {currentStep === 2 && <Step2 formData={formData} updateFormData={updateFormData} />}
-          {currentStep === 3 && <Step3 formData={formData} updateFormData={updateFormData} />}
-          {currentStep === 4 && <Step4 formData={formData} updateFormData={updateFormData} />}
-          {currentStep === 5 && <Step5 formData={formData} updateFormData={updateFormData} />}
-          {currentStep === 6 && <Step6 formData={formData} updateFormData={updateFormData} />}
-          {currentStep === 7 && <Step7 formData={formData} updateFormData={updateFormData} />}
+          {currentStep === 1 && (
+            <Step1 formData={formData} updateFormData={updateFormData} />
+          )}
+          {currentStep === 2 && (
+            <Step2 formData={formData} updateFormData={updateFormData} />
+          )}
+          {currentStep === 3 && (
+            <Step3 formData={formData} updateFormData={updateFormData} />
+          )}
+          {currentStep === 4 && (
+            <Step4 formData={formData} updateFormData={updateFormData} />
+          )}
+          {currentStep === 5 && (
+            <Step5 formData={formData} updateFormData={updateFormData} />
+          )}
+          {currentStep === 6 && (
+            <Step6 formData={formData} updateFormData={updateFormData} />
+          )}
+          {currentStep === 7 && (
+            <Step7 formData={formData} updateFormData={updateFormData} />
+          )}
         </div>
 
         {/* Navigation Buttons */}
@@ -233,15 +273,17 @@ export default function ProjectRegistrationFlow() {
 function Step1({ formData, updateFormData }: any) {
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-400">Tell us about your bioenergy or biorefinery project.</p>
-      
+      <p className="text-sm text-gray-400">
+        Tell us about your bioenergy or biorefinery project.
+      </p>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="projectName">Project Name *</Label>
           <Input
             id="projectName"
             value={formData.projectName}
-            onChange={(e) => updateFormData("projectName", e.target.value)}
+            onChange={e => updateFormData("projectName", e.target.value)}
             placeholder="e.g., Burdekin BioHub"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -252,7 +294,7 @@ function Step1({ formData, updateFormData }: any) {
           <Input
             id="developerName"
             value={formData.developerName}
-            onChange={(e) => updateFormData("developerName", e.target.value)}
+            onChange={e => updateFormData("developerName", e.target.value)}
             placeholder="Company or entity name"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -263,7 +305,7 @@ function Step1({ formData, updateFormData }: any) {
           <Input
             id="abn"
             value={formData.abn}
-            onChange={(e) => updateFormData("abn", e.target.value)}
+            onChange={e => updateFormData("abn", e.target.value)}
             placeholder="XX XXX XXX XXX"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -275,7 +317,7 @@ function Step1({ formData, updateFormData }: any) {
             id="website"
             type="url"
             value={formData.website}
-            onChange={(e) => updateFormData("website", e.target.value)}
+            onChange={e => updateFormData("website", e.target.value)}
             placeholder="https://..."
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -283,7 +325,10 @@ function Step1({ formData, updateFormData }: any) {
 
         <div className="space-y-2">
           <Label htmlFor="region">Project Location — Region *</Label>
-          <Select value={formData.region} onValueChange={(value) => updateFormData("region", value)}>
+          <Select
+            value={formData.region}
+            onValueChange={value => updateFormData("region", value)}
+          >
             <SelectTrigger className="bg-[#0a0f14] border-[#c9a962]/20">
               <SelectValue placeholder="Select region..." />
             </SelectTrigger>
@@ -307,7 +352,7 @@ function Step1({ formData, updateFormData }: any) {
           <Input
             id="siteAddress"
             value={formData.siteAddress}
-            onChange={(e) => updateFormData("siteAddress", e.target.value)}
+            onChange={e => updateFormData("siteAddress", e.target.value)}
             placeholder="Specific site or general area"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -316,17 +361,39 @@ function Step1({ formData, updateFormData }: any) {
 
       <div className="space-y-2">
         <Label>Development Stage *</Label>
-        <RadioGroup value={formData.developmentStage} onValueChange={(value) => updateFormData("developmentStage", value)}>
+        <RadioGroup
+          value={formData.developmentStage}
+          onValueChange={value => updateFormData("developmentStage", value)}
+        >
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[
               { value: "concept", label: "Concept", desc: "Early feasibility" },
-              { value: "prefeasibility", label: "Pre-Feasibility", desc: "Initial studies" },
-              { value: "feasibility", label: "Feasibility", desc: "Detailed analysis" },
+              {
+                value: "prefeasibility",
+                label: "Pre-Feasibility",
+                desc: "Initial studies",
+              },
+              {
+                value: "feasibility",
+                label: "Feasibility",
+                desc: "Detailed analysis",
+              },
               { value: "fid", label: "FID", desc: "Investment decision" },
-              { value: "construction", label: "Construction", desc: "Under construction" },
-              { value: "operational", label: "Operational", desc: "Currently operating" }
-            ].map((stage) => (
-              <div key={stage.value} className="flex items-start space-x-2 p-3 border border-[#c9a962]/15 rounded-lg hover:bg-[#c9a962]/5 cursor-pointer">
+              {
+                value: "construction",
+                label: "Construction",
+                desc: "Under construction",
+              },
+              {
+                value: "operational",
+                label: "Operational",
+                desc: "Currently operating",
+              },
+            ].map(stage => (
+              <div
+                key={stage.value}
+                className="flex items-start space-x-2 p-3 border border-[#c9a962]/15 rounded-lg hover:bg-[#c9a962]/5 cursor-pointer"
+              >
                 <RadioGroupItem value={stage.value} id={stage.value} />
                 <Label htmlFor={stage.value} className="cursor-pointer flex-1">
                   <div className="font-semibold text-sm">{stage.label}</div>
@@ -345,22 +412,33 @@ function Step1({ formData, updateFormData }: any) {
 function Step2({ formData, updateFormData }: any) {
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-400">Describe the conversion technology and expected outputs.</p>
-      
+      <p className="text-sm text-gray-400">
+        Describe the conversion technology and expected outputs.
+      </p>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="conversionTechnology">Conversion Technology *</Label>
-          <Select value={formData.conversionTechnology} onValueChange={(value) => updateFormData("conversionTechnology", value)}>
+          <Select
+            value={formData.conversionTechnology}
+            onValueChange={value =>
+              updateFormData("conversionTechnology", value)
+            }
+          >
             <SelectTrigger className="bg-[#0a0f14] border-[#c9a962]/20">
               <SelectValue placeholder="Select technology..." />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="anaerobic_digestion">Anaerobic Digestion</SelectItem>
+              <SelectItem value="anaerobic_digestion">
+                Anaerobic Digestion
+              </SelectItem>
               <SelectItem value="gasification">Gasification</SelectItem>
               <SelectItem value="pyrolysis">Pyrolysis</SelectItem>
               <SelectItem value="fermentation">Fermentation</SelectItem>
               <SelectItem value="combustion">Combustion</SelectItem>
-              <SelectItem value="hydrothermal">Hydrothermal Processing</SelectItem>
+              <SelectItem value="hydrothermal">
+                Hydrothermal Processing
+              </SelectItem>
               <SelectItem value="other">Other</SelectItem>
             </SelectContent>
           </Select>
@@ -371,7 +449,7 @@ function Step2({ formData, updateFormData }: any) {
           <Input
             id="technologyProvider"
             value={formData.technologyProvider}
-            onChange={(e) => updateFormData("technologyProvider", e.target.value)}
+            onChange={e => updateFormData("technologyProvider", e.target.value)}
             placeholder="Equipment/technology supplier"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -379,7 +457,10 @@ function Step2({ formData, updateFormData }: any) {
 
         <div className="space-y-2">
           <Label htmlFor="primaryOutput">Primary Output *</Label>
-          <Select value={formData.primaryOutput} onValueChange={(value) => updateFormData("primaryOutput", value)}>
+          <Select
+            value={formData.primaryOutput}
+            onValueChange={value => updateFormData("primaryOutput", value)}
+          >
             <SelectTrigger className="bg-[#0a0f14] border-[#c9a962]/20">
               <SelectValue placeholder="Select output..." />
             </SelectTrigger>
@@ -401,19 +482,21 @@ function Step2({ formData, updateFormData }: any) {
           <Input
             id="secondaryOutputs"
             value={formData.secondaryOutputs}
-            onChange={(e) => updateFormData("secondaryOutputs", e.target.value)}
+            onChange={e => updateFormData("secondaryOutputs", e.target.value)}
             placeholder="e.g., Digestate, CO₂, Heat"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="nameplateCapacity">Feedstock Capacity (tonnes/year) *</Label>
+          <Label htmlFor="nameplateCapacity">
+            Feedstock Capacity (tonnes/year) *
+          </Label>
           <Input
             id="nameplateCapacity"
             type="number"
             value={formData.nameplateCapacity}
-            onChange={(e) => updateFormData("nameplateCapacity", e.target.value)}
+            onChange={e => updateFormData("nameplateCapacity", e.target.value)}
             placeholder="e.g., 100000"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -426,11 +509,14 @@ function Step2({ formData, updateFormData }: any) {
               id="outputCapacity"
               type="number"
               value={formData.outputCapacity}
-              onChange={(e) => updateFormData("outputCapacity", e.target.value)}
+              onChange={e => updateFormData("outputCapacity", e.target.value)}
               placeholder="e.g., 50"
               className="bg-[#0a0f14] border-[#c9a962]/20 flex-1"
             />
-            <Select value={formData.outputUnit} onValueChange={(value) => updateFormData("outputUnit", value)}>
+            <Select
+              value={formData.outputUnit}
+              onValueChange={value => updateFormData("outputUnit", value)}
+            >
               <SelectTrigger className="bg-[#0a0f14] border-[#c9a962]/20 w-32">
                 <SelectValue placeholder="Unit" />
               </SelectTrigger>
@@ -453,12 +539,17 @@ function Step2({ formData, updateFormData }: any) {
 function Step3({ formData, updateFormData }: any) {
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-400">Specify your feedstock needs and quality requirements.</p>
-      
+      <p className="text-sm text-gray-400">
+        Specify your feedstock needs and quality requirements.
+      </p>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="feedstockType">Primary Feedstock Type *</Label>
-          <Select value={formData.feedstockType} onValueChange={(value) => updateFormData("feedstockType", value)}>
+          <Select
+            value={formData.feedstockType}
+            onValueChange={value => updateFormData("feedstockType", value)}
+          >
             <SelectTrigger className="bg-[#0a0f14] border-[#c9a962]/20">
               <SelectValue placeholder="Select feedstock..." />
             </SelectTrigger>
@@ -480,19 +571,25 @@ function Step3({ formData, updateFormData }: any) {
           <Input
             id="secondaryFeedstocks"
             value={formData.secondaryFeedstocks}
-            onChange={(e) => updateFormData("secondaryFeedstocks", e.target.value)}
+            onChange={e =>
+              updateFormData("secondaryFeedstocks", e.target.value)
+            }
             placeholder="e.g., Wood waste, Green waste"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="annualFeedstockVolume">Annual Feedstock Volume (tonnes) *</Label>
+          <Label htmlFor="annualFeedstockVolume">
+            Annual Feedstock Volume (tonnes) *
+          </Label>
           <Input
             id="annualFeedstockVolume"
             type="number"
             value={formData.annualFeedstockVolume}
-            onChange={(e) => updateFormData("annualFeedstockVolume", e.target.value)}
+            onChange={e =>
+              updateFormData("annualFeedstockVolume", e.target.value)
+            }
             placeholder="e.g., 100000"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -504,7 +601,7 @@ function Step3({ formData, updateFormData }: any) {
             id="supplyRadius"
             type="number"
             value={formData.supplyRadius}
-            onChange={(e) => updateFormData("supplyRadius", e.target.value)}
+            onChange={e => updateFormData("supplyRadius", e.target.value)}
             placeholder="e.g., 150"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -516,7 +613,9 @@ function Step3({ formData, updateFormData }: any) {
         <Textarea
           id="feedstockQualitySpecs"
           value={formData.feedstockQualitySpecs}
-          onChange={(e) => updateFormData("feedstockQualitySpecs", e.target.value)}
+          onChange={e =>
+            updateFormData("feedstockQualitySpecs", e.target.value)
+          }
           placeholder="e.g., Moisture content <15%, Ash content <5%, Particle size 10-50mm"
           className="bg-[#0a0f14] border-[#c9a962]/20 min-h-24"
         />
@@ -527,7 +626,9 @@ function Step3({ formData, updateFormData }: any) {
         <Textarea
           id="logisticsRequirements"
           value={formData.logisticsRequirements}
-          onChange={(e) => updateFormData("logisticsRequirements", e.target.value)}
+          onChange={e =>
+            updateFormData("logisticsRequirements", e.target.value)
+          }
           placeholder="e.g., Truck delivery, Rail siding available, Storage capacity 5000 tonnes"
           className="bg-[#0a0f14] border-[#c9a962]/20 min-h-24"
         />
@@ -540,8 +641,10 @@ function Step3({ formData, updateFormData }: any) {
 function Step4({ formData, updateFormData }: any) {
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-400">Provide information about project financing.</p>
-      
+      <p className="text-sm text-gray-400">
+        Provide information about project financing.
+      </p>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="totalCapex">Total CAPEX ($M) *</Label>
@@ -549,7 +652,7 @@ function Step4({ formData, updateFormData }: any) {
             id="totalCapex"
             type="number"
             value={formData.totalCapex}
-            onChange={(e) => updateFormData("totalCapex", e.target.value)}
+            onChange={e => updateFormData("totalCapex", e.target.value)}
             placeholder="e.g., 150"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -561,7 +664,7 @@ function Step4({ formData, updateFormData }: any) {
             id="fundingSecured"
             type="number"
             value={formData.fundingSecured}
-            onChange={(e) => updateFormData("fundingSecured", e.target.value)}
+            onChange={e => updateFormData("fundingSecured", e.target.value)}
             placeholder="e.g., 50"
             className="bg-[#0a0f14] border-[#c9a962]/20"
           />
@@ -572,7 +675,7 @@ function Step4({ formData, updateFormData }: any) {
           <Textarea
             id="fundingSources"
             value={formData.fundingSources}
-            onChange={(e) => updateFormData("fundingSources", e.target.value)}
+            onChange={e => updateFormData("fundingSources", e.target.value)}
             placeholder="e.g., Equity investors, ARENA grant, Commercial debt"
             className="bg-[#0a0f14] border-[#c9a962]/20 min-h-20"
           />
@@ -580,7 +683,10 @@ function Step4({ formData, updateFormData }: any) {
 
         <div className="space-y-2">
           <Label htmlFor="investmentStage">Investment Stage *</Label>
-          <Select value={formData.investmentStage} onValueChange={(value) => updateFormData("investmentStage", value)}>
+          <Select
+            value={formData.investmentStage}
+            onValueChange={value => updateFormData("investmentStage", value)}
+          >
             <SelectTrigger className="bg-[#0a0f14] border-[#c9a962]/20">
               <SelectValue placeholder="Select stage..." />
             </SelectTrigger>
@@ -601,7 +707,7 @@ function Step4({ formData, updateFormData }: any) {
             id="investmentAmount"
             type="number"
             value={formData.investmentAmount}
-            onChange={(e) => updateFormData("investmentAmount", e.target.value)}
+            onChange={e => updateFormData("investmentAmount", e.target.value)}
             placeholder="e.g., 100"
             className="bg-[#0a0f14] border-[#c9a962]/20"
             disabled={!formData.seekingInvestment}
@@ -613,7 +719,9 @@ function Step4({ formData, updateFormData }: any) {
         <Checkbox
           id="seekingInvestment"
           checked={formData.seekingInvestment}
-          onCheckedChange={(checked) => updateFormData("seekingInvestment", checked)}
+          onCheckedChange={checked =>
+            updateFormData("seekingInvestment", checked)
+          }
         />
         <Label htmlFor="seekingInvestment" className="cursor-pointer">
           Currently seeking investment
@@ -627,18 +735,27 @@ function Step4({ formData, updateFormData }: any) {
 function Step5({ formData, updateFormData }: any) {
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-400">Indicate which approvals and permits have been obtained.</p>
-      
+      <p className="text-sm text-gray-400">
+        Indicate which approvals and permits have been obtained.
+      </p>
+
       <div className="space-y-4">
         <div className="flex items-center space-x-2 p-3 border border-[#c9a962]/15 rounded-lg">
           <Checkbox
             id="environmentalApproval"
             checked={formData.environmentalApproval}
-            onCheckedChange={(checked) => updateFormData("environmentalApproval", checked)}
+            onCheckedChange={checked =>
+              updateFormData("environmentalApproval", checked)
+            }
           />
-          <Label htmlFor="environmentalApproval" className="cursor-pointer flex-1">
+          <Label
+            htmlFor="environmentalApproval"
+            className="cursor-pointer flex-1"
+          >
             <div className="font-semibold text-sm">Environmental Approval</div>
-            <div className="text-xs text-gray-500">State or Commonwealth environmental assessment</div>
+            <div className="text-xs text-gray-500">
+              State or Commonwealth environmental assessment
+            </div>
           </Label>
         </div>
 
@@ -646,11 +763,15 @@ function Step5({ formData, updateFormData }: any) {
           <Checkbox
             id="planningPermit"
             checked={formData.planningPermit}
-            onCheckedChange={(checked) => updateFormData("planningPermit", checked)}
+            onCheckedChange={checked =>
+              updateFormData("planningPermit", checked)
+            }
           />
           <Label htmlFor="planningPermit" className="cursor-pointer flex-1">
             <div className="font-semibold text-sm">Planning Permit</div>
-            <div className="text-xs text-gray-500">Local council development approval</div>
+            <div className="text-xs text-gray-500">
+              Local council development approval
+            </div>
           </Label>
         </div>
 
@@ -658,11 +779,13 @@ function Step5({ formData, updateFormData }: any) {
           <Checkbox
             id="epaLicense"
             checked={formData.epaLicense}
-            onCheckedChange={(checked) => updateFormData("epaLicense", checked)}
+            onCheckedChange={checked => updateFormData("epaLicense", checked)}
           />
           <Label htmlFor="epaLicense" className="cursor-pointer flex-1">
             <div className="font-semibold text-sm">EPA License</div>
-            <div className="text-xs text-gray-500">Environmental Protection Authority operating license</div>
+            <div className="text-xs text-gray-500">
+              Environmental Protection Authority operating license
+            </div>
           </Label>
         </div>
       </div>
@@ -672,7 +795,7 @@ function Step5({ formData, updateFormData }: any) {
         <Input
           id="otherApprovals"
           value={formData.otherApprovals}
-          onChange={(e) => updateFormData("otherApprovals", e.target.value)}
+          onChange={e => updateFormData("otherApprovals", e.target.value)}
           placeholder="e.g., Water license, Grid connection approval"
           className="bg-[#0a0f14] border-[#c9a962]/20"
         />
@@ -683,7 +806,7 @@ function Step5({ formData, updateFormData }: any) {
         <Textarea
           id="approvalsNotes"
           value={formData.approvalsNotes}
-          onChange={(e) => updateFormData("approvalsNotes", e.target.value)}
+          onChange={e => updateFormData("approvalsNotes", e.target.value)}
           placeholder="Any additional information about approvals status or timeline"
           className="bg-[#0a0f14] border-[#c9a962]/20 min-h-24"
         />
@@ -696,15 +819,30 @@ function Step5({ formData, updateFormData }: any) {
 function Step6({ formData, updateFormData }: any) {
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-400">Upload supporting documents for third-party verification (optional but recommended).</p>
-      
+      <p className="text-sm text-gray-400">
+        Upload supporting documents for third-party verification (optional but
+        recommended).
+      </p>
+
       <div className="border-2 border-dashed border-[#c9a962]/30 rounded-lg p-8 text-center">
         <div className="text-gray-400 mb-4">
-          <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          <svg
+            className="w-12 h-12 mx-auto mb-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+            />
           </svg>
           <p className="text-sm font-semibold">Upload Documents</p>
-          <p className="text-xs text-gray-500 mt-1">Drag and drop or click to browse</p>
+          <p className="text-xs text-gray-500 mt-1">
+            Drag and drop or click to browse
+          </p>
         </div>
         <Button variant="outline" className="border-[#c9a962]/30">
           Choose Files
@@ -731,7 +869,7 @@ function Step6({ formData, updateFormData }: any) {
         <Textarea
           id="verificationNotes"
           value={formData.verificationNotes}
-          onChange={(e) => updateFormData("verificationNotes", e.target.value)}
+          onChange={e => updateFormData("verificationNotes", e.target.value)}
           placeholder="Any additional context for the verification team"
           className="bg-[#0a0f14] border-[#c9a962]/20 min-h-24"
         />
@@ -744,18 +882,29 @@ function Step6({ formData, updateFormData }: any) {
 function Step7({ formData, updateFormData }: any) {
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-400">Choose how you want to engage with the platform.</p>
-      
+      <p className="text-sm text-gray-400">
+        Choose how you want to engage with the platform.
+      </p>
+
       <div className="space-y-4">
         <div className="flex items-center space-x-2 p-3 border border-[#c9a962]/15 rounded-lg">
           <Checkbox
             id="feedstockMatchingEnabled"
             checked={formData.feedstockMatchingEnabled}
-            onCheckedChange={(checked) => updateFormData("feedstockMatchingEnabled", checked)}
+            onCheckedChange={checked =>
+              updateFormData("feedstockMatchingEnabled", checked)
+            }
           />
-          <Label htmlFor="feedstockMatchingEnabled" className="cursor-pointer flex-1">
-            <div className="font-semibold text-sm">Enable Feedstock Matching</div>
-            <div className="text-xs text-gray-500">Receive notifications when suitable feedstock suppliers register</div>
+          <Label
+            htmlFor="feedstockMatchingEnabled"
+            className="cursor-pointer flex-1"
+          >
+            <div className="font-semibold text-sm">
+              Enable Feedstock Matching
+            </div>
+            <div className="text-xs text-gray-500">
+              Receive notifications when suitable feedstock suppliers register
+            </div>
           </Label>
         </div>
 
@@ -763,11 +912,15 @@ function Step7({ formData, updateFormData }: any) {
           <Checkbox
             id="financingInterest"
             checked={formData.financingInterest}
-            onCheckedChange={(checked) => updateFormData("financingInterest", checked)}
+            onCheckedChange={checked =>
+              updateFormData("financingInterest", checked)
+            }
           />
           <Label htmlFor="financingInterest" className="cursor-pointer flex-1">
             <div className="font-semibold text-sm">Financing Interest</div>
-            <div className="text-xs text-gray-500">Appear in deal flow for financial institutions and investors</div>
+            <div className="text-xs text-gray-500">
+              Appear in deal flow for financial institutions and investors
+            </div>
           </Label>
         </div>
 
@@ -775,33 +928,55 @@ function Step7({ formData, updateFormData }: any) {
           <Checkbox
             id="partnershipInterest"
             checked={formData.partnershipInterest}
-            onCheckedChange={(checked) => updateFormData("partnershipInterest", checked)}
+            onCheckedChange={checked =>
+              updateFormData("partnershipInterest", checked)
+            }
           />
-          <Label htmlFor="partnershipInterest" className="cursor-pointer flex-1">
-            <div className="font-semibold text-sm">Partnership Opportunities</div>
-            <div className="text-xs text-gray-500">Open to strategic partnerships and collaboration</div>
+          <Label
+            htmlFor="partnershipInterest"
+            className="cursor-pointer flex-1"
+          >
+            <div className="font-semibold text-sm">
+              Partnership Opportunities
+            </div>
+            <div className="text-xs text-gray-500">
+              Open to strategic partnerships and collaboration
+            </div>
           </Label>
         </div>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="publicVisibility">Project Visibility</Label>
-        <Select value={formData.publicVisibility} onValueChange={(value) => updateFormData("publicVisibility", value)}>
+        <Select
+          value={formData.publicVisibility}
+          onValueChange={value => updateFormData("publicVisibility", value)}
+        >
           <SelectTrigger className="bg-[#0a0f14] border-[#c9a962]/20">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="private">Private - Only visible to platform administrators</SelectItem>
-            <SelectItem value="investors_only">Investors Only - Visible to verified financial institutions</SelectItem>
-            <SelectItem value="suppliers_only">Suppliers Only - Visible to feedstock suppliers</SelectItem>
-            <SelectItem value="public">Public - Visible to all platform users</SelectItem>
+            <SelectItem value="private">
+              Private - Only visible to platform administrators
+            </SelectItem>
+            <SelectItem value="investors_only">
+              Investors Only - Visible to verified financial institutions
+            </SelectItem>
+            <SelectItem value="suppliers_only">
+              Suppliers Only - Visible to feedstock suppliers
+            </SelectItem>
+            <SelectItem value="public">
+              Public - Visible to all platform users
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
         <p className="text-sm text-blue-300">
-          <strong>Note:</strong> Your project details will be reviewed by our team before appearing in search results or match notifications. This typically takes 2-3 business days.
+          <strong>Note:</strong> Your project details will be reviewed by our
+          team before appearing in search results or match notifications. This
+          typically takes 2-3 business days.
         </p>
       </div>
     </div>

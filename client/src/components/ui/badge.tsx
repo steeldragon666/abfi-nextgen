@@ -17,12 +17,9 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-destructive-foreground [a&]:hover:bg-destructive/90",
         outline:
           "border-border text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
-        success:
-          "border-transparent bg-success text-success-foreground",
-        warning:
-          "border-transparent bg-warning text-warning-foreground",
-        info:
-          "border-transparent bg-info text-info-foreground",
+        success: "border-transparent bg-success text-success-foreground",
+        warning: "border-transparent bg-warning text-warning-foreground",
+        info: "border-transparent bg-info text-info-foreground",
         // Rating tiers (A+ through F)
         "rating-a-plus":
           "border-rating-a-plus/30 bg-rating-a-plus/10 text-rating-a-plus font-semibold",
@@ -41,14 +38,10 @@ const badgeVariants = cva(
         "rating-f":
           "border-rating-f/30 bg-rating-f/10 text-rating-f font-semibold",
         // Status variants
-        draft:
-          "border-muted bg-muted/50 text-muted-foreground",
-        pending:
-          "border-warning/30 bg-warning/10 text-warning",
-        verified:
-          "border-success/30 bg-success/10 text-success",
-        rejected:
-          "border-destructive/30 bg-destructive/10 text-destructive",
+        draft: "border-muted bg-muted/50 text-muted-foreground",
+        pending: "border-warning/30 bg-warning/10 text-warning",
+        verified: "border-success/30 bg-success/10 text-success",
+        rejected: "border-destructive/30 bg-destructive/10 text-destructive",
       },
       size: {
         default: "px-2.5 py-0.5 text-xs",
@@ -85,9 +78,18 @@ function Badge({
 /**
  * StatusBadge - For workflow/document statuses
  */
-type StatusType = "draft" | "pending" | "verified" | "rejected" | "active" | "expired";
+type StatusType =
+  | "draft"
+  | "pending"
+  | "verified"
+  | "rejected"
+  | "active"
+  | "expired";
 
-const statusConfig: Record<StatusType, { label: string; variant: VariantProps<typeof badgeVariants>["variant"] }> = {
+const statusConfig: Record<
+  StatusType,
+  { label: string; variant: VariantProps<typeof badgeVariants>["variant"] }
+> = {
   draft: { label: "Draft", variant: "draft" },
   pending: { label: "Pending Review", variant: "pending" },
   verified: { label: "Verified", variant: "verified" },
@@ -114,15 +116,18 @@ function StatusBadge({
  */
 type RatingTier = "A+" | "A" | "B+" | "B" | "C+" | "C" | "D" | "F";
 
-const ratingVariantMap: Record<RatingTier, VariantProps<typeof badgeVariants>["variant"]> = {
+const ratingVariantMap: Record<
+  RatingTier,
+  VariantProps<typeof badgeVariants>["variant"]
+> = {
   "A+": "rating-a-plus",
-  "A": "rating-a",
+  A: "rating-a",
   "B+": "rating-b-plus",
-  "B": "rating-b",
+  B: "rating-b",
   "C+": "rating-c-plus",
-  "C": "rating-c",
-  "D": "rating-d",
-  "F": "rating-f",
+  C: "rating-c",
+  D: "rating-d",
+  F: "rating-f",
 };
 
 function RatingBadge({
@@ -130,7 +135,10 @@ function RatingBadge({
   score,
   className,
   ...props
-}: { rating: RatingTier; score?: number } & Omit<React.ComponentProps<"span">, "children">) {
+}: { rating: RatingTier; score?: number } & Omit<
+  React.ComponentProps<"span">,
+  "children"
+>) {
   const variant = ratingVariantMap[rating];
   return (
     <Badge variant={variant} className={cn("font-mono", className)} {...props}>

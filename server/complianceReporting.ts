@@ -599,7 +599,10 @@ export async function generateComplianceReport(
       complianceScore -= 10;
     }
 
-    if (overrideMetrics.revokedOverrides > overrideMetrics.totalOverrides * 0.2) {
+    if (
+      overrideMetrics.revokedOverrides >
+      overrideMetrics.totalOverrides * 0.2
+    ) {
       keyFindings.push(
         `High revocation rate: ${((overrideMetrics.revokedOverrides / overrideMetrics.totalOverrides) * 100).toFixed(1)}%`
       );
@@ -655,9 +658,7 @@ export async function generateComplianceReport(
     keyFindings.push(
       `${certificateMetrics.expiringSoon} certificates expiring in next 30 days`
     );
-    recommendations.push(
-      "Proactively contact certificate holders for renewal"
-    );
+    recommendations.push("Proactively contact certificate holders for renewal");
   }
 
   // Determine overall compliance level
@@ -720,7 +721,10 @@ DETAILED METRICS:
 
 Audit Activity:
 - Total Events: ${report.auditMetrics?.totalEvents || 0}
-- Top Actions: ${report.auditMetrics?.eventsByAction.slice(0, 3).map((a) => `${a.action} (${a.count})`).join(", ")}
+- Top Actions: ${report.auditMetrics?.eventsByAction
+    .slice(0, 3)
+    .map(a => `${a.action} (${a.count})`)
+    .join(", ")}
 
 Admin Overrides:
 - Total: ${report.overrideMetrics?.totalOverrides || 0}

@@ -1,10 +1,22 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Leaf, ArrowLeft, ArrowRight, Upload } from "lucide-react";
@@ -27,10 +39,13 @@ export default function ProducerPropertyDetails() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem("producerRegistration", JSON.stringify({
-      step: 3,
-      data: { ...formData }
-    }));
+    localStorage.setItem(
+      "producerRegistration",
+      JSON.stringify({
+        step: 3,
+        data: { ...formData },
+      })
+    );
     setLocation("/producer-registration/production-profile");
   };
 
@@ -55,7 +70,9 @@ export default function ProducerPropertyDetails() {
       <div className="bg-white border-b">
         <div className="container mx-auto py-4">
           <Progress value={28} className="h-2" />
-          <p className="mt-2 text-sm text-gray-600">28% Complete • Estimated 10 minutes remaining</p>
+          <p className="mt-2 text-sm text-gray-600">
+            28% Complete • Estimated 10 minutes remaining
+          </p>
         </div>
       </div>
 
@@ -64,24 +81,34 @@ export default function ProducerPropertyDetails() {
         <div className="mx-auto max-w-3xl">
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl text-[#0F3A5C]">Property Details</CardTitle>
+              <CardTitle className="text-2xl text-[#0F3A5C]">
+                Property Details
+              </CardTitle>
               <CardDescription>
-                Tell us about your property. This helps buyers understand your production capacity and logistics.
+                Tell us about your property. This helps buyers understand your
+                production capacity and logistics.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Property Identification */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0F3A5C]">Property Identification</h3>
-                  
+                  <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                    Property Identification
+                  </h3>
+
                   <div className="space-y-2">
                     <Label htmlFor="propertyName">Property Name *</Label>
                     <Input
                       id="propertyName"
                       placeholder="e.g., Sunshine Farm"
                       value={formData.propertyName}
-                      onChange={(e) => setFormData(prev => ({ ...prev, propertyName: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({
+                          ...prev,
+                          propertyName: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -92,7 +119,12 @@ export default function ProducerPropertyDetails() {
                       id="address"
                       placeholder="Street address, locality"
                       value={formData.address}
-                      onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({
+                          ...prev,
+                          address: e.target.value,
+                        }))
+                      }
                       required
                       rows={2}
                     />
@@ -101,7 +133,12 @@ export default function ProducerPropertyDetails() {
                   <div className="grid gap-4 md:grid-cols-3">
                     <div className="space-y-2">
                       <Label htmlFor="state">State *</Label>
-                      <Select value={formData.state} onValueChange={(value) => setFormData(prev => ({ ...prev, state: value }))}>
+                      <Select
+                        value={formData.state}
+                        onValueChange={value =>
+                          setFormData(prev => ({ ...prev, state: value }))
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select state" />
                         </SelectTrigger>
@@ -125,7 +162,12 @@ export default function ProducerPropertyDetails() {
                         placeholder="4000"
                         maxLength={4}
                         value={formData.postcode}
-                        onChange={(e) => setFormData(prev => ({ ...prev, postcode: e.target.value.replace(/\D/g, "") }))}
+                        onChange={e =>
+                          setFormData(prev => ({
+                            ...prev,
+                            postcode: e.target.value.replace(/\D/g, ""),
+                          }))
+                        }
                         required
                       />
                     </div>
@@ -136,7 +178,12 @@ export default function ProducerPropertyDetails() {
                         id="region"
                         placeholder="e.g., Burdekin"
                         value={formData.region}
-                        onChange={(e) => setFormData(prev => ({ ...prev, region: e.target.value }))}
+                        onChange={e =>
+                          setFormData(prev => ({
+                            ...prev,
+                            region: e.target.value,
+                          }))
+                        }
                       />
                     </div>
                   </div>
@@ -144,61 +191,104 @@ export default function ProducerPropertyDetails() {
 
                 {/* Land Details */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0F3A5C]">Land Details</h3>
-                  
+                  <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                    Land Details
+                  </h3>
+
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="totalLandArea">Total Land Area (hectares) *</Label>
+                      <Label htmlFor="totalLandArea">
+                        Total Land Area (hectares) *
+                      </Label>
                       <Input
                         id="totalLandArea"
                         type="number"
                         placeholder="e.g., 500"
                         value={formData.totalLandArea}
-                        onChange={(e) => setFormData(prev => ({ ...prev, totalLandArea: e.target.value }))}
+                        onChange={e =>
+                          setFormData(prev => ({
+                            ...prev,
+                            totalLandArea: e.target.value,
+                          }))
+                        }
                         required
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="cultivatedArea">Cultivated Area (hectares) *</Label>
+                      <Label htmlFor="cultivatedArea">
+                        Cultivated Area (hectares) *
+                      </Label>
                       <Input
                         id="cultivatedArea"
                         type="number"
                         placeholder="e.g., 450"
                         value={formData.cultivatedArea}
-                        onChange={(e) => setFormData(prev => ({ ...prev, cultivatedArea: e.target.value }))}
+                        onChange={e =>
+                          setFormData(prev => ({
+                            ...prev,
+                            cultivatedArea: e.target.value,
+                          }))
+                        }
                         required
                       />
-                      <p className="text-xs text-gray-600">Area actively used for crop production</p>
+                      <p className="text-xs text-gray-600">
+                        Area actively used for crop production
+                      </p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="propertyType">Property Type *</Label>
-                    <Select value={formData.propertyType} onValueChange={(value) => setFormData(prev => ({ ...prev, propertyType: value }))}>
+                    <Select
+                      value={formData.propertyType}
+                      onValueChange={value =>
+                        setFormData(prev => ({ ...prev, propertyType: value }))
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select property type" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="freehold">Freehold</SelectItem>
                         <SelectItem value="leasehold">Leasehold</SelectItem>
-                        <SelectItem value="mixed">Mixed (Freehold + Leasehold)</SelectItem>
+                        <SelectItem value="mixed">
+                          Mixed (Freehold + Leasehold)
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="waterAccessType">Water Access Type *</Label>
-                    <Select value={formData.waterAccessType} onValueChange={(value) => setFormData(prev => ({ ...prev, waterAccessType: value }))}>
+                    <Select
+                      value={formData.waterAccessType}
+                      onValueChange={value =>
+                        setFormData(prev => ({
+                          ...prev,
+                          waterAccessType: value,
+                        }))
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select water access" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="irrigated_surface">Irrigated (Surface Water)</SelectItem>
-                        <SelectItem value="irrigated_groundwater">Irrigated (Groundwater)</SelectItem>
-                        <SelectItem value="irrigated_recycled">Irrigated (Recycled Water)</SelectItem>
-                        <SelectItem value="dryland">Dryland (Rainfed)</SelectItem>
-                        <SelectItem value="mixed_irrigation">Mixed Irrigation Sources</SelectItem>
+                        <SelectItem value="irrigated_surface">
+                          Irrigated (Surface Water)
+                        </SelectItem>
+                        <SelectItem value="irrigated_groundwater">
+                          Irrigated (Groundwater)
+                        </SelectItem>
+                        <SelectItem value="irrigated_recycled">
+                          Irrigated (Recycled Water)
+                        </SelectItem>
+                        <SelectItem value="dryland">
+                          Dryland (Rainfed)
+                        </SelectItem>
+                        <SelectItem value="mixed_irrigation">
+                          Mixed Irrigation Sources
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -206,26 +296,41 @@ export default function ProducerPropertyDetails() {
 
                 {/* Legal Identifiers */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0F3A5C]">Legal Identifiers (Optional)</h3>
-                  
+                  <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                    Legal Identifiers (Optional)
+                  </h3>
+
                   <div className="space-y-2">
                     <Label htmlFor="lotPlanNumbers">Lot/Plan Numbers</Label>
                     <Textarea
                       id="lotPlanNumbers"
                       placeholder="e.g., Lot 123 on RP456789, Lot 124 on RP456790"
                       value={formData.lotPlanNumbers}
-                      onChange={(e) => setFormData(prev => ({ ...prev, lotPlanNumbers: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({
+                          ...prev,
+                          lotPlanNumbers: e.target.value,
+                        }))
+                      }
                       rows={2}
                     />
-                    <p className="text-xs text-gray-600">Helps with property verification</p>
+                    <p className="text-xs text-gray-600">
+                      Helps with property verification
+                    </p>
                   </div>
 
                   <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
                     <Label className="mb-2 block">Property Boundary File</Label>
                     <p className="mb-3 text-sm text-gray-600">
-                      Upload KML or Shapefile to show exact property boundaries (optional but recommended)
+                      Upload KML or Shapefile to show exact property boundaries
+                      (optional but recommended)
                     </p>
-                    <Button type="button" variant="outline" size="sm" className="gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                    >
                       <Upload className="h-4 w-4" />
                       Upload Boundary File
                     </Button>

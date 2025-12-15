@@ -1,12 +1,30 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, StatsCard } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  StatsCard,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDate } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { AlertCircle, CheckCircle2, Clock, Leaf, Shield, XCircle, Building2, Package, Bell, ArrowRight } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  Leaf,
+  Shield,
+  XCircle,
+  Building2,
+  Package,
+  Bell,
+  ArrowRight,
+} from "lucide-react";
 import { Link, Redirect } from "wouter";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -14,15 +32,21 @@ import { cn } from "@/lib/utils";
 export default function AdminDashboard() {
   const { user, isAuthenticated, loading } = useAuth();
 
-  const { data: pendingSuppliers, isLoading: loadingSuppliers, refetch: refetchSuppliers } =
-    trpc.admin.getPendingSuppliers.useQuery(undefined, {
-      enabled: isAuthenticated && user?.role === "admin",
-    });
+  const {
+    data: pendingSuppliers,
+    isLoading: loadingSuppliers,
+    refetch: refetchSuppliers,
+  } = trpc.admin.getPendingSuppliers.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === "admin",
+  });
 
-  const { data: pendingFeedstocks, isLoading: loadingFeedstocks, refetch: refetchFeedstocks } =
-    trpc.admin.getPendingFeedstocks.useQuery(undefined, {
-      enabled: isAuthenticated && user?.role === "admin",
-    });
+  const {
+    data: pendingFeedstocks,
+    isLoading: loadingFeedstocks,
+    refetch: refetchFeedstocks,
+  } = trpc.admin.getPendingFeedstocks.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === "admin",
+  });
 
   const verifySupplierMutation = trpc.admin.verifySupplier.useMutation({
     onSuccess: () => {
@@ -33,8 +57,6 @@ export default function AdminDashboard() {
       toast.error(error.message || "Verification failed");
     },
   });
-
-
 
   const verifyFeedstockMutation = trpc.admin.verifyFeedstock.useMutation({
     onSuccess: () => {
@@ -94,7 +116,9 @@ export default function AdminDashboard() {
               <Button variant="ghost">Dashboard</Button>
             </Link>
             <Link href="/browse">
-              <Button variant="outline" size="sm">Browse Feedstocks</Button>
+              <Button variant="outline" size="sm">
+                Browse Feedstocks
+              </Button>
             </Link>
           </div>
         </div>
@@ -109,7 +133,9 @@ export default function AdminDashboard() {
             </div>
             <div>
               <h1 className="heading-1 text-foreground">Admin Dashboard</h1>
-              <p className="text-muted-foreground body-lg">Manage verifications and platform operations</p>
+              <p className="text-muted-foreground body-lg">
+                Manage verifications and platform operations
+              </p>
             </div>
           </div>
         </div>
@@ -134,7 +160,9 @@ export default function AdminDashboard() {
 
           <StatsCard
             title="Total Queue"
-            value={(pendingSuppliers?.length || 0) + (pendingFeedstocks?.length || 0)}
+            value={
+              (pendingSuppliers?.length || 0) + (pendingFeedstocks?.length || 0)
+            }
             description="Total pending items"
             icon={<Clock className="h-5 w-5" />}
             variant="info"
@@ -144,12 +172,18 @@ export default function AdminDashboard() {
             <CardContent className="p-5">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">Platform Status</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Platform Status
+                  </p>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="h-2.5 w-2.5 bg-success rounded-full animate-pulse"></div>
-                    <span className="font-medium text-success">All Systems Active</span>
+                    <span className="font-medium text-success">
+                      All Systems Active
+                    </span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">Last checked: Just now</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Last checked: Just now
+                  </p>
                 </div>
                 <div className="rounded-lg bg-success/10 p-2.5 text-success">
                   <CheckCircle2 className="h-5 w-5" />
@@ -174,13 +208,13 @@ export default function AdminDashboard() {
           <TabsContent value="suppliers">
             {loadingSuppliers ? (
               <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
+                {[1, 2, 3].map(i => (
                   <Skeleton key={i} className="h-48 w-full" />
                 ))}
               </div>
             ) : pendingSuppliers && pendingSuppliers.length > 0 ? (
               <div className="space-y-4">
-                {pendingSuppliers.map((supplier) => (
+                {pendingSuppliers.map(supplier => (
                   <Card key={supplier.id} hover className="group">
                     <CardHeader>
                       <div className="flex justify-between items-start">
@@ -189,8 +223,12 @@ export default function AdminDashboard() {
                             <Building2 className="h-5 w-5 text-warning" />
                           </div>
                           <div>
-                            <CardTitle className="group-hover:text-primary transition-colors">{supplier.companyName}</CardTitle>
-                            <CardDescription className="mt-1">ABN: {supplier.abn}</CardDescription>
+                            <CardTitle className="group-hover:text-primary transition-colors">
+                              {supplier.companyName}
+                            </CardTitle>
+                            <CardDescription className="mt-1">
+                              ABN: {supplier.abn}
+                            </CardDescription>
                           </div>
                         </div>
                         <Badge variant="pending" className="shrink-0">
@@ -202,18 +240,26 @@ export default function AdminDashboard() {
                     <CardContent>
                       <div className="grid md:grid-cols-2 gap-4 mb-4">
                         <div className="space-y-1">
-                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Contact Email</p>
+                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            Contact Email
+                          </p>
                           <p className="font-medium">{supplier.contactEmail}</p>
                         </div>
                         {supplier.contactPhone && (
                           <div className="space-y-1">
-                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Contact Phone</p>
-                            <p className="font-medium">{supplier.contactPhone}</p>
+                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                              Contact Phone
+                            </p>
+                            <p className="font-medium">
+                              {supplier.contactPhone}
+                            </p>
                           </div>
                         )}
                         {supplier.addressLine1 && (
                           <div className="space-y-1">
-                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Address</p>
+                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                              Address
+                            </p>
                             <p className="font-medium">
                               {supplier.addressLine1}
                               {supplier.city && `, ${supplier.city}`}
@@ -223,7 +269,9 @@ export default function AdminDashboard() {
                         )}
                         {supplier.website && (
                           <div className="space-y-1">
-                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Website</p>
+                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                              Website
+                            </p>
                             <a
                               href={supplier.website}
                               target="_blank"
@@ -238,7 +286,9 @@ export default function AdminDashboard() {
 
                       {supplier.description && (
                         <div className="mb-4 p-3 rounded-lg bg-muted/50">
-                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Description</p>
+                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
+                            Description
+                          </p>
                           <p className="text-sm">{supplier.description}</p>
                         </div>
                       )}
@@ -247,7 +297,12 @@ export default function AdminDashboard() {
                         <Button
                           size="sm"
                           variant="success"
-                          onClick={() => verifySupplierMutation.mutate({ supplierId: supplier.id, approved: true })}
+                          onClick={() =>
+                            verifySupplierMutation.mutate({
+                              supplierId: supplier.id,
+                              approved: true,
+                            })
+                          }
                           disabled={verifySupplierMutation.isPending}
                           loading={verifySupplierMutation.isPending}
                           leftIcon={<CheckCircle2 className="h-4 w-4" />}
@@ -257,7 +312,12 @@ export default function AdminDashboard() {
                         <Button
                           size="sm"
                           variant="destructive"
-                          onClick={() => verifySupplierMutation.mutate({ supplierId: supplier.id, approved: false })}
+                          onClick={() =>
+                            verifySupplierMutation.mutate({
+                              supplierId: supplier.id,
+                              approved: false,
+                            })
+                          }
                           disabled={verifySupplierMutation.isPending}
                           leftIcon={<XCircle className="h-4 w-4" />}
                         >
@@ -275,7 +335,9 @@ export default function AdminDashboard() {
                     <CheckCircle2 className="h-8 w-8 text-success" />
                   </div>
                   <h3 className="heading-3 mb-2">All Caught Up!</h3>
-                  <p className="text-muted-foreground">No pending supplier verifications</p>
+                  <p className="text-muted-foreground">
+                    No pending supplier verifications
+                  </p>
                 </CardContent>
               </Card>
             )}
@@ -285,13 +347,13 @@ export default function AdminDashboard() {
           <TabsContent value="feedstocks">
             {loadingFeedstocks ? (
               <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
+                {[1, 2, 3].map(i => (
                   <Skeleton key={i} className="h-48 w-full" />
                 ))}
               </div>
             ) : pendingFeedstocks && pendingFeedstocks.length > 0 ? (
               <div className="space-y-4">
-                {pendingFeedstocks.map((feedstock) => (
+                {pendingFeedstocks.map(feedstock => (
                   <Card key={feedstock.id} hover className="group">
                     <CardHeader>
                       <div className="flex justify-between items-start">
@@ -300,9 +362,14 @@ export default function AdminDashboard() {
                             <Package className="h-5 w-5 text-warning" />
                           </div>
                           <div>
-                            <CardTitle className="group-hover:text-primary transition-colors">{feedstock.type}</CardTitle>
+                            <CardTitle className="group-hover:text-primary transition-colors">
+                              {feedstock.type}
+                            </CardTitle>
                             <CardDescription className="mt-1">
-                              <span className="font-mono text-xs">{feedstock.abfiId}</span> • {feedstock.category}
+                              <span className="font-mono text-xs">
+                                {feedstock.abfiId}
+                              </span>{" "}
+                              • {feedstock.category}
                             </CardDescription>
                           </div>
                         </div>
@@ -315,26 +382,40 @@ export default function AdminDashboard() {
                     <CardContent>
                       <div className="grid md:grid-cols-3 gap-4 mb-4">
                         <div className="space-y-1">
-                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Location</p>
+                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            Location
+                          </p>
                           <p className="font-medium">{feedstock.state}</p>
                         </div>
                         <div className="space-y-1">
-                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Annual Capacity</p>
+                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            Annual Capacity
+                          </p>
                           <p className="font-medium font-mono">
-                            {feedstock.annualCapacityTonnes.toLocaleString()} <span className="text-muted-foreground text-xs">tonnes</span>
+                            {feedstock.annualCapacityTonnes.toLocaleString()}{" "}
+                            <span className="text-muted-foreground text-xs">
+                              tonnes
+                            </span>
                           </p>
                         </div>
                         <div className="space-y-1">
-                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Available Now</p>
+                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            Available Now
+                          </p>
                           <p className="font-medium font-mono">
-                            {feedstock.availableVolumeCurrent.toLocaleString()} <span className="text-muted-foreground text-xs">tonnes</span>
+                            {feedstock.availableVolumeCurrent.toLocaleString()}{" "}
+                            <span className="text-muted-foreground text-xs">
+                              tonnes
+                            </span>
                           </p>
                         </div>
                       </div>
 
                       {feedstock.description && (
                         <div className="mb-4 p-3 rounded-lg bg-muted/50">
-                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Description</p>
+                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
+                            Description
+                          </p>
                           <p className="text-sm">{feedstock.description}</p>
                         </div>
                       )}
@@ -344,7 +425,10 @@ export default function AdminDashboard() {
                           size="sm"
                           variant="success"
                           onClick={() =>
-                            verifyFeedstockMutation.mutate({ feedstockId: feedstock.id, approved: true })
+                            verifyFeedstockMutation.mutate({
+                              feedstockId: feedstock.id,
+                              approved: true,
+                            })
                           }
                           disabled={verifyFeedstockMutation.isPending}
                           loading={verifyFeedstockMutation.isPending}
@@ -352,7 +436,11 @@ export default function AdminDashboard() {
                         >
                           Verify
                         </Button>
-                        <Button size="sm" variant="outline" leftIcon={<AlertCircle className="h-4 w-4" />}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          leftIcon={<AlertCircle className="h-4 w-4" />}
+                        >
                           Request More Info
                         </Button>
                       </div>
@@ -367,7 +455,9 @@ export default function AdminDashboard() {
                     <CheckCircle2 className="h-8 w-8 text-success" />
                   </div>
                   <h3 className="heading-3 mb-2">All Caught Up!</h3>
-                  <p className="text-muted-foreground">No pending feedstock verifications</p>
+                  <p className="text-muted-foreground">
+                    No pending feedstock verifications
+                  </p>
                 </CardContent>
               </Card>
             )}

@@ -83,7 +83,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [138.60, -34.93] },
+      "geometry": { "type": "Point", "coordinates": [138.6, -34.93] },
       "properties": {
         "name": "Adelaide Biodiesel Plant",
         "type": "biofuel_plant",

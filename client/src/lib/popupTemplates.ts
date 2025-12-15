@@ -23,27 +23,39 @@ export function createPopupHTML(layerId: string, props: any): string {
               <span class="text-gray-600">Crushing Capacity:</span>
               <span class="font-medium">${parseInt(props?.crushing_capacity_tonnes || 0).toLocaleString()} t/season</span>
             </div>
-            ${props?.cogeneration_mw ? `
+            ${
+              props?.cogeneration_mw
+                ? `
             <div class="flex justify-between">
               <span class="text-gray-600">Cogeneration:</span>
               <span class="font-medium">${props.cogeneration_mw} MW</span>
             </div>
-            ` : ''}
-            ${props?.bagasse_production_tonnes ? `
+            `
+                : ""
+            }
+            ${
+              props?.bagasse_production_tonnes
+                ? `
             <div class="flex justify-between">
               <span class="text-gray-600">Bagasse Production:</span>
               <span class="font-medium">${parseInt(props.bagasse_production_tonnes).toLocaleString()} t/yr</span>
             </div>
-            ` : ''}
-            ${props?.grid_export ? `
+            `
+                : ""
+            }
+            ${
+              props?.grid_export
+                ? `
             <div class="flex justify-between">
               <span class="text-gray-600">Grid Export:</span>
               <span class="font-medium text-green-600">✓ Yes</span>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
             <div class="flex justify-between">
               <span class="text-gray-600">Status:</span>
-              <span class="px-2 py-0.5 rounded text-xs font-medium ${props?.status === 'operational' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">${props?.status || 'unknown'}</span>
+              <span class="px-2 py-0.5 rounded text-xs font-medium ${props?.status === "operational" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}">${props?.status || "unknown"}</span>
             </div>
           </div>
         </div>
@@ -78,12 +90,16 @@ export function createPopupHTML(layerId: string, props: any): string {
               <span class="text-gray-600">Density:</span>
               <span class="font-medium">${props?.density_tonnes_per_ha || 0} t/ha</span>
             </div>
-            ${props?.harvest_months ? `
+            ${
+              props?.harvest_months
+                ? `
             <div class="flex justify-between">
               <span class="text-gray-600">Harvest Season:</span>
               <span class="font-medium">${props.harvest_months}</span>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
           </div>
         </div>
       `;
@@ -96,7 +112,7 @@ export function createPopupHTML(layerId: string, props: any): string {
             <div class="space-y-1.5 text-sm">
               <div class="flex justify-between">
                 <span class="text-gray-600">Type:</span>
-                <span class="font-medium capitalize">${(props?.facility_type || "N/A").replace(/_/g, ' ')}</span>
+                <span class="font-medium capitalize">${(props?.facility_type || "N/A").replace(/_/g, " ")}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Location:</span>
@@ -106,24 +122,36 @@ export function createPopupHTML(layerId: string, props: any): string {
                 <span class="text-gray-600">Region:</span>
                 <span class="font-medium">${props?.region || "N/A"}</span>
               </div>
-              ${props?.managed_hectares ? `
+              ${
+                props?.managed_hectares
+                  ? `
               <div class="flex justify-between">
                 <span class="text-gray-600">Managed Area:</span>
                 <span class="font-medium">${parseInt(props.managed_hectares).toLocaleString()} ha</span>
               </div>
-              ` : ''}
-              ${props?.annual_output_tonnes ? `
+              `
+                  : ""
+              }
+              ${
+                props?.annual_output_tonnes
+                  ? `
               <div class="flex justify-between">
                 <span class="text-gray-600">Annual Output:</span>
                 <span class="font-medium">${parseInt(props.annual_output_tonnes).toLocaleString()} t/yr</span>
               </div>
-              ` : ''}
-              ${props?.annual_capacity_gmt ? `
+              `
+                  : ""
+              }
+              ${
+                props?.annual_capacity_gmt
+                  ? `
               <div class="flex justify-between">
                 <span class="text-gray-600">Capacity:</span>
                 <span class="font-medium">${parseFloat(props.annual_capacity_gmt).toLocaleString()} GMT/yr</span>
               </div>
-              ` : ''}
+              `
+                  : ""
+              }
             </div>
           </div>
         `;
@@ -144,18 +172,26 @@ export function createPopupHTML(layerId: string, props: any): string {
                 <span class="text-gray-600">Annual Residue:</span>
                 <span class="font-medium">${parseInt(props?.annual_residue_tonnes || 0).toLocaleString()} t/yr</span>
               </div>
-              ${props?.primary_species ? `
+              ${
+                props?.primary_species
+                  ? `
               <div class="flex justify-between">
                 <span class="text-gray-600">Primary Species:</span>
                 <span class="font-medium">${props.primary_species}</span>
               </div>
-              ` : ''}
-              ${props?.key_facilities ? `
+              `
+                  : ""
+              }
+              ${
+                props?.key_facilities
+                  ? `
               <div class="mt-2">
                 <span class="text-gray-600 block mb-1">Key Facilities:</span>
                 <span class="text-xs">${props.key_facilities}</span>
               </div>
-              ` : ''}
+              `
+                  : ""
+              }
             </div>
           </div>
         `;
@@ -168,7 +204,7 @@ export function createPopupHTML(layerId: string, props: any): string {
           <div class="space-y-1.5 text-sm">
             <div class="flex justify-between">
               <span class="text-gray-600">Type:</span>
-              <span class="font-medium capitalize">${(props?.facility_type || "N/A").replace(/_/g, ' ')}</span>
+              <span class="font-medium capitalize">${(props?.facility_type || "N/A").replace(/_/g, " ")}</span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Location:</span>
@@ -178,31 +214,43 @@ export function createPopupHTML(layerId: string, props: any): string {
               <span class="text-gray-600">Feedstock:</span>
               <span class="font-medium capitalize">${props?.feedstock || "N/A"}</span>
             </div>
-            ${props?.capacity_mw ? `
+            ${
+              props?.capacity_mw
+                ? `
             <div class="flex justify-between">
               <span class="text-gray-600">Capacity:</span>
               <span class="font-medium">${props.capacity_mw} MW</span>
             </div>
-            ` : ''}
-            ${props?.capacity_tonnes_yr ? `
+            `
+                : ""
+            }
+            ${
+              props?.capacity_tonnes_yr
+                ? `
             <div class="flex justify-between">
               <span class="text-gray-600">Processing Capacity:</span>
               <span class="font-medium">${parseInt(props.capacity_tonnes_yr).toLocaleString()} t/yr</span>
             </div>
-            ` : ''}
-            ${props?.annual_generation_gwh ? `
+            `
+                : ""
+            }
+            ${
+              props?.annual_generation_gwh
+                ? `
             <div class="flex justify-between">
               <span class="text-gray-600">Annual Generation:</span>
               <span class="font-medium">${props.annual_generation_gwh} GWh/yr</span>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
             <div class="flex justify-between">
               <span class="text-gray-600">Operator:</span>
               <span class="font-medium">${props?.operator || "N/A"}</span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Status:</span>
-              <span class="px-2 py-0.5 rounded text-xs font-medium ${props?.status === 'operational' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">${props?.status || 'unknown'}</span>
+              <span class="px-2 py-0.5 rounded text-xs font-medium ${props?.status === "operational" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}">${props?.status || "unknown"}</span>
             </div>
           </div>
         </div>
@@ -233,15 +281,19 @@ export function createPopupHTML(layerId: string, props: any): string {
               <span class="text-gray-600">Operator:</span>
               <span class="font-medium">${props?.operator || "N/A"}</span>
             </div>
-            ${props?.year_commissioned ? `
+            ${
+              props?.year_commissioned
+                ? `
             <div class="flex justify-between">
               <span class="text-gray-600">Commissioned:</span>
               <span class="font-medium">${props.year_commissioned}</span>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
             <div class="flex justify-between">
               <span class="text-gray-600">Status:</span>
-              <span class="px-2 py-0.5 rounded text-xs font-medium ${props?.status === 'operational' ? 'bg-green-100 text-green-800' : props?.status === 'pilot' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}">${props?.status || 'unknown'}</span>
+              <span class="px-2 py-0.5 rounded text-xs font-medium ${props?.status === "operational" ? "bg-green-100 text-green-800" : props?.status === "pilot" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}">${props?.status || "unknown"}</span>
             </div>
           </div>
         </div>
@@ -267,22 +319,26 @@ export function createPopupHTML(layerId: string, props: any): string {
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Bulk Handling:</span>
-                <span class="font-medium">${props?.bulk_handling ? '✓ Yes' : '✗ No'}</span>
+                <span class="font-medium">${props?.bulk_handling ? "✓ Yes" : "✗ No"}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Container Terminal:</span>
-                <span class="font-medium">${props?.container_terminal ? '✓ Yes' : '✗ No'}</span>
+                <span class="font-medium">${props?.container_terminal ? "✓ Yes" : "✗ No"}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Rail Connected:</span>
-                <span class="font-medium">${props?.rail_connected ? '✓ Yes' : '✗ No'}</span>
+                <span class="font-medium">${props?.rail_connected ? "✓ Yes" : "✗ No"}</span>
               </div>
-              ${props?.woodchip_terminal ? `
+              ${
+                props?.woodchip_terminal
+                  ? `
               <div class="flex justify-between">
                 <span class="text-gray-600">Woodchip Terminal:</span>
                 <span class="font-medium text-green-600">✓ Yes</span>
               </div>
-              ` : ''}
+              `
+                  : ""
+              }
             </div>
           </div>
         `;
@@ -305,7 +361,7 @@ export function createPopupHTML(layerId: string, props: any): string {
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Rail Connected:</span>
-                <span class="font-medium">${props?.rail_connected ? '✓ Yes' : '✗ No'}</span>
+                <span class="font-medium">${props?.rail_connected ? "✓ Yes" : "✗ No"}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Road Access:</span>
@@ -337,7 +393,7 @@ export function createPopupHTML(layerId: string, props: any): string {
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Electrified:</span>
-                <span class="font-medium">${props?.electrified ? '✓ Yes' : '✗ No'}</span>
+                <span class="font-medium">${props?.electrified ? "✓ Yes" : "✗ No"}</span>
               </div>
             </div>
           </div>

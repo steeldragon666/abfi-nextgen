@@ -13,8 +13,12 @@ test.describe("Producer Registration Flow", () => {
 
     test("should display all registration form elements", async ({ page }) => {
       // Page title and description
-      await expect(page.getByRole("heading", { name: /create an account/i })).toBeVisible();
-      await expect(page.getByText(/australia.*bioenergy.*marketplace/i)).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: /create an account/i })
+      ).toBeVisible();
+      await expect(
+        page.getByText(/australia.*bioenergy.*marketplace/i)
+      ).toBeVisible();
 
       // Role selection
       await expect(page.getByText(/i am a\.\.\./i)).toBeVisible();
@@ -28,14 +32,20 @@ test.describe("Producer Registration Flow", () => {
       await expect(page.getByLabel(/confirm password/i)).toBeVisible();
 
       // Submit button
-      await expect(page.getByRole("button", { name: /create account/i })).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: /create account/i })
+      ).toBeVisible();
 
       // Google OAuth
       await expect(page.getByRole("button", { name: /google/i })).toBeVisible();
 
       // Links
-      await expect(page.getByRole("link", { name: /terms of service/i })).toBeVisible();
-      await expect(page.getByRole("link", { name: /privacy policy/i })).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: /terms of service/i })
+      ).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: /privacy policy/i })
+      ).toBeVisible();
       await expect(page.getByRole("link", { name: /sign in/i })).toBeVisible();
     });
 
@@ -48,7 +58,9 @@ test.describe("Producer Registration Flow", () => {
     });
 
     test("should have password requirements visible", async ({ page }) => {
-      await expect(page.getByText(/must be at least 8 characters/i)).toBeVisible();
+      await expect(
+        page.getByText(/must be at least 8 characters/i)
+      ).toBeVisible();
     });
   });
 
@@ -74,13 +86,19 @@ test.describe("Producer Registration Flow", () => {
     });
 
     test("should display role descriptions", async ({ page }) => {
-      await expect(page.getByText(/sell feedstock to producers/i)).toBeVisible();
-      await expect(page.getByText(/source feedstock for production/i)).toBeVisible();
+      await expect(
+        page.getByText(/sell feedstock to producers/i)
+      ).toBeVisible();
+      await expect(
+        page.getByText(/source feedstock for production/i)
+      ).toBeVisible();
     });
 
     test("should visually highlight selected role", async ({ page }) => {
       // Click buyer
-      const buyerLabel = page.locator("label").filter({ hasText: /bioenergy producer/i });
+      const buyerLabel = page
+        .locator("label")
+        .filter({ hasText: /bioenergy producer/i });
       await buyerLabel.click();
 
       // Check that buyer label has the selected styling (border-primary)
@@ -148,12 +166,18 @@ test.describe("Producer Registration Flow", () => {
       await page.getByRole("button", { name: /create account/i }).click();
 
       // Should show error
-      await expect(page.getByText(/must be at least 8 characters/i)).toBeVisible();
+      await expect(
+        page.getByText(/must be at least 8 characters/i)
+      ).toBeVisible();
     });
 
-    test("should prevent form submission with empty fields", async ({ page }) => {
+    test("should prevent form submission with empty fields", async ({
+      page,
+    }) => {
       // Try to submit without filling anything
-      const submitButton = page.getByRole("button", { name: /create account/i });
+      const submitButton = page.getByRole("button", {
+        name: /create account/i,
+      });
       await submitButton.click();
 
       // Form should not have submitted (still on same page)
@@ -179,12 +203,14 @@ test.describe("Producer Registration Flow", () => {
       // Should show loading (button text changes or spinner appears)
       // Note: This might be very quick, so we use a waitFor
       await expect(
-        page.getByRole("button", { name: /creating account/i }).or(
-          page.locator('.animate-spin')
-        )
-      ).toBeVisible({ timeout: 2000 }).catch(() => {
-        // Loading state may be too quick to catch - that's acceptable
-      });
+        page
+          .getByRole("button", { name: /creating account/i })
+          .or(page.locator(".animate-spin"))
+      )
+        .toBeVisible({ timeout: 2000 })
+        .catch(() => {
+          // Loading state may be too quick to catch - that's acceptable
+        });
     });
 
     test("should disable form fields while loading", async ({ page }) => {
@@ -195,7 +221,9 @@ test.describe("Producer Registration Flow", () => {
       await page.getByLabel(/confirm password/i).fill("password123");
 
       // Submit and check immediately (loading state)
-      const submitButton = page.getByRole("button", { name: /create account/i });
+      const submitButton = page.getByRole("button", {
+        name: /create account/i,
+      });
 
       // Check that button can be clicked (not initially disabled)
       await expect(submitButton).toBeEnabled();
@@ -217,7 +245,9 @@ test.describe("Producer Registration Flow", () => {
       await page.getByRole("button", { name: /create account/i }).click();
 
       // Error should no longer be visible (or page should navigate)
-      await expect(page.getByText(/passwords do not match/i)).not.toBeVisible({ timeout: 3000 });
+      await expect(page.getByText(/passwords do not match/i)).not.toBeVisible({
+        timeout: 3000,
+      });
     });
   });
 
@@ -308,7 +338,9 @@ test.describe("Producer Registration Flow", () => {
 
       // Note: Full submission would require mocked Supabase
       // This test verifies the form is ready for submission
-      const submitButton = page.getByRole("button", { name: /create account/i });
+      const submitButton = page.getByRole("button", {
+        name: /create account/i,
+      });
       await expect(submitButton).toBeEnabled();
     });
 
@@ -329,7 +361,9 @@ test.describe("Producer Registration Flow", () => {
       await page.getByLabel(/confirm password/i).fill("password123");
 
       // Verify form is ready for submission
-      const submitButton = page.getByRole("button", { name: /create account/i });
+      const submitButton = page.getByRole("button", {
+        name: /create account/i,
+      });
       await expect(submitButton).toBeEnabled();
     });
   });
@@ -368,7 +402,9 @@ test.describe("Producer Registration Flow", () => {
       await page.goto("/register");
     });
 
-    test("should display error alert for validation errors", async ({ page }) => {
+    test("should display error alert for validation errors", async ({
+      page,
+    }) => {
       // Trigger password mismatch
       await page.getByLabel(/full name/i).fill("Test User");
       await page.getByLabel(/work email/i).fill("test@example.com");
@@ -405,7 +441,9 @@ test.describe("Producer Registration Flow", () => {
       await page.goto("/register");
 
       // Mobile logo should be visible (the ABFI logo in the header)
-      const mobileLogo = page.locator('.lg\\:hidden').filter({ hasText: /abfi/i });
+      const mobileLogo = page
+        .locator(".lg\\:hidden")
+        .filter({ hasText: /abfi/i });
       await expect(mobileLogo).toBeVisible();
     });
 
@@ -431,7 +469,9 @@ test.describe("Supplier Settings (Post-Registration)", () => {
   // These tests would require authentication setup
   // For now, we test the settings page structure
 
-  test.skip("should display supplier settings form when authenticated", async ({ page }) => {
+  test.skip("should display supplier settings form when authenticated", async ({
+    page,
+  }) => {
     // This would require auth setup
     await page.goto("/supplier/settings");
 
@@ -444,7 +484,9 @@ test.describe("Supplier Settings (Post-Registration)", () => {
 test.describe("Buyer Settings (Post-Registration)", () => {
   // These tests would require authentication setup
 
-  test.skip("should display buyer settings form when authenticated", async ({ page }) => {
+  test.skip("should display buyer settings form when authenticated", async ({
+    page,
+  }) => {
     // This would require auth setup
     await page.goto("/buyer/settings");
 

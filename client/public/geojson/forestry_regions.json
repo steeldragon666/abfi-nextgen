@@ -5,7 +5,15 @@
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[140.0, -37.0], [141.5, -37.0], [141.5, -38.5], [140.0, -38.5], [140.0, -37.0]]]
+        "coordinates": [
+          [
+            [140.0, -37.0],
+            [141.5, -37.0],
+            [141.5, -38.5],
+            [140.0, -38.5],
+            [140.0, -37.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Green Triangle",
@@ -14,14 +22,26 @@
         "area_hectares": 328000,
         "annual_residue_tonnes": 425000,
         "primary_species": ["Pinus radiata", "Pinus elliottii"],
-        "key_facilities": ["OneFortyOne Mount Gambier", "Timberlink Tarpeena", "Midway Myamyn"]
+        "key_facilities": [
+          "OneFortyOne Mount Gambier",
+          "Timberlink Tarpeena",
+          "Midway Myamyn"
+        ]
       }
     },
     {
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[146.0, -41.0], [148.0, -41.0], [148.0, -43.0], [146.0, -43.0], [146.0, -41.0]]]
+        "coordinates": [
+          [
+            [146.0, -41.0],
+            [148.0, -41.0],
+            [148.0, -43.0],
+            [146.0, -43.0],
+            [146.0, -41.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Tasmania",
@@ -30,14 +50,26 @@
         "area_hectares": 281000,
         "annual_residue_tonnes": 325000,
         "primary_species": ["Eucalyptus nitens", "Eucalyptus globulus"],
-        "key_facilities": ["Forico Long Reach", "Midway Bell Bay", "Timberlink Bell Bay"]
+        "key_facilities": [
+          "Forico Long Reach",
+          "Midway Bell Bay",
+          "Timberlink Bell Bay"
+        ]
       }
     },
     {
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[147.5, -35.0], [148.5, -35.0], [148.5, -36.0], [147.5, -36.0], [147.5, -35.0]]]
+        "coordinates": [
+          [
+            [147.5, -35.0],
+            [148.5, -35.0],
+            [148.5, -36.0],
+            [147.5, -36.0],
+            [147.5, -35.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Tumut-Tumbarumba",
@@ -46,14 +78,26 @@
         "area_hectares": 90000,
         "annual_residue_tonnes": 375000,
         "primary_species": ["Pinus radiata"],
-        "key_facilities": ["AKD Sawmills Tumut", "Hyne Timber Tumbarumba", "Visy Pulp Mill"]
+        "key_facilities": [
+          "AKD Sawmills Tumut",
+          "Hyne Timber Tumbarumba",
+          "Visy Pulp Mill"
+        ]
       }
     },
     {
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[145.5, -37.5], [147.5, -37.5], [147.5, -38.5], [145.5, -38.5], [145.5, -37.5]]]
+        "coordinates": [
+          [
+            [145.5, -37.5],
+            [147.5, -37.5],
+            [147.5, -38.5],
+            [145.5, -38.5],
+            [145.5, -37.5]
+          ]
+        ]
       },
       "properties": {
         "name": "Gippsland",
@@ -62,14 +106,25 @@
         "area_hectares": 90000,
         "annual_residue_tonnes": 275000,
         "primary_species": ["Eucalyptus nitens", "Pinus radiata"],
-        "key_facilities": ["HVP Plantations Gelliondale", "Australian Paper Maryvale"]
+        "key_facilities": [
+          "HVP Plantations Gelliondale",
+          "Australian Paper Maryvale"
+        ]
       }
     },
     {
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[115.0, -33.0], [118.0, -33.0], [118.0, -35.5], [115.0, -35.5], [115.0, -33.0]]]
+        "coordinates": [
+          [
+            [115.0, -33.0],
+            [118.0, -33.0],
+            [118.0, -35.5],
+            [115.0, -35.5],
+            [115.0, -33.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Southwest WA",
@@ -123,7 +178,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [141.60, -38.00] },
+      "geometry": { "type": "Point", "coordinates": [141.6, -38.0] },
       "properties": {
         "name": "Midway Myamyn",
         "type": "forestry_facility",
@@ -162,7 +217,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [148.23, -35.30] },
+      "geometry": { "type": "Point", "coordinates": [148.23, -35.3] },
       "properties": {
         "name": "AKD Sawmills Tumut",
         "type": "forestry_facility",
@@ -214,7 +269,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [115.75, -33.40] },
+      "geometry": { "type": "Point", "coordinates": [115.75, -33.4] },
       "properties": {
         "name": "FPC Dardanup",
         "type": "forestry_facility",

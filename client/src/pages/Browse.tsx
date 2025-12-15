@@ -1,15 +1,43 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { AUSTRALIAN_STATES, FEEDSTOCK_CATEGORIES, formatPrice, getScoreGrade } from "@/const";
+import {
+  AUSTRALIAN_STATES,
+  FEEDSTOCK_CATEGORIES,
+  formatPrice,
+  getScoreGrade,
+} from "@/const";
 import { trpc } from "@/lib/trpc";
 import { PageLayout, PageContainer } from "@/components/layout";
-import { Award, Filter, MapPin, TrendingUp, Leaf, ChevronRight, Zap, ShieldCheck, Package, X } from "lucide-react";
+import {
+  Award,
+  Filter,
+  MapPin,
+  TrendingUp,
+  Leaf,
+  ChevronRight,
+  Zap,
+  ShieldCheck,
+  Package,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
@@ -30,7 +58,8 @@ const MOCK_FEEDSTOCKS = [
     priceVisibility: "public",
     carbonIntensityValue: 12.5,
     verificationLevel: "third_party_verified",
-    description: "High-quality bagasse from sustainable sugarcane operations with established logistics.",
+    description:
+      "High-quality bagasse from sustainable sugarcane operations with established logistics.",
     supplierName: "Queensland Sugar Ltd",
   },
   {
@@ -47,7 +76,8 @@ const MOCK_FEEDSTOCKS = [
     priceVisibility: "public",
     carbonIntensityValue: 15.2,
     verificationLevel: "self_declared",
-    description: "Post-harvest wheat straw aggregated from multiple farms in the Riverina region.",
+    description:
+      "Post-harvest wheat straw aggregated from multiple farms in the Riverina region.",
     supplierName: "Riverina Agri Co-op",
   },
   {
@@ -64,7 +94,8 @@ const MOCK_FEEDSTOCKS = [
     priceVisibility: "public",
     carbonIntensityValue: 8.3,
     verificationLevel: "third_party_verified",
-    description: "FSC-certified eucalyptus plantation with proven carbon credentials.",
+    description:
+      "FSC-certified eucalyptus plantation with proven carbon credentials.",
     supplierName: "Gippsland Plantations",
   },
   {
@@ -81,7 +112,8 @@ const MOCK_FEEDSTOCKS = [
     priceVisibility: "public",
     carbonIntensityValue: 22.1,
     verificationLevel: "platform_verified",
-    description: "By-product from canola oil processing with consistent supply chain.",
+    description:
+      "By-product from canola oil processing with consistent supply chain.",
     supplierName: "SA Oilseeds Processing",
   },
   {
@@ -98,7 +130,8 @@ const MOCK_FEEDSTOCKS = [
     priceVisibility: "public",
     carbonIntensityValue: 10.8,
     verificationLevel: "third_party_verified",
-    description: "Sustainably harvested native forestry residues from certified operations.",
+    description:
+      "Sustainably harvested native forestry residues from certified operations.",
     supplierName: "Tasmanian Timber Co",
   },
   {
@@ -131,9 +164,18 @@ const SCORE_COLORS: Record<string, string> = {
 };
 
 const VERIFICATION_CONFIG: Record<string, { label: string; color: string }> = {
-  third_party_verified: { label: "Third-Party Verified", color: "bg-emerald-100 text-emerald-700" },
-  platform_verified: { label: "Platform Verified", color: "bg-blue-100 text-blue-700" },
-  self_declared: { label: "Self-Declared", color: "bg-slate-100 text-slate-700" },
+  third_party_verified: {
+    label: "Third-Party Verified",
+    color: "bg-emerald-100 text-emerald-700",
+  },
+  platform_verified: {
+    label: "Platform Verified",
+    color: "bg-blue-100 text-blue-700",
+  },
+  self_declared: {
+    label: "Self-Declared",
+    color: "bg-slate-100 text-slate-700",
+  },
 };
 
 export default function Browse() {
@@ -160,14 +202,14 @@ export default function Browse() {
   const totalPages = feedstocks ? Math.ceil(feedstocks.length / pageSize) : 0;
 
   const toggleCategory = (cat: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+    setSelectedCategories(prev =>
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
     );
   };
 
   const toggleState = (state: string) => {
-    setSelectedStates((prev) =>
-      prev.includes(state) ? prev.filter((s) => s !== state) : [...prev, state]
+    setSelectedStates(prev =>
+      prev.includes(state) ? prev.filter(s => s !== state) : [...prev, state]
     );
   };
 
@@ -178,11 +220,20 @@ export default function Browse() {
     setMaxCarbon(undefined);
   };
 
-  const hasFilters = selectedCategories.length > 0 || selectedStates.length > 0 || minScore || maxCarbon;
+  const hasFilters =
+    selectedCategories.length > 0 ||
+    selectedStates.length > 0 ||
+    minScore ||
+    maxCarbon;
 
   // Calculate stats
-  const totalVolume = feedstocks.reduce((sum, f: any) => sum + (f.availableVolumeCurrent || 0), 0);
-  const avgScore = feedstocks.reduce((sum, f: any) => sum + (f.abfiScore || 0), 0) / feedstocks.length;
+  const totalVolume = feedstocks.reduce(
+    (sum, f: any) => sum + (f.availableVolumeCurrent || 0),
+    0
+  );
+  const avgScore =
+    feedstocks.reduce((sum, f: any) => sum + (f.abfiScore || 0), 0) /
+    feedstocks.length;
 
   return (
     <PageLayout>
@@ -196,12 +247,18 @@ export default function Browse() {
         <PageContainer className="relative z-10" padding="none">
           <div className="max-w-3xl">
             <div className="flex flex-wrap gap-2 mb-6">
-              <Badge variant="outline" className="border-green-400/50 text-green-300 bg-green-500/10">
+              <Badge
+                variant="outline"
+                className="border-green-400/50 text-green-300 bg-green-500/10"
+              >
                 <Package className="h-3 w-3 mr-1" />
                 Verified Supply
               </Badge>
               {isUsingMockData && (
-                <Badge variant="outline" className="border-amber-400/50 text-amber-300 bg-amber-500/10">
+                <Badge
+                  variant="outline"
+                  className="border-amber-400/50 text-amber-300 bg-amber-500/10"
+                >
                   Demo Data
                 </Badge>
               )}
@@ -211,8 +268,9 @@ export default function Browse() {
               Browse Feedstocks
             </h1>
             <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-              Discover verified biofuel feedstock sources across Australia. Compare ABFI scores,
-              carbon intensity, and availability from qualified suppliers.
+              Discover verified biofuel feedstock sources across Australia.
+              Compare ABFI scores, carbon intensity, and availability from
+              qualified suppliers.
             </p>
 
             <div className="flex flex-wrap gap-3">
@@ -234,15 +292,23 @@ export default function Browse() {
           {/* Stats Row */}
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-white">{feedstocks.length}</div>
+              <div className="text-3xl font-bold font-mono text-white">
+                {feedstocks.length}
+              </div>
               <div className="text-sm text-slate-400 mt-1">Listings</div>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-green-400">{(totalVolume / 1000).toFixed(0)}k</div>
-              <div className="text-sm text-slate-400 mt-1">Tonnes Available</div>
+              <div className="text-3xl font-bold font-mono text-green-400">
+                {(totalVolume / 1000).toFixed(0)}k
+              </div>
+              <div className="text-sm text-slate-400 mt-1">
+                Tonnes Available
+              </div>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-white">{avgScore.toFixed(0)}</div>
+              <div className="text-3xl font-bold font-mono text-white">
+                {avgScore.toFixed(0)}
+              </div>
               <div className="text-sm text-slate-400 mt-1">Avg ABFI Score</div>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
@@ -274,16 +340,21 @@ export default function Browse() {
               <CardContent className="space-y-6">
                 {/* Category Filter */}
                 <div>
-                  <Label className="text-sm font-medium mb-3 block">Feedstock Category</Label>
+                  <Label className="text-sm font-medium mb-3 block">
+                    Feedstock Category
+                  </Label>
                   <div className="space-y-2">
-                    {FEEDSTOCK_CATEGORIES.map((cat) => (
+                    {FEEDSTOCK_CATEGORIES.map(cat => (
                       <div key={cat.value} className="flex items-center gap-2">
                         <Checkbox
                           id={`cat-${cat.value}`}
                           checked={selectedCategories.includes(cat.value)}
                           onCheckedChange={() => toggleCategory(cat.value)}
                         />
-                        <Label htmlFor={`cat-${cat.value}`} className="text-sm cursor-pointer">
+                        <Label
+                          htmlFor={`cat-${cat.value}`}
+                          className="text-sm cursor-pointer"
+                        >
                           {cat.label}
                         </Label>
                       </div>
@@ -293,16 +364,24 @@ export default function Browse() {
 
                 {/* State Filter */}
                 <div>
-                  <Label className="text-sm font-medium mb-3 block">State</Label>
+                  <Label className="text-sm font-medium mb-3 block">
+                    State
+                  </Label>
                   <div className="grid grid-cols-3 gap-2">
-                    {AUSTRALIAN_STATES.map((state) => (
-                      <div key={state.value} className="flex items-center gap-1.5">
+                    {AUSTRALIAN_STATES.map(state => (
+                      <div
+                        key={state.value}
+                        className="flex items-center gap-1.5"
+                      >
                         <Checkbox
                           id={`state-${state.value}`}
                           checked={selectedStates.includes(state.value)}
                           onCheckedChange={() => toggleState(state.value)}
                         />
-                        <Label htmlFor={`state-${state.value}`} className="text-xs cursor-pointer">
+                        <Label
+                          htmlFor={`state-${state.value}`}
+                          className="text-xs cursor-pointer"
+                        >
                           {state.value}
                         </Label>
                       </div>
@@ -312,7 +391,9 @@ export default function Browse() {
 
                 {/* ABFI Score Filter */}
                 <div>
-                  <Label htmlFor="minScore" className="text-sm font-medium">Min ABFI Score</Label>
+                  <Label htmlFor="minScore" className="text-sm font-medium">
+                    Min ABFI Score
+                  </Label>
                   <Input
                     id="minScore"
                     type="number"
@@ -320,26 +401,40 @@ export default function Browse() {
                     max="100"
                     placeholder="e.g., 70"
                     value={minScore || ""}
-                    onChange={(e) => setMinScore(e.target.value ? Number(e.target.value) : undefined)}
+                    onChange={e =>
+                      setMinScore(
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
                     className="mt-1"
                   />
                 </div>
 
                 {/* Carbon Intensity Filter */}
                 <div>
-                  <Label htmlFor="maxCarbon" className="text-sm font-medium">Max Carbon (gCO2e/MJ)</Label>
+                  <Label htmlFor="maxCarbon" className="text-sm font-medium">
+                    Max Carbon (gCO2e/MJ)
+                  </Label>
                   <Input
                     id="maxCarbon"
                     type="number"
                     min="0"
                     placeholder="e.g., 50"
                     value={maxCarbon || ""}
-                    onChange={(e) => setMaxCarbon(e.target.value ? Number(e.target.value) : undefined)}
+                    onChange={e =>
+                      setMaxCarbon(
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
                     className="mt-1"
                   />
                 </div>
 
-                <Button variant="outline" className="w-full" onClick={clearFilters}>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={clearFilters}
+                >
                   Clear All Filters
                 </Button>
               </CardContent>
@@ -350,8 +445,13 @@ export default function Browse() {
           <div className="lg:col-span-3">
             <div className="mb-6 flex justify-between items-center">
               <p className="text-muted-foreground">
-                <strong className="text-foreground">{feedstocks?.length || 0}</strong> feedstocks found
-                {isUsingMockData && <span className="ml-2 text-amber-600">(Demo data)</span>}
+                <strong className="text-foreground">
+                  {feedstocks?.length || 0}
+                </strong>{" "}
+                feedstocks found
+                {isUsingMockData && (
+                  <span className="ml-2 text-amber-600">(Demo data)</span>
+                )}
               </p>
               <Button variant="outline" size="sm" asChild>
                 <Link href="/feedstock-map">
@@ -363,7 +463,7 @@ export default function Browse() {
 
             {isLoading ? (
               <div className="grid md:grid-cols-2 gap-6">
-                {[1, 2, 3, 4].map((i) => (
+                {[1, 2, 3, 4].map(i => (
                   <Card key={i}>
                     <CardHeader>
                       <Skeleton className="h-6 w-3/4 mb-2" />
@@ -378,11 +478,18 @@ export default function Browse() {
             ) : feedstocks && feedstocks.length > 0 ? (
               <div className="grid md:grid-cols-2 gap-6">
                 {feedstocks.map((feedstock: any) => {
-                  const grade = feedstock.abfiScore ? getScoreGrade(feedstock.abfiScore) : null;
-                  const verificationConfig = VERIFICATION_CONFIG[feedstock.verificationLevel] || VERIFICATION_CONFIG.self_declared;
+                  const grade = feedstock.abfiScore
+                    ? getScoreGrade(feedstock.abfiScore)
+                    : null;
+                  const verificationConfig =
+                    VERIFICATION_CONFIG[feedstock.verificationLevel] ||
+                    VERIFICATION_CONFIG.self_declared;
 
                   return (
-                    <Card key={feedstock.id} className="hover:shadow-lg transition-all group border-2 border-transparent hover:border-primary/20">
+                    <Card
+                      key={feedstock.id}
+                      className="hover:shadow-lg transition-all group border-2 border-transparent hover:border-primary/20"
+                    >
                       <CardHeader className="pb-3">
                         <div className="flex justify-between items-start gap-3">
                           <div className="flex-1">
@@ -398,16 +505,25 @@ export default function Browse() {
                                 {feedstock.region && `, ${feedstock.region}`}
                               </span>
                               <span className="text-muted-foreground">•</span>
-                              <span className="font-mono text-xs">{feedstock.abfiId}</span>
+                              <span className="font-mono text-xs">
+                                {feedstock.abfiId}
+                              </span>
                             </CardDescription>
                           </div>
                           <div className="text-right shrink-0">
                             <div className="flex items-center gap-1.5 justify-end">
                               <Award className="h-5 w-5 text-primary" />
-                              <span className="text-2xl font-bold font-mono">{feedstock.abfiScore || "N/A"}</span>
+                              <span className="text-2xl font-bold font-mono">
+                                {feedstock.abfiScore || "N/A"}
+                              </span>
                             </div>
                             {grade && (
-                              <Badge className={cn("text-xs mt-1", SCORE_COLORS[grade])}>
+                              <Badge
+                                className={cn(
+                                  "text-xs mt-1",
+                                  SCORE_COLORS[grade]
+                                )}
+                              >
                                 {grade}
                               </Badge>
                             )}
@@ -416,13 +532,22 @@ export default function Browse() {
 
                         <div className="flex gap-2 flex-wrap mt-3">
                           <Badge variant="outline" className="text-xs">
-                            {FEEDSTOCK_CATEGORIES.find((c) => c.value === feedstock.category)?.label}
+                            {
+                              FEEDSTOCK_CATEGORIES.find(
+                                c => c.value === feedstock.category
+                              )?.label
+                            }
                           </Badge>
-                          <Badge className={cn("text-xs", verificationConfig.color)}>
+                          <Badge
+                            className={cn("text-xs", verificationConfig.color)}
+                          >
                             {verificationConfig.label}
                           </Badge>
                           {feedstock.carbonIntensityValue && (
-                            <Badge variant="outline" className="text-xs font-mono">
+                            <Badge
+                              variant="outline"
+                              className="text-xs font-mono"
+                            >
                               {feedstock.carbonIntensityValue} gCO2e/MJ
                             </Badge>
                           )}
@@ -433,31 +558,42 @@ export default function Browse() {
                         {/* Volume Stats */}
                         <div className="bg-muted/50 rounded-lg p-3 space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Annual Capacity</span>
+                            <span className="text-muted-foreground">
+                              Annual Capacity
+                            </span>
                             <span className="font-medium font-mono">
-                              {feedstock.annualCapacityTonnes.toLocaleString()} t
+                              {feedstock.annualCapacityTonnes.toLocaleString()}{" "}
+                              t
                             </span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Available Now</span>
+                            <span className="text-muted-foreground">
+                              Available Now
+                            </span>
                             <span className="font-semibold text-green-600 font-mono">
-                              {feedstock.availableVolumeCurrent.toLocaleString()} t
+                              {feedstock.availableVolumeCurrent.toLocaleString()}{" "}
+                              t
                             </span>
                           </div>
-                          {feedstock.pricePerTonne && feedstock.priceVisibility === "public" && (
-                            <div className="flex justify-between text-sm pt-2 border-t border-border/50">
-                              <span className="text-muted-foreground">Price</span>
-                              <span className="font-semibold font-mono">
-                                {formatPrice(feedstock.pricePerTonne)}/t
-                              </span>
-                            </div>
-                          )}
+                          {feedstock.pricePerTonne &&
+                            feedstock.priceVisibility === "public" && (
+                              <div className="flex justify-between text-sm pt-2 border-t border-border/50">
+                                <span className="text-muted-foreground">
+                                  Price
+                                </span>
+                                <span className="font-semibold font-mono">
+                                  {formatPrice(feedstock.pricePerTonne)}/t
+                                </span>
+                              </div>
+                            )}
                         </div>
 
                         {/* Supplier */}
                         {feedstock.supplierName && (
                           <div className="text-sm text-muted-foreground">
-                            <span className="font-medium text-foreground">{feedstock.supplierName}</span>
+                            <span className="font-medium text-foreground">
+                              {feedstock.supplierName}
+                            </span>
                           </div>
                         )}
 
@@ -469,13 +605,18 @@ export default function Browse() {
 
                         {/* Actions */}
                         <div className="flex gap-2 pt-2 border-t">
-                          <Link href={`/feedstock/${feedstock.id}`} className="flex-1">
+                          <Link
+                            href={`/feedstock/${feedstock.id}`}
+                            className="flex-1"
+                          >
                             <Button className="w-full" size="sm">
                               View Details
                               <ChevronRight className="h-4 w-4 ml-1" />
                             </Button>
                           </Link>
-                          <Link href={`/inquiry/send?feedstockId=${feedstock.id}`}>
+                          <Link
+                            href={`/inquiry/send?feedstockId=${feedstock.id}`}
+                          >
                             <Button variant="outline" size="sm">
                               Inquire
                             </Button>
@@ -490,9 +631,12 @@ export default function Browse() {
               <Card>
                 <CardContent className="py-16 text-center">
                   <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No feedstocks found</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    No feedstocks found
+                  </h3>
                   <p className="text-muted-foreground mb-4">
-                    Try adjusting your filters or check back later for new listings
+                    Try adjusting your filters or check back later for new
+                    listings
                   </p>
                   {hasFilters && (
                     <Button variant="outline" onClick={clearFilters}>
@@ -510,7 +654,7 @@ export default function Browse() {
                   <Label className="text-sm">Items per page:</Label>
                   <Select
                     value={pageSize.toString()}
-                    onValueChange={(v) => {
+                    onValueChange={v => {
                       setPageSize(parseInt(v));
                       setPage(1);
                     }}
@@ -527,10 +671,20 @@ export default function Browse() {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                  >
                     Previous
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages}
+                  >
                     Next
                   </Button>
                 </div>
@@ -543,9 +697,12 @@ export default function Browse() {
                 <CardContent className="py-8">
                   <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                     <div>
-                      <h3 className="text-xl font-semibold mb-2">Want to list your feedstock?</h3>
+                      <h3 className="text-xl font-semibold mb-2">
+                        Want to list your feedstock?
+                      </h3>
                       <p className="text-muted-foreground">
-                        Register as a supplier and list your biomass feedstock to reach verified buyers.
+                        Register as a supplier and list your biomass feedstock
+                        to reach verified buyers.
                       </p>
                     </div>
                     <div className="flex gap-3">

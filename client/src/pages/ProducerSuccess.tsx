@@ -25,14 +25,17 @@ export default function ProducerSuccess() {
 
           {/* What Happens Next */}
           <div className="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-6 text-left">
-            <h2 className="mb-4 text-xl font-semibold text-[#0F3A5C]">What happens next?</h2>
+            <h2 className="mb-4 text-xl font-semibold text-[#0F3A5C]">
+              What happens next?
+            </h2>
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start gap-3">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#F4C430] text-sm font-semibold text-[#0F3A5C]">
                   1
                 </span>
                 <span>
-                  <strong>Verification:</strong> Our team will review your listing within 24 hours
+                  <strong>Verification:</strong> Our team will review your
+                  listing within 24 hours
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -40,7 +43,8 @@ export default function ProducerSuccess() {
                   2
                 </span>
                 <span>
-                  <strong>Go Live:</strong> Once verified, your listing appears in marketplace search results
+                  <strong>Go Live:</strong> Once verified, your listing appears
+                  in marketplace search results
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -48,7 +52,8 @@ export default function ProducerSuccess() {
                   3
                 </span>
                 <span>
-                  <strong>Connect:</strong> Buyers can send inquiries and you'll receive email notifications
+                  <strong>Connect:</strong> Buyers can send inquiries and you'll
+                  receive email notifications
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -56,7 +61,8 @@ export default function ProducerSuccess() {
                   4
                 </span>
                 <span>
-                  <strong>Manage:</strong> Update your listing anytime from your dashboard
+                  <strong>Manage:</strong> Update your listing anytime from your
+                  dashboard
                 </span>
               </li>
             </ul>
@@ -70,7 +76,7 @@ export default function ProducerSuccess() {
                 Go to Dashboard
               </Button>
             </Link>
-            
+
             <Link href="/browse">
               <Button variant="outline" className="w-full gap-2 sm:w-auto">
                 <Search className="h-5 w-5" />
@@ -90,7 +96,10 @@ export default function ProducerSuccess() {
           <div className="mt-8 rounded-lg border border-blue-200 bg-blue-50 p-4">
             <p className="text-sm text-blue-900">
               <strong>Need help?</strong> Contact our support team at{" "}
-              <a href="mailto:support@abfi.com.au" className="font-semibold text-blue-700 hover:underline">
+              <a
+                href="mailto:support@abfi.com.au"
+                className="font-semibold text-blue-700 hover:underline"
+              >
                 support@abfi.com.au
               </a>
             </p>

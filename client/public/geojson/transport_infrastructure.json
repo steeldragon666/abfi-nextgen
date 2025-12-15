@@ -199,7 +199,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [148.60, -20.31] },
+      "geometry": { "type": "Point", "coordinates": [148.6, -20.31] },
       "properties": {
         "name": "Bowen Grain Terminal",
         "type": "transport_infrastructure",
@@ -229,7 +229,11 @@
       "type": "Feature",
       "geometry": {
         "type": "LineString",
-        "coordinates": [[153.03, -27.47], [151.78, -32.93], [151.21, -33.87]]
+        "coordinates": [
+          [153.03, -27.47],
+          [151.78, -32.93],
+          [151.21, -33.87]
+        ]
       },
       "properties": {
         "name": "North Coast Rail Line",
@@ -245,7 +249,10 @@
       "type": "Feature",
       "geometry": {
         "type": "LineString",
-        "coordinates": [[151.21, -33.87], [144.96, -37.81]]
+        "coordinates": [
+          [151.21, -33.87],
+          [144.96, -37.81]
+        ]
       },
       "properties": {
         "name": "Sydney-Melbourne Rail Corridor",
@@ -261,7 +268,10 @@
       "type": "Feature",
       "geometry": {
         "type": "LineString",
-        "coordinates": [[144.96, -37.81], [138.60, -34.93]]
+        "coordinates": [
+          [144.96, -37.81],
+          [138.6, -34.93]
+        ]
       },
       "properties": {
         "name": "Melbourne-Adelaide Rail Line",
@@ -277,7 +287,10 @@
       "type": "Feature",
       "geometry": {
         "type": "LineString",
-        "coordinates": [[138.60, -34.93], [115.86, -31.95]]
+        "coordinates": [
+          [138.6, -34.93],
+          [115.86, -31.95]
+        ]
       },
       "properties": {
         "name": "Trans-Australian Railway",

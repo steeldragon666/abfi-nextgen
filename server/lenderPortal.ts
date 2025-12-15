@@ -30,14 +30,16 @@ export async function checkCovenantCompliance(params: {
     minSupplierCount: number;
     actualSupplierCount: number;
   };
-}): Promise<Array<{
-  covenantType: string;
-  compliant: boolean;
-  actualValue: number;
-  thresholdValue: number;
-  variancePercent: number;
-  severity: "info" | "warning" | "breach" | "critical";
-}>> {
+}): Promise<
+  Array<{
+    covenantType: string;
+    compliant: boolean;
+    actualValue: number;
+    thresholdValue: number;
+    variancePercent: number;
+    severity: "info" | "warning" | "breach" | "critical";
+  }>
+> {
   const results: Array<{
     covenantType: string;
     compliant: boolean;
@@ -79,14 +81,21 @@ export async function checkCovenantCompliance(params: {
 
     // Calculate variance
     const variance = actualValue - covenant.threshold;
-    const variancePercent = Math.round((Math.abs(variance) / covenant.threshold) * 100);
+    const variancePercent = Math.round(
+      (Math.abs(variance) / covenant.threshold) * 100
+    );
 
     // Determine severity
     let severity: "info" | "warning" | "breach" | "critical";
     if (compliant) {
       severity = variancePercent < 10 ? "warning" : "info"; // Close to threshold = warning
     } else {
-      severity = variancePercent > 50 ? "critical" : variancePercent > 25 ? "breach" : "warning";
+      severity =
+        variancePercent > 50
+          ? "critical"
+          : variancePercent > 25
+            ? "breach"
+            : "warning";
     }
 
     results.push({
@@ -139,7 +148,10 @@ export async function recordCovenantBreach(params: {
 /**
  * Get covenant breach history for a project
  */
-export async function getCovenantBreachHistory(projectId: number, options?: { unresolved?: boolean; since?: Date }) {
+export async function getCovenantBreachHistory(
+  projectId: number,
+  options?: { unresolved?: boolean; since?: Date }
+) {
   const db = await getDb();
   if (!db) return [];
 
@@ -193,15 +205,24 @@ export async function getActiveAlerts(projectId: number) {
   const breaches = await db
     .select()
     .from(covenantBreachEvents)
-    .where(and(eq(covenantBreachEvents.projectId, projectId), eq(covenantBreachEvents.resolved, false)))
-    .orderBy(desc(covenantBreachEvents.severity), desc(covenantBreachEvents.breachDate));
+    .where(
+      and(
+        eq(covenantBreachEvents.projectId, projectId),
+        eq(covenantBreachEvents.resolved, false)
+      )
+    )
+    .orderBy(
+      desc(covenantBreachEvents.severity),
+      desc(covenantBreachEvents.breachDate)
+    );
 
-  return breaches.map((breach) => ({
+  return breaches.map(breach => ({
     id: breach.id,
     type: "covenant_breach",
     severity: breach.severity,
     title: `Covenant Breach: ${breach.covenantType}`,
-    message: breach.narrativeExplanation || `${breach.covenantType} breach detected`,
+    message:
+      breach.narrativeExplanation || `${breach.covenantType} breach detected`,
     date: breach.breachDate,
     actualValue: breach.actualValue,
     thresholdValue: breach.thresholdValue,
@@ -232,8 +253,10 @@ export async function generateMonthlyReport(params: {
 
   const covenantComplianceStatus = {
     compliant: breaches.length === 0,
-    breaches: breaches.filter((b) => b.severity === "breach" || b.severity === "critical").length,
-    warnings: breaches.filter((b) => b.severity === "warning").length,
+    breaches: breaches.filter(
+      b => b.severity === "breach" || b.severity === "critical"
+    ).length,
+    warnings: breaches.filter(b => b.severity === "warning").length,
   };
 
   // Placeholder for supply position summary (would come from actual project data)
@@ -298,7 +321,11 @@ export async function getProjectReports(projectId: number) {
 /**
  * Finalize report (mark as ready to send)
  */
-export async function finalizeReport(params: { reportId: number; reportPdfUrl?: string; evidencePackUrl?: string }): Promise<void> {
+export async function finalizeReport(params: {
+  reportId: number;
+  reportPdfUrl?: string;
+  evidencePackUrl?: string;
+}): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
@@ -342,7 +369,9 @@ export async function getLenderDashboardData(projectId: number) {
   // Get recent breaches (last 30 days)
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const recentBreaches = await getCovenantBreachHistory(projectId, { since: thirtyDaysAgo });
+  const recentBreaches = await getCovenantBreachHistory(projectId, {
+    since: thirtyDaysAgo,
+  });
 
   // Get latest report
   const latestReport = await getLatestReport(projectId);
@@ -353,8 +382,8 @@ export async function getLenderDashboardData(projectId: number) {
     latestReport,
     summary: {
       activeAlerts: alerts.length,
-      criticalAlerts: alerts.filter((a) => a.severity === "critical").length,
-      unresolvedBreaches: recentBreaches.filter((b) => !b.resolved).length,
+      criticalAlerts: alerts.filter(a => a.severity === "critical").length,
+      unresolvedBreaches: recentBreaches.filter(b => !b.resolved).length,
       lastReportDate: latestReport?.generatedDate || null,
     },
   };

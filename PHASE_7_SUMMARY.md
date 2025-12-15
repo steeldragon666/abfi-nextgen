@@ -1,11 +1,13 @@
 # Phase 7 Complete: Institutional-Grade Lender Portal
 
 ## Overview
+
 Transformed the basic read-only lender portal into an institutional-grade monitoring platform with real-time covenant tracking, automated breach detection, and monthly reporting infrastructure.
 
 ## Database Schema (2 New Tables)
 
 ### covenantBreachEvents (19 columns)
+
 - Tracks covenant violations with severity classification (info, warning, breach, critical)
 - Records actual vs threshold values with variance percentage
 - Includes narrative explanations and impact assessments
@@ -13,6 +15,7 @@ Transformed the basic read-only lender portal into an institutional-grade monito
 - Lender notification tracking
 
 ### lenderReports (24 columns)
+
 - Monthly/quarterly report generation and distribution
 - Executive summaries and score change narratives
 - Covenant compliance status snapshots
@@ -23,6 +26,7 @@ Transformed the basic read-only lender portal into an institutional-grade monito
 ## Backend Infrastructure (server/lenderPortal.ts)
 
 ### Covenant Monitoring Engine
+
 - `checkCovenantCompliance()`: Real-time compliance checking against 5 covenant types
   - min_tier1_coverage, min_tier2_coverage, max_hhi, max_supply_shortfall, min_supplier_count
 - `recordCovenantBreach()`: Automatic breach event logging
@@ -31,11 +35,13 @@ Transformed the basic read-only lender portal into an institutional-grade monito
 - Severity calculation based on variance from threshold (< 10% = warning, 10-25% = breach, 25-50% = major, > 50% = critical)
 
 ### Alert System
+
 - `getActiveAlerts()`: Unresolved breaches sorted by severity
 - Alert aggregation with type, severity, title, message, date, metrics
 - Real-time dashboard feed
 
 ### Reporting Engine
+
 - `generateMonthlyReport()`: Automated monthly/quarterly report generation
 - `getLatestReport()`: Most recent report retrieval
 - `getProjectReports()`: Full report archive
@@ -43,6 +49,7 @@ Transformed the basic read-only lender portal into an institutional-grade monito
 - `markReportSent()`: Track distribution status
 
 ### Dashboard Aggregation
+
 - `getLenderDashboardData()`: Comprehensive dashboard view
   - Active alerts (count + critical count)
   - Recent breaches (last 30 days)
@@ -64,12 +71,14 @@ Transformed the basic read-only lender portal into an institutional-grade monito
 ## Key Capabilities
 
 ### Real-Time Monitoring
+
 - Continuous covenant compliance tracking
 - Automatic breach detection with severity classification
 - Alert aggregation and prioritization
 - Historical trend analysis
 
 ### Automated Reporting
+
 - Monthly/quarterly report generation
 - Covenant compliance snapshots
 - Score change narratives
@@ -77,6 +86,7 @@ Transformed the basic read-only lender portal into an institutional-grade monito
 - Evidence pack assembly
 
 ### Institutional Features
+
 - Multi-project dashboard support
 - Breach resolution workflow
 - Report distribution tracking
@@ -86,16 +96,19 @@ Transformed the basic read-only lender portal into an institutional-grade monito
 ## Integration Points
 
 ### With Evidence Chain (Phase 1)
+
 - Reports reference evidence packs
 - Evidence count and type tracking
 - Manifest generation for evidence packages
 
 ### With Temporal Versioning (Phase 2)
+
 - Historical covenant compliance queries
 - Score change tracking over time
 - Time-series breach analysis
 
 ### With Stress-Testing (Phase 6)
+
 - Covenant breach predictions under stress scenarios
 - Proactive risk identification
 - Scenario-based reporting
@@ -112,6 +125,7 @@ Transformed the basic read-only lender portal into an institutional-grade monito
 ## Remaining Work
 
 ### UI Components (Not Critical for MVP)
+
 - Enhanced project dashboard with charts and traffic lights
 - Alerts management page with filtering
 - Reports download center
@@ -119,6 +133,7 @@ Transformed the basic read-only lender portal into an institutional-grade monito
 - Evidence pack assembler
 
 ### Advanced Features
+
 - Automated email notifications for breaches
 - Custom covenant thresholds per lender
 - Multi-lender access control
@@ -128,6 +143,7 @@ Transformed the basic read-only lender portal into an institutional-grade monito
 ## Status: Phase 7 Core Complete (80%)
 
 The backend infrastructure is complete and production-ready. UI components can be built incrementally based on lender feedback. The system is already capable of:
+
 - Detecting and recording covenant breaches
 - Generating monthly reports
 - Providing dashboard data

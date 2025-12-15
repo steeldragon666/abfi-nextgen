@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -67,21 +73,58 @@ function FeatureCard({
   features: string[];
   color: string;
 }) {
-  const colorClasses: Record<string, { bg: string; text: string; border: string }> = {
-    emerald: { bg: "bg-emerald-500/10", text: "text-emerald-600", border: "hover:border-emerald-500/30" },
-    amber: { bg: "bg-amber-500/10", text: "text-amber-600", border: "hover:border-amber-500/30" },
-    blue: { bg: "bg-blue-500/10", text: "text-blue-600", border: "hover:border-blue-500/30" },
-    purple: { bg: "bg-purple-500/10", text: "text-purple-600", border: "hover:border-purple-500/30" },
-    rose: { bg: "bg-rose-500/10", text: "text-rose-600", border: "hover:border-rose-500/30" },
-    cyan: { bg: "bg-cyan-500/10", text: "text-cyan-600", border: "hover:border-cyan-500/30" },
+  const colorClasses: Record<
+    string,
+    { bg: string; text: string; border: string }
+  > = {
+    emerald: {
+      bg: "bg-emerald-500/10",
+      text: "text-emerald-600",
+      border: "hover:border-emerald-500/30",
+    },
+    amber: {
+      bg: "bg-amber-500/10",
+      text: "text-amber-600",
+      border: "hover:border-amber-500/30",
+    },
+    blue: {
+      bg: "bg-blue-500/10",
+      text: "text-blue-600",
+      border: "hover:border-blue-500/30",
+    },
+    purple: {
+      bg: "bg-purple-500/10",
+      text: "text-purple-600",
+      border: "hover:border-purple-500/30",
+    },
+    rose: {
+      bg: "bg-rose-500/10",
+      text: "text-rose-600",
+      border: "hover:border-rose-500/30",
+    },
+    cyan: {
+      bg: "bg-cyan-500/10",
+      text: "text-cyan-600",
+      border: "hover:border-cyan-500/30",
+    },
   };
 
   const classes = colorClasses[color] || colorClasses.blue;
 
   return (
-    <Card className={cn("h-full border-2 border-transparent transition-colors", classes.border)}>
+    <Card
+      className={cn(
+        "h-full border-2 border-transparent transition-colors",
+        classes.border
+      )}
+    >
       <CardHeader>
-        <div className={cn("h-12 w-12 rounded-xl flex items-center justify-center mb-4", classes.bg)}>
+        <div
+          className={cn(
+            "h-12 w-12 rounded-xl flex items-center justify-center mb-4",
+            classes.bg
+          )}
+        >
           <Icon className={cn("h-6 w-6", classes.text)} />
         </div>
         <CardTitle className="text-xl">{title}</CardTitle>
@@ -90,8 +133,13 @@ function FeatureCard({
       <CardContent>
         <ul className="space-y-2">
           {features.map((feature, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-              <CheckCircle2 className={cn("h-4 w-4 shrink-0 mt-0.5", classes.text)} />
+            <li
+              key={i}
+              className="flex items-start gap-2 text-sm text-muted-foreground"
+            >
+              <CheckCircle2
+                className={cn("h-4 w-4 shrink-0 mt-0.5", classes.text)}
+              />
               <span>{feature}</span>
             </li>
           ))}
@@ -112,12 +160,16 @@ export default function PlatformFeatures() {
               <div className="p-2 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
                 <Leaf className="h-6 w-6 text-primary" />
               </div>
-              <span className="text-xl font-bold text-foreground font-display">ABFI</span>
+              <span className="text-xl font-bold text-foreground font-display">
+                ABFI
+              </span>
             </div>
           </Link>
           <nav className="flex items-center gap-2">
             <Link href="/futures">
-              <Button variant="ghost" size="sm">Marketplace</Button>
+              <Button variant="ghost" size="sm">
+                Marketplace
+              </Button>
             </Link>
             <Link href="/producer-registration">
               <Button size="sm">Get Started</Button>
@@ -129,9 +181,23 @@ export default function PlatformFeatures() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-20 lg:py-28">
         <div className="absolute inset-0 opacity-5">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <pattern id="hex" patternUnits="userSpaceOnUse" width="20" height="23">
-              <path d="M10 0 L20 5.77 L20 17.32 L10 23.09 L0 17.32 L0 5.77 Z" fill="none" stroke="currentColor" strokeWidth="0.5" />
+          <svg
+            className="w-full h-full"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
+            <pattern
+              id="hex"
+              patternUnits="userSpaceOnUse"
+              width="20"
+              height="23"
+            >
+              <path
+                d="M10 0 L20 5.77 L20 17.32 L10 23.09 L0 17.32 L0 5.77 Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="0.5"
+              />
             </pattern>
             <rect width="100%" height="100%" fill="url(#hex)" />
           </svg>
@@ -140,7 +206,10 @@ export default function PlatformFeatures() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <FadeInUp>
-              <Badge variant="outline" className="border-white/20 text-white/90 bg-white/5 mb-6">
+              <Badge
+                variant="outline"
+                className="border-white/20 text-white/90 bg-white/5 mb-6"
+              >
                 <Layers className="h-3 w-3 mr-1.5" />
                 Complete Platform Overview
               </Badge>
@@ -149,20 +218,29 @@ export default function PlatformFeatures() {
             <FadeInUp delay={0.1}>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
                 Bank-Grade Infrastructure
-                <span className="block text-primary">for Bioenergy Finance</span>
+                <span className="block text-primary">
+                  for Bioenergy Finance
+                </span>
               </h1>
             </FadeInUp>
 
             <FadeInUp delay={0.2}>
               <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
                 A complete ecosystem connecting growers, developers, and lenders
-                through verified data, standardized ratings, and cryptographic security.
+                through verified data, standardized ratings, and cryptographic
+                security.
               </p>
             </FadeInUp>
 
-            <FadeInUp delay={0.3} className="flex flex-wrap justify-center gap-4">
+            <FadeInUp
+              delay={0.3}
+              className="flex flex-wrap justify-center gap-4"
+            >
               <Link href="/producer-registration">
-                <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600">
+                <Button
+                  size="lg"
+                  className="bg-emerald-500 hover:bg-emerald-600"
+                >
                   <Sprout className="h-4 w-4 mr-2" />
                   For Growers
                 </Button>
@@ -188,12 +266,15 @@ export default function PlatformFeatures() {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <FadeInUp className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">Core Platform</Badge>
+            <Badge variant="outline" className="mb-4">
+              Core Platform
+            </Badge>
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
               Everything You Need, Built In
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              From supply discovery to covenant monitoring — a complete infrastructure stack.
+              From supply discovery to covenant monitoring — a complete
+              infrastructure stack.
             </p>
           </FadeInUp>
 
@@ -295,14 +376,18 @@ export default function PlatformFeatures() {
       <section className="py-20 bg-slate-900 text-white">
         <div className="container mx-auto px-4">
           <FadeInUp className="text-center mb-16">
-            <Badge variant="outline" className="border-white/20 text-white/90 mb-4">
+            <Badge
+              variant="outline"
+              className="border-white/20 text-white/90 mb-4"
+            >
               Security & Compliance
             </Badge>
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
               Bank-Grade Security Built In
             </h2>
             <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-              Every feature designed with financial compliance requirements from day one.
+              Every feature designed with financial compliance requirements from
+              day one.
             </p>
           </FadeInUp>
 
@@ -311,7 +396,8 @@ export default function PlatformFeatures() {
               {
                 icon: Fingerprint,
                 title: "SHA-256 Evidence Chain",
-                description: "Every document cryptographically hashed and chained",
+                description:
+                  "Every document cryptographically hashed and chained",
               },
               {
                 icon: History,
@@ -371,7 +457,8 @@ export default function PlatformFeatures() {
               Features by User Type
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Explore capabilities tailored to your role in the bioenergy supply chain.
+              Explore capabilities tailored to your role in the bioenergy supply
+              chain.
             </p>
           </FadeInUp>
 
@@ -394,24 +481,55 @@ export default function PlatformFeatures() {
             <TabsContent value="growers">
               <div className="grid md:grid-cols-2 gap-6">
                 {[
-                  { icon: Sprout, title: "Producer Registration", desc: "Complete onboarding with ABN verification and property details" },
-                  { icon: Calendar, title: "Futures Listing", desc: "Project yields up to 25 years forward with annual breakdown" },
-                  { icon: Award, title: "GQ Qualification", desc: "Progress through GQ4 to GQ1 as you build track record" },
-                  { icon: FileText, title: "EOI Management", desc: "Receive and respond to buyer expressions of interest" },
-                  { icon: BarChart3, title: "Performance Dashboard", desc: "Track deliveries, quality tests, and compliance status" },
-                  { icon: DollarSign, title: "Fair Pricing", desc: "Transparent market pricing based on verified quality" },
+                  {
+                    icon: Sprout,
+                    title: "Producer Registration",
+                    desc: "Complete onboarding with ABN verification and property details",
+                  },
+                  {
+                    icon: Calendar,
+                    title: "Futures Listing",
+                    desc: "Project yields up to 25 years forward with annual breakdown",
+                  },
+                  {
+                    icon: Award,
+                    title: "GQ Qualification",
+                    desc: "Progress through GQ4 to GQ1 as you build track record",
+                  },
+                  {
+                    icon: FileText,
+                    title: "EOI Management",
+                    desc: "Receive and respond to buyer expressions of interest",
+                  },
+                  {
+                    icon: BarChart3,
+                    title: "Performance Dashboard",
+                    desc: "Track deliveries, quality tests, and compliance status",
+                  },
+                  {
+                    icon: DollarSign,
+                    title: "Fair Pricing",
+                    desc: "Transparent market pricing based on verified quality",
+                  },
                 ].map((item, i) => (
-                  <Card key={i} className="border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
+                  <Card
+                    key={i}
+                    className="border-2 border-emerald-100 hover:border-emerald-300 transition-colors"
+                  >
                     <CardHeader className="pb-2">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                           <item.icon className="h-5 w-5 text-emerald-600" />
                         </div>
-                        <CardTitle className="text-base">{item.title}</CardTitle>
+                        <CardTitle className="text-base">
+                          {item.title}
+                        </CardTitle>
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {item.desc}
+                      </p>
                     </CardContent>
                   </Card>
                 ))}
@@ -429,24 +547,55 @@ export default function PlatformFeatures() {
             <TabsContent value="developers">
               <div className="grid md:grid-cols-2 gap-6">
                 {[
-                  { icon: Search, title: "Supply Discovery", desc: "Browse verified suppliers filtered by region, crop, and capacity" },
-                  { icon: Target, title: "EOI Submission", desc: "Express interest in futures with volume and term preferences" },
-                  { icon: Layers, title: "Portfolio Builder", desc: "Aggregate suppliers into diversified supply chains" },
-                  { icon: Award, title: "Bankability Assessment", desc: "Get AAA-CCC rating on your supply portfolio" },
-                  { icon: PieChart, title: "Concentration Analysis", desc: "Analyze single-supplier and geographic concentration" },
-                  { icon: FileCheck, title: "Compliance Packages", desc: "Generate bank-ready documentation with crypto signatures" },
+                  {
+                    icon: Search,
+                    title: "Supply Discovery",
+                    desc: "Browse verified suppliers filtered by region, crop, and capacity",
+                  },
+                  {
+                    icon: Target,
+                    title: "EOI Submission",
+                    desc: "Express interest in futures with volume and term preferences",
+                  },
+                  {
+                    icon: Layers,
+                    title: "Portfolio Builder",
+                    desc: "Aggregate suppliers into diversified supply chains",
+                  },
+                  {
+                    icon: Award,
+                    title: "Bankability Assessment",
+                    desc: "Get AAA-CCC rating on your supply portfolio",
+                  },
+                  {
+                    icon: PieChart,
+                    title: "Concentration Analysis",
+                    desc: "Analyze single-supplier and geographic concentration",
+                  },
+                  {
+                    icon: FileCheck,
+                    title: "Compliance Packages",
+                    desc: "Generate bank-ready documentation with crypto signatures",
+                  },
                 ].map((item, i) => (
-                  <Card key={i} className="border-2 border-amber-100 hover:border-amber-300 transition-colors">
+                  <Card
+                    key={i}
+                    className="border-2 border-amber-100 hover:border-amber-300 transition-colors"
+                  >
                     <CardHeader className="pb-2">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
                           <item.icon className="h-5 w-5 text-amber-600" />
                         </div>
-                        <CardTitle className="text-base">{item.title}</CardTitle>
+                        <CardTitle className="text-base">
+                          {item.title}
+                        </CardTitle>
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {item.desc}
+                      </p>
                     </CardContent>
                   </Card>
                 ))}
@@ -464,24 +613,55 @@ export default function PlatformFeatures() {
             <TabsContent value="lenders">
               <div className="grid md:grid-cols-2 gap-6">
                 {[
-                  { icon: Eye, title: "Portfolio Dashboard", desc: "Monitor all financed projects in one view" },
-                  { icon: Clock, title: "Covenant Monitoring", desc: "Automated daily checks with instant breach alerts" },
-                  { icon: History, title: "Time Machine", desc: "Reconstruct any data point at historical dates" },
-                  { icon: Bell, title: "Alert Center", desc: "Centralized notifications for all covenant events" },
-                  { icon: LineChart, title: "Rating Tracker", desc: "Historical trends and outlook forecasts" },
-                  { icon: Webhook, title: "API Integration", desc: "Connect to loan management and risk systems" },
+                  {
+                    icon: Eye,
+                    title: "Portfolio Dashboard",
+                    desc: "Monitor all financed projects in one view",
+                  },
+                  {
+                    icon: Clock,
+                    title: "Covenant Monitoring",
+                    desc: "Automated daily checks with instant breach alerts",
+                  },
+                  {
+                    icon: History,
+                    title: "Time Machine",
+                    desc: "Reconstruct any data point at historical dates",
+                  },
+                  {
+                    icon: Bell,
+                    title: "Alert Center",
+                    desc: "Centralized notifications for all covenant events",
+                  },
+                  {
+                    icon: LineChart,
+                    title: "Rating Tracker",
+                    desc: "Historical trends and outlook forecasts",
+                  },
+                  {
+                    icon: Webhook,
+                    title: "API Integration",
+                    desc: "Connect to loan management and risk systems",
+                  },
                 ].map((item, i) => (
-                  <Card key={i} className="border-2 border-blue-100 hover:border-blue-300 transition-colors">
+                  <Card
+                    key={i}
+                    className="border-2 border-blue-100 hover:border-blue-300 transition-colors"
+                  >
                     <CardHeader className="pb-2">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
                           <item.icon className="h-5 w-5 text-blue-600" />
                         </div>
-                        <CardTitle className="text-base">{item.title}</CardTitle>
+                        <CardTitle className="text-base">
+                          {item.title}
+                        </CardTitle>
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {item.desc}
+                      </p>
                     </CardContent>
                   </Card>
                 ))}
@@ -504,7 +684,9 @@ export default function PlatformFeatures() {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
             <FadeInUp>
-              <Badge variant="outline" className="mb-4">Developer Tools</Badge>
+              <Badge variant="outline" className="mb-4">
+                Developer Tools
+              </Badge>
               <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">
                 Build on ABFI Infrastructure
               </h2>
@@ -532,11 +714,13 @@ export default function PlatformFeatures() {
             <FadeInUp delay={0.2}>
               <Card className="bg-slate-900 text-white border-0">
                 <CardHeader>
-                  <CardTitle className="text-sm font-mono text-slate-400">API Example</CardTitle>
+                  <CardTitle className="text-sm font-mono text-slate-400">
+                    API Example
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <pre className="text-xs leading-relaxed overflow-x-auto">
-{`GET /api/v1/projects/{id}/rating
+                    {`GET /api/v1/projects/{id}/rating
 
 {
   "project_id": "PRJ-2024-0042",
@@ -580,13 +764,21 @@ export default function PlatformFeatures() {
                 </Button>
               </Link>
               <Link href="/bankability">
-                <Button size="xl" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                <Button
+                  size="xl"
+                  variant="outline"
+                  className="border-white/30 text-white hover:bg-white/10"
+                >
                   <Building2 className="h-5 w-5 mr-2" />
                   I'm a Developer
                 </Button>
               </Link>
               <Link href="/lender-portal">
-                <Button size="xl" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                <Button
+                  size="xl"
+                  variant="outline"
+                  className="border-white/30 text-white hover:bg-white/10"
+                >
                   <Banknote className="h-5 w-5 mr-2" />
                   I'm a Lender
                 </Button>
@@ -604,7 +796,9 @@ export default function PlatformFeatures() {
               <Link href="/">
                 <div className="flex items-center gap-2 mb-4">
                   <Leaf className="h-5 w-5 text-primary" />
-                  <span className="font-bold font-display text-white">ABFI</span>
+                  <span className="font-bold font-display text-white">
+                    ABFI
+                  </span>
                 </div>
               </Link>
               <p className="text-sm">
@@ -614,30 +808,94 @@ export default function PlatformFeatures() {
             <div>
               <h3 className="font-semibold mb-4 text-white">Platform</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/futures" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/bankability" className="hover:text-white transition-colors">Bankability</Link></li>
-                <li><Link href="/feedstock-map" className="hover:text-white transition-colors">Supply Map</Link></li>
+                <li>
+                  <Link
+                    href="/futures"
+                    className="hover:text-white transition-colors"
+                  >
+                    Marketplace
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/bankability"
+                    className="hover:text-white transition-colors"
+                  >
+                    Bankability
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/feedstock-map"
+                    className="hover:text-white transition-colors"
+                  >
+                    Supply Map
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold mb-4 text-white">Resources</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/for-growers" className="hover:text-white transition-colors">For Growers</Link></li>
-                <li><Link href="/for-developers" className="hover:text-white transition-colors">For Developers</Link></li>
-                <li><Link href="/for-lenders" className="hover:text-white transition-colors">For Lenders</Link></li>
+                <li>
+                  <Link
+                    href="/for-growers"
+                    className="hover:text-white transition-colors"
+                  >
+                    For Growers
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/for-developers"
+                    className="hover:text-white transition-colors"
+                  >
+                    For Developers
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/for-lenders"
+                    className="hover:text-white transition-colors"
+                  >
+                    For Lenders
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold mb-4 text-white">Legal</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
-                <li><Link href="/security" className="hover:text-white transition-colors">Security</Link></li>
+                <li>
+                  <Link
+                    href="/privacy"
+                    className="hover:text-white transition-colors"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/terms"
+                    className="hover:text-white transition-colors"
+                  >
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/security"
+                    className="hover:text-white transition-colors"
+                  >
+                    Security
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
           <div className="border-t border-slate-800 mt-12 pt-8 text-center text-sm text-slate-500">
-            © {new Date().getFullYear()} Australian Bioenergy Feedstock Institute. All rights reserved.
+            © {new Date().getFullYear()} Australian Bioenergy Feedstock
+            Institute. All rights reserved.
           </div>
         </div>
       </footer>

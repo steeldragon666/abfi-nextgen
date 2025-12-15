@@ -10,7 +10,9 @@ test.describe("Homepage", () => {
 
     // Check navigation links
     await expect(page.getByRole("link", { name: /login/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /register|sign up/i })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /register|sign up/i })
+    ).toBeVisible();
   });
 
   test("should have working navigation links", async ({ page }) => {
@@ -28,7 +30,9 @@ test.describe("Homepage", () => {
     await page.goto("/");
 
     // Look for features content
-    await expect(page.locator("body")).toContainText(/feedstock|bioenergy|sustainable/i);
+    await expect(page.locator("body")).toContainText(
+      /feedstock|bioenergy|sustainable/i
+    );
   });
 
   test("should be responsive", async ({ page }) => {

@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -24,20 +30,22 @@ export default function ProducerAccountSetup() {
   const [passwordStrength, setPasswordStrength] = useState(0);
 
   const utils = trpc.useUtils();
-  
+
   const handleAbnValidation = async () => {
     if (formData.abn.length !== 11) return;
-    
+
     try {
-      const data = await utils.client.utils.validateABN.query({ abn: formData.abn });
-      
+      const data = await utils.client.utils.validateABN.query({
+        abn: formData.abn,
+      });
+
       if (data?.success) {
         setAbnValidated(true);
-        setFormData(prev => ({ 
-          ...prev, 
-          companyName: data.entityName || data.businessName || "" 
+        setFormData(prev => ({
+          ...prev,
+          companyName: data.entityName || data.businessName || "",
         }));
-        
+
         if (data.message) {
           alert(data.message);
         }
@@ -45,7 +53,7 @@ export default function ProducerAccountSetup() {
         alert(data?.message || "Invalid ABN. Please check and try again.");
       }
     } catch (error) {
-      console.error('ABN validation error:', error);
+      console.error("ABN validation error:", error);
       alert("Error validating ABN. Please try again.");
     }
   };
@@ -67,7 +75,10 @@ export default function ProducerAccountSetup() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Save to localStorage for progressive form saving
-    localStorage.setItem("producerRegistration", JSON.stringify({ step: 1, data: formData }));
+    localStorage.setItem(
+      "producerRegistration",
+      JSON.stringify({ step: 1, data: formData })
+    );
     setLocation("/producer-registration/property-map");
   };
 
@@ -76,7 +87,10 @@ export default function ProducerAccountSetup() {
       {/* Header */}
       <header className="border-b bg-white">
         <div className="container mx-auto flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-[#0F3A5C] hover:opacity-80">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-[#0F3A5C] hover:opacity-80"
+          >
             <Leaf className="h-6 w-6" />
             <span className="text-xl font-semibold">ABFI</span>
           </Link>
@@ -90,7 +104,9 @@ export default function ProducerAccountSetup() {
       <div className="bg-white border-b">
         <div className="container mx-auto py-4">
           <Progress value={14} className="h-2" />
-          <p className="mt-2 text-sm text-gray-600">14% Complete • Estimated 12 minutes remaining</p>
+          <p className="mt-2 text-sm text-gray-600">
+            14% Complete • Estimated 12 minutes remaining
+          </p>
         </div>
       </div>
 
@@ -99,23 +115,33 @@ export default function ProducerAccountSetup() {
         <div className="mx-auto max-w-2xl">
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl text-[#0F3A5C]">Create Your Account</CardTitle>
+              <CardTitle className="text-2xl text-[#0F3A5C]">
+                Create Your Account
+              </CardTitle>
               <CardDescription>
-                Let's start with your business details. We'll use your ABN to verify your registration.
+                Let's start with your business details. We'll use your ABN to
+                verify your registration.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* ABN Validation */}
                 <div className="space-y-2">
-                  <Label htmlFor="abn">Australian Business Number (ABN) *</Label>
+                  <Label htmlFor="abn">
+                    Australian Business Number (ABN) *
+                  </Label>
                   <div className="flex gap-2">
                     <Input
                       id="abn"
                       placeholder="12345678901"
                       maxLength={11}
                       value={formData.abn}
-                      onChange={(e) => setFormData(prev => ({ ...prev, abn: e.target.value.replace(/\D/g, "") }))}
+                      onChange={e =>
+                        setFormData(prev => ({
+                          ...prev,
+                          abn: e.target.value.replace(/\D/g, ""),
+                        }))
+                      }
                       required
                       className={abnValidated ? "border-green-500" : ""}
                     />
@@ -143,7 +169,12 @@ export default function ProducerAccountSetup() {
                     id="companyName"
                     placeholder="Your business name"
                     value={formData.companyName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, companyName: e.target.value }))}
+                    onChange={e =>
+                      setFormData(prev => ({
+                        ...prev,
+                        companyName: e.target.value,
+                      }))
+                    }
                     required
                     disabled={!abnValidated}
                   />
@@ -156,7 +187,12 @@ export default function ProducerAccountSetup() {
                     id="contactName"
                     placeholder="John Smith"
                     value={formData.contactName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, contactName: e.target.value }))}
+                    onChange={e =>
+                      setFormData(prev => ({
+                        ...prev,
+                        contactName: e.target.value,
+                      }))
+                    }
                     required
                   />
                 </div>
@@ -169,7 +205,12 @@ export default function ProducerAccountSetup() {
                       type="email"
                       placeholder="john@example.com"
                       value={formData.email}
-                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -181,7 +222,12 @@ export default function ProducerAccountSetup() {
                       type="tel"
                       placeholder="0400 000 000"
                       value={formData.phone}
-                      onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({
+                          ...prev,
+                          phone: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -195,13 +241,18 @@ export default function ProducerAccountSetup() {
                     type="password"
                     placeholder="Min. 8 characters"
                     value={formData.password}
-                    onChange={(e) => handlePasswordChange(e.target.value)}
+                    onChange={e => handlePasswordChange(e.target.value)}
                     required
                   />
                   <div className="space-y-1">
                     <Progress value={passwordStrength} className="h-1" />
                     <p className="text-xs text-gray-600">
-                      Password strength: {passwordStrength < 50 ? "Weak" : passwordStrength < 75 ? "Medium" : "Strong"}
+                      Password strength:{" "}
+                      {passwordStrength < 50
+                        ? "Weak"
+                        : passwordStrength < 75
+                          ? "Medium"
+                          : "Strong"}
                     </p>
                   </div>
                 </div>
@@ -213,12 +264,20 @@ export default function ProducerAccountSetup() {
                     type="password"
                     placeholder="Re-enter password"
                     value={formData.confirmPassword}
-                    onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                    onChange={e =>
+                      setFormData(prev => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }))
+                    }
                     required
                   />
-                  {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                    <p className="text-sm text-red-600">Passwords do not match</p>
-                  )}
+                  {formData.confirmPassword &&
+                    formData.password !== formData.confirmPassword && (
+                      <p className="text-sm text-red-600">
+                        Passwords do not match
+                      </p>
+                    )}
                 </div>
 
                 {/* MyGovID Option */}
@@ -227,14 +286,19 @@ export default function ProducerAccountSetup() {
                     Streamline verification with myGovID
                   </p>
                   <p className="mb-3 text-sm text-blue-700">
-                    Link your myGovID for faster identity verification and reduced paperwork.
+                    Link your myGovID for faster identity verification and
+                    reduced paperwork.
                   </p>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
                     className="border-blue-300 text-blue-700"
-                    onClick={() => alert("myGovID integration coming soon.\n\nThis will allow you to verify your identity using your existing myGovID account, streamlining the registration process.")}
+                    onClick={() =>
+                      alert(
+                        "myGovID integration coming soon.\n\nThis will allow you to verify your identity using your existing myGovID account, streamlining the registration process."
+                      )
+                    }
                   >
                     Link myGovID (Optional)
                   </Button>
@@ -255,7 +319,10 @@ export default function ProducerAccountSetup() {
                   <Button
                     type="submit"
                     className="gap-2 bg-[#F4C430] text-[#0F3A5C] hover:bg-[#F4C430]/90"
-                    disabled={!abnValidated || formData.password !== formData.confirmPassword}
+                    disabled={
+                      !abnValidated ||
+                      formData.password !== formData.confirmPassword
+                    }
                   >
                     Continue to Property Details
                     <ArrowRight className="h-4 w-4" />
@@ -267,7 +334,15 @@ export default function ProducerAccountSetup() {
 
           {/* Help Text */}
           <div className="mt-6 text-center text-sm text-gray-600">
-            <p>Need help? Contact our support team at <a href="mailto:support@abfi.com.au" className="text-[#F4C430] hover:underline">support@abfi.com.au</a></p>
+            <p>
+              Need help? Contact our support team at{" "}
+              <a
+                href="mailto:support@abfi.com.au"
+                className="text-[#F4C430] hover:underline"
+              >
+                support@abfi.com.au
+              </a>
+            </p>
           </div>
         </div>
       </div>

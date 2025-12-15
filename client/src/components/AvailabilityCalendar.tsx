@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Plus, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -43,7 +49,7 @@ export function AvailabilityCalendar({
     };
 
     onChange([...value, newWindow]);
-    
+
     // Reset form
     setStartDate("");
     setEndDate("");
@@ -53,7 +59,7 @@ export function AvailabilityCalendar({
   };
 
   const handleRemove = (id: string) => {
-    onChange(value.filter((w) => w.id !== id));
+    onChange(value.filter(w => w.id !== id));
   };
 
   const formatDate = (date: Date) => {
@@ -72,12 +78,15 @@ export function AvailabilityCalendar({
   };
 
   // Group windows by month
-  const groupedWindows = value.reduce((acc, window) => {
-    const monthKey = getMonthLabel(window.startDate);
-    if (!acc[monthKey]) acc[monthKey] = [];
-    acc[monthKey].push(window);
-    return acc;
-  }, {} as Record<string, AvailabilityWindow[]>);
+  const groupedWindows = value.reduce(
+    (acc, window) => {
+      const monthKey = getMonthLabel(window.startDate);
+      if (!acc[monthKey]) acc[monthKey] = [];
+      acc[monthKey].push(window);
+      return acc;
+    },
+    {} as Record<string, AvailabilityWindow[]>
+  );
 
   return (
     <Card className={className}>
@@ -121,7 +130,7 @@ export function AvailabilityCalendar({
                   id="startDate"
                   type="date"
                   value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  onChange={e => setStartDate(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
@@ -130,7 +139,7 @@ export function AvailabilityCalendar({
                   id="endDate"
                   type="date"
                   value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  onChange={e => setEndDate(e.target.value)}
                   min={startDate}
                 />
               </div>
@@ -143,7 +152,7 @@ export function AvailabilityCalendar({
                 type="number"
                 placeholder="1000"
                 value={volume}
-                onChange={(e) => setVolume(e.target.value)}
+                onChange={e => setVolume(e.target.value)}
                 min="0"
               />
             </div>
@@ -154,7 +163,7 @@ export function AvailabilityCalendar({
                 id="notes"
                 placeholder="e.g., Subject to weather conditions"
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                onChange={e => setNotes(e.target.value)}
               />
             </div>
 
@@ -168,7 +177,9 @@ export function AvailabilityCalendar({
           <div className="text-center py-8 text-muted-foreground">
             <Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
             <p className="text-sm">No availability windows added yet</p>
-            <p className="text-xs mt-1">Click "Add Window" to specify when feedstock is available</p>
+            <p className="text-xs mt-1">
+              Click "Add Window" to specify when feedstock is available
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -180,7 +191,7 @@ export function AvailabilityCalendar({
                     {month}
                   </div>
                   <div className="space-y-2">
-                    {windows.map((window) => (
+                    {windows.map(window => (
                       <div
                         key={window.id}
                         className="flex items-start justify-between p-3 border rounded-lg bg-background"
@@ -188,14 +199,17 @@ export function AvailabilityCalendar({
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-sm font-medium">
-                              {formatDate(window.startDate)} - {formatDate(window.endDate)}
+                              {formatDate(window.startDate)} -{" "}
+                              {formatDate(window.endDate)}
                             </span>
                             <Badge variant="outline" className="text-xs">
                               {window.volume.toLocaleString()}t
                             </Badge>
                           </div>
                           {window.notes && (
-                            <p className="text-xs text-muted-foreground">{window.notes}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {window.notes}
+                            </p>
                           )}
                         </div>
                         <Button
@@ -217,9 +231,12 @@ export function AvailabilityCalendar({
         {value.length > 0 && (
           <div className="border-t pt-4">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Total Available Volume</span>
+              <span className="text-muted-foreground">
+                Total Available Volume
+              </span>
               <span className="font-semibold">
-                {value.reduce((sum, w) => sum + w.volume, 0).toLocaleString()} tonnes
+                {value.reduce((sum, w) => sum + w.volume, 0).toLocaleString()}{" "}
+                tonnes
               </span>
             </div>
           </div>
@@ -255,7 +272,8 @@ export function AvailabilityDisplay({
       <div className={`flex items-center gap-2 ${className}`}>
         <Calendar className="h-4 w-4 text-muted-foreground" />
         <span className="text-sm">
-          {windows.length} window{windows.length !== 1 ? "s" : ""} • {totalVolume.toLocaleString()}t total
+          {windows.length} window{windows.length !== 1 ? "s" : ""} •{" "}
+          {totalVolume.toLocaleString()}t total
         </span>
       </div>
     );
@@ -268,17 +286,24 @@ export function AvailabilityDisplay({
         Availability Windows
       </div>
       {windows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No availability windows specified</p>
+        <p className="text-sm text-muted-foreground">
+          No availability windows specified
+        </p>
       ) : (
         <div className="space-y-2">
-          {windows.map((window) => (
-            <div key={window.id} className="flex items-center justify-between text-sm border-l-2 border-primary pl-3 py-1">
+          {windows.map(window => (
+            <div
+              key={window.id}
+              className="flex items-center justify-between text-sm border-l-2 border-primary pl-3 py-1"
+            >
               <div>
                 <div className="font-medium">
                   {formatDate(window.startDate)} - {formatDate(window.endDate)}
                 </div>
                 {window.notes && (
-                  <div className="text-xs text-muted-foreground">{window.notes}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {window.notes}
+                  </div>
                 )}
               </div>
               <Badge variant="outline">{window.volume.toLocaleString()}t</Badge>
@@ -286,7 +311,9 @@ export function AvailabilityDisplay({
           ))}
           <div className="flex justify-between text-sm pt-2 border-t">
             <span className="text-muted-foreground">Total</span>
-            <span className="font-semibold">{totalVolume.toLocaleString()} tonnes</span>
+            <span className="font-semibold">
+              {totalVolume.toLocaleString()} tonnes
+            </span>
           </div>
         </div>
       )}

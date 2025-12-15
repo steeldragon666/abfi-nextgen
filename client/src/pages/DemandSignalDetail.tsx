@@ -3,7 +3,13 @@
  */
 import { useState } from "react";
 import { useRoute, useLocation } from "wouter";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +17,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { PageLayout, PageContainer } from "@/components/layout";
@@ -39,7 +52,8 @@ const MOCK_SIGNAL = {
   id: 1,
   signalNumber: "DS-2025-0001",
   title: "Wheat Straw for Bioenergy Plant - Hunter Valley",
-  description: "Large-scale bioenergy facility seeking consistent supply of wheat straw for year-round operations. Our facility is currently under construction with commissioning expected Q3 2025. We are seeking long-term offtake agreements with reliable suppliers who can demonstrate consistent quality and volume capabilities.",
+  description:
+    "Large-scale bioenergy facility seeking consistent supply of wheat straw for year-round operations. Our facility is currently under construction with commissioning expected Q3 2025. We are seeking long-term offtake agreements with reliable suppliers who can demonstrate consistent quality and volume capabilities.",
   feedstockType: "Wheat Straw",
   feedstockCategory: "agricultural_residue",
   annualVolume: 75000,
@@ -50,7 +64,8 @@ const MOCK_SIGNAL = {
   minEnergyContent: 14,
   maxAshContent: 8,
   maxChlorineContent: 500,
-  otherQualitySpecs: "No foreign material contamination. Bales must be stored under cover. Certification for sustainable harvesting practices preferred.",
+  otherQualitySpecs:
+    "No foreign material contamination. Bales must be stored under cover. Certification for sustainable harvesting practices preferred.",
   deliveryLocation: "Muswellbrook",
   deliveryState: "NSW",
   maxTransportDistance: 250,
@@ -62,7 +77,8 @@ const MOCK_SIGNAL = {
   supplyEndDate: "2030-06-30",
   contractTerm: 5,
   responseDeadline: "2025-03-15",
-  sustainabilityRequirements: "ISCC certification preferred. Carbon intensity documentation required. Suppliers must demonstrate sustainable farming practices and provide chain of custody documentation.",
+  sustainabilityRequirements:
+    "ISCC certification preferred. Carbon intensity documentation required. Suppliers must demonstrate sustainable farming practices and provide chain of custody documentation.",
   status: "published",
   responseCount: 8,
   viewCount: 156,
@@ -71,12 +87,35 @@ const MOCK_SIGNAL = {
   createdAt: "2025-01-15",
 };
 
-const CATEGORY_COLORS: Record<string, { bg: string; text: string; label: string }> = {
-  agricultural_residue: { bg: "bg-green-100", text: "text-green-800", label: "Agricultural Residue" },
-  forestry_residue: { bg: "bg-amber-100", text: "text-amber-800", label: "Forestry Residue" },
-  energy_crop: { bg: "bg-blue-100", text: "text-blue-800", label: "Energy Crop" },
-  organic_waste: { bg: "bg-purple-100", text: "text-purple-800", label: "Organic Waste" },
-  algae_aquatic: { bg: "bg-cyan-100", text: "text-cyan-800", label: "Algae/Aquatic" },
+const CATEGORY_COLORS: Record<
+  string,
+  { bg: string; text: string; label: string }
+> = {
+  agricultural_residue: {
+    bg: "bg-green-100",
+    text: "text-green-800",
+    label: "Agricultural Residue",
+  },
+  forestry_residue: {
+    bg: "bg-amber-100",
+    text: "text-amber-800",
+    label: "Forestry Residue",
+  },
+  energy_crop: {
+    bg: "bg-blue-100",
+    text: "text-blue-800",
+    label: "Energy Crop",
+  },
+  organic_waste: {
+    bg: "bg-purple-100",
+    text: "text-purple-800",
+    label: "Organic Waste",
+  },
+  algae_aquatic: {
+    bg: "bg-cyan-100",
+    text: "text-cyan-800",
+    label: "Algae/Aquatic",
+  },
   mixed: { bg: "bg-gray-100", text: "text-gray-800", label: "Mixed" },
 };
 
@@ -96,7 +135,9 @@ export default function DemandSignalDetail() {
     coverLetter: "",
   });
 
-  const { data, isLoading } = trpc.demandSignals.getById.useQuery({ id: signalId });
+  const { data, isLoading } = trpc.demandSignals.getById.useQuery({
+    id: signalId,
+  });
 
   // Use mock data if API returns empty
   const signal = data?.signal || MOCK_SIGNAL;
@@ -124,7 +165,9 @@ export default function DemandSignalDetail() {
       proposedPrice: parseInt(responseForm.proposedPrice),
       proposedDeliveryMethod: responseForm.proposedDeliveryMethod || undefined,
       proposedStartDate: new Date(responseForm.proposedStartDate),
-      proposedContractTerm: responseForm.proposedContractTerm ? parseInt(responseForm.proposedContractTerm) : undefined,
+      proposedContractTerm: responseForm.proposedContractTerm
+        ? parseInt(responseForm.proposedContractTerm)
+        : undefined,
       coverLetter: responseForm.coverLetter || undefined,
     });
   };
@@ -151,9 +194,13 @@ export default function DemandSignalDetail() {
     );
   }
 
-  const category = CATEGORY_COLORS[signal.feedstockCategory] || CATEGORY_COLORS.mixed;
+  const category =
+    CATEGORY_COLORS[signal.feedstockCategory] || CATEGORY_COLORS.mixed;
   const isExpired = new Date() > new Date(signal.responseDeadline);
-  const daysUntilDeadline = Math.ceil((new Date(signal.responseDeadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  const daysUntilDeadline = Math.ceil(
+    (new Date(signal.responseDeadline).getTime() - Date.now()) /
+      (1000 * 60 * 60 * 24)
+  );
 
   // Calculate volume coverage progress (mock data)
   const responseCoverage = Math.min(95, (signal.responseCount || 0) * 12);
@@ -187,7 +234,9 @@ export default function DemandSignalDetail() {
                   {signal.feedstockType}
                 </Badge>
                 <Badge
-                  variant={signal.status === "published" ? "default" : "secondary"}
+                  variant={
+                    signal.status === "published" ? "default" : "secondary"
+                  }
                   className="bg-emerald-500 text-white border-0"
                 >
                   {signal.status}
@@ -236,7 +285,9 @@ export default function DemandSignalDetail() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">{signal.description}</p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {signal.description}
+                  </p>
                 </CardContent>
               </Card>
             )}
@@ -252,23 +303,39 @@ export default function DemandSignalDetail() {
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Annual Volume</div>
-                    <div className="text-xl font-bold font-mono">{signal.annualVolume?.toLocaleString()} t</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Annual Volume
+                    </div>
+                    <div className="text-xl font-bold font-mono">
+                      {signal.annualVolume?.toLocaleString()} t
+                    </div>
                   </div>
                   {signal.volumeFlexibility && (
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Flexibility</div>
-                      <div className="text-xl font-bold">±{signal.volumeFlexibility}%</div>
+                      <div className="text-sm text-muted-foreground mb-1">
+                        Flexibility
+                      </div>
+                      <div className="text-xl font-bold">
+                        ±{signal.volumeFlexibility}%
+                      </div>
                     </div>
                   )}
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Delivery Frequency</div>
-                    <div className="text-xl font-bold capitalize">{signal.deliveryFrequency?.replace("_", " ")}</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Delivery Frequency
+                    </div>
+                    <div className="text-xl font-bold capitalize">
+                      {signal.deliveryFrequency?.replace("_", " ")}
+                    </div>
                   </div>
                   {signal.contractTerm && (
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Contract Term</div>
-                      <div className="text-xl font-bold">{signal.contractTerm} years</div>
+                      <div className="text-sm text-muted-foreground mb-1">
+                        Contract Term
+                      </div>
+                      <div className="text-xl font-bold">
+                        {signal.contractTerm} years
+                      </div>
                     </div>
                   )}
                 </div>
@@ -276,7 +343,12 @@ export default function DemandSignalDetail() {
             </Card>
 
             {/* Quality Specifications */}
-            {(signal.minMoistureContent || signal.maxMoistureContent || signal.minEnergyContent || signal.maxAshContent || signal.maxChlorineContent || signal.otherQualitySpecs) && (
+            {(signal.minMoistureContent ||
+              signal.maxMoistureContent ||
+              signal.minEnergyContent ||
+              signal.maxAshContent ||
+              signal.maxChlorineContent ||
+              signal.otherQualitySpecs) && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -288,38 +360,60 @@ export default function DemandSignalDetail() {
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-6">
                     {signal.minMoistureContent && (
                       <div>
-                        <div className="text-sm text-muted-foreground mb-1">Min Moisture</div>
-                        <div className="font-semibold">{signal.minMoistureContent}%</div>
+                        <div className="text-sm text-muted-foreground mb-1">
+                          Min Moisture
+                        </div>
+                        <div className="font-semibold">
+                          {signal.minMoistureContent}%
+                        </div>
                       </div>
                     )}
                     {signal.maxMoistureContent && (
                       <div>
-                        <div className="text-sm text-muted-foreground mb-1">Max Moisture</div>
-                        <div className="font-semibold">{signal.maxMoistureContent}%</div>
+                        <div className="text-sm text-muted-foreground mb-1">
+                          Max Moisture
+                        </div>
+                        <div className="font-semibold">
+                          {signal.maxMoistureContent}%
+                        </div>
                       </div>
                     )}
                     {signal.minEnergyContent && (
                       <div>
-                        <div className="text-sm text-muted-foreground mb-1">Min Energy Content</div>
-                        <div className="font-semibold">{signal.minEnergyContent} MJ/kg</div>
+                        <div className="text-sm text-muted-foreground mb-1">
+                          Min Energy Content
+                        </div>
+                        <div className="font-semibold">
+                          {signal.minEnergyContent} MJ/kg
+                        </div>
                       </div>
                     )}
                     {signal.maxAshContent && (
                       <div>
-                        <div className="text-sm text-muted-foreground mb-1">Max Ash</div>
-                        <div className="font-semibold">{signal.maxAshContent}%</div>
+                        <div className="text-sm text-muted-foreground mb-1">
+                          Max Ash
+                        </div>
+                        <div className="font-semibold">
+                          {signal.maxAshContent}%
+                        </div>
                       </div>
                     )}
                     {signal.maxChlorineContent && (
                       <div>
-                        <div className="text-sm text-muted-foreground mb-1">Max Chlorine</div>
-                        <div className="font-semibold">{signal.maxChlorineContent} ppm</div>
+                        <div className="text-sm text-muted-foreground mb-1">
+                          Max Chlorine
+                        </div>
+                        <div className="font-semibold">
+                          {signal.maxChlorineContent} ppm
+                        </div>
                       </div>
                     )}
                   </div>
                   {signal.otherQualitySpecs && (
                     <div className="pt-4 border-t">
-                      <div className="text-sm text-muted-foreground mb-2">Additional Requirements</div>
+                      <div className="text-sm text-muted-foreground mb-2">
+                        Additional Requirements
+                      </div>
                       <p className="text-sm">{signal.otherQualitySpecs}</p>
                     </div>
                   )}
@@ -338,21 +432,32 @@ export default function DemandSignalDetail() {
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Delivery Location</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Delivery Location
+                    </div>
                     <div className="font-semibold flex items-center gap-1">
                       <MapPin className="h-4 w-4 text-muted-foreground" />
-                      {signal.deliveryLocation}{signal.deliveryState && `, ${signal.deliveryState}`}
+                      {signal.deliveryLocation}
+                      {signal.deliveryState && `, ${signal.deliveryState}`}
                     </div>
                   </div>
                   {signal.maxTransportDistance && (
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Max Transport Distance</div>
-                      <div className="font-semibold">{signal.maxTransportDistance} km</div>
+                      <div className="text-sm text-muted-foreground mb-1">
+                        Max Transport Distance
+                      </div>
+                      <div className="font-semibold">
+                        {signal.maxTransportDistance} km
+                      </div>
                     </div>
                   )}
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Delivery Method</div>
-                    <div className="font-semibold capitalize">{signal.deliveryMethod?.replace("_", " ")}</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Delivery Method
+                    </div>
+                    <div className="font-semibold capitalize">
+                      {signal.deliveryMethod?.replace("_", " ")}
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -370,21 +475,34 @@ export default function DemandSignalDetail() {
                 <div className="grid grid-cols-2 gap-6">
                   {signal.indicativePriceMin && signal.indicativePriceMax && (
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Indicative Price Range</div>
-                      <div className="text-2xl font-bold font-mono text-primary">
-                        ${signal.indicativePriceMin} - ${signal.indicativePriceMax}
+                      <div className="text-sm text-muted-foreground mb-1">
+                        Indicative Price Range
                       </div>
-                      <div className="text-sm text-muted-foreground">AUD per tonne</div>
+                      <div className="text-2xl font-bold font-mono text-primary">
+                        ${signal.indicativePriceMin} - $
+                        {signal.indicativePriceMax}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        AUD per tonne
+                      </div>
                     </div>
                   )}
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Pricing Mechanism</div>
-                    <div className="font-semibold capitalize">{signal.pricingMechanism}</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Pricing Mechanism
+                    </div>
+                    <div className="font-semibold capitalize">
+                      {signal.pricingMechanism}
+                    </div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      {signal.pricingMechanism === "indexed" && "Price adjusts with market indices"}
-                      {signal.pricingMechanism === "fixed" && "Price locked for contract term"}
-                      {signal.pricingMechanism === "negotiable" && "Open to discussion"}
-                      {signal.pricingMechanism === "spot" && "Spot market rates apply"}
+                      {signal.pricingMechanism === "indexed" &&
+                        "Price adjusts with market indices"}
+                      {signal.pricingMechanism === "fixed" &&
+                        "Price locked for contract term"}
+                      {signal.pricingMechanism === "negotiable" &&
+                        "Open to discussion"}
+                      {signal.pricingMechanism === "spot" &&
+                        "Spot market rates apply"}
                     </div>
                   </div>
                 </div>
@@ -401,7 +519,9 @@ export default function DemandSignalDetail() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm leading-relaxed">{signal.sustainabilityRequirements}</p>
+                  <p className="text-sm leading-relaxed">
+                    {signal.sustainabilityRequirements}
+                  </p>
                 </CardContent>
               </Card>
             )}
@@ -415,7 +535,9 @@ export default function DemandSignalDetail() {
                 {isExpired ? (
                   <div className="text-center">
                     <AlertCircle className="h-12 w-12 mx-auto mb-4 text-red-500" />
-                    <h3 className="font-semibold mb-2">Response Deadline Passed</h3>
+                    <h3 className="font-semibold mb-2">
+                      Response Deadline Passed
+                    </h3>
                     <p className="text-sm text-muted-foreground">
                       This demand signal is no longer accepting responses.
                     </p>
@@ -423,15 +545,26 @@ export default function DemandSignalDetail() {
                 ) : (
                   <>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm text-muted-foreground">Response Deadline</span>
-                      <Badge variant={daysUntilDeadline <= 7 ? "destructive" : "outline"}>
+                      <span className="text-sm text-muted-foreground">
+                        Response Deadline
+                      </span>
+                      <Badge
+                        variant={
+                          daysUntilDeadline <= 7 ? "destructive" : "outline"
+                        }
+                      >
                         {daysUntilDeadline} days left
                       </Badge>
                     </div>
-                    <div className="text-lg font-semibold mb-4">{formatDate(signal.responseDeadline)}</div>
+                    <div className="text-lg font-semibold mb-4">
+                      {formatDate(signal.responseDeadline)}
+                    </div>
 
                     {!isBuyer && user && (
-                      <Dialog open={showResponseDialog} onOpenChange={setShowResponseDialog}>
+                      <Dialog
+                        open={showResponseDialog}
+                        onOpenChange={setShowResponseDialog}
+                      >
                         <DialogTrigger asChild>
                           <Button className="w-full" size="lg">
                             <Send className="h-4 w-4 mr-2" />
@@ -448,24 +581,38 @@ export default function DemandSignalDetail() {
                           <div className="space-y-4 py-4">
                             <div className="grid grid-cols-2 gap-4">
                               <div>
-                                <Label htmlFor="proposedVolume">Proposed Volume (t/year) *</Label>
+                                <Label htmlFor="proposedVolume">
+                                  Proposed Volume (t/year) *
+                                </Label>
                                 <Input
                                   id="proposedVolume"
                                   type="number"
                                   value={responseForm.proposedVolume}
-                                  onChange={(e) => setResponseForm(prev => ({ ...prev, proposedVolume: e.target.value }))}
+                                  onChange={e =>
+                                    setResponseForm(prev => ({
+                                      ...prev,
+                                      proposedVolume: e.target.value,
+                                    }))
+                                  }
                                   placeholder="e.g., 25000"
                                   className="mt-1.5"
                                   required
                                 />
                               </div>
                               <div>
-                                <Label htmlFor="proposedPrice">Proposed Price ($/t) *</Label>
+                                <Label htmlFor="proposedPrice">
+                                  Proposed Price ($/t) *
+                                </Label>
                                 <Input
                                   id="proposedPrice"
                                   type="number"
                                   value={responseForm.proposedPrice}
-                                  onChange={(e) => setResponseForm(prev => ({ ...prev, proposedPrice: e.target.value }))}
+                                  onChange={e =>
+                                    setResponseForm(prev => ({
+                                      ...prev,
+                                      proposedPrice: e.target.value,
+                                    }))
+                                  }
                                   placeholder="e.g., 95"
                                   className="mt-1.5"
                                   required
@@ -474,44 +621,72 @@ export default function DemandSignalDetail() {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                               <div>
-                                <Label htmlFor="proposedStartDate">Earliest Start Date *</Label>
+                                <Label htmlFor="proposedStartDate">
+                                  Earliest Start Date *
+                                </Label>
                                 <Input
                                   id="proposedStartDate"
                                   type="date"
                                   value={responseForm.proposedStartDate}
-                                  onChange={(e) => setResponseForm(prev => ({ ...prev, proposedStartDate: e.target.value }))}
+                                  onChange={e =>
+                                    setResponseForm(prev => ({
+                                      ...prev,
+                                      proposedStartDate: e.target.value,
+                                    }))
+                                  }
                                   className="mt-1.5"
                                   required
                                 />
                               </div>
                               <div>
-                                <Label htmlFor="proposedContractTerm">Contract Term (years)</Label>
+                                <Label htmlFor="proposedContractTerm">
+                                  Contract Term (years)
+                                </Label>
                                 <Input
                                   id="proposedContractTerm"
                                   type="number"
                                   value={responseForm.proposedContractTerm}
-                                  onChange={(e) => setResponseForm(prev => ({ ...prev, proposedContractTerm: e.target.value }))}
+                                  onChange={e =>
+                                    setResponseForm(prev => ({
+                                      ...prev,
+                                      proposedContractTerm: e.target.value,
+                                    }))
+                                  }
                                   placeholder="e.g., 5"
                                   className="mt-1.5"
                                 />
                               </div>
                             </div>
                             <div>
-                              <Label htmlFor="proposedDeliveryMethod">Delivery Method</Label>
+                              <Label htmlFor="proposedDeliveryMethod">
+                                Delivery Method
+                              </Label>
                               <Input
                                 id="proposedDeliveryMethod"
                                 value={responseForm.proposedDeliveryMethod}
-                                onChange={(e) => setResponseForm(prev => ({ ...prev, proposedDeliveryMethod: e.target.value }))}
+                                onChange={e =>
+                                  setResponseForm(prev => ({
+                                    ...prev,
+                                    proposedDeliveryMethod: e.target.value,
+                                  }))
+                                }
                                 placeholder="e.g., Delivered to site, Ex farm"
                                 className="mt-1.5"
                               />
                             </div>
                             <div>
-                              <Label htmlFor="coverLetter">Cover Letter / Additional Info</Label>
+                              <Label htmlFor="coverLetter">
+                                Cover Letter / Additional Info
+                              </Label>
                               <Textarea
                                 id="coverLetter"
                                 value={responseForm.coverLetter}
-                                onChange={(e) => setResponseForm(prev => ({ ...prev, coverLetter: e.target.value }))}
+                                onChange={e =>
+                                  setResponseForm(prev => ({
+                                    ...prev,
+                                    coverLetter: e.target.value,
+                                  }))
+                                }
                                 placeholder="Introduce your operation, experience, and why you're a good fit for this requirement..."
                                 rows={5}
                                 className="mt-1.5"
@@ -519,11 +694,18 @@ export default function DemandSignalDetail() {
                             </div>
                             <Button
                               onClick={handleSubmitResponse}
-                              disabled={submitResponseMutation.isPending || !responseForm.proposedVolume || !responseForm.proposedPrice || !responseForm.proposedStartDate}
+                              disabled={
+                                submitResponseMutation.isPending ||
+                                !responseForm.proposedVolume ||
+                                !responseForm.proposedPrice ||
+                                !responseForm.proposedStartDate
+                              }
                               className="w-full"
                               size="lg"
                             >
-                              {submitResponseMutation.isPending ? "Submitting..." : "Submit Response"}
+                              {submitResponseMutation.isPending
+                                ? "Submitting..."
+                                : "Submit Response"}
                             </Button>
                           </div>
                         </DialogContent>
@@ -531,7 +713,11 @@ export default function DemandSignalDetail() {
                     )}
 
                     {!user && (
-                      <Button className="w-full" size="lg" onClick={() => setLocation("/login")}>
+                      <Button
+                        className="w-full"
+                        size="lg"
+                        onClick={() => setLocation("/login")}
+                      >
                         Sign In to Respond
                       </Button>
                     )}
@@ -550,18 +736,30 @@ export default function DemandSignalDetail() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <div className="text-sm text-muted-foreground">Supply Start</div>
-                  <div className="font-semibold">{formatDate(signal.supplyStartDate)}</div>
+                  <div className="text-sm text-muted-foreground">
+                    Supply Start
+                  </div>
+                  <div className="font-semibold">
+                    {formatDate(signal.supplyStartDate)}
+                  </div>
                 </div>
                 {signal.supplyEndDate && (
                   <div>
-                    <div className="text-sm text-muted-foreground">Supply End</div>
-                    <div className="font-semibold">{formatDate(signal.supplyEndDate)}</div>
+                    <div className="text-sm text-muted-foreground">
+                      Supply End
+                    </div>
+                    <div className="font-semibold">
+                      {formatDate(signal.supplyEndDate)}
+                    </div>
                   </div>
                 )}
                 <div>
-                  <div className="text-sm text-muted-foreground">Response Deadline</div>
-                  <div className="font-semibold text-red-600">{formatDate(signal.responseDeadline)}</div>
+                  <div className="text-sm text-muted-foreground">
+                    Response Deadline
+                  </div>
+                  <div className="font-semibold text-red-600">
+                    {formatDate(signal.responseDeadline)}
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -577,7 +775,9 @@ export default function DemandSignalDetail() {
                     <Zap className="h-4 w-4" />
                     Responses
                   </span>
-                  <span className="font-semibold">{signal.responseCount || 0}</span>
+                  <span className="font-semibold">
+                    {signal.responseCount || 0}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -588,12 +788,15 @@ export default function DemandSignalDetail() {
                 </div>
                 <div className="pt-3 border-t">
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-muted-foreground">Volume Coverage</span>
+                    <span className="text-muted-foreground">
+                      Volume Coverage
+                    </span>
                     <span className="font-medium">{responseCoverage}%</span>
                   </div>
                   <Progress value={responseCoverage} className="h-2" />
                   <p className="text-xs text-muted-foreground mt-2">
-                    Estimated coverage based on {signal.responseCount || 0} responses
+                    Estimated coverage based on {signal.responseCount || 0}{" "}
+                    responses
                   </p>
                 </div>
               </CardContent>
@@ -613,8 +816,12 @@ export default function DemandSignalDetail() {
                     <Building2 className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold">{(signal as any).buyerName || "Verified Buyer"}</div>
-                    <div className="text-sm text-muted-foreground">ABFI Verified</div>
+                    <div className="font-semibold">
+                      {(signal as any).buyerName || "Verified Buyer"}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      ABFI Verified
+                    </div>
                   </div>
                 </div>
               </CardContent>

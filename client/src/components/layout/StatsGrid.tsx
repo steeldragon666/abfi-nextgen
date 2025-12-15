@@ -42,8 +42,12 @@ export function StatsGrid({
           <Card key={index} className="p-4 lg:p-6">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">{stat.label}</p>
-                <p className="text-2xl lg:text-3xl font-bold font-mono">{stat.value}</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  {stat.label}
+                </p>
+                <p className="text-2xl lg:text-3xl font-bold font-mono">
+                  {stat.value}
+                </p>
                 {stat.change && (
                   <p
                     className={cn(
@@ -79,7 +83,9 @@ export function StatsGrid({
       <div className={cn("grid gap-6", columnClasses[columns], className)}>
         {stats.map((stat, index) => (
           <div key={index}>
-            <p className="text-3xl lg:text-4xl font-bold font-mono">{stat.value}</p>
+            <p className="text-3xl lg:text-4xl font-bold font-mono">
+              {stat.value}
+            </p>
             <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
           </div>
         ))}
@@ -98,7 +104,9 @@ export function StatsGrid({
     >
       {stats.map((stat, index) => (
         <div key={index} className="text-center">
-          <p className="text-2xl lg:text-3xl font-bold font-mono">{stat.value}</p>
+          <p className="text-2xl lg:text-3xl font-bold font-mono">
+            {stat.value}
+          </p>
           <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
           {stat.change && (
             <p

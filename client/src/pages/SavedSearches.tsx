@@ -1,6 +1,12 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -26,11 +32,12 @@ export default function SavedSearches() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchName, setSearchName] = useState("");
   const [searchCriteria, setSearchCriteria] = useState("");
-  
-  const { data: searches, isLoading, refetch } = trpc.savedSearches.list.useQuery(
-    undefined,
-    { enabled: !!user }
-  );
+
+  const {
+    data: searches,
+    isLoading,
+    refetch,
+  } = trpc.savedSearches.list.useQuery(undefined, { enabled: !!user });
 
   const createMutation = trpc.savedSearches.create.useMutation({
     onSuccess: () => {
@@ -40,7 +47,7 @@ export default function SavedSearches() {
       setSearchCriteria("");
       refetch();
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to save search");
     },
   });
@@ -50,7 +57,7 @@ export default function SavedSearches() {
       toast.success("Search deleted");
       refetch();
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to delete search");
     },
   });
@@ -60,7 +67,7 @@ export default function SavedSearches() {
       toast.error("Please enter a search name");
       return;
     }
-    
+
     createMutation.mutate({
       name: searchName,
       criteria: searchCriteria || "{}",
@@ -127,7 +134,7 @@ export default function SavedSearches() {
                     id="name"
                     placeholder="e.g., NSW Oilseed Suppliers"
                     value={searchName}
-                    onChange={(e) => setSearchName(e.target.value)}
+                    onChange={e => setSearchName(e.target.value)}
                   />
                 </div>
                 <div>
@@ -136,7 +143,7 @@ export default function SavedSearches() {
                     id="criteria"
                     placeholder='{"category": ["oilseed"], "state": ["NSW"]}'
                     value={searchCriteria}
-                    onChange={(e) => setSearchCriteria(e.target.value)}
+                    onChange={e => setSearchCriteria(e.target.value)}
                   />
                   <p className="text-xs text-muted-foreground mt-1">
                     Optional: Add JSON criteria from your current search
@@ -147,7 +154,10 @@ export default function SavedSearches() {
                 <Button variant="outline" onClick={() => setDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button onClick={handleCreate} disabled={createMutation.isPending}>
+                <Button
+                  onClick={handleCreate}
+                  disabled={createMutation.isPending}
+                >
                   {createMutation.isPending ? "Saving..." : "Save Search"}
                 </Button>
               </DialogFooter>
@@ -172,7 +182,10 @@ export default function SavedSearches() {
         ) : searches && searches.length > 0 ? (
           <div className="grid md:grid-cols-2 gap-4">
             {searches.map((search: any) => (
-              <Card key={search.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={search.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
@@ -181,7 +194,8 @@ export default function SavedSearches() {
                         {search.name}
                       </CardTitle>
                       <CardDescription className="mt-2">
-                        Created {new Date(search.createdAt).toLocaleDateString()}
+                        Created{" "}
+                        {new Date(search.createdAt).toLocaleDateString()}
                       </CardDescription>
                     </div>
                     <div className="flex gap-1">
@@ -207,7 +221,7 @@ export default function SavedSearches() {
                       </div>
                     </div>
                   )}
-                  
+
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
@@ -235,9 +249,12 @@ export default function SavedSearches() {
           <Card>
             <CardContent className="py-12 text-center">
               <Bookmark className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No saved searches yet</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                No saved searches yet
+              </h3>
               <p className="text-muted-foreground mb-4">
-                Save your search criteria to quickly find feedstocks that match your requirements
+                Save your search criteria to quickly find feedstocks that match
+                your requirements
               </p>
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
@@ -260,7 +277,7 @@ export default function SavedSearches() {
                         id="name"
                         placeholder="e.g., NSW Oilseed Suppliers"
                         value={searchName}
-                        onChange={(e) => setSearchName(e.target.value)}
+                        onChange={e => setSearchName(e.target.value)}
                       />
                     </div>
                     <div>
@@ -269,15 +286,21 @@ export default function SavedSearches() {
                         id="criteria"
                         placeholder='{"category": ["oilseed"], "state": ["NSW"]}'
                         value={searchCriteria}
-                        onChange={(e) => setSearchCriteria(e.target.value)}
+                        onChange={e => setSearchCriteria(e.target.value)}
                       />
                     </div>
                   </div>
                   <DialogFooter>
-                    <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setDialogOpen(false)}
+                    >
                       Cancel
                     </Button>
-                    <Button onClick={handleCreate} disabled={createMutation.isPending}>
+                    <Button
+                      onClick={handleCreate}
+                      disabled={createMutation.isPending}
+                    >
                       {createMutation.isPending ? "Saving..." : "Save Search"}
                     </Button>
                   </DialogFooter>

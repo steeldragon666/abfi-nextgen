@@ -1,6 +1,12 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -97,7 +103,8 @@ const MOCK_EOIS = [
     totalVolumeTonnes: "21000",
     offeredPricePerTonne: "128.00",
     deliveryLocation: "Port of Newcastle",
-    supplierResponse: "Thank you for your interest. We are pleased to accept your EOI and look forward to finalizing the contract terms.",
+    supplierResponse:
+      "Thank you for your interest. We are pleased to accept your EOI and look forward to finalizing the contract terms.",
     respondedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
     futures: {
@@ -121,7 +128,8 @@ const MOCK_EOIS = [
     totalVolumeTonnes: "8000",
     offeredPricePerTonne: "105.00",
     deliveryLocation: "Adelaide",
-    supplierResponse: "Thank you for your interest. Unfortunately, we have committed this volume to another buyer. We encourage you to browse our other listings.",
+    supplierResponse:
+      "Thank you for your interest. Unfortunately, we have committed this volume to another buyer. We encourage you to browse our other listings.",
     respondedAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
     createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
     futures: {
@@ -233,17 +241,16 @@ export default function MyEOIs() {
   const { user, loading: authLoading } = useAuth();
   const utils = trpc.useUtils();
 
-  const { data: apiEois, isLoading } = trpc.futures.myEOIs.useQuery(
-    undefined,
-    { enabled: !!user }
-  );
+  const { data: apiEois, isLoading } = trpc.futures.myEOIs.useQuery(undefined, {
+    enabled: !!user,
+  });
 
   const withdrawMutation = trpc.futures.withdrawEOI.useMutation({
     onSuccess: () => {
       toast.success("EOI withdrawn successfully");
       utils.futures.myEOIs.invalidate();
     },
-    onError: (error) => toast.error(error.message),
+    onError: error => toast.error(error.message),
   });
 
   // Use mock data if API returns empty
@@ -264,17 +271,29 @@ export default function MyEOIs() {
   }
 
   // Group EOIs by status
-  const pendingEOIs = eois?.filter((e: any) => ["pending", "under_review"].includes(e.status)) || [];
+  const pendingEOIs =
+    eois?.filter((e: any) => ["pending", "under_review"].includes(e.status)) ||
+    [];
   const activeEOIs = eois?.filter((e: any) => e.status === "accepted") || [];
-  const closedEOIs = eois?.filter((e: any) => ["declined", "expired", "withdrawn"].includes(e.status)) || [];
+  const closedEOIs =
+    eois?.filter((e: any) =>
+      ["declined", "expired", "withdrawn"].includes(e.status)
+    ) || [];
 
   // Stats
   const stats = {
     total: eois?.length || 0,
     pending: pendingEOIs.length,
     accepted: activeEOIs.length,
-    totalVolume: eois?.reduce((sum: number, e: any) => sum + parseFloat(e.totalVolumeTonnes || "0"), 0) || 0,
-    acceptedVolume: activeEOIs.reduce((sum: number, e: any) => sum + parseFloat(e.totalVolumeTonnes || "0"), 0),
+    totalVolume:
+      eois?.reduce(
+        (sum: number, e: any) => sum + parseFloat(e.totalVolumeTonnes || "0"),
+        0
+      ) || 0,
+    acceptedVolume: activeEOIs.reduce(
+      (sum: number, e: any) => sum + parseFloat(e.totalVolumeTonnes || "0"),
+      0
+    ),
   };
 
   return (
@@ -306,7 +325,8 @@ export default function MyEOIs() {
             </h1>
 
             <p className="text-lg md:text-xl text-emerald-100 mb-8 max-w-2xl">
-              Track and manage your submitted EOIs for futures listings. Monitor responses from suppliers and manage your contracting pipeline.
+              Track and manage your submitted EOIs for futures listings. Monitor
+              responses from suppliers and manage your contracting pipeline.
             </p>
 
             {/* Quick Stats Row */}
@@ -328,7 +348,9 @@ export default function MyEOIs() {
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                 <TrendingUp className="h-4 w-4 text-emerald-300" />
-                <span className="font-semibold">{stats.acceptedVolume.toLocaleString()}t</span>
+                <span className="font-semibold">
+                  {stats.acceptedVolume.toLocaleString()}t
+                </span>
                 <span className="text-emerald-200">Contracted</span>
               </div>
             </div>
@@ -342,22 +364,34 @@ export default function MyEOIs() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Card className="border-l-4 border-l-teal-500">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total EOIs</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Total EOIs
+                </CardTitle>
                 <FileText className="h-4 w-4 text-teal-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold font-mono">{stats.total}</div>
-                <p className="text-xs text-muted-foreground">Submitted to suppliers</p>
+                <div className="text-3xl font-bold font-mono">
+                  {stats.total}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Submitted to suppliers
+                </p>
               </CardContent>
             </Card>
             <Card className="border-l-4 border-l-yellow-500">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Pending Review
+                </CardTitle>
                 <Clock className="h-4 w-4 text-yellow-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold font-mono">{stats.pending}</div>
-                <p className="text-xs text-muted-foreground">Awaiting response</p>
+                <div className="text-3xl font-bold font-mono">
+                  {stats.pending}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Awaiting response
+                </p>
               </CardContent>
             </Card>
             <Card className="border-l-4 border-l-emerald-500">
@@ -366,17 +400,25 @@ export default function MyEOIs() {
                 <CheckCircle2 className="h-4 w-4 text-emerald-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold font-mono">{stats.accepted}</div>
-                <p className="text-xs text-muted-foreground">Ready for contract</p>
+                <div className="text-3xl font-bold font-mono">
+                  {stats.accepted}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Ready for contract
+                </p>
               </CardContent>
             </Card>
             <Card className="border-l-4 border-l-blue-500">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Contracted Volume</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Contracted Volume
+                </CardTitle>
                 <TrendingUp className="h-4 w-4 text-blue-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold font-mono">{stats.acceptedVolume.toLocaleString()}t</div>
+                <div className="text-3xl font-bold font-mono">
+                  {stats.acceptedVolume.toLocaleString()}t
+                </div>
                 <p className="text-xs text-muted-foreground">Total committed</p>
               </CardContent>
             </Card>
@@ -389,7 +431,7 @@ export default function MyEOIs() {
         <div className="container mx-auto px-4">
           {isLoading ? (
             <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3].map(i => (
                 <Card key={i}>
                   <CardHeader>
                     <Skeleton className="h-6 w-3/4 mb-2" />
@@ -412,12 +454,24 @@ export default function MyEOIs() {
                     </div>
                     <div>
                       <h2 className="text-xl font-bold">Pending Response</h2>
-                      <p className="text-sm text-muted-foreground">{pendingEOIs.length} EOI{pendingEOIs.length !== 1 ? "s" : ""} awaiting supplier review</p>
+                      <p className="text-sm text-muted-foreground">
+                        {pendingEOIs.length} EOI
+                        {pendingEOIs.length !== 1 ? "s" : ""} awaiting supplier
+                        review
+                      </p>
                     </div>
                   </div>
                   <div className="space-y-4">
                     {pendingEOIs.map((eoi: any) => (
-                      <EOICard key={eoi.id} eoi={eoi} onWithdraw={!isUsingMockData ? (id) => withdrawMutation.mutate({ eoiId: id }) : undefined} />
+                      <EOICard
+                        key={eoi.id}
+                        eoi={eoi}
+                        onWithdraw={
+                          !isUsingMockData
+                            ? id => withdrawMutation.mutate({ eoiId: id })
+                            : undefined
+                        }
+                      />
                     ))}
                   </div>
                 </div>
@@ -432,7 +486,11 @@ export default function MyEOIs() {
                     </div>
                     <div>
                       <h2 className="text-xl font-bold">Accepted</h2>
-                      <p className="text-sm text-muted-foreground">{activeEOIs.length} EOI{activeEOIs.length !== 1 ? "s" : ""} ready for contracting</p>
+                      <p className="text-sm text-muted-foreground">
+                        {activeEOIs.length} EOI
+                        {activeEOIs.length !== 1 ? "s" : ""} ready for
+                        contracting
+                      </p>
                     </div>
                   </div>
                   <div className="space-y-4">
@@ -451,8 +509,14 @@ export default function MyEOIs() {
                       <XCircle className="h-5 w-5 text-gray-500" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-muted-foreground">Closed</h2>
-                      <p className="text-sm text-muted-foreground">{closedEOIs.length} EOI{closedEOIs.length !== 1 ? "s" : ""} declined, expired, or withdrawn</p>
+                      <h2 className="text-xl font-bold text-muted-foreground">
+                        Closed
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {closedEOIs.length} EOI
+                        {closedEOIs.length !== 1 ? "s" : ""} declined, expired,
+                        or withdrawn
+                      </p>
                     </div>
                   </div>
                   <div className="space-y-4 opacity-75">
@@ -471,7 +535,9 @@ export default function MyEOIs() {
                 </div>
                 <h3 className="text-2xl font-bold mb-3">No EOIs Yet</h3>
                 <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                  You haven't submitted any expressions of interest yet. Browse the marketplace to find futures listings and secure your long-term feedstock supply.
+                  You haven't submitted any expressions of interest yet. Browse
+                  the marketplace to find futures listings and secure your
+                  long-term feedstock supply.
                 </p>
                 <Link href="/futures">
                   <Button size="lg" className="bg-teal-600 hover:bg-teal-700">
@@ -488,7 +554,13 @@ export default function MyEOIs() {
   );
 }
 
-function EOICard({ eoi, onWithdraw }: { eoi: any; onWithdraw?: (id: number) => void }) {
+function EOICard({
+  eoi,
+  onWithdraw,
+}: {
+  eoi: any;
+  onWithdraw?: (id: number) => void;
+}) {
   const f = eoi.futures;
 
   return (
@@ -499,12 +571,20 @@ function EOICard({ eoi, onWithdraw }: { eoi: any; onWithdraw?: (id: number) => v
           <div className="flex-1">
             <div className="flex items-start gap-4 mb-4">
               <div className="p-3 bg-emerald-100 rounded-xl shrink-0">
-                {f ? CROP_TYPE_ICONS[f.cropType] || <Sprout className="h-5 w-5 text-emerald-600" /> : <FileText className="h-5 w-5 text-emerald-600" />}
+                {f ? (
+                  CROP_TYPE_ICONS[f.cropType] || (
+                    <Sprout className="h-5 w-5 text-emerald-600" />
+                  )
+                ) : (
+                  <FileText className="h-5 w-5 text-emerald-600" />
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
                   <span className="font-bold text-lg">{eoi.eoiReference}</span>
-                  <Badge className={getEOIStatusColor(eoi.status)}>{EOI_STATUS_LABELS[eoi.status]}</Badge>
+                  <Badge className={getEOIStatusColor(eoi.status)}>
+                    {EOI_STATUS_LABELS[eoi.status]}
+                  </Badge>
                 </div>
                 {f && (
                   <p className="text-muted-foreground text-sm truncate">
@@ -517,21 +597,33 @@ function EOICard({ eoi, onWithdraw }: { eoi: any; onWithdraw?: (id: number) => v
             {/* Details Grid */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm mb-4 p-4 bg-muted/30 rounded-lg">
               <div>
-                <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Interest Period</p>
+                <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">
+                  Interest Period
+                </p>
                 <p className="font-semibold">
                   {eoi.interestStartYear} - {eoi.interestEndYear}
                 </p>
               </div>
               <div>
-                <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Annual Volume</p>
-                <p className="font-semibold font-mono">{parseFloat(eoi.annualVolumeTonnes).toLocaleString()}t</p>
+                <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">
+                  Annual Volume
+                </p>
+                <p className="font-semibold font-mono">
+                  {parseFloat(eoi.annualVolumeTonnes).toLocaleString()}t
+                </p>
               </div>
               <div>
-                <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Total Volume</p>
-                <p className="font-semibold font-mono">{parseFloat(eoi.totalVolumeTonnes).toLocaleString()}t</p>
+                <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">
+                  Total Volume
+                </p>
+                <p className="font-semibold font-mono">
+                  {parseFloat(eoi.totalVolumeTonnes).toLocaleString()}t
+                </p>
               </div>
               <div>
-                <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Offered Price</p>
+                <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">
+                  Offered Price
+                </p>
                 <p className="font-semibold font-mono">
                   {eoi.offeredPricePerTonne
                     ? `$${parseFloat(eoi.offeredPricePerTonne).toFixed(2)}/t`
@@ -562,7 +654,9 @@ function EOICard({ eoi, onWithdraw }: { eoi: any; onWithdraw?: (id: number) => v
             {/* Supplier Response */}
             {eoi.supplierResponse && (
               <div className="mt-4 p-4 bg-teal-50 border border-teal-100 rounded-lg">
-                <p className="text-sm font-semibold text-teal-800 mb-1">Supplier Response:</p>
+                <p className="text-sm font-semibold text-teal-800 mb-1">
+                  Supplier Response:
+                </p>
                 <p className="text-sm text-teal-700">{eoi.supplierResponse}</p>
                 {eoi.respondedAt && (
                   <p className="text-xs text-teal-600 mt-2">
@@ -590,7 +684,11 @@ function EOICard({ eoi, onWithdraw }: { eoi: any; onWithdraw?: (id: number) => v
             {["pending", "under_review"].includes(eoi.status) && onWithdraw && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50 w-full">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-red-600 border-red-200 hover:bg-red-50 w-full"
+                  >
                     <X className="h-4 w-4 mr-2" />
                     Withdraw
                   </Button>
@@ -599,7 +697,8 @@ function EOICard({ eoi, onWithdraw }: { eoi: any; onWithdraw?: (id: number) => v
                   <AlertDialogHeader>
                     <AlertDialogTitle>Withdraw EOI?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Are you sure you want to withdraw this expression of interest? This action cannot be undone.
+                      Are you sure you want to withdraw this expression of
+                      interest? This action cannot be undone.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

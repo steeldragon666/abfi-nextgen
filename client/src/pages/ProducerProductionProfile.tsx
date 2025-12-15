@@ -1,12 +1,31 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { Leaf, ArrowLeft, ArrowRight, Plus, Trash2, TrendingUp } from "lucide-react";
+import {
+  Leaf,
+  ArrowLeft,
+  ArrowRight,
+  Plus,
+  Trash2,
+  TrendingUp,
+} from "lucide-react";
 import { Link } from "wouter";
 
 interface YieldRecord {
@@ -27,7 +46,14 @@ export default function ProducerProductionProfile() {
     harvestMonth: "",
   });
   const [yieldHistory, setYieldHistory] = useState<YieldRecord[]>([
-    { year: 2024, plantedArea: 0, totalHarvest: 0, yieldPerHa: 0, weatherImpact: "normal", notes: "" }
+    {
+      year: 2024,
+      plantedArea: 0,
+      totalHarvest: 0,
+      yieldPerHa: 0,
+      weatherImpact: "normal",
+      notes: "",
+    },
   ]);
 
   const feedstockTypes = [
@@ -43,46 +69,66 @@ export default function ProducerProductionProfile() {
 
   const addYieldRecord = () => {
     const currentYear = new Date().getFullYear();
-    setYieldHistory([...yieldHistory, {
-      year: currentYear - yieldHistory.length,
-      plantedArea: 0,
-      totalHarvest: 0,
-      yieldPerHa: 0,
-      weatherImpact: "normal",
-      notes: ""
-    }]);
+    setYieldHistory([
+      ...yieldHistory,
+      {
+        year: currentYear - yieldHistory.length,
+        plantedArea: 0,
+        totalHarvest: 0,
+        yieldPerHa: 0,
+        weatherImpact: "normal",
+        notes: "",
+      },
+    ]);
   };
 
   const removeYieldRecord = (index: number) => {
     setYieldHistory(yieldHistory.filter((_, i) => i !== index));
   };
 
-  const updateYieldRecord = (index: number, field: keyof YieldRecord, value: any) => {
+  const updateYieldRecord = (
+    index: number,
+    field: keyof YieldRecord,
+    value: any
+  ) => {
     const updated = [...yieldHistory];
     updated[index] = { ...updated[index], [field]: value };
-    
+
     // Auto-calculate yield per hectare
     if (field === "plantedArea" || field === "totalHarvest") {
-      const area = field === "plantedArea" ? parseFloat(value) : updated[index].plantedArea;
-      const harvest = field === "totalHarvest" ? parseFloat(value) : updated[index].totalHarvest;
-      updated[index].yieldPerHa = area > 0 ? Math.round((harvest / area) * 10) / 10 : 0;
+      const area =
+        field === "plantedArea"
+          ? parseFloat(value)
+          : updated[index].plantedArea;
+      const harvest =
+        field === "totalHarvest"
+          ? parseFloat(value)
+          : updated[index].totalHarvest;
+      updated[index].yieldPerHa =
+        area > 0 ? Math.round((harvest / area) * 10) / 10 : 0;
     }
-    
+
     setYieldHistory(updated);
   };
 
   const calculateAverageYield = () => {
     if (yieldHistory.length === 0) return 0;
-    const sum = yieldHistory.reduce((acc, record) => acc + record.yieldPerHa, 0);
+    const sum = yieldHistory.reduce(
+      (acc, record) => acc + record.yieldPerHa,
+      0
+    );
     return Math.round((sum / yieldHistory.length) * 10) / 10;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem("producerRegistration", JSON.stringify({
-      step: 4,
-      data: { feedstockType, currentSeason, yieldHistory }
-    }));
+    localStorage.setItem(
+      "producerRegistration",
+      JSON.stringify({
+        step: 4,
+        data: { feedstockType, currentSeason, yieldHistory },
+      })
+    );
     setLocation("/producer-registration/carbon-calculator");
   };
 
@@ -107,7 +153,9 @@ export default function ProducerProductionProfile() {
       <div className="bg-white border-b">
         <div className="container mx-auto py-4">
           <Progress value={42} className="h-2" />
-          <p className="mt-2 text-sm text-gray-600">42% Complete • Estimated 8 minutes remaining</p>
+          <p className="mt-2 text-sm text-gray-600">
+            42% Complete • Estimated 8 minutes remaining
+          </p>
         </div>
       </div>
 
@@ -116,18 +164,23 @@ export default function ProducerProductionProfile() {
         <div className="mx-auto max-w-4xl">
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl text-[#0F3A5C]">Production Profile</CardTitle>
+              <CardTitle className="text-2xl text-[#0F3A5C]">
+                Production Profile
+              </CardTitle>
               <CardDescription>
-                Tell us about your feedstock production. Historical data helps buyers assess reliability.
+                Tell us about your feedstock production. Historical data helps
+                buyers assess reliability.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Feedstock Type Selector */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0F3A5C]">Feedstock Type *</h3>
+                  <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                    Feedstock Type *
+                  </h3>
                   <div className="grid gap-3 md:grid-cols-4">
-                    {feedstockTypes.map((type) => (
+                    {feedstockTypes.map(type => (
                       <button
                         key={type.id}
                         type="button"
@@ -139,7 +192,9 @@ export default function ProducerProductionProfile() {
                         }`}
                       >
                         <div className="mb-2 text-3xl">{type.icon}</div>
-                        <div className="text-sm font-medium text-[#0F3A5C]">{type.name}</div>
+                        <div className="text-sm font-medium text-[#0F3A5C]">
+                          {type.name}
+                        </div>
                       </button>
                     ))}
                   </div>
@@ -147,8 +202,10 @@ export default function ProducerProductionProfile() {
 
                 {/* Current Season Status */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0F3A5C]">Current Season (2024/25)</h3>
-                  
+                  <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                    Current Season (2024/25)
+                  </h3>
+
                   <div className="grid gap-4 md:grid-cols-3">
                     <div className="space-y-2">
                       <Label htmlFor="plantedArea">Planted Area (ha) *</Label>
@@ -157,26 +214,46 @@ export default function ProducerProductionProfile() {
                         type="number"
                         placeholder="e.g., 450"
                         value={currentSeason.plantedArea}
-                        onChange={(e) => setCurrentSeason(prev => ({ ...prev, plantedArea: e.target.value }))}
+                        onChange={e =>
+                          setCurrentSeason(prev => ({
+                            ...prev,
+                            plantedArea: e.target.value,
+                          }))
+                        }
                         required
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="expectedHarvest">Expected Harvest (tonnes) *</Label>
+                      <Label htmlFor="expectedHarvest">
+                        Expected Harvest (tonnes) *
+                      </Label>
                       <Input
                         id="expectedHarvest"
                         type="number"
                         placeholder="e.g., 36000"
                         value={currentSeason.expectedHarvest}
-                        onChange={(e) => setCurrentSeason(prev => ({ ...prev, expectedHarvest: e.target.value }))}
+                        onChange={e =>
+                          setCurrentSeason(prev => ({
+                            ...prev,
+                            expectedHarvest: e.target.value,
+                          }))
+                        }
                         required
                       />
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="harvestMonth">Harvest Month *</Label>
-                      <Select value={currentSeason.harvestMonth} onValueChange={(value) => setCurrentSeason(prev => ({ ...prev, harvestMonth: value }))}>
+                      <Select
+                        value={currentSeason.harvestMonth}
+                        onValueChange={value =>
+                          setCurrentSeason(prev => ({
+                            ...prev,
+                            harvestMonth: value,
+                          }))
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select month" />
                         </SelectTrigger>
@@ -202,22 +279,36 @@ export default function ProducerProductionProfile() {
                 {/* Historical Yield Data */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-[#0F3A5C]">Historical Yield Data</h3>
-                    <Button type="button" variant="outline" size="sm" onClick={addYieldRecord} className="gap-2">
+                    <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                      Historical Yield Data
+                    </h3>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={addYieldRecord}
+                      className="gap-2"
+                    >
                       <Plus className="h-4 w-4" />
                       Add Year
                     </Button>
                   </div>
 
                   <p className="text-sm text-gray-600">
-                    Provide at least 1 year of historical data. More years = better buyer confidence.
+                    Provide at least 1 year of historical data. More years =
+                    better buyer confidence.
                   </p>
 
                   <div className="space-y-4">
                     {yieldHistory.map((record, index) => (
-                      <div key={index} className="rounded-lg border border-gray-200 p-4">
+                      <div
+                        key={index}
+                        className="rounded-lg border border-gray-200 p-4"
+                      >
                         <div className="mb-3 flex items-center justify-between">
-                          <span className="font-semibold text-[#0F3A5C]">Season {record.year}</span>
+                          <span className="font-semibold text-[#0F3A5C]">
+                            Season {record.year}
+                          </span>
                           {yieldHistory.length > 1 && (
                             <Button
                               type="button"
@@ -237,7 +328,13 @@ export default function ProducerProductionProfile() {
                             <Input
                               type="number"
                               value={record.plantedArea || ""}
-                              onChange={(e) => updateYieldRecord(index, "plantedArea", parseFloat(e.target.value) || 0)}
+                              onChange={e =>
+                                updateYieldRecord(
+                                  index,
+                                  "plantedArea",
+                                  parseFloat(e.target.value) || 0
+                                )
+                              }
                             />
                           </div>
 
@@ -246,7 +343,13 @@ export default function ProducerProductionProfile() {
                             <Input
                               type="number"
                               value={record.totalHarvest || ""}
-                              onChange={(e) => updateYieldRecord(index, "totalHarvest", parseFloat(e.target.value) || 0)}
+                              onChange={e =>
+                                updateYieldRecord(
+                                  index,
+                                  "totalHarvest",
+                                  parseFloat(e.target.value) || 0
+                                )
+                              }
                             />
                           </div>
 
@@ -266,16 +369,24 @@ export default function ProducerProductionProfile() {
                             <Label>Weather Impact</Label>
                             <Select
                               value={record.weatherImpact}
-                              onValueChange={(value) => updateYieldRecord(index, "weatherImpact", value)}
+                              onValueChange={value =>
+                                updateYieldRecord(index, "weatherImpact", value)
+                              }
                             >
                               <SelectTrigger>
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="normal">Normal Conditions</SelectItem>
+                                <SelectItem value="normal">
+                                  Normal Conditions
+                                </SelectItem>
                                 <SelectItem value="drought">Drought</SelectItem>
-                                <SelectItem value="flood">Flood/Excessive Rain</SelectItem>
-                                <SelectItem value="other">Other (specify in notes)</SelectItem>
+                                <SelectItem value="flood">
+                                  Flood/Excessive Rain
+                                </SelectItem>
+                                <SelectItem value="other">
+                                  Other (specify in notes)
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -285,7 +396,13 @@ export default function ProducerProductionProfile() {
                             <Input
                               placeholder="Any relevant details"
                               value={record.notes}
-                              onChange={(e) => updateYieldRecord(index, "notes", e.target.value)}
+                              onChange={e =>
+                                updateYieldRecord(
+                                  index,
+                                  "notes",
+                                  e.target.value
+                                )
+                              }
                             />
                           </div>
                         </div>
@@ -302,7 +419,8 @@ export default function ProducerProductionProfile() {
                           Average Yield: {calculateAverageYield()} t/ha
                         </span>
                         <span className="text-sm text-gray-600">
-                          (based on {yieldHistory.length} {yieldHistory.length === 1 ? "year" : "years"})
+                          (based on {yieldHistory.length}{" "}
+                          {yieldHistory.length === 1 ? "year" : "years"})
                         </span>
                       </div>
                     </div>

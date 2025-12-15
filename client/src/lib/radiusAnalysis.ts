@@ -113,17 +113,22 @@ export async function analyzeRadius(
 
   try {
     // Load and analyze sugar mills
-    const sugarMills = await fetch("/geojson/sugar_mills.json").then((r) => r.json());
+    const sugarMills = await fetch("/geojson/sugar_mills.json").then(r =>
+      r.json()
+    );
     for (const feature of sugarMills.features) {
       const [lon, lat] = feature.geometry.coordinates;
       if (isPointInRadius(centerLat, centerLon, lat, lon, radiusKm)) {
         results.facilities.sugarMills++;
-        results.feedstockTonnes.bagasse += feature.properties.bagasse_production_tonnes || 0;
+        results.feedstockTonnes.bagasse +=
+          feature.properties.bagasse_production_tonnes || 0;
       }
     }
 
     // Load and analyze grain regions
-    const grainRegions = await fetch("/geojson/grain_regions.json").then((r) => r.json());
+    const grainRegions = await fetch("/geojson/grain_regions.json").then(r =>
+      r.json()
+    );
     for (const feature of grainRegions.features) {
       if (
         doesPolygonIntersectRadius(
@@ -140,8 +145,8 @@ export async function analyzeRadius(
     }
 
     // Load and analyze forestry regions
-    const forestryRegions = await fetch("/geojson/forestry_regions.json").then((r) =>
-      r.json()
+    const forestryRegions = await fetch("/geojson/forestry_regions.json").then(
+      r => r.json()
     );
     for (const feature of forestryRegions.features) {
       if (feature.geometry.type === "Polygon") {
@@ -161,21 +166,23 @@ export async function analyzeRadius(
     }
 
     // Load and analyze biogas facilities
-    const biogasFacilities = await fetch("/geojson/biogas_facilities.json").then((r) =>
-      r.json()
-    );
+    const biogasFacilities = await fetch(
+      "/geojson/biogas_facilities.json"
+    ).then(r => r.json());
     for (const feature of biogasFacilities.features) {
       const [lon, lat] = feature.geometry.coordinates;
       if (isPointInRadius(centerLat, centerLon, lat, lon, radiusKm)) {
         results.facilities.biogasFacilities++;
         // Estimate annual biogas production (MW * 8000 hours * 0.6 efficiency / 1000)
         results.feedstockTonnes.biogas +=
-          (feature.properties.capacity_mw || 0) * 8000 * 0.6 / 1000;
+          ((feature.properties.capacity_mw || 0) * 8000 * 0.6) / 1000;
       }
     }
 
     // Load and analyze biofuel plants
-    const biofuelPlants = await fetch("/geojson/biofuel_plants.json").then((r) => r.json());
+    const biofuelPlants = await fetch("/geojson/biofuel_plants.json").then(r =>
+      r.json()
+    );
     for (const feature of biofuelPlants.features) {
       const [lon, lat] = feature.geometry.coordinates;
       if (isPointInRadius(centerLat, centerLon, lat, lon, radiusKm)) {
@@ -184,9 +191,9 @@ export async function analyzeRadius(
     }
 
     // Load and analyze transport infrastructure
-    const transport = await fetch("/geojson/transport_infrastructure.json").then((r) =>
-      r.json()
-    );
+    const transport = await fetch(
+      "/geojson/transport_infrastructure.json"
+    ).then(r => r.json());
     for (const feature of transport.features) {
       const [lon, lat] = feature.geometry.coordinates;
       if (isPointInRadius(centerLat, centerLon, lat, lon, radiusKm)) {
@@ -210,7 +217,7 @@ export async function analyzeRadius(
 
     // Calculate feasibility score (0-100)
     let score = 0;
-    
+
     // Feedstock availability (40 points)
     if (results.feedstockTonnes.total > 1000000) score += 40;
     else if (results.feedstockTonnes.total > 500000) score += 30;
@@ -249,7 +256,10 @@ export async function analyzeRadius(
         "High feedstock availability with no existing facilities - greenfield opportunity"
       );
     }
-    if (results.facilities.sugarMills > 0 && results.feedstockTonnes.bagasse > 200000) {
+    if (
+      results.facilities.sugarMills > 0 &&
+      results.feedstockTonnes.bagasse > 200000
+    ) {
       results.recommendations.push(
         "Significant bagasse supply available - consider cogeneration or pelletization"
       );

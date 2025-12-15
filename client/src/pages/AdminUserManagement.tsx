@@ -1,11 +1,23 @@
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { Users, Shield, Search, UserCog, Mail, Calendar } from "lucide-react";
 
@@ -64,13 +76,14 @@ export default function AdminUserManagement() {
   }
 
   // Filter users
-  const filteredUsers = users?.filter((u: any) => {
-    const matchesSearch = 
-      u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      u.email?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRole = roleFilter === "all" || u.role === roleFilter;
-    return matchesSearch && matchesRole;
-  }) || [];
+  const filteredUsers =
+    users?.filter((u: any) => {
+      const matchesSearch =
+        u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        u.email?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesRole = roleFilter === "all" || u.role === roleFilter;
+      return matchesSearch && matchesRole;
+    }) || [];
 
   const formatDate = (date: Date | null) => {
     if (!date) return "Never";
@@ -116,7 +129,7 @@ export default function AdminUserManagement() {
                 <Input
                   placeholder="Search by name or email..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={e => setSearchQuery(e.target.value)}
                   className="pl-10"
                 />
               </div>
@@ -192,7 +205,9 @@ export default function AdminUserManagement() {
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-3">
                         <div>
-                          <h4 className="font-semibold">{u.name || "Unnamed User"}</h4>
+                          <h4 className="font-semibold">
+                            {u.name || "Unnamed User"}
+                          </h4>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Mail className="h-3 w-3" />
                             {u.email}
@@ -217,9 +232,14 @@ export default function AdminUserManagement() {
                       </Badge>
                       <Select
                         value={u.role}
-                        onValueChange={(newRole) => {
-                          if (confirm(`Change ${u.name}'s role to ${newRole}?`)) {
-                            updateUserRole.mutate({ userId: u.id, role: newRole as "admin" | "supplier" | "buyer" });
+                        onValueChange={newRole => {
+                          if (
+                            confirm(`Change ${u.name}'s role to ${newRole}?`)
+                          ) {
+                            updateUserRole.mutate({
+                              userId: u.id,
+                              role: newRole as "admin" | "supplier" | "buyer",
+                            });
                           }
                         }}
                         disabled={u.id === user.id} // Can't change own role

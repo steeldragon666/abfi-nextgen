@@ -1,12 +1,31 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { Leaf, ArrowLeft, ArrowRight, TrendingDown, TrendingUp, Info } from "lucide-react";
+import {
+  Leaf,
+  ArrowLeft,
+  ArrowRight,
+  TrendingDown,
+  TrendingUp,
+  Info,
+} from "lucide-react";
 import { Link } from "wouter";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -42,7 +61,11 @@ export default function ProducerCarbonCalculator() {
     carbonProject: false,
   });
 
-  const [carbonScore, setCarbonScore] = useState({ intensity: 0, rating: "", color: "" });
+  const [carbonScore, setCarbonScore] = useState({
+    intensity: 0,
+    rating: "",
+    color: "",
+  });
 
   // Calculate carbon intensity score in real-time
   useEffect(() => {
@@ -70,7 +93,7 @@ export default function ProducerCarbonCalculator() {
     // Machinery
     if (carbonData.tractorFuelType === "biodiesel_blend") score -= 5;
     else if (carbonData.tractorFuelType === "electric") score -= 10;
-    
+
     const diesel = parseFloat(carbonData.annualDieselLitres) || 0;
     if (diesel > 10000) score += 10;
 
@@ -88,23 +111,41 @@ export default function ProducerCarbonCalculator() {
     // Convert to rating
     let rating = "";
     let color = "";
-    if (score < 30) { rating = "A+"; color = "text-green-600"; }
-    else if (score < 40) { rating = "A"; color = "text-green-500"; }
-    else if (score < 50) { rating = "B+"; color = "text-yellow-600"; }
-    else if (score < 60) { rating = "B"; color = "text-yellow-500"; }
-    else if (score < 70) { rating = "C+"; color = "text-orange-500"; }
-    else if (score < 80) { rating = "C"; color = "text-orange-600"; }
-    else { rating = "D"; color = "text-red-600"; }
+    if (score < 30) {
+      rating = "A+";
+      color = "text-green-600";
+    } else if (score < 40) {
+      rating = "A";
+      color = "text-green-500";
+    } else if (score < 50) {
+      rating = "B+";
+      color = "text-yellow-600";
+    } else if (score < 60) {
+      rating = "B";
+      color = "text-yellow-500";
+    } else if (score < 70) {
+      rating = "C+";
+      color = "text-orange-500";
+    } else if (score < 80) {
+      rating = "C";
+      color = "text-orange-600";
+    } else {
+      rating = "D";
+      color = "text-red-600";
+    }
 
     setCarbonScore({ intensity: score, rating, color });
   }, [carbonData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem("producerRegistration", JSON.stringify({
-      step: 5,
-      data: { carbonData, carbonScore }
-    }));
+    localStorage.setItem(
+      "producerRegistration",
+      JSON.stringify({
+        step: 5,
+        data: { carbonData, carbonScore },
+      })
+    );
     setLocation("/producer-registration/contracts");
   };
 
@@ -129,7 +170,9 @@ export default function ProducerCarbonCalculator() {
       <div className="bg-white border-b">
         <div className="container mx-auto py-4">
           <Progress value={56} className="h-2" />
-          <p className="mt-2 text-sm text-gray-600">56% Complete • Estimated 6 minutes remaining</p>
+          <p className="mt-2 text-sm text-gray-600">
+            56% Complete • Estimated 6 minutes remaining
+          </p>
         </div>
       </div>
 
@@ -141,9 +184,12 @@ export default function ProducerCarbonCalculator() {
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl text-[#0F3A5C]">Carbon Intensity Calculator</CardTitle>
+                  <CardTitle className="text-2xl text-[#0F3A5C]">
+                    Carbon Intensity Calculator
+                  </CardTitle>
                   <CardDescription>
-                    Answer these questions about your agricultural practices. Your ABFI rating updates in real-time.
+                    Answer these questions about your agricultural practices.
+                    Your ABFI rating updates in real-time.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -154,18 +200,34 @@ export default function ProducerCarbonCalculator() {
                         Tillage Practices
                         <Info className="h-4 w-4 text-gray-400" />
                       </h3>
-                      
+
                       <div className="space-y-2">
                         <Label>Primary Tillage Method *</Label>
-                        <Select value={carbonData.tillagePractice} onValueChange={(value) => setCarbonData(prev => ({ ...prev, tillagePractice: value }))}>
+                        <Select
+                          value={carbonData.tillagePractice}
+                          onValueChange={value =>
+                            setCarbonData(prev => ({
+                              ...prev,
+                              tillagePractice: value,
+                            }))
+                          }
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select tillage practice" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_till">No-Till / Zero-Till</SelectItem>
-                            <SelectItem value="minimum_till">Minimum Tillage</SelectItem>
-                            <SelectItem value="conventional">Conventional Tillage</SelectItem>
-                            <SelectItem value="multiple_passes">Multiple Passes</SelectItem>
+                            <SelectItem value="no_till">
+                              No-Till / Zero-Till
+                            </SelectItem>
+                            <SelectItem value="minimum_till">
+                              Minimum Tillage
+                            </SelectItem>
+                            <SelectItem value="conventional">
+                              Conventional Tillage
+                            </SelectItem>
+                            <SelectItem value="multiple_passes">
+                              Multiple Passes
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -176,7 +238,7 @@ export default function ProducerCarbonCalculator() {
                       <h3 className="flex items-center gap-2 text-lg font-semibold text-[#0F3A5C]">
                         Fertilizer Management
                       </h3>
-                      
+
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label>Nitrogen Application Rate (kg/ha) *</Label>
@@ -184,53 +246,98 @@ export default function ProducerCarbonCalculator() {
                             type="number"
                             placeholder="e.g., 150"
                             value={carbonData.nitrogenKgPerHa}
-                            onChange={(e) => setCarbonData(prev => ({ ...prev, nitrogenKgPerHa: e.target.value }))}
+                            onChange={e =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                nitrogenKgPerHa: e.target.value,
+                              }))
+                            }
                             required
                           />
                         </div>
 
                         <div className="space-y-2">
                           <Label>Fertiliser Type *</Label>
-                          <Select value={carbonData.fertiliserType} onValueChange={(value) => setCarbonData(prev => ({ ...prev, fertiliserType: value }))}>
+                          <Select
+                            value={carbonData.fertiliserType}
+                            onValueChange={value =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                fertiliserType: value,
+                              }))
+                            }
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select type" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="urea">Urea</SelectItem>
-                              <SelectItem value="anhydrous_ammonia">Anhydrous Ammonia</SelectItem>
+                              <SelectItem value="anhydrous_ammonia">
+                                Anhydrous Ammonia
+                              </SelectItem>
                               <SelectItem value="dap_map">DAP/MAP</SelectItem>
-                              <SelectItem value="organic_compost">Organic Compost</SelectItem>
-                              <SelectItem value="controlled_release">Controlled Release</SelectItem>
-                              <SelectItem value="mixed_blend">Mixed Blend</SelectItem>
+                              <SelectItem value="organic_compost">
+                                Organic Compost
+                              </SelectItem>
+                              <SelectItem value="controlled_release">
+                                Controlled Release
+                              </SelectItem>
+                              <SelectItem value="mixed_blend">
+                                Mixed Blend
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
 
                         <div className="space-y-2">
                           <Label>Application Method *</Label>
-                          <Select value={carbonData.applicationMethod} onValueChange={(value) => setCarbonData(prev => ({ ...prev, applicationMethod: value }))}>
+                          <Select
+                            value={carbonData.applicationMethod}
+                            onValueChange={value =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                applicationMethod: value,
+                              }))
+                            }
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select method" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="broadcast">Broadcast</SelectItem>
+                              <SelectItem value="broadcast">
+                                Broadcast
+                              </SelectItem>
                               <SelectItem value="banded">Banded</SelectItem>
                               <SelectItem value="injected">Injected</SelectItem>
-                              <SelectItem value="fertigation">Fertigation</SelectItem>
-                              <SelectItem value="variable_rate">Variable Rate</SelectItem>
+                              <SelectItem value="fertigation">
+                                Fertigation
+                              </SelectItem>
+                              <SelectItem value="variable_rate">
+                                Variable Rate
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
 
                         <div className="space-y-2">
                           <Label>Soil Testing Frequency *</Label>
-                          <Select value={carbonData.soilTestingFrequency} onValueChange={(value) => setCarbonData(prev => ({ ...prev, soilTestingFrequency: value }))}>
+                          <Select
+                            value={carbonData.soilTestingFrequency}
+                            onValueChange={value =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                soilTestingFrequency: value,
+                              }))
+                            }
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select frequency" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="annual">Annual</SelectItem>
-                              <SelectItem value="biennial">Every 2 Years</SelectItem>
+                              <SelectItem value="biennial">
+                                Every 2 Years
+                              </SelectItem>
                               <SelectItem value="rarely">Rarely</SelectItem>
                               <SelectItem value="never">Never</SelectItem>
                             </SelectContent>
@@ -241,8 +348,10 @@ export default function ProducerCarbonCalculator() {
 
                     {/* Crop Protection */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-[#0F3A5C]">Crop Protection</h3>
-                      
+                      <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                        Crop Protection
+                      </h3>
+
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label>Herbicide Applications/Season *</Label>
@@ -250,7 +359,12 @@ export default function ProducerCarbonCalculator() {
                             type="number"
                             placeholder="e.g., 2"
                             value={carbonData.herbicideApplications}
-                            onChange={(e) => setCarbonData(prev => ({ ...prev, herbicideApplications: e.target.value }))}
+                            onChange={e =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                herbicideApplications: e.target.value,
+                              }))
+                            }
                             required
                           />
                         </div>
@@ -261,7 +375,12 @@ export default function ProducerCarbonCalculator() {
                             type="number"
                             placeholder="e.g., 1"
                             value={carbonData.pesticideApplications}
-                            onChange={(e) => setCarbonData(prev => ({ ...prev, pesticideApplications: e.target.value }))}
+                            onChange={e =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                pesticideApplications: e.target.value,
+                              }))
+                            }
                             required
                           />
                         </div>
@@ -272,7 +391,12 @@ export default function ProducerCarbonCalculator() {
                           <Checkbox
                             id="ipm"
                             checked={carbonData.integratedPestManagement}
-                            onCheckedChange={(checked) => setCarbonData(prev => ({ ...prev, integratedPestManagement: checked as boolean }))}
+                            onCheckedChange={checked =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                integratedPestManagement: checked as boolean,
+                              }))
+                            }
                           />
                           <Label htmlFor="ipm" className="cursor-pointer">
                             Integrated Pest Management (IPM) Certified
@@ -283,7 +407,12 @@ export default function ProducerCarbonCalculator() {
                           <Checkbox
                             id="organic"
                             checked={carbonData.organicCertified}
-                            onCheckedChange={(checked) => setCarbonData(prev => ({ ...prev, organicCertified: checked as boolean }))}
+                            onCheckedChange={checked =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                organicCertified: checked as boolean,
+                              }))
+                            }
                           />
                           <Label htmlFor="organic" className="cursor-pointer">
                             Organic Certified
@@ -294,8 +423,10 @@ export default function ProducerCarbonCalculator() {
 
                     {/* Machinery & Energy */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-[#0F3A5C]">Machinery & Energy</h3>
-                      
+                      <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                        Machinery & Energy
+                      </h3>
+
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label>Heavy Machinery Days/Year *</Label>
@@ -303,20 +434,35 @@ export default function ProducerCarbonCalculator() {
                             type="number"
                             placeholder="e.g., 30"
                             value={carbonData.heavyMachineryDays}
-                            onChange={(e) => setCarbonData(prev => ({ ...prev, heavyMachineryDays: e.target.value }))}
+                            onChange={e =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                heavyMachineryDays: e.target.value,
+                              }))
+                            }
                             required
                           />
                         </div>
 
                         <div className="space-y-2">
                           <Label>Primary Tractor Fuel Type *</Label>
-                          <Select value={carbonData.tractorFuelType} onValueChange={(value) => setCarbonData(prev => ({ ...prev, tractorFuelType: value }))}>
+                          <Select
+                            value={carbonData.tractorFuelType}
+                            onValueChange={value =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                tractorFuelType: value,
+                              }))
+                            }
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select fuel type" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="diesel">Diesel</SelectItem>
-                              <SelectItem value="biodiesel_blend">Biodiesel Blend</SelectItem>
+                              <SelectItem value="biodiesel_blend">
+                                Biodiesel Blend
+                              </SelectItem>
                               <SelectItem value="electric">Electric</SelectItem>
                               <SelectItem value="other">Other</SelectItem>
                             </SelectContent>
@@ -329,35 +475,62 @@ export default function ProducerCarbonCalculator() {
                             type="number"
                             placeholder="e.g., 8000"
                             value={carbonData.annualDieselLitres}
-                            onChange={(e) => setCarbonData(prev => ({ ...prev, annualDieselLitres: e.target.value }))}
+                            onChange={e =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                annualDieselLitres: e.target.value,
+                              }))
+                            }
                             required
                           />
                         </div>
 
                         <div className="space-y-2">
                           <Label>Harvester Type *</Label>
-                          <Select value={carbonData.harvesterType} onValueChange={(value) => setCarbonData(prev => ({ ...prev, harvesterType: value }))}>
+                          <Select
+                            value={carbonData.harvesterType}
+                            onValueChange={value =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                harvesterType: value,
+                              }))
+                            }
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select type" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="owned">Owned</SelectItem>
-                              <SelectItem value="contractor">Contractor</SelectItem>
+                              <SelectItem value="contractor">
+                                Contractor
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
 
                         <div className="space-y-2">
                           <Label>Irrigation Pump Energy Source *</Label>
-                          <Select value={carbonData.irrigationPumpEnergy} onValueChange={(value) => setCarbonData(prev => ({ ...prev, irrigationPumpEnergy: value }))}>
+                          <Select
+                            value={carbonData.irrigationPumpEnergy}
+                            onValueChange={value =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                irrigationPumpEnergy: value,
+                              }))
+                            }
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select source" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="grid">Grid Electricity</SelectItem>
+                              <SelectItem value="grid">
+                                Grid Electricity
+                              </SelectItem>
                               <SelectItem value="solar">Solar</SelectItem>
                               <SelectItem value="diesel">Diesel</SelectItem>
-                              <SelectItem value="none">No Irrigation</SelectItem>
+                              <SelectItem value="none">
+                                No Irrigation
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -366,36 +539,68 @@ export default function ProducerCarbonCalculator() {
 
                     {/* Land Use & Sequestration */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-[#0F3A5C]">Land Use & Sequestration</h3>
-                      
+                      <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                        Land Use & Sequestration
+                      </h3>
+
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label>Previous Land Use *</Label>
-                          <Select value={carbonData.previousLandUse} onValueChange={(value) => setCarbonData(prev => ({ ...prev, previousLandUse: value }))}>
+                          <Select
+                            value={carbonData.previousLandUse}
+                            onValueChange={value =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                previousLandUse: value,
+                              }))
+                            }
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select previous use" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="native_vegetation">Native Vegetation</SelectItem>
-                              <SelectItem value="improved_pasture">Improved Pasture</SelectItem>
-                              <SelectItem value="other_cropping">Other Cropping</SelectItem>
-                              <SelectItem value="plantation_forestry">Plantation Forestry</SelectItem>
-                              <SelectItem value="existing_crop_10plus">Existing Crop (10+ years)</SelectItem>
+                              <SelectItem value="native_vegetation">
+                                Native Vegetation
+                              </SelectItem>
+                              <SelectItem value="improved_pasture">
+                                Improved Pasture
+                              </SelectItem>
+                              <SelectItem value="other_cropping">
+                                Other Cropping
+                              </SelectItem>
+                              <SelectItem value="plantation_forestry">
+                                Plantation Forestry
+                              </SelectItem>
+                              <SelectItem value="existing_crop_10plus">
+                                Existing Crop (10+ years)
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
 
                         <div className="space-y-2">
                           <Label>Stubble Management *</Label>
-                          <Select value={carbonData.stubbleManagement} onValueChange={(value) => setCarbonData(prev => ({ ...prev, stubbleManagement: value }))}>
+                          <Select
+                            value={carbonData.stubbleManagement}
+                            onValueChange={value =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                stubbleManagement: value,
+                              }))
+                            }
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select method" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="retain">Retain on Field</SelectItem>
+                              <SelectItem value="retain">
+                                Retain on Field
+                              </SelectItem>
                               <SelectItem value="burn">Burn</SelectItem>
                               <SelectItem value="remove">Remove</SelectItem>
-                              <SelectItem value="incorporate">Incorporate</SelectItem>
+                              <SelectItem value="incorporate">
+                                Incorporate
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -406,7 +611,12 @@ export default function ProducerCarbonCalculator() {
                             type="number"
                             placeholder="e.g., 50"
                             value={carbonData.permanentVegetationHa}
-                            onChange={(e) => setCarbonData(prev => ({ ...prev, permanentVegetationHa: e.target.value }))}
+                            onChange={e =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                permanentVegetationHa: e.target.value,
+                              }))
+                            }
                           />
                         </div>
                       </div>
@@ -416,7 +626,12 @@ export default function ProducerCarbonCalculator() {
                           <Checkbox
                             id="coverCrop"
                             checked={carbonData.coverCropping}
-                            onCheckedChange={(checked) => setCarbonData(prev => ({ ...prev, coverCropping: checked as boolean }))}
+                            onCheckedChange={checked =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                coverCropping: checked as boolean,
+                              }))
+                            }
                           />
                           <Label htmlFor="coverCrop" className="cursor-pointer">
                             Cover Cropping Practiced
@@ -427,9 +642,17 @@ export default function ProducerCarbonCalculator() {
                           <Checkbox
                             id="carbonProject"
                             checked={carbonData.carbonProject}
-                            onCheckedChange={(checked) => setCarbonData(prev => ({ ...prev, carbonProject: checked as boolean }))}
+                            onCheckedChange={checked =>
+                              setCarbonData(prev => ({
+                                ...prev,
+                                carbonProject: checked as boolean,
+                              }))
+                            }
                           />
-                          <Label htmlFor="carbonProject" className="cursor-pointer">
+                          <Label
+                            htmlFor="carbonProject"
+                            className="cursor-pointer"
+                          >
                             Registered Carbon Project
                           </Label>
                         </div>
@@ -463,11 +686,15 @@ export default function ProducerCarbonCalculator() {
               <div className="sticky top-6">
                 <Card className="border-2 border-[#F4C430]">
                   <CardHeader className="bg-[#F4C430]/10">
-                    <CardTitle className="text-center text-[#0F3A5C]">Your ABFI Rating</CardTitle>
+                    <CardTitle className="text-center text-[#0F3A5C]">
+                      Your ABFI Rating
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="pt-6">
                     <div className="text-center">
-                      <div className={`mb-4 text-6xl font-bold ${carbonScore.color}`}>
+                      <div
+                        className={`mb-4 text-6xl font-bold ${carbonScore.color}`}
+                      >
                         {carbonScore.rating || "—"}
                       </div>
                       <p className="mb-6 text-sm text-gray-600">
@@ -489,7 +716,9 @@ export default function ProducerCarbonCalculator() {
                           )}
 
                           <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-left text-sm">
-                            <p className="mb-2 font-semibold text-[#0F3A5C]">Improvement Tips:</p>
+                            <p className="mb-2 font-semibold text-[#0F3A5C]">
+                              Improvement Tips:
+                            </p>
                             <ul className="space-y-1 text-gray-600">
                               {carbonData.tillagePractice !== "no_till" && (
                                 <li>• Consider no-till farming</li>

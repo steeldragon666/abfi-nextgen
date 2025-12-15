@@ -1,9 +1,11 @@
 # ABFI Platform Hardening TODO
+
 ## Bank-Grade, Regulator-Credible Market Infrastructure
 
 **Objective**: Transform ABFI into institutional-grade platform suitable for lenders, government agencies, and legal/audit review.
 
 **Quality Bar**: Every feature must answer:
+
 - What is this score based on?
 - Is it current?
 - What happens if something breaks?
@@ -14,6 +16,7 @@
 ## PHASE 1: Evidence Chain & Data Provenance
 
 ### Backend Schema
+
 - [x] Create `evidence` table (separate from documents)
   - id, type (lab_test, audit_report, registry_cert, contract, etc.)
   - file_hash (SHA-256), file_url, file_size, mime_type
@@ -38,6 +41,7 @@
   - Add `evidence_lineage` JSON to track version history
 
 ### Backend APIs
+
 - [x] POST /api/evidence/upload - Upload evidence with automatic hashing
 - [x] GET /api/evidence/:id - Retrieve evidence with linkages
 - [x] POST /api/evidence/:id/supersede - Mark evidence as superseded
@@ -46,6 +50,7 @@
 - [x] GET /api/certificates/:id/snapshot/:date - Retrieve historical snapshot
 
 ### Admin UI
+
 - [x] Evidence Management page
   - Upload interface with issuer selection
   - Evidence browser with filters (type, issuer, status, expiry)
@@ -58,6 +63,7 @@
   - Immutability indicator
 
 ### Score Linkage Logic
+
 - [ ] Update ABFI scoring to record evidence dependencies
 - [ ] Update Bankability scoring to record evidence dependencies
 - [ ] Implement evidence validation checks before score calculation
@@ -68,6 +74,7 @@
 ## PHASE 2: Temporal Versioning & Validity
 
 ### Backend Schema
+
 - [x] Add versioning fields to `feedstocks` table
   - version_number, valid_from, valid_to, superseded_by_id
   - is_current (boolean), version_reason (text)
@@ -89,6 +96,7 @@
   - reassessment_reason, is_current
 
 ### Backend APIs
+
 - [x] Add `as_of_date` parameter to all GET endpoints (via temporal.getAsOfDate)
 - [x] GET /api/feedstocks/:id/history - Get version history (via temporal.getHistory)
 - [x] GET /api/feedstocks/:id/as-of/:date - Get state at specific date (via temporal.getAsOfDate)
@@ -96,17 +104,20 @@
 - [x] GET /api/scores/:id/timeline - Get score changes over time (via temporal.getTimeline)
 
 ### Query Patterns
+
 - [x] Implement time-aware query helpers in temporal.ts
   - getEntityAsOfDate(entityType, id, date)
   - getEntityHistory(entityType, id)
   - getCurrentVersion(entityType, id)
 
 ### UI Components
+
 - [ ] VersionTimeline component - Show entity version history
 - [ ] AsOfDatePicker component - Select historical date for views
 - [ ] VersionComparison component - Compare two versions side-by-side
 
 ### UI Features
+
 - [ ] Add "View Historical" toggle to all entity detail pages
 - [ ] Add version history sidebar to feedstock pages
 - [ ] Add "as-of date" selector to lender portal
@@ -117,6 +128,7 @@
 ## PHASE 3: Physical Reality & Supply Risk
 
 ### Backend Schema
+
 - [x] Create `yield_estimates` table
   - feedstock_id, year, season
   - p50_yield, p75_yield, p90_yield (tonnes/hectare)
@@ -149,6 +161,7 @@
   - Add total_hectares, site_count
 
 ### Backend APIs
+
 - [x] POST /api/yield-estimates - Add yield estimate
 - [x] GET /api/feedstocks/:id/yield-confidence - Get P50/P75/P90 data
 - [x] POST /api/delivery-events - Record delivery event
@@ -158,12 +171,14 @@
 - [x] GET /api/feedstocks/:id/seasonality - Get availability by month
 
 ### Scoring Adjustments
+
 - [ ] Update Volume Security score to factor in P50/P75/P90
 - [ ] Add delivery performance penalty to Reliability score
 - [ ] Add seasonality risk adjustment to Bankability
 - [ ] Add climate exposure factor to Risk score
 
 ### Visualizations
+
 - [ ] YieldConfidenceBand component - Show P50/P75/P90 ranges
 - [ ] SeasonalityChart component - Monthly availability heatmap
 - [ ] DeliveryPerformanceChart component - Actual vs committed over time
@@ -174,6 +189,7 @@
 ## PHASE 4: ABFI Score Explainability
 
 ### Backend Schema
+
 - [x] Create `score_calculations` table
   - score_id, score_type (abfi, bankability, grower_qual)
   - calculation_timestamp, calculated_by_user_id
@@ -192,24 +208,28 @@
   - feasibility_score, estimated_timeline
 
 ### Backend APIs
+
 - [ ] GET /api/scores/:id/decomposition - Get full breakdown
 - [ ] GET /api/scores/:id/sensitivity - Get sensitivity analysis
 - [ ] POST /api/scores/:id/simulate-improvement - Run "what-if" scenario
 - [ ] GET /api/scores/:id/consistency-check - Check for contradictions
 
 ### Calculation Metadata Layer
+
 - [x] Store calculation metadata with every score
 - [x] Record which evidence influenced which score components
 - [x] Track admin overrides with justification
 - [x] Log calculation engine version used
 
 ### UI Components
+
 - [ ] ScoreDecomposition component - Input → Weight → Contribution table
 - [ ] TornadoChart component - Sensitivity visualization
 - [ ] ImprovementSimulator component - "What improves this score" tool
 - [ ] ScoreConsistencyAlerts component - Show contradictions
 
 ### Admin Features
+
 - [ ] Admin score override interface with mandatory justification
 - [ ] Score recalculation trigger with reason logging
 - [ ] Calculation audit trail viewer
@@ -219,6 +239,7 @@
 ## PHASE 5: Buyer Procurement & Scenario Tools
 
 ### Backend Schema
+
 - [ ] Create `rfq_bundles` table
   - buyer_id, bundle_name, status (draft, sent, closed)
   - required_feedstock_types (JSON array)
@@ -240,6 +261,7 @@
   - entity_id, notes, added_date
 
 ### Backend APIs
+
 - [ ] POST /api/rfq-bundles - Create RFQ bundle
 - [ ] POST /api/rfq-bundles/:id/send - Send to suppliers
 - [ ] GET /api/rfq-bundles/:id/responses - Get responses
@@ -249,6 +271,7 @@
 - [ ] GET /api/pricing/normalized - Get normalized pricing (AUD/GJ, AUD/t dry)
 
 ### Buyer UI Flows
+
 - [ ] RFQ Bundle Builder page
   - Multi-feedstock selector
   - Multi-supplier targeting
@@ -265,6 +288,7 @@
   - Notes and tags
 
 ### Pricing Normalization
+
 - [ ] Implement conversion logic (AUD/t → AUD/GJ based on energy content)
 - [ ] Add moisture content adjustment for dry weight pricing
 - [ ] Display normalized prices where data available
@@ -274,6 +298,7 @@
 ## PHASE 6: Bankability Stress-Testing
 
 ### Backend Schema
+
 - [x] Create `stress_scenarios` table
   - scenario_name, scenario_type (supplier_loss, region_shock, shortfall)
   - parameters (JSON - which supplier, what percentage loss, etc.)
@@ -294,12 +319,14 @@
   - overall_enforceability_score
 
 ### Backend APIs
+
 - [x] POST /api/stress-tests - Run stress test
 - [x] GET /api/stress-tests/:projectId/scenarios - List available scenarios
 - [x] GET /api/stress-tests/:id/results - Get detailed results
 - [x] POST /api/agreements/:id/enforceability-assessment - Score contract enforceability
 
 ### Scenario Engine
+
 - [x] Implement "loss of top supplier" scenario
 - [ ] Implement "regional event" scenario (all suppliers in region)
 - [x] Implement "supply shortfall" scenario (X% reduction)
@@ -307,6 +334,7 @@
 - [x] Calculate covenant breach impact
 
 ### Expanded Scoring Logic
+
 - [ ] Add contract enforceability to Bankability score (new component)
   - Governing law jurisdiction (10 points)
   - Termination protections (10 points)
@@ -315,6 +343,7 @@
   - Remedies (10 points)
 
 ### Visual Risk Outputs
+
 - [ ] StressTestResults component - Base vs stress comparison
 - [ ] CovenantBreachImpact component - Show which covenants fail
 - [ ] SupplierLossImpact component - Visualize concentration risk
@@ -325,6 +354,7 @@
 ## PHASE 7: Lender Portal (Institutional-Grade)
 
 ### Backend Schema
+
 - [x] Create `lender_access_grants` table (already exists as lenderAccess)
   - lender_user_id, project_id, access_level (read, monitor, alert)
   - granted_by, granted_date, expiry_date
@@ -342,6 +372,7 @@
   - status (draft, finalized, sent)
 
 ### Backend APIs
+
 - [x] GET /api/lender/projects - List accessible projects (via getDashboard)
 - [x] GET /api/lender/projects/:id/dashboard - Get monitoring dashboard data
 - [x] GET /api/lender/projects/:id/alerts - Get active alerts
@@ -351,6 +382,7 @@
 - [ ] GET /api/lender/evidence-pack/:projectId - Download evidence pack
 
 ### Portal UI Enhancements
+
 - [ ] Enhanced project dashboard with:
   - Covenant status traffic lights
   - Score trend charts (last 12 months)
@@ -368,6 +400,7 @@
   - Custom date range exports
 
 ### Reporting Engine
+
 - [ ] PDF report generator for monthly lender reports
   - Executive summary
   - Score changes narrative
@@ -381,6 +414,7 @@
   - Verification hashes
 
 ### Scheduled Jobs
+
 - [ ] Daily covenant check job
   - Check all active projects
   - Identify breaches
@@ -398,6 +432,7 @@
 ## PHASE 8: Audit, Legal & Compliance
 
 ### Backend Schema
+
 - [x] Create `audit_logs` table (append-only)
   - event_id (UUID), timestamp, user_id, user_role
   - action_type (create, update, delete, override, calculate, certify)
@@ -419,6 +454,7 @@
   - disclaimers (text), reliance_terms (text)
 
 ### Backend APIs
+
 - [x] GET /api/audit-logs - Query audit logs (admin only)
 - [x] POST /api/audit-logs/export - Export audit trail (CSV/JSON) (via queryAuditLogs)
 - [x] POST /api/admin/override - Record admin override with justification
@@ -426,6 +462,7 @@
 - [x] POST /api/certificates/:id/legal-metadata - Update legal metadata
 
 ### Audit Log Requirements
+
 - [x] Log all score calculations (via createAuditLog)
 - [x] Log all evidence uploads and changes (via createAuditLog)
 - [x] Log all certificate issuances (via createAuditLog)
@@ -434,6 +471,7 @@
 - [ ] Implement tamper-evident checksums for log batches
 
 ### Legal Text Templates
+
 - [ ] Certificate disclaimer (short form - on certificate)
 - [ ] Certificate disclaimer (long form - in documentation)
 - [ ] Lender report disclaimer
@@ -445,6 +483,7 @@
   - Dispute resolution
 
 ### Certificate Schema Updates
+
 - [ ] Add mandatory legal fields to certificate generation
 - [ ] Add QR code with certificate verification URL
 - [ ] Add version number and snapshot ID
@@ -452,6 +491,7 @@
 - [ ] Add governing law and jurisdiction
 
 ### Admin UI
+
 - [ ] Audit Log Viewer
   - Searchable and filterable
   - Export functionality
@@ -472,6 +512,7 @@
 ## PHASE 9: Platform Operations & Trust Signals
 
 ### Backend Schema
+
 - [ ] Create `system_health_metrics` table
   - metric_name, metric_value, timestamp
   - status (healthy, degraded, critical)
@@ -486,18 +527,21 @@
   - duration_ms, success (boolean), error_message
 
 ### Backend APIs
+
 - [ ] GET /api/system/health - System health check
 - [ ] GET /api/system/uptime - Uptime metrics
 - [ ] GET /api/system/data-freshness - Data freshness indicators
 - [ ] GET /api/system/jobs - Scheduled jobs status
 
 ### Monitoring Jobs
+
 - [ ] Uptime monitoring job (every 5 minutes)
 - [ ] Data freshness check job (daily)
 - [ ] Stale evidence detection job (daily)
 - [ ] Missing data alert job (daily)
 
 ### Ops Dashboards
+
 - [ ] System Health Dashboard (admin only)
   - Uptime percentage
   - API response times
@@ -511,6 +555,7 @@
   - Score recalculation queue
 
 ### Trust Signals (Public UI)
+
 - [ ] Add "Last Updated" timestamps to all data displays
 - [ ] Add "Data as of [date]" notices
 - [ ] Add "Next recalculation: [date]" notices
@@ -518,6 +563,7 @@
 - [ ] Add data freshness badges on entity cards
 
 ### Seed/Demo Data
+
 - [ ] Create seed script with representative scenarios:
   - Good case: High ABFI score, compliant covenants, fresh evidence
   - Average case: Medium scores, some warnings
@@ -529,6 +575,7 @@
 ## PHASE 10: Integration Testing & Quality Assurance
 
 ### Backend Tests
+
 - [ ] Unit tests for all new scoring logic
 - [ ] Integration tests for evidence chain
 - [ ] Integration tests for temporal versioning
@@ -538,6 +585,7 @@
 - [ ] Regression test suite
 
 ### Frontend Tests
+
 - [ ] Component tests for new UI components
 - [ ] E2E tests for critical user flows:
   - Supplier onboarding with evidence upload
@@ -546,17 +594,20 @@
   - Lender portal monitoring
 
 ### Data Integrity Tests
+
 - [ ] Test evidence hash verification
 - [ ] Test snapshot immutability
 - [ ] Test temporal query correctness
 - [ ] Test audit log completeness
 
 ### Performance Tests
+
 - [ ] Load test for concurrent users
 - [ ] Stress test for large datasets
 - [ ] Query performance optimization
 
 ### Security Tests
+
 - [ ] Role-based access control verification
 - [ ] Evidence file upload security
 - [ ] SQL injection prevention
@@ -567,6 +618,7 @@
 ## PHASE 11: Documentation & Delivery
 
 ### Technical Documentation
+
 - [ ] API documentation (OpenAPI/Swagger)
 - [ ] Database schema documentation (ERD)
 - [ ] Scoring methodology documentation
@@ -574,18 +626,21 @@
 - [ ] Temporal versioning guide
 
 ### User Documentation
+
 - [ ] Supplier onboarding guide
 - [ ] Buyer procurement guide
 - [ ] Admin assessment guide
 - [ ] Lender monitoring guide
 
 ### Compliance Documentation
+
 - [ ] Audit trail specification
 - [ ] Evidence retention policy
 - [ ] Data privacy policy (GDPR/Privacy Act compliance)
 - [ ] Security controls documentation
 
 ### Operational Runbooks
+
 - [ ] Certificate issuance procedure
 - [ ] Evidence verification procedure
 - [ ] Covenant breach response procedure
@@ -597,18 +652,21 @@
 ## Risk & Dependency Notes
 
 ### High-Risk Items
+
 1. **Evidence Chain Integrity**: Cryptographic hashing must be bulletproof
 2. **Temporal Versioning**: Query correctness is critical for legal defensibility
 3. **Audit Logs**: Append-only enforcement must be database-level
 4. **Certificate Snapshots**: Immutability must be cryptographically guaranteed
 
 ### External Dependencies
+
 1. PDF generation library for reports and certificates
 2. Cryptographic library for SHA-256 hashing
 3. Job scheduler for background tasks
 4. Email service for lender alerts
 
 ### Compliance Checkpoints
+
 - [ ] Legal review of all disclaimer text
 - [ ] Security audit of evidence upload flow
 - [ ] Penetration testing of lender portal

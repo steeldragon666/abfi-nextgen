@@ -1,9 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AUSTRALIAN_STATES, FEEDSTOCK_CATEGORIES, formatPrice, getScoreGrade } from "@/const";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  AUSTRALIAN_STATES,
+  FEEDSTOCK_CATEGORIES,
+  formatPrice,
+  getScoreGrade,
+} from "@/const";
 import { trpc } from "@/lib/trpc";
 import { Award, Filter, Leaf, List, MapIcon, MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -61,8 +78,11 @@ export default function MapView() {
 
     feedstocks.forEach(feedstock => {
       if (feedstock.latitude && feedstock.longitude) {
-        const position = { lat: parseFloat(feedstock.latitude), lng: parseFloat(feedstock.longitude) };
-        
+        const position = {
+          lat: parseFloat(feedstock.latitude),
+          lng: parseFloat(feedstock.longitude),
+        };
+
         const marker = new google.maps.Marker({
           position,
           map: mapRef.current!,
@@ -86,18 +106,23 @@ export default function MapView() {
                 <p style="font-size: 12px; color: #666; margin-bottom: 8px;">${feedstock.abfiId}</p>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
                   <span style="font-size: 12px;">ABFI Score:</span>
-                  <span style="font-weight: bold; color: ${getScoreColor(feedstock.abfiScore)}">${feedstock.abfiScore || 'N/A'}</span>
+                  <span style="font-weight: bold; color: ${getScoreColor(feedstock.abfiScore)}">${feedstock.abfiScore || "N/A"}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
                   <span style="font-size: 12px;">Available:</span>
                   <span style="font-weight: bold;">${feedstock.availableVolumeCurrent.toLocaleString()} tonnes</span>
                 </div>
-                ${feedstock.pricePerTonne && feedstock.priceVisibility === 'public' ? `
+                ${
+                  feedstock.pricePerTonne &&
+                  feedstock.priceVisibility === "public"
+                    ? `
                   <div style="display: flex; justify-between; margin-bottom: 8px;">
                     <span style="font-size: 12px;">Price:</span>
                     <span style="font-weight: bold;">${formatPrice(feedstock.pricePerTonne)}/tonne</span>
                   </div>
-                ` : ''}
+                `
+                    : ""
+                }
                 <a href="/inquiry/send?feedstockId=${feedstock.id}" style="display: inline-block; margin-top: 8px; padding: 6px 12px; background: #1B4332; color: white; text-decoration: none; border-radius: 4px; font-size: 12px;">Send Inquiry</a>
               </div>
             `);
@@ -166,7 +191,9 @@ export default function MapView() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">Feedstock Map</h1>
+          <h1 className="text-4xl font-bold text-primary mb-2">
+            Feedstock Map
+          </h1>
           <p className="text-gray-600">
             Explore verified biofuel feedstock sources across Australia
           </p>
@@ -188,7 +215,10 @@ export default function MapView() {
                   <Label className="mb-2 block">Feedstock Category</Label>
                   <div className="space-y-2">
                     {FEEDSTOCK_CATEGORIES.map(cat => (
-                      <label key={cat.value} className="flex items-center gap-2 cursor-pointer">
+                      <label
+                        key={cat.value}
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
                         <input
                           type="checkbox"
                           checked={selectedCategories.includes(cat.value)}
@@ -206,7 +236,10 @@ export default function MapView() {
                   <Label className="mb-2 block">State</Label>
                   <div className="space-y-2">
                     {AUSTRALIAN_STATES.map(state => (
-                      <label key={state.value} className="flex items-center gap-2 cursor-pointer">
+                      <label
+                        key={state.value}
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
                         <input
                           type="checkbox"
                           checked={selectedStates.includes(state.value)}
@@ -228,21 +261,31 @@ export default function MapView() {
                     min="0"
                     max="100"
                     placeholder="e.g., 70"
-                    value={minScore || ''}
-                    onChange={(e) => setMinScore(e.target.value ? Number(e.target.value) : undefined)}
+                    value={minScore || ""}
+                    onChange={e =>
+                      setMinScore(
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
                   />
                 </div>
 
                 {/* Carbon Intensity Filter */}
                 <div>
-                  <Label htmlFor="maxCarbon">Max Carbon Intensity (gCO2e/MJ)</Label>
+                  <Label htmlFor="maxCarbon">
+                    Max Carbon Intensity (gCO2e/MJ)
+                  </Label>
                   <Input
                     id="maxCarbon"
                     type="number"
                     min="0"
                     placeholder="e.g., 50"
-                    value={maxCarbon || ''}
-                    onChange={(e) => setMaxCarbon(e.target.value ? Number(e.target.value) : undefined)}
+                    value={maxCarbon || ""}
+                    onChange={e =>
+                      setMaxCarbon(
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
                   />
                 </div>
 
@@ -289,7 +332,9 @@ export default function MapView() {
           <div className="lg:col-span-3">
             <div className="mb-4 flex justify-between items-center">
               <p className="text-gray-600">
-                {isLoading ? 'Loading...' : `${feedstocks?.length || 0} feedstocks found`}
+                {isLoading
+                  ? "Loading..."
+                  : `${feedstocks?.length || 0} feedstocks found`}
               </p>
             </div>
 
@@ -326,10 +371,12 @@ export default function MapView() {
                     <div className="text-right">
                       <div className="flex items-center gap-1 text-primary font-bold text-xl">
                         <Award className="h-5 w-5" />
-                        {selectedFeedstock.abfiScore || 'N/A'}
+                        {selectedFeedstock.abfiScore || "N/A"}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {selectedFeedstock.abfiScore ? getScoreGrade(selectedFeedstock.abfiScore) : ''}
+                        {selectedFeedstock.abfiScore
+                          ? getScoreGrade(selectedFeedstock.abfiScore)
+                          : ""}
                       </div>
                     </div>
                   </div>
@@ -338,28 +385,43 @@ export default function MapView() {
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <div>
                       <p className="text-sm text-gray-600">Annual Capacity</p>
-                      <p className="font-medium">{selectedFeedstock.annualCapacityTonnes.toLocaleString()} tonnes</p>
+                      <p className="font-medium">
+                        {selectedFeedstock.annualCapacityTonnes.toLocaleString()}{" "}
+                        tonnes
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-600">Available Now</p>
-                      <p className="font-medium">{selectedFeedstock.availableVolumeCurrent.toLocaleString()} tonnes</p>
+                      <p className="font-medium">
+                        {selectedFeedstock.availableVolumeCurrent.toLocaleString()}{" "}
+                        tonnes
+                      </p>
                     </div>
-                    {selectedFeedstock.pricePerTonne && selectedFeedstock.priceVisibility === 'public' && (
-                      <div>
-                        <p className="text-sm text-gray-600">Price</p>
-                        <p className="font-medium">{formatPrice(selectedFeedstock.pricePerTonne)}/tonne</p>
-                      </div>
-                    )}
+                    {selectedFeedstock.pricePerTonne &&
+                      selectedFeedstock.priceVisibility === "public" && (
+                        <div>
+                          <p className="text-sm text-gray-600">Price</p>
+                          <p className="font-medium">
+                            {formatPrice(selectedFeedstock.pricePerTonne)}/tonne
+                          </p>
+                        </div>
+                      )}
                     {selectedFeedstock.carbonIntensityValue && (
                       <div>
-                        <p className="text-sm text-gray-600">Carbon Intensity</p>
-                        <p className="font-medium">{selectedFeedstock.carbonIntensityValue} gCO2e/MJ</p>
+                        <p className="text-sm text-gray-600">
+                          Carbon Intensity
+                        </p>
+                        <p className="font-medium">
+                          {selectedFeedstock.carbonIntensityValue} gCO2e/MJ
+                        </p>
                       </div>
                     )}
                   </div>
                   <div className="flex gap-2">
                     <Button className="flex-1">View Details</Button>
-                    <Link href={`/inquiry/send?feedstockId=${selectedFeedstock.id}`}>
+                    <Link
+                      href={`/inquiry/send?feedstockId=${selectedFeedstock.id}`}
+                    >
                       <Button variant="outline">Send Inquiry</Button>
                     </Link>
                   </div>

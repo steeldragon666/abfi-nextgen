@@ -21,10 +21,20 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Clock, PieChart, TreeDeciduous, FileText } from "lucide-react";
+import {
+  LayoutDashboard,
+  LogOut,
+  PanelLeft,
+  Users,
+  Shield,
+  Clock,
+  PieChart,
+  TreeDeciduous,
+  FileText,
+} from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
+import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
 import { Button } from "./ui/button";
 
 const menuItems = [
@@ -42,7 +52,11 @@ const buyerMenuItems = [
 ];
 
 const adminMenuItems = [
-  { icon: Shield, label: "Assessor Workflow", path: "/admin/assessor-workflow" },
+  {
+    icon: Shield,
+    label: "Assessor Workflow",
+    path: "/admin/assessor-workflow",
+  },
   { icon: Clock, label: "Monitoring Jobs", path: "/admin/monitoring-jobs" },
   { icon: Users, label: "User Management", path: "/admin/users" },
   { icon: PieChart, label: "Admin Dashboard", path: "/admin" },
@@ -69,7 +83,7 @@ export default function DashboardLayout({
   }, [sidebarWidth]);
 
   if (loading) {
-    return <DashboardLayoutSkeleton />
+    return <DashboardLayoutSkeleton />;
   }
 
   if (!user) {
@@ -81,7 +95,8 @@ export default function DashboardLayout({
               Sign in to continue
             </h1>
             <p className="text-sm text-muted-foreground text-center max-w-sm">
-              Access to this dashboard requires authentication. Continue to launch the login flow.
+              Access to this dashboard requires authentication. Continue to
+              launch the login flow.
             </p>
           </div>
           <Button
@@ -220,12 +235,14 @@ function DashboardLayoutContent({
             {/* Supplier Menu */}
             <div className="px-4 py-2 mt-4">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {!isCollapsed ? 'Supplier' : ''}
+                {!isCollapsed ? "Supplier" : ""}
               </p>
             </div>
             <SidebarMenu className="px-2 py-1">
               {supplierMenuItems.map(item => {
-                const isActive = location === item.path || location.startsWith(item.path + '/');
+                const isActive =
+                  location === item.path ||
+                  location.startsWith(item.path + "/");
                 return (
                   <SidebarMenuItem key={item.path}>
                     <SidebarMenuButton
@@ -247,12 +264,14 @@ function DashboardLayoutContent({
             {/* Buyer Menu */}
             <div className="px-4 py-2 mt-4">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {!isCollapsed ? 'Buyer' : ''}
+                {!isCollapsed ? "Buyer" : ""}
               </p>
             </div>
             <SidebarMenu className="px-2 py-1">
               {buyerMenuItems.map(item => {
-                const isActive = location === item.path || location.startsWith(item.path + '/');
+                const isActive =
+                  location === item.path ||
+                  location.startsWith(item.path + "/");
                 return (
                   <SidebarMenuItem key={item.path}>
                     <SidebarMenuButton
@@ -272,11 +291,11 @@ function DashboardLayoutContent({
             </SidebarMenu>
 
             {/* Admin Menu (only for admin users) */}
-            {user?.role === 'admin' && (
+            {user?.role === "admin" && (
               <>
                 <div className="px-4 py-2 mt-4">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    {!isCollapsed ? 'Admin' : ''}
+                    {!isCollapsed ? "Admin" : ""}
                   </p>
                 </div>
                 <SidebarMenu className="px-2 py-1">

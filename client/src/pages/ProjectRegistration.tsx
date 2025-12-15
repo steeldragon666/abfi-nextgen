@@ -1,5 +1,11 @@
 import { Link } from "wouter";
-import { ArrowRight, Sprout, DollarSign, CheckCircle, TrendingUp } from "lucide-react";
+import {
+  ArrowRight,
+  Sprout,
+  DollarSign,
+  CheckCircle,
+  TrendingUp,
+} from "lucide-react";
 
 export default function ProjectRegistration() {
   return (
@@ -31,20 +37,43 @@ export default function ProjectRegistration() {
           </h1>
 
           <p className="text-gray-400 text-lg max-w-2xl mx-auto font-light">
-            Connect with verified feedstock supply, gain industry recognition, and access financing pathways through Australia's premier bioenergy market platform.
+            Connect with verified feedstock supply, gain industry recognition,
+            and access financing pathways through Australia's premier bioenergy
+            market platform.
           </p>
         </header>
 
         {/* Benefits Bar */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
           {[
-            { icon: <Sprout className="w-6 h-6" />, title: "Feedstock Matching", desc: "Access verified supply projections" },
-            { icon: <DollarSign className="w-6 h-6" />, title: "Investor Visibility", desc: "Appear in deal flow for financiers" },
-            { icon: <CheckCircle className="w-6 h-6" />, title: "Credibility Signals", desc: "Verified milestones & approvals" },
-            { icon: <TrendingUp className="w-6 h-6" />, title: "Industry Recognition", desc: "Featured announcements & PR" }
+            {
+              icon: <Sprout className="w-6 h-6" />,
+              title: "Feedstock Matching",
+              desc: "Access verified supply projections",
+            },
+            {
+              icon: <DollarSign className="w-6 h-6" />,
+              title: "Investor Visibility",
+              desc: "Appear in deal flow for financiers",
+            },
+            {
+              icon: <CheckCircle className="w-6 h-6" />,
+              title: "Credibility Signals",
+              desc: "Verified milestones & approvals",
+            },
+            {
+              icon: <TrendingUp className="w-6 h-6" />,
+              title: "Industry Recognition",
+              desc: "Featured announcements & PR",
+            },
           ].map((benefit, idx) => (
-            <div key={idx} className="bg-[#111820] border border-[#c9a962]/15 rounded-xl p-5 text-center">
-              <div className="text-[#c9a962] mb-2 flex justify-center">{benefit.icon}</div>
+            <div
+              key={idx}
+              className="bg-[#111820] border border-[#c9a962]/15 rounded-xl p-5 text-center"
+            >
+              <div className="text-[#c9a962] mb-2 flex justify-center">
+                {benefit.icon}
+              </div>
               <h4 className="text-sm font-semibold mb-1">{benefit.title}</h4>
               <p className="text-xs text-gray-500 font-light">{benefit.desc}</p>
             </div>
@@ -63,13 +92,15 @@ export default function ProjectRegistration() {
               { num: 4, label: "Funding" },
               { num: 5, label: "Approvals" },
               { num: 6, label: "Verification" },
-              { num: 7, label: "Opportunities" }
-            ].map((step) => (
+              { num: 7, label: "Opportunities" },
+            ].map(step => (
               <div key={step.num} className="flex flex-col items-center">
                 <div className="w-9 h-9 rounded-full bg-[#1a222d] border-2 border-[#1a222d] flex items-center justify-center font-mono text-sm text-gray-500 mb-2">
                   {step.num}
                 </div>
-                <span className="text-[10px] uppercase tracking-wide text-gray-500 text-center">{step.label}</span>
+                <span className="text-[10px] uppercase tracking-wide text-gray-500 text-center">
+                  {step.label}
+                </span>
               </div>
             ))}
           </div>
@@ -78,9 +109,12 @@ export default function ProjectRegistration() {
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-sm mb-1">Comprehensive Project Profile</h4>
+                <h4 className="font-semibold text-sm mb-1">
+                  Comprehensive Project Profile
+                </h4>
                 <p className="text-sm text-gray-400 font-light">
-                  Provide detailed information about your bioenergy or biorefinery project across 7 key areas
+                  Provide detailed information about your bioenergy or
+                  biorefinery project across 7 key areas
                 </p>
               </div>
             </div>
@@ -88,9 +122,12 @@ export default function ProjectRegistration() {
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-sm mb-1">Third-Party Verification</h4>
+                <h4 className="font-semibold text-sm mb-1">
+                  Third-Party Verification
+                </h4>
                 <p className="text-sm text-gray-400 font-light">
-                  Upload supporting documents for independent verification of milestones and approvals
+                  Upload supporting documents for independent verification of
+                  milestones and approvals
                 </p>
               </div>
             </div>
@@ -98,9 +135,12 @@ export default function ProjectRegistration() {
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-sm mb-1">Automated Matching & Visibility</h4>
+                <h4 className="font-semibold text-sm mb-1">
+                  Automated Matching & Visibility
+                </h4>
                 <p className="text-sm text-gray-400 font-light">
-                  Get matched with suitable feedstock suppliers and appear in investor deal flow
+                  Get matched with suitable feedstock suppliers and appear in
+                  investor deal flow
                 </p>
               </div>
             </div>
@@ -117,7 +157,13 @@ export default function ProjectRegistration() {
           </Link>
 
           <p className="mt-4 text-sm text-gray-500">
-            Already started? <Link href="/project-registration/flow" className="text-[#c9a962] hover:underline">Continue registration</Link>
+            Already started?{" "}
+            <Link
+              href="/project-registration/flow"
+              className="text-[#c9a962] hover:underline"
+            >
+              Continue registration
+            </Link>
           </p>
         </div>
 
@@ -126,11 +172,19 @@ export default function ProjectRegistration() {
           <h3 className="font-semibold mb-2 text-sm">What You'll Need</h3>
           <ul className="text-sm text-gray-400 space-y-1 font-light">
             <li>• Project details (name, location, development stage)</li>
-            <li>• Technology specifications (conversion type, capacity, outputs)</li>
+            <li>
+              • Technology specifications (conversion type, capacity, outputs)
+            </li>
             <li>• Feedstock requirements (types, volumes, quality specs)</li>
-            <li>• Funding status (capital requirements, sources, investment stage)</li>
-            <li>• Regulatory approvals (environmental, planning, EPA licenses)</li>
-            <li>• Supporting documents for verification (optional but recommended)</li>
+            <li>
+              • Funding status (capital requirements, sources, investment stage)
+            </li>
+            <li>
+              • Regulatory approvals (environmental, planning, EPA licenses)
+            </li>
+            <li>
+              • Supporting documents for verification (optional but recommended)
+            </li>
           </ul>
         </div>
       </div>

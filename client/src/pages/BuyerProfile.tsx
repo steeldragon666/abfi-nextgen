@@ -1,9 +1,21 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AUSTRALIAN_STATES } from "@/const";
@@ -14,12 +26,11 @@ import { toast } from "sonner";
 
 export default function BuyerProfile() {
   const { user, loading: authLoading } = useAuth();
-  
-  const { data: buyer, isLoading } = trpc.buyers.get.useQuery(
-    undefined,
-    { enabled: !!user }
-  );
-  
+
+  const { data: buyer, isLoading } = trpc.buyers.get.useQuery(undefined, {
+    enabled: !!user,
+  });
+
   const updateMutation = trpc.buyers.update.useMutation({
     onSuccess: () => {
       toast.success("Profile updated successfully");
@@ -37,7 +48,16 @@ export default function BuyerProfile() {
     facilityAddress: "",
     facilityLatitude: "",
     facilityLongitude: "",
-    facilityState: "" as "NSW" | "VIC" | "QLD" | "SA" | "WA" | "TAS" | "NT" | "ACT" | "",
+    facilityState: "" as
+      | "NSW"
+      | "VIC"
+      | "QLD"
+      | "SA"
+      | "WA"
+      | "TAS"
+      | "NT"
+      | "ACT"
+      | "",
     description: "",
     website: "",
   });
@@ -61,7 +81,7 @@ export default function BuyerProfile() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     await updateMutation.mutateAsync({
       companyName: formData.companyName || undefined,
       contactEmail: formData.contactEmail || undefined,
@@ -135,7 +155,9 @@ export default function BuyerProfile() {
                   <Input
                     id="companyName"
                     value={formData.companyName}
-                    onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, companyName: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -145,7 +167,9 @@ export default function BuyerProfile() {
                     id="contactEmail"
                     type="email"
                     value={formData.contactEmail}
-                    onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, contactEmail: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -157,7 +181,9 @@ export default function BuyerProfile() {
                   <Input
                     id="contactPhone"
                     value={formData.contactPhone}
-                    onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, contactPhone: e.target.value })
+                    }
                   />
                 </div>
                 <div>
@@ -166,7 +192,9 @@ export default function BuyerProfile() {
                     id="website"
                     type="url"
                     value={formData.website}
-                    onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, website: e.target.value })
+                    }
                     placeholder="https://example.com"
                   />
                 </div>
@@ -174,8 +202,10 @@ export default function BuyerProfile() {
 
               {/* Facility Information */}
               <div className="border-t pt-6">
-                <h3 className="text-lg font-semibold mb-4">Facility Information</h3>
-                
+                <h3 className="text-lg font-semibold mb-4">
+                  Facility Information
+                </h3>
+
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -183,7 +213,12 @@ export default function BuyerProfile() {
                       <Input
                         id="facilityName"
                         value={formData.facilityName}
-                        onChange={(e) => setFormData({ ...formData, facilityName: e.target.value })}
+                        onChange={e =>
+                          setFormData({
+                            ...formData,
+                            facilityName: e.target.value,
+                          })
+                        }
                         placeholder="e.g., Biodiesel Production Plant"
                       />
                     </div>
@@ -191,13 +226,18 @@ export default function BuyerProfile() {
                       <Label htmlFor="facilityState">State</Label>
                       <Select
                         value={formData.facilityState}
-                        onValueChange={(value) => setFormData({ ...formData, facilityState: value as any })}
+                        onValueChange={value =>
+                          setFormData({
+                            ...formData,
+                            facilityState: value as any,
+                          })
+                        }
                       >
                         <SelectTrigger id="facilityState">
                           <SelectValue placeholder="Select state" />
                         </SelectTrigger>
                         <SelectContent>
-                          {AUSTRALIAN_STATES.map((state) => (
+                          {AUSTRALIAN_STATES.map(state => (
                             <SelectItem key={state.value} value={state.value}>
                               {state.label}
                             </SelectItem>
@@ -212,7 +252,12 @@ export default function BuyerProfile() {
                     <Input
                       id="facilityAddress"
                       value={formData.facilityAddress}
-                      onChange={(e) => setFormData({ ...formData, facilityAddress: e.target.value })}
+                      onChange={e =>
+                        setFormData({
+                          ...formData,
+                          facilityAddress: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
@@ -222,7 +267,12 @@ export default function BuyerProfile() {
                       <Input
                         id="facilityLatitude"
                         value={formData.facilityLatitude}
-                        onChange={(e) => setFormData({ ...formData, facilityLatitude: e.target.value })}
+                        onChange={e =>
+                          setFormData({
+                            ...formData,
+                            facilityLatitude: e.target.value,
+                          })
+                        }
                         placeholder="-33.8688"
                       />
                     </div>
@@ -231,7 +281,12 @@ export default function BuyerProfile() {
                       <Input
                         id="facilityLongitude"
                         value={formData.facilityLongitude}
-                        onChange={(e) => setFormData({ ...formData, facilityLongitude: e.target.value })}
+                        onChange={e =>
+                          setFormData({
+                            ...formData,
+                            facilityLongitude: e.target.value,
+                          })
+                        }
                         placeholder="151.2093"
                       />
                     </div>
@@ -245,7 +300,9 @@ export default function BuyerProfile() {
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={e =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   rows={4}
                   placeholder="Tell us about your company and procurement needs..."
                 />
@@ -253,7 +310,9 @@ export default function BuyerProfile() {
 
               {/* Submit Button */}
               <Button type="submit" disabled={updateMutation.isPending}>
-                {updateMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {updateMutation.isPending && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 Save Changes
               </Button>
             </form>

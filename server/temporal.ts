@@ -17,7 +17,11 @@ import {
  * Returns the version that was valid at that point in time
  */
 export async function getEntityAsOfDate(
-  entityType: "feedstock" | "certificate" | "supply_agreement" | "bankability_assessment",
+  entityType:
+    | "feedstock"
+    | "certificate"
+    | "supply_agreement"
+    | "bankability_assessment",
   entityId: number,
   asOfDate: Date
 ): Promise<any | null> {
@@ -35,10 +39,7 @@ export async function getEntityAsOfDate(
       and(
         eq(table.id, entityId),
         lte(table.validFrom, asOfDate),
-        or(
-          gte(table.validTo, asOfDate),
-          isNull(table.validTo)
-        )
+        or(gte(table.validTo, asOfDate), isNull(table.validTo))
       )
     )
     .limit(1);
@@ -50,7 +51,11 @@ export async function getEntityAsOfDate(
  * Get current version of entity
  */
 export async function getCurrentVersion(
-  entityType: "feedstock" | "certificate" | "supply_agreement" | "bankability_assessment",
+  entityType:
+    | "feedstock"
+    | "certificate"
+    | "supply_agreement"
+    | "bankability_assessment",
   entityId: number
 ): Promise<any | null> {
   const db = await getDb();
@@ -62,12 +67,7 @@ export async function getCurrentVersion(
   const results = await db
     .select()
     .from(table)
-    .where(
-      and(
-        eq(table.id, entityId),
-        eq(table.isCurrent, true)
-      )
-    )
+    .where(and(eq(table.id, entityId), eq(table.isCurrent, true)))
     .limit(1);
 
   return results[0] || null;
@@ -78,7 +78,11 @@ export async function getCurrentVersion(
  * Returns all versions ordered by version number
  */
 export async function getEntityHistory(
-  entityType: "feedstock" | "certificate" | "supply_agreement" | "bankability_assessment",
+  entityType:
+    | "feedstock"
+    | "certificate"
+    | "supply_agreement"
+    | "bankability_assessment",
   entityId: number
 ): Promise<any[]> {
   const db = await getDb();
@@ -102,7 +106,11 @@ export async function getEntityHistory(
  * Marks old version as superseded and creates new version
  */
 export async function createNewVersion(
-  entityType: "feedstock" | "certificate" | "supply_agreement" | "bankability_assessment",
+  entityType:
+    | "feedstock"
+    | "certificate"
+    | "supply_agreement"
+    | "bankability_assessment",
   oldEntityId: number,
   newEntityData: Record<string, any>,
   versionReason: string
@@ -122,7 +130,8 @@ export async function createNewVersion(
   }
 
   // Mark old version as superseded
-  await db.update(table)
+  await db
+    .update(table)
     .set({
       isCurrent: false,
       validTo: now,
@@ -145,7 +154,8 @@ export async function createNewVersion(
   const newVersionId = Number(result[0].insertId);
 
   // Update old version to point to new version
-  await db.update(table)
+  await db
+    .update(table)
     .set({ supersededById: newVersionId })
     .where(eq(table.id, oldEntityId));
 
@@ -157,24 +167,33 @@ export async function createNewVersion(
  * Returns summary of all versions with key changes
  */
 export async function getVersionTimeline(
-  entityType: "feedstock" | "certificate" | "supply_agreement" | "bankability_assessment",
+  entityType:
+    | "feedstock"
+    | "certificate"
+    | "supply_agreement"
+    | "bankability_assessment",
   entityId: number
-): Promise<Array<{
-  versionNumber: number;
-  validFrom: Date;
-  validTo: Date | null;
-  isCurrent: boolean;
-  reason: string | null;
-  supersededById: number | null;
-}>> {
+): Promise<
+  Array<{
+    versionNumber: number;
+    validFrom: Date;
+    validTo: Date | null;
+    isCurrent: boolean;
+    reason: string | null;
+    supersededById: number | null;
+  }>
+> {
   const history = await getEntityHistory(entityType, entityId);
 
-  return history.map((version) => ({
+  return history.map(version => ({
     versionNumber: version.versionNumber,
     validFrom: version.validFrom,
     validTo: version.validTo,
     isCurrent: version.isCurrent,
-    reason: version.versionReason || version.amendmentReason || version.reassessmentReason,
+    reason:
+      version.versionReason ||
+      version.amendmentReason ||
+      version.reassessmentReason,
     supersededById: version.supersededById,
   }));
 }
@@ -199,7 +218,10 @@ export function wasEntityValidAt(entity: any, date: Date): boolean {
 /**
  * Get validity period for entity
  */
-export function getValidityPeriod(entity: any): { from: Date; to: Date | null } {
+export function getValidityPeriod(entity: any): {
+  from: Date;
+  to: Date | null;
+} {
   return {
     from: new Date(entity.validFrom),
     to: entity.validTo ? new Date(entity.validTo) : null,
@@ -223,7 +245,10 @@ export function daysUntilExpiry(entity: any): number | null {
 /**
  * Check if entity is expiring soon
  */
-export function isExpiringSoon(entity: any, daysThreshold: number = 30): boolean {
+export function isExpiringSoon(
+  entity: any,
+  daysThreshold: number = 30
+): boolean {
   const days = daysUntilExpiry(entity);
   return days !== null && days > 0 && days <= daysThreshold;
 }
@@ -240,7 +265,11 @@ export function isExpired(entity: any): boolean {
  * Helper to get table reference for entity type
  */
 function getTableForEntityType(
-  entityType: "feedstock" | "certificate" | "supply_agreement" | "bankability_assessment"
+  entityType:
+    | "feedstock"
+    | "certificate"
+    | "supply_agreement"
+    | "bankability_assessment"
 ): any {
   switch (entityType) {
     case "feedstock":
@@ -259,11 +288,16 @@ function getTableForEntityType(
 /**
  * Compare two versions and return differences
  */
-export function compareVersions(oldVersion: any, newVersion: any): Record<string, { old: any; new: any }> {
+export function compareVersions(
+  oldVersion: any,
+  newVersion: any
+): Record<string, { old: any; new: any }> {
   const differences: Record<string, { old: any; new: any }> = {};
 
   // Get all keys from both versions
-  const allKeys = Array.from(new Set([...Object.keys(oldVersion), ...Object.keys(newVersion)]));
+  const allKeys = Array.from(
+    new Set([...Object.keys(oldVersion), ...Object.keys(newVersion)])
+  );
 
   // Exclude metadata fields
   const excludeKeys = [

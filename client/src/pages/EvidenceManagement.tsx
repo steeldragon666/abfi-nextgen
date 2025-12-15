@@ -1,14 +1,34 @@
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { trpc } from "@/lib/trpc";
-import { Upload, FileText, Shield, AlertCircle, CheckCircle, Clock, Search } from "lucide-react";
+import {
+  Upload,
+  FileText,
+  Shield,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  Search,
+} from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function EvidenceManagement() {
@@ -67,7 +87,9 @@ export default function EvidenceManagement() {
           <CardContent className="py-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="search" className="text-xs mb-2">Search</Label>
+                <Label htmlFor="search" className="text-xs mb-2">
+                  Search
+                </Label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -78,7 +100,9 @@ export default function EvidenceManagement() {
                 </div>
               </div>
               <div>
-                <Label htmlFor="filterType" className="text-xs mb-2">Evidence Type</Label>
+                <Label htmlFor="filterType" className="text-xs mb-2">
+                  Evidence Type
+                </Label>
                 <Select value={filterType} onValueChange={setFilterType}>
                   <SelectTrigger>
                     <SelectValue />
@@ -87,19 +111,31 @@ export default function EvidenceManagement() {
                     <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="lab_test">Lab Test</SelectItem>
                     <SelectItem value="audit_report">Audit Report</SelectItem>
-                    <SelectItem value="registry_cert">Registry Certificate</SelectItem>
+                    <SelectItem value="registry_cert">
+                      Registry Certificate
+                    </SelectItem>
                     <SelectItem value="contract">Contract</SelectItem>
-                    <SelectItem value="insurance_policy">Insurance Policy</SelectItem>
-                    <SelectItem value="financial_statement">Financial Statement</SelectItem>
+                    <SelectItem value="insurance_policy">
+                      Insurance Policy
+                    </SelectItem>
+                    <SelectItem value="financial_statement">
+                      Financial Statement
+                    </SelectItem>
                     <SelectItem value="land_title">Land Title</SelectItem>
-                    <SelectItem value="sustainability_cert">Sustainability Certificate</SelectItem>
+                    <SelectItem value="sustainability_cert">
+                      Sustainability Certificate
+                    </SelectItem>
                     <SelectItem value="quality_test">Quality Test</SelectItem>
-                    <SelectItem value="delivery_record">Delivery Record</SelectItem>
+                    <SelectItem value="delivery_record">
+                      Delivery Record
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label htmlFor="filterStatus" className="text-xs mb-2">Status</Label>
+                <Label htmlFor="filterStatus" className="text-xs mb-2">
+                  Status
+                </Label>
                 <Select value={filterStatus} onValueChange={setFilterStatus}>
                   <SelectTrigger>
                     <SelectValue />
@@ -110,7 +146,9 @@ export default function EvidenceManagement() {
                     <SelectItem value="expired">Expired</SelectItem>
                     <SelectItem value="revoked">Revoked</SelectItem>
                     <SelectItem value="superseded">Superseded</SelectItem>
-                    <SelectItem value="pending_verification">Pending Verification</SelectItem>
+                    <SelectItem value="pending_verification">
+                      Pending Verification
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -242,7 +280,10 @@ function EvidenceItem({
   };
 
   const getTypeLabel = (t: string) => {
-    return t.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+    return t
+      .split("_")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   return (
@@ -262,7 +303,10 @@ function EvidenceItem({
         </div>
         <div className="flex items-center gap-2">
           {verified && (
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+            <Badge
+              variant="outline"
+              className="bg-blue-50 text-blue-700 border-blue-200"
+            >
               <Shield className="h-3 w-3 mr-1" />
               Verified
             </Badge>
@@ -274,12 +318,16 @@ function EvidenceItem({
       <div className="grid grid-cols-3 gap-4 text-xs">
         <div>
           <div className="text-muted-foreground">Issued Date</div>
-          <div className="font-medium mt-0.5">{new Date(issuedDate).toLocaleDateString()}</div>
+          <div className="font-medium mt-0.5">
+            {new Date(issuedDate).toLocaleDateString()}
+          </div>
         </div>
         <div>
           <div className="text-muted-foreground">Expiry Date</div>
           <div className="font-medium mt-0.5">
-            {expiryDate ? new Date(expiryDate).toLocaleDateString() : "No expiry"}
+            {expiryDate
+              ? new Date(expiryDate).toLocaleDateString()
+              : "No expiry"}
           </div>
         </div>
         <div>
@@ -305,7 +353,8 @@ function UploadEvidenceDialog({ onClose }: UploadEvidenceDialogProps) {
         <CardHeader>
           <CardTitle>Upload Evidence</CardTitle>
           <CardDescription>
-            Upload a new evidence document with cryptographic integrity verification
+            Upload a new evidence document with cryptographic integrity
+            verification
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -313,7 +362,8 @@ function UploadEvidenceDialog({ onClose }: UploadEvidenceDialogProps) {
             <Label htmlFor="file">Evidence File *</Label>
             <Input id="file" type="file" />
             <p className="text-xs text-muted-foreground">
-              File will be automatically hashed (SHA-256) for integrity verification
+              File will be automatically hashed (SHA-256) for integrity
+              verification
             </p>
           </div>
 
@@ -327,14 +377,24 @@ function UploadEvidenceDialog({ onClose }: UploadEvidenceDialogProps) {
                 <SelectContent>
                   <SelectItem value="lab_test">Lab Test</SelectItem>
                   <SelectItem value="audit_report">Audit Report</SelectItem>
-                  <SelectItem value="registry_cert">Registry Certificate</SelectItem>
+                  <SelectItem value="registry_cert">
+                    Registry Certificate
+                  </SelectItem>
                   <SelectItem value="contract">Contract</SelectItem>
-                  <SelectItem value="insurance_policy">Insurance Policy</SelectItem>
-                  <SelectItem value="financial_statement">Financial Statement</SelectItem>
+                  <SelectItem value="insurance_policy">
+                    Insurance Policy
+                  </SelectItem>
+                  <SelectItem value="financial_statement">
+                    Financial Statement
+                  </SelectItem>
                   <SelectItem value="land_title">Land Title</SelectItem>
-                  <SelectItem value="sustainability_cert">Sustainability Certificate</SelectItem>
+                  <SelectItem value="sustainability_cert">
+                    Sustainability Certificate
+                  </SelectItem>
                   <SelectItem value="quality_test">Quality Test</SelectItem>
-                  <SelectItem value="delivery_record">Delivery Record</SelectItem>
+                  <SelectItem value="delivery_record">
+                    Delivery Record
+                  </SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
@@ -353,7 +413,9 @@ function UploadEvidenceDialog({ onClose }: UploadEvidenceDialogProps) {
                   <SelectItem value="counterparty">Counterparty</SelectItem>
                   <SelectItem value="supplier">Supplier</SelectItem>
                   <SelectItem value="government">Government Agency</SelectItem>
-                  <SelectItem value="certification_body">Certification Body</SelectItem>
+                  <SelectItem value="certification_body">
+                    Certification Body
+                  </SelectItem>
                   <SelectItem value="self_declared">Self-Declared</SelectItem>
                 </SelectContent>
               </Select>
@@ -366,8 +428,13 @@ function UploadEvidenceDialog({ onClose }: UploadEvidenceDialogProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="issuerCredentials">Issuer Credentials (Optional)</Label>
-            <Input id="issuerCredentials" placeholder="e.g., NATA Accreditation #12345" />
+            <Label htmlFor="issuerCredentials">
+              Issuer Credentials (Optional)
+            </Label>
+            <Input
+              id="issuerCredentials"
+              placeholder="e.g., NATA Accreditation #12345"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -386,7 +453,7 @@ function UploadEvidenceDialog({ onClose }: UploadEvidenceDialogProps) {
             <Label htmlFor="metadata">Additional Metadata (Optional)</Label>
             <Textarea
               id="metadata"
-              placeholder="JSON format: { &quot;testMethod&quot;: &quot;ASTM D2974&quot;, &quot;sampleId&quot;: &quot;S-2024-001&quot; }"
+              placeholder='JSON format: { "testMethod": "ASTM D2974", "sampleId": "S-2024-001" }'
               rows={3}
             />
           </div>

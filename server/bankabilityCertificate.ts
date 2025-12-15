@@ -3,7 +3,11 @@
  * Generates PDF certificates for approved bankability assessments
  */
 
-import { generateABFICertificate, generateCertificateHash, type CertificateData } from './certificateGenerator';
+import {
+  generateABFICertificate,
+  generateCertificateHash,
+  type CertificateData,
+} from "./certificateGenerator";
 
 export interface BankabilityAssessmentData {
   assessmentId: number;
@@ -23,16 +27,18 @@ export interface BankabilityAssessmentData {
   approvedDate?: Date;
 }
 
-export async function generateBankabilityCertificate(data: BankabilityAssessmentData): Promise<Buffer> {
+export async function generateBankabilityCertificate(
+  data: BankabilityAssessmentData
+): Promise<Buffer> {
   // Convert bankability assessment data to certificate format
   const certificateData: CertificateData = {
     feedstockId: data.assessmentId,
     feedstockName: data.feedstockType,
-    feedstockCategory: 'Bankability Assessment',
+    feedstockCategory: "Bankability Assessment",
     supplierName: data.projectName,
-    supplierABN: '00000000000', // Not applicable for bankability
+    supplierABN: "00000000000", // Not applicable for bankability
     location: data.projectLocation,
-    state: 'QLD', // Default, should be extracted from location
+    state: "QLD", // Default, should be extracted from location
     abfiScore: data.compositeScore,
     sustainabilityScore: data.compositeScore,
     carbonIntensityScore: data.concentrationRiskScore,
@@ -41,11 +47,13 @@ export async function generateBankabilityCertificate(data: BankabilityAssessment
     ratingGrade: data.rating,
     certificateNumber: `BANK-${data.assessmentId}-${Date.now()}`,
     issueDate: data.assessmentDate.toISOString(),
-    validUntil: new Date(data.assessmentDate.getTime() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+    validUntil: new Date(
+      data.assessmentDate.getTime() + 365 * 24 * 60 * 60 * 1000
+    ).toISOString(),
     assessmentDate: data.assessmentDate.toISOString(),
     carbonIntensity: 0,
     annualVolume: data.annualVolume,
-    certifications: ['ABFI Bankability Assessment'],
+    certifications: ["ABFI Bankability Assessment"],
   };
 
   // Generate certificate hash
@@ -61,11 +69,11 @@ export async function generateBankabilityCertificate(data: BankabilityAssessment
 }
 
 export function getBankabilityRating(compositeScore: number): string {
-  if (compositeScore >= 90) return 'AAA';
-  if (compositeScore >= 85) return 'AA';
-  if (compositeScore >= 80) return 'A';
-  if (compositeScore >= 75) return 'BBB';
-  if (compositeScore >= 70) return 'BB';
-  if (compositeScore >= 65) return 'B';
-  return 'CCC';
+  if (compositeScore >= 90) return "AAA";
+  if (compositeScore >= 85) return "AA";
+  if (compositeScore >= 80) return "A";
+  if (compositeScore >= 75) return "BBB";
+  if (compositeScore >= 70) return "BB";
+  if (compositeScore >= 65) return "B";
+  return "CCC";
 }

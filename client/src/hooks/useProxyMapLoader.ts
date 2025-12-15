@@ -26,7 +26,7 @@ let loadError: Error | null = null;
 const callbacks: Array<(loaded: boolean, error: Error | null) => void> = [];
 
 function notifyCallbacks(loaded: boolean, error: Error | null) {
-  callbacks.forEach((cb) => cb(loaded, error));
+  callbacks.forEach(cb => cb(loaded, error));
   callbacks.length = 0;
 }
 
@@ -48,7 +48,9 @@ function loadMapScript(): Promise<void> {
     }
 
     if (!API_KEY) {
-      const error = new Error("No Google Maps API key configured. Set VITE_FRONTEND_FORGE_API_KEY or VITE_GOOGLE_MAPS_API_KEY.");
+      const error = new Error(
+        "No Google Maps API key configured. Set VITE_FRONTEND_FORGE_API_KEY or VITE_GOOGLE_MAPS_API_KEY."
+      );
       loadError = error;
       reject(error);
       return;
@@ -77,7 +79,9 @@ function loadMapScript(): Promise<void> {
     script.onerror = () => {
       isLoading = false;
       isLoaded = false;
-      loadError = new Error(`Failed to load Google Maps script${USE_PROXY ? " via proxy" : ""}`);
+      loadError = new Error(
+        `Failed to load Google Maps script${USE_PROXY ? " via proxy" : ""}`
+      );
       notifyCallbacks(false, loadError);
       reject(loadError);
     };
@@ -117,7 +121,7 @@ export function useProxyMapLoader(): UseProxyMapLoaderResult {
           setState({ isLoaded: true, loadError: null });
         }
       })
-      .catch((error) => {
+      .catch(error => {
         if (mountedRef.current) {
           setState({ isLoaded: false, loadError: error });
         }

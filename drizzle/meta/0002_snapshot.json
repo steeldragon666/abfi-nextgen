@@ -75,24 +75,17 @@
       "indexes": {
         "auditLogs_userId_idx": {
           "name": "auditLogs_userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         },
         "auditLogs_entity_idx": {
           "name": "auditLogs_entity_idx",
-          "columns": [
-            "entityType",
-            "entityId"
-          ],
+          "columns": ["entityType", "entityId"],
           "isUnique": false
         },
         "auditLogs_createdAt_idx": {
           "name": "auditLogs_createdAt_idx",
-          "columns": [
-            "createdAt"
-          ],
+          "columns": ["createdAt"],
           "isUnique": false
         }
       },
@@ -101,12 +94,8 @@
           "name": "auditLogs_userId_users_id_fk",
           "tableFrom": "auditLogs",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -114,9 +103,7 @@
       "compositePrimaryKeys": {
         "auditLogs_id": {
           "name": "auditLogs_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -245,9 +232,7 @@
       "indexes": {
         "buyers_userId_idx": {
           "name": "buyers_userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -256,12 +241,8 @@
           "name": "buyers_userId_users_id_fk",
           "tableFrom": "buyers",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -269,17 +250,13 @@
       "compositePrimaryKeys": {
         "buyers_id": {
           "name": "buyers_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "buyers_abn_unique": {
           "name": "buyers_abn_unique",
-          "columns": [
-            "abn"
-          ]
+          "columns": ["abn"]
         }
       },
       "checkConstraint": {}
@@ -393,16 +370,12 @@
       "indexes": {
         "certificates_feedstockId_idx": {
           "name": "certificates_feedstockId_idx",
-          "columns": [
-            "feedstockId"
-          ],
+          "columns": ["feedstockId"],
           "isUnique": false
         },
         "certificates_expiryDate_idx": {
           "name": "certificates_expiryDate_idx",
-          "columns": [
-            "expiryDate"
-          ],
+          "columns": ["expiryDate"],
           "isUnique": false
         }
       },
@@ -411,12 +384,8 @@
           "name": "certificates_feedstockId_feedstocks_id_fk",
           "tableFrom": "certificates",
           "tableTo": "feedstocks",
-          "columnsFrom": [
-            "feedstockId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["feedstockId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -424,12 +393,8 @@
           "name": "certificates_verifiedBy_users_id_fk",
           "tableFrom": "certificates",
           "tableTo": "users",
-          "columnsFrom": [
-            "verifiedBy"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["verifiedBy"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -437,9 +402,7 @@
       "compositePrimaryKeys": {
         "certificates_id": {
           "name": "certificates_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -682,37 +645,27 @@
       "indexes": {
         "feedstocks_supplierId_idx": {
           "name": "feedstocks_supplierId_idx",
-          "columns": [
-            "supplierId"
-          ],
+          "columns": ["supplierId"],
           "isUnique": false
         },
         "feedstocks_category_idx": {
           "name": "feedstocks_category_idx",
-          "columns": [
-            "category"
-          ],
+          "columns": ["category"],
           "isUnique": false
         },
         "feedstocks_state_idx": {
           "name": "feedstocks_state_idx",
-          "columns": [
-            "state"
-          ],
+          "columns": ["state"],
           "isUnique": false
         },
         "feedstocks_status_idx": {
           "name": "feedstocks_status_idx",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         },
         "feedstocks_abfiScore_idx": {
           "name": "feedstocks_abfiScore_idx",
-          "columns": [
-            "abfiScore"
-          ],
+          "columns": ["abfiScore"],
           "isUnique": false
         }
       },
@@ -721,12 +674,8 @@
           "name": "feedstocks_supplierId_suppliers_id_fk",
           "tableFrom": "feedstocks",
           "tableTo": "suppliers",
-          "columnsFrom": [
-            "supplierId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["supplierId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -734,12 +683,8 @@
           "name": "feedstocks_verifiedBy_users_id_fk",
           "tableFrom": "feedstocks",
           "tableTo": "users",
-          "columnsFrom": [
-            "verifiedBy"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["verifiedBy"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -747,17 +692,13 @@
       "compositePrimaryKeys": {
         "feedstocks_id": {
           "name": "feedstocks_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "feedstocks_abfiId_unique": {
           "name": "feedstocks_abfiId_unique",
-          "columns": [
-            "abfiId"
-          ]
+          "columns": ["abfiId"]
         }
       },
       "checkConstraint": {}
@@ -885,30 +826,22 @@
       "indexes": {
         "inquiries_buyerId_idx": {
           "name": "inquiries_buyerId_idx",
-          "columns": [
-            "buyerId"
-          ],
+          "columns": ["buyerId"],
           "isUnique": false
         },
         "inquiries_supplierId_idx": {
           "name": "inquiries_supplierId_idx",
-          "columns": [
-            "supplierId"
-          ],
+          "columns": ["supplierId"],
           "isUnique": false
         },
         "inquiries_feedstockId_idx": {
           "name": "inquiries_feedstockId_idx",
-          "columns": [
-            "feedstockId"
-          ],
+          "columns": ["feedstockId"],
           "isUnique": false
         },
         "inquiries_status_idx": {
           "name": "inquiries_status_idx",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         }
       },
@@ -917,12 +850,8 @@
           "name": "inquiries_buyerId_buyers_id_fk",
           "tableFrom": "inquiries",
           "tableTo": "buyers",
-          "columnsFrom": [
-            "buyerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["buyerId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -930,12 +859,8 @@
           "name": "inquiries_supplierId_suppliers_id_fk",
           "tableFrom": "inquiries",
           "tableTo": "suppliers",
-          "columnsFrom": [
-            "supplierId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["supplierId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -943,12 +868,8 @@
           "name": "inquiries_feedstockId_feedstocks_id_fk",
           "tableFrom": "inquiries",
           "tableTo": "feedstocks",
-          "columnsFrom": [
-            "feedstockId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["feedstockId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -956,9 +877,7 @@
       "compositePrimaryKeys": {
         "inquiries_id": {
           "name": "inquiries_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -1058,23 +977,17 @@
       "indexes": {
         "notifications_userId_idx": {
           "name": "notifications_userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         },
         "notifications_read_idx": {
           "name": "notifications_read_idx",
-          "columns": [
-            "read"
-          ],
+          "columns": ["read"],
           "isUnique": false
         },
         "notifications_createdAt_idx": {
           "name": "notifications_createdAt_idx",
-          "columns": [
-            "createdAt"
-          ],
+          "columns": ["createdAt"],
           "isUnique": false
         }
       },
@@ -1083,12 +996,8 @@
           "name": "notifications_userId_users_id_fk",
           "tableFrom": "notifications",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1096,9 +1005,7 @@
       "compositePrimaryKeys": {
         "notifications_id": {
           "name": "notifications_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -1192,16 +1099,12 @@
       "indexes": {
         "qualityTests_feedstockId_idx": {
           "name": "qualityTests_feedstockId_idx",
-          "columns": [
-            "feedstockId"
-          ],
+          "columns": ["feedstockId"],
           "isUnique": false
         },
         "qualityTests_testDate_idx": {
           "name": "qualityTests_testDate_idx",
-          "columns": [
-            "testDate"
-          ],
+          "columns": ["testDate"],
           "isUnique": false
         }
       },
@@ -1210,12 +1113,8 @@
           "name": "qualityTests_feedstockId_feedstocks_id_fk",
           "tableFrom": "qualityTests",
           "tableTo": "feedstocks",
-          "columnsFrom": [
-            "feedstockId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["feedstockId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1223,9 +1122,7 @@
       "compositePrimaryKeys": {
         "qualityTests_id": {
           "name": "qualityTests_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -1291,9 +1188,7 @@
       "indexes": {
         "savedSearches_buyerId_idx": {
           "name": "savedSearches_buyerId_idx",
-          "columns": [
-            "buyerId"
-          ],
+          "columns": ["buyerId"],
           "isUnique": false
         }
       },
@@ -1302,12 +1197,8 @@
           "name": "savedSearches_buyerId_buyers_id_fk",
           "tableFrom": "savedSearches",
           "tableTo": "buyers",
-          "columnsFrom": [
-            "buyerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["buyerId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1315,9 +1206,7 @@
       "compositePrimaryKeys": {
         "savedSearches_id": {
           "name": "savedSearches_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -1476,9 +1365,7 @@
       "indexes": {
         "suppliers_userId_idx": {
           "name": "suppliers_userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -1487,12 +1374,8 @@
           "name": "suppliers_userId_users_id_fk",
           "tableFrom": "suppliers",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1500,17 +1383,13 @@
       "compositePrimaryKeys": {
         "suppliers_id": {
           "name": "suppliers_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "suppliers_abn_unique": {
           "name": "suppliers_abn_unique",
-          "columns": [
-            "abn"
-          ]
+          "columns": ["abn"]
         }
       },
       "checkConstraint": {}
@@ -1666,30 +1545,22 @@
       "indexes": {
         "transactions_feedstockId_idx": {
           "name": "transactions_feedstockId_idx",
-          "columns": [
-            "feedstockId"
-          ],
+          "columns": ["feedstockId"],
           "isUnique": false
         },
         "transactions_supplierId_idx": {
           "name": "transactions_supplierId_idx",
-          "columns": [
-            "supplierId"
-          ],
+          "columns": ["supplierId"],
           "isUnique": false
         },
         "transactions_buyerId_idx": {
           "name": "transactions_buyerId_idx",
-          "columns": [
-            "buyerId"
-          ],
+          "columns": ["buyerId"],
           "isUnique": false
         },
         "transactions_status_idx": {
           "name": "transactions_status_idx",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         }
       },
@@ -1698,12 +1569,8 @@
           "name": "transactions_feedstockId_feedstocks_id_fk",
           "tableFrom": "transactions",
           "tableTo": "feedstocks",
-          "columnsFrom": [
-            "feedstockId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["feedstockId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1711,12 +1578,8 @@
           "name": "transactions_supplierId_suppliers_id_fk",
           "tableFrom": "transactions",
           "tableTo": "suppliers",
-          "columnsFrom": [
-            "supplierId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["supplierId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1724,12 +1587,8 @@
           "name": "transactions_buyerId_buyers_id_fk",
           "tableFrom": "transactions",
           "tableTo": "buyers",
-          "columnsFrom": [
-            "buyerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["buyerId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1737,12 +1596,8 @@
           "name": "transactions_inquiryId_inquiries_id_fk",
           "tableFrom": "transactions",
           "tableTo": "inquiries",
-          "columnsFrom": [
-            "inquiryId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["inquiryId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1750,12 +1605,8 @@
           "name": "transactions_qualityReceiptId_qualityTests_id_fk",
           "tableFrom": "transactions",
           "tableTo": "qualityTests",
-          "columnsFrom": [
-            "qualityReceiptId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["qualityReceiptId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1763,9 +1614,7 @@
       "compositePrimaryKeys": {
         "transactions_id": {
           "name": "transactions_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -1848,17 +1697,13 @@
       "compositePrimaryKeys": {
         "users_id": {
           "name": "users_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "users_openId_unique": {
           "name": "users_openId_unique",
-          "columns": [
-            "openId"
-          ]
+          "columns": ["openId"]
         }
       },
       "checkConstraint": {}

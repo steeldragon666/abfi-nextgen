@@ -12,13 +12,13 @@ console.log("🌱 Starting ABFI seed data generation...\n");
 
 async function seed() {
   const db = await getDb();
-  
+
   try {
     // Clean up any existing seed data
     console.log("Cleaning up existing seed data...");
     await db.delete(users).where(like(users.openId, "seed-%"));
     console.log("✅ Cleanup complete\n");
-    
+
     // Create supplier users
     console.log("Creating supplier users...");
     const supplierUsers = await Promise.all([
@@ -83,8 +83,14 @@ async function seed() {
 
     // Get inserted user IDs
     const [supplierIds, buyerIds] = await Promise.all([
-      db.select({ id: users.id }).from(users).where(like(users.openId, "seed-supplier-%")),
-      db.select({ id: users.id }).from(users).where(like(users.openId, "seed-buyer-%")),
+      db
+        .select({ id: users.id })
+        .from(users)
+        .where(like(users.openId, "seed-supplier-%")),
+      db
+        .select({ id: users.id })
+        .from(users)
+        .where(like(users.openId, "seed-buyer-%")),
     ]);
 
     // Create suppliers
@@ -104,7 +110,8 @@ async function seed() {
         longitude: "149.1858",
         verificationStatus: "verified",
         subscriptionTier: "professional",
-        description: "Leading sugar producer in Queensland with extensive cane crushing operations and bagasse co-generation facilities.",
+        description:
+          "Leading sugar producer in Queensland with extensive cane crushing operations and bagasse co-generation facilities.",
         website: "https://www.mackaysugar.com.au",
       }),
       db.insert(suppliers).values({
@@ -121,7 +128,8 @@ async function seed() {
         longitude: "147.1000",
         verificationStatus: "verified",
         subscriptionTier: "enterprise",
-        description: "Major integrated sugar and renewable energy producer with multiple mills across Queensland.",
+        description:
+          "Major integrated sugar and renewable energy producer with multiple mills across Queensland.",
         website: "https://www.wilmarsugar.com.au",
       }),
       db.insert(suppliers).values({
@@ -138,7 +146,8 @@ async function seed() {
         longitude: "151.2093",
         verificationStatus: "verified",
         subscriptionTier: "professional",
-        description: "Australia's largest grain handler with extensive wheat straw and stubble resources across NSW and Victoria.",
+        description:
+          "Australia's largest grain handler with extensive wheat straw and stubble resources across NSW and Victoria.",
         website: "https://www.graincorp.com.au",
       }),
       db.insert(suppliers).values({
@@ -155,7 +164,8 @@ async function seed() {
         longitude: "147.0667",
         verificationStatus: "verified",
         subscriptionTier: "starter",
-        description: "Sustainable forestry operations providing sawmill residues and wood chips for bioenergy applications.",
+        description:
+          "Sustainable forestry operations providing sawmill residues and wood chips for bioenergy applications.",
         website: "https://www.aptimber.com.au",
       }),
       db.insert(suppliers).values({
@@ -172,7 +182,8 @@ async function seed() {
         longitude: "147.3598",
         verificationStatus: "pending",
         subscriptionTier: "starter",
-        description: "Regional biogas facility processing agricultural waste and organic materials from Riverina farms.",
+        description:
+          "Regional biogas facility processing agricultural waste and organic materials from Riverina farms.",
         website: "https://www.riverbio.com.au",
       }),
     ]);
@@ -193,7 +204,8 @@ async function seed() {
         state: "VIC",
         postcode: "3008",
         verificationStatus: "verified",
-        description: "Major fuel distributor seeking sustainable biofuel feedstocks for renewable diesel production.",
+        description:
+          "Major fuel distributor seeking sustainable biofuel feedstocks for renewable diesel production.",
         website: "https://www.vivaenergy.com.au",
       }),
       db.insert(buyers).values({
@@ -207,7 +219,8 @@ async function seed() {
         state: "NSW",
         postcode: "2000",
         verificationStatus: "verified",
-        description: "Leading energy retailer investing in biomass power generation and renewable energy projects.",
+        description:
+          "Leading energy retailer investing in biomass power generation and renewable energy projects.",
         website: "https://www.originenergy.com.au",
       }),
       db.insert(buyers).values({
@@ -221,7 +234,8 @@ async function seed() {
         state: "NSW",
         postcode: "2000",
         verificationStatus: "verified",
-        description: "Australia's largest electricity generator exploring biomass co-firing opportunities.",
+        description:
+          "Australia's largest electricity generator exploring biomass co-firing opportunities.",
         website: "https://www.agl.com.au",
       }),
     ]);
@@ -229,16 +243,28 @@ async function seed() {
     console.log("✅ Created 3 buyers\n");
 
     // Get supplier IDs for feedstock creation
-    const supplierRecords = await db.select({ id: suppliers.id, companyName: suppliers.companyName }).from(suppliers);
+    const supplierRecords = await db
+      .select({ id: suppliers.id, companyName: suppliers.companyName })
+      .from(suppliers);
 
     // Create feedstocks with ABFI ratings
     console.log("Creating feedstocks with ABFI ratings...");
-    
-    const mackayId = supplierRecords.find(s => s.companyName === "Mackay Sugar Limited")?.id;
-    const wilmarId = supplierRecords.find(s => s.companyName === "Wilmar Sugar Australia")?.id;
-    const grainCorpId = supplierRecords.find(s => s.companyName === "GrainCorp Operations")?.id;
-    const aptId = supplierRecords.find(s => s.companyName === "Australian Plantation Timber")?.id;
-    const riverinaId = supplierRecords.find(s => s.companyName === "Riverina BioEnergy")?.id;
+
+    const mackayId = supplierRecords.find(
+      s => s.companyName === "Mackay Sugar Limited"
+    )?.id;
+    const wilmarId = supplierRecords.find(
+      s => s.companyName === "Wilmar Sugar Australia"
+    )?.id;
+    const grainCorpId = supplierRecords.find(
+      s => s.companyName === "GrainCorp Operations"
+    )?.id;
+    const aptId = supplierRecords.find(
+      s => s.companyName === "Australian Plantation Timber"
+    )?.id;
+    const riverinaId = supplierRecords.find(
+      s => s.companyName === "Riverina BioEnergy"
+    )?.id;
 
     await Promise.all([
       // Mackay Sugar - Bagasse
@@ -247,10 +273,11 @@ async function seed() {
         name: "Premium Sugarcane Bagasse",
         type: "Agricultural Residue",
         category: "Sugarcane Bagasse",
-        description: "High-quality bagasse from modern crushing operations, suitable for co-generation and advanced biofuel production. Consistent moisture content and minimal contamination.",
+        description:
+          "High-quality bagasse from modern crushing operations, suitable for co-generation and advanced biofuel production. Consistent moisture content and minimal contamination.",
         quantity: 250000,
         unit: "tonnes",
-        pricePerUnit: 45.00,
+        pricePerUnit: 45.0,
         location: "Mackay, QLD",
         latitude: "-21.1417",
         longitude: "149.1858",
@@ -274,10 +301,11 @@ async function seed() {
         name: "Industrial Grade Bagasse",
         type: "Agricultural Residue",
         category: "Sugarcane Bagasse",
-        description: "Bulk bagasse supply from Victoria Mill with established logistics chain. Ideal for large-scale biomass power generation.",
+        description:
+          "Bulk bagasse supply from Victoria Mill with established logistics chain. Ideal for large-scale biomass power generation.",
         quantity: 180000,
         unit: "tonnes",
-        pricePerUnit: 42.00,
+        pricePerUnit: 42.0,
         location: "Townsville, QLD",
         latitude: "-19.5167",
         longitude: "147.1000",
@@ -301,10 +329,11 @@ async function seed() {
         name: "NSW Wheat Straw Bales",
         type: "Agricultural Residue",
         category: "Cereal Straw",
-        description: "Premium wheat straw from NSW grain belt. Baled and ready for transport. Excellent for cellulosic ethanol production.",
+        description:
+          "Premium wheat straw from NSW grain belt. Baled and ready for transport. Excellent for cellulosic ethanol production.",
         quantity: 50000,
         unit: "tonnes",
-        pricePerUnit: 85.00,
+        pricePerUnit: 85.0,
         location: "Wagga Wagga, NSW",
         latitude: "-35.1082",
         longitude: "147.3598",
@@ -328,10 +357,11 @@ async function seed() {
         name: "Canola Stubble Residue",
         type: "Agricultural Residue",
         category: "Oilseed Residue",
-        description: "Canola stubble from Victorian farms. Lower ash content than cereal straws, suitable for advanced conversion processes.",
+        description:
+          "Canola stubble from Victorian farms. Lower ash content than cereal straws, suitable for advanced conversion processes.",
         quantity: 30000,
         unit: "tonnes",
-        pricePerUnit: 75.00,
+        pricePerUnit: 75.0,
         location: "Horsham, VIC",
         latitude: "-36.7178",
         longitude: "142.1992",
@@ -355,10 +385,11 @@ async function seed() {
         name: "Plantation Pine Wood Chips",
         type: "Forestry Residue",
         category: "Wood Chips",
-        description: "Clean wood chips from sustainable plantation pine. Low moisture, consistent size distribution. Ideal for biomass boilers.",
+        description:
+          "Clean wood chips from sustainable plantation pine. Low moisture, consistent size distribution. Ideal for biomass boilers.",
         quantity: 75000,
         unit: "tonnes",
-        pricePerUnit: 95.00,
+        pricePerUnit: 95.0,
         location: "Sale, VIC",
         latitude: "-38.1000",
         longitude: "147.0667",
@@ -382,10 +413,11 @@ async function seed() {
         name: "Sawmill Sawdust",
         type: "Forestry Residue",
         category: "Sawdust",
-        description: "Fine sawdust from sawmill operations. Suitable for pellet production or direct combustion in specialized boilers.",
+        description:
+          "Fine sawdust from sawmill operations. Suitable for pellet production or direct combustion in specialized boilers.",
         quantity: 20000,
         unit: "tonnes",
-        pricePerUnit: 55.00,
+        pricePerUnit: 55.0,
         location: "Sale, VIC",
         latitude: "-38.1000",
         longitude: "147.0667",
@@ -409,10 +441,11 @@ async function seed() {
         name: "Biogas Facility Digestate",
         type: "Organic Waste",
         category: "Digestate",
-        description: "Nutrient-rich digestate from anaerobic digestion of agricultural waste. Excellent soil amendment with biofertilizer properties.",
+        description:
+          "Nutrient-rich digestate from anaerobic digestion of agricultural waste. Excellent soil amendment with biofertilizer properties.",
         quantity: 15000,
         unit: "tonnes",
-        pricePerUnit: 35.00,
+        pricePerUnit: 35.0,
         location: "Wagga Wagga, NSW",
         latitude: "-35.1082",
         longitude: "147.3598",
@@ -440,7 +473,6 @@ async function seed() {
     console.log("- 5 supplier companies");
     console.log("- 3 buyer companies");
     console.log("- 7 feedstock listings with ABFI scores\n");
-
   } catch (error) {
     console.error("❌ Error during seeding:", error);
     throw error;
@@ -452,7 +484,7 @@ seed()
     console.log("✅ Seeding completed successfully");
     process.exit(0);
   })
-  .catch((error) => {
+  .catch(error => {
     console.error("❌ Seeding failed:", error);
     process.exit(1);
   });

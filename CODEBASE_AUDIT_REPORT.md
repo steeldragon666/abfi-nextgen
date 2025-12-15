@@ -15,14 +15,14 @@ This audit identified **52 TypeScript errors**, **175 legacy Next.js files**, co
 
 ### Critical Errors (Require Immediate Fix)
 
-| File | Line | Error | Priority |
-|------|------|-------|----------|
-| `client/src/components/ui/input.tsx` | 1 | Missing `useDialogComposition` export | HIGH |
-| `client/src/components/ui/textarea.tsx` | 1 | Missing `useDialogComposition` export | HIGH |
-| `client/src/pages/AdminDashboard.tsx` | 124,132,140 | `StatsCard` variant prop type mismatch | HIGH |
-| `client/src/pages/Dashboard.tsx` | 269 | `StatsCard` variant prop type mismatch | HIGH |
-| `client/src/pages/FeedstockMap.tsx` | 190 | GeoJSON type conversion error | MEDIUM |
-| `client/src/pages/FuturesCreate.tsx` | 120-130 | Accessing props without `.futures` prefix | HIGH |
+| File                                    | Line        | Error                                     | Priority |
+| --------------------------------------- | ----------- | ----------------------------------------- | -------- |
+| `client/src/components/ui/input.tsx`    | 1           | Missing `useDialogComposition` export     | HIGH     |
+| `client/src/components/ui/textarea.tsx` | 1           | Missing `useDialogComposition` export     | HIGH     |
+| `client/src/pages/AdminDashboard.tsx`   | 124,132,140 | `StatsCard` variant prop type mismatch    | HIGH     |
+| `client/src/pages/Dashboard.tsx`        | 269         | `StatsCard` variant prop type mismatch    | HIGH     |
+| `client/src/pages/FeedstockMap.tsx`     | 190         | GeoJSON type conversion error             | MEDIUM   |
+| `client/src/pages/FuturesCreate.tsx`    | 120-130     | Accessing props without `.futures` prefix | HIGH     |
 
 ### Root Cause Analysis
 
@@ -35,6 +35,7 @@ This audit identified **52 TypeScript errors**, **175 legacy Next.js files**, co
 ### Legacy Next.js Errors (~46 errors)
 
 All files in `src/` reference Next.js modules that don't exist:
+
 - `Cannot find module 'next/server'`
 - `Cannot find module 'next/link'`
 - `Cannot find module 'next/navigation'`
@@ -46,22 +47,25 @@ All files in `src/` reference Next.js modules that don't exist:
 ## 2. ESLint Configuration Issues
 
 ### Problem
+
 ESLint config (`eslint.config.mjs`) references Next.js ESLint packages but:
+
 - Project uses Vite, not Next.js
 - ESLint is not in `package.json` dependencies
 - Config imports non-existent `eslint-config-next`
 
 ### Fix Required
+
 ```javascript
 // Replace eslint.config.mjs with Vite-compatible config:
-import globals from 'globals';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
+import globals from "globals";
+import tseslint from "@typescript-eslint/eslint-plugin";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 
 export default [
-  { files: ['**/*.{ts,tsx}'] },
-  { ignores: ['dist/**', 'node_modules/**', 'src/**'] },
+  { files: ["**/*.{ts,tsx}"] },
+  { ignores: ["dist/**", "node_modules/**", "src/**"] },
   // ... Vite-specific rules
 ];
 ```
@@ -72,30 +76,32 @@ export default [
 
 ### .env File Analysis
 
-| File | Issue | Severity |
-|------|-------|----------|
-| `.env` | Contains actual API keys (should only be in .env.local) | HIGH |
-| `.env` | SUPABASE_SERVICE_ROLE_KEY exposed | CRITICAL |
-| `.env.local` | Missing Google Maps API key | MEDIUM |
-| `.env.example` | Incomplete - missing Mapbox, service role example | LOW |
-| All files | Using `NEXT_PUBLIC_` prefix instead of `VITE_` | LOW |
+| File           | Issue                                                   | Severity |
+| -------------- | ------------------------------------------------------- | -------- |
+| `.env`         | Contains actual API keys (should only be in .env.local) | HIGH     |
+| `.env`         | SUPABASE_SERVICE_ROLE_KEY exposed                       | CRITICAL |
+| `.env.local`   | Missing Google Maps API key                             | MEDIUM   |
+| `.env.example` | Incomplete - missing Mapbox, service role example       | LOW      |
+| All files      | Using `NEXT_PUBLIC_` prefix instead of `VITE_`          | LOW      |
 
 ### Current State
+
 ```
 .env (SHOULD NOT HAVE REAL VALUES):
   NEXT_PUBLIC_SUPABASE_URL=https://rwfnjrckbbekusbkvbiz.supabase.co
   NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_...
   SUPABASE_SERVICE_ROLE_KEY=sb_secret_...  # CRITICAL - Should not be here!
-  
+
 .env.local (CORRECT LOCATION FOR SECRETS):
   Contains Supabase + Mapbox keys
-  
+
 .env.example (TEMPLATE - Missing entries):
   Missing: NEXT_PUBLIC_MAPBOX_TOKEN
   Missing: SUPABASE_SERVICE_ROLE_KEY placeholder
 ```
 
 ### Recommendations
+
 1. Remove all real values from `.env`
 2. Update `.env.example` with all required variables
 3. Migrate `NEXT_PUBLIC_` prefixes to `VITE_` for Vite compatibility
@@ -106,11 +112,13 @@ export default [
 ## 4. Legacy/Dead Code
 
 ### Summary
+
 - **175 files** in `src/` directory (legacy Next.js)
 - **~2,400 lines** of unused code
 - Importing non-existent Next.js modules
 
 ### Legacy Structure
+
 ```
 src/
 ├── app/
@@ -128,6 +136,7 @@ src/
 ```
 
 ### Recommendation
+
 Delete `src/` directory entirely after confirming no unique code needs migration.
 
 ---
@@ -136,15 +145,15 @@ Delete `src/` directory entirely after confirming no unique code needs migration
 
 ### Outdated Packages
 
-| Package | Current | Latest | Risk |
-|---------|---------|--------|------|
-| lucide-react | 0.453.0 | 0.561.0 | LOW |
-| express | 4.22.1 | 5.2.1 | MEDIUM (major version) |
-| @types/express | 4.17.21 | 5.0.6 | MEDIUM |
-| drizzle-orm | 0.44.7 | 0.45.1 | LOW |
-| recharts | 2.15.4 | 3.5.1 | HIGH (major version) |
-| superjson | 1.13.3 | 2.2.6 | MEDIUM (major version) |
-| vitest | 2.1.9 | 4.0.15 | HIGH (major version) |
+| Package        | Current | Latest  | Risk                   |
+| -------------- | ------- | ------- | ---------------------- |
+| lucide-react   | 0.453.0 | 0.561.0 | LOW                    |
+| express        | 4.22.1  | 5.2.1   | MEDIUM (major version) |
+| @types/express | 4.17.21 | 5.0.6   | MEDIUM                 |
+| drizzle-orm    | 0.44.7  | 0.45.1  | LOW                    |
+| recharts       | 2.15.4  | 3.5.1   | HIGH (major version)   |
+| superjson      | 1.13.3  | 2.2.6   | MEDIUM (major version) |
+| vitest         | 2.1.9   | 4.0.15  | HIGH (major version)   |
 
 ### Conflicting Dependencies
 
@@ -152,6 +161,7 @@ Delete `src/` directory entirely after confirming no unique code needs migration
 2. **pnpm patches**: References `wouter@3.7.1` but installed is `wouter@3.3.5`
 
 ### Missing Dependencies
+
 - ESLint (referenced in config but not installed)
 - @playwright/test (now installed)
 
@@ -162,6 +172,7 @@ Delete `src/` directory entirely after confirming no unique code needs migration
 ### Test Results: 12 Passed, 2 Failed
 
 #### Passed Tests
+
 - Typography - Font consistency (Inter across all pages)
 - Color palette - 34 unique colors detected
 - Navigation consistency - 70%+ pages have nav
@@ -172,9 +183,9 @@ Delete `src/` directory entirely after confirming no unique code needs migration
 
 #### Failed Tests
 
-| Test | Issue | Fix Required |
-|------|-------|--------------|
-| Home page H1 | No `<h1>` tag found | Add semantic heading |
+| Test              | Issue                | Fix Required                         |
+| ----------------- | -------------------- | ------------------------------------ |
+| Home page H1      | No `<h1>` tag found  | Add semantic heading                 |
 | Gradient elements | 0 gradients detected | CSS gradient not in background-image |
 
 ### Design Issues Identified
@@ -182,7 +193,6 @@ Delete `src/` directory entirely after confirming no unique code needs migration
 1. **Missing H1 on Landing Page**
    - Accessibility violation (WCAG 2.1)
    - SEO impact
-   
 2. **Missing Navigation on Key Pages**
    - Home/Landing
    - Futures Marketplace

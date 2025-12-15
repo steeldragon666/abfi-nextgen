@@ -1,14 +1,35 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AUSTRALIAN_STATES } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { ArrowLeft, ArrowRight, Building2, CheckCircle2, Leaf, MapPin, Settings, Info } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Building2,
+  CheckCircle2,
+  Leaf,
+  MapPin,
+  Settings,
+  Info,
+} from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
@@ -55,7 +76,16 @@ export default function SupplierRegistration() {
       addressLine1: addressLine1 || undefined,
       addressLine2: addressLine2 || undefined,
       city: city || undefined,
-      state: state as "NSW" | "VIC" | "QLD" | "SA" | "WA" | "TAS" | "NT" | "ACT" | undefined,
+      state: state as
+        | "NSW"
+        | "VIC"
+        | "QLD"
+        | "SA"
+        | "WA"
+        | "TAS"
+        | "NT"
+        | "ACT"
+        | undefined,
       postcode: postcode || undefined,
       website: website || undefined,
       description: description || undefined,
@@ -77,7 +107,9 @@ export default function SupplierRegistration() {
               <Building2 className="h-8 w-8 text-primary" />
             </div>
             <CardTitle className="heading-3">Authentication Required</CardTitle>
-            <CardDescription className="body-lg">Please sign in to register as a supplier</CardDescription>
+            <CardDescription className="body-lg">
+              Please sign in to register as a supplier
+            </CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -98,7 +130,10 @@ export default function SupplierRegistration() {
             </div>
           </Link>
           <Link href="/dashboard">
-            <Button variant="ghost" leftIcon={<ArrowLeft className="h-4 w-4" />}>
+            <Button
+              variant="ghost"
+              leftIcon={<ArrowLeft className="h-4 w-4" />}
+            >
               Back to Dashboard
             </Button>
           </Link>
@@ -112,16 +147,19 @@ export default function SupplierRegistration() {
             <Building2 className="h-3.5 w-3.5 mr-1.5" />
             Supplier Registration
           </Badge>
-          <h1 className="heading-1 text-foreground mb-2">Register as a Supplier</h1>
+          <h1 className="heading-1 text-foreground mb-2">
+            Register as a Supplier
+          </h1>
           <p className="text-muted-foreground body-lg max-w-xl mx-auto">
-            Join Australia's leading biofuel feedstock marketplace and connect with verified buyers
+            Join Australia's leading biofuel feedstock marketplace and connect
+            with verified buyers
           </p>
         </div>
 
         {/* Progress Steps */}
         <div className="mb-10">
           <div className="flex items-center justify-between">
-            {[1, 2, 3].map((step) => {
+            {[1, 2, 3].map(step => {
               const StepIcon = stepIcons[step - 1];
               return (
                 <div key={step} className="flex items-center flex-1">
@@ -157,7 +195,9 @@ export default function SupplierRegistration() {
                 key={label}
                 className={cn(
                   "text-sm font-medium transition-colors",
-                  currentStep >= i + 1 ? "text-foreground" : "text-muted-foreground"
+                  currentStep >= i + 1
+                    ? "text-foreground"
+                    : "text-muted-foreground"
                 )}
               >
                 {label}
@@ -189,11 +229,15 @@ export default function SupplierRegistration() {
                   id="abn"
                   placeholder="12 345 678 901"
                   value={abn}
-                  onChange={(e) => setAbn(e.target.value.replace(/\D/g, "").slice(0, 11))}
+                  onChange={e =>
+                    setAbn(e.target.value.replace(/\D/g, "").slice(0, 11))
+                  }
                   maxLength={11}
                   className="font-mono"
                 />
-                <p className="text-xs text-muted-foreground">11 digits, no spaces</p>
+                <p className="text-xs text-muted-foreground">
+                  11 digits, no spaces
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -202,7 +246,7 @@ export default function SupplierRegistration() {
                   id="companyName"
                   placeholder="e.g., Green Energy Supplies Pty Ltd"
                   value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
+                  onChange={e => setCompanyName(e.target.value)}
                 />
               </div>
 
@@ -213,7 +257,7 @@ export default function SupplierRegistration() {
                   type="email"
                   placeholder="contact@company.com.au"
                   value={contactEmail}
-                  onChange={(e) => setContactEmail(e.target.value)}
+                  onChange={e => setContactEmail(e.target.value)}
                 />
               </div>
 
@@ -224,7 +268,7 @@ export default function SupplierRegistration() {
                   type="tel"
                   placeholder="+61 2 1234 5678"
                   value={contactPhone}
-                  onChange={(e) => setContactPhone(e.target.value)}
+                  onChange={e => setContactPhone(e.target.value)}
                 />
               </div>
 
@@ -235,7 +279,7 @@ export default function SupplierRegistration() {
                   type="url"
                   placeholder="https://www.company.com.au"
                   value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
+                  onChange={e => setWebsite(e.target.value)}
                 />
               </div>
 
@@ -275,7 +319,7 @@ export default function SupplierRegistration() {
                   id="addressLine1"
                   placeholder="Street address"
                   value={addressLine1}
-                  onChange={(e) => setAddressLine1(e.target.value)}
+                  onChange={e => setAddressLine1(e.target.value)}
                 />
               </div>
 
@@ -285,7 +329,7 @@ export default function SupplierRegistration() {
                   id="addressLine2"
                   placeholder="Unit, suite, etc."
                   value={addressLine2}
-                  onChange={(e) => setAddressLine2(e.target.value)}
+                  onChange={e => setAddressLine2(e.target.value)}
                 />
               </div>
 
@@ -296,7 +340,7 @@ export default function SupplierRegistration() {
                     id="city"
                     placeholder="e.g., Sydney"
                     value={city}
-                    onChange={(e) => setCity(e.target.value)}
+                    onChange={e => setCity(e.target.value)}
                   />
                 </div>
 
@@ -307,7 +351,7 @@ export default function SupplierRegistration() {
                       <SelectValue placeholder="Select state" />
                     </SelectTrigger>
                     <SelectContent>
-                      {AUSTRALIAN_STATES.map((s) => (
+                      {AUSTRALIAN_STATES.map(s => (
                         <SelectItem key={s.value} value={s.value}>
                           {s.label}
                         </SelectItem>
@@ -323,14 +367,18 @@ export default function SupplierRegistration() {
                   id="postcode"
                   placeholder="2000"
                   value={postcode}
-                  onChange={(e) => setPostcode(e.target.value.slice(0, 4))}
+                  onChange={e => setPostcode(e.target.value.slice(0, 4))}
                   maxLength={4}
                   className="font-mono w-32"
                 />
               </div>
 
               <div className="flex justify-between gap-2 pt-4 border-t">
-                <Button variant="outline" onClick={() => setCurrentStep(1)} leftIcon={<ArrowLeft className="h-4 w-4" />}>
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStep(1)}
+                  leftIcon={<ArrowLeft className="h-4 w-4" />}
+                >
                   Previous
                 </Button>
                 <Button
@@ -364,15 +412,26 @@ export default function SupplierRegistration() {
             <CardContent className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="operationScale">Operation Scale</Label>
-                <Select value={operationScale} onValueChange={setOperationScale}>
+                <Select
+                  value={operationScale}
+                  onValueChange={setOperationScale}
+                >
                   <SelectTrigger id="operationScale">
                     <SelectValue placeholder="Select scale" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="small">Small (&lt;1,000 tonnes/year)</SelectItem>
-                    <SelectItem value="medium">Medium (1,000-10,000 tonnes/year)</SelectItem>
-                    <SelectItem value="large">Large (10,000-50,000 tonnes/year)</SelectItem>
-                    <SelectItem value="industrial">Industrial (&gt;50,000 tonnes/year)</SelectItem>
+                    <SelectItem value="small">
+                      Small (&lt;1,000 tonnes/year)
+                    </SelectItem>
+                    <SelectItem value="medium">
+                      Medium (1,000-10,000 tonnes/year)
+                    </SelectItem>
+                    <SelectItem value="large">
+                      Large (10,000-50,000 tonnes/year)
+                    </SelectItem>
+                    <SelectItem value="industrial">
+                      Industrial (&gt;50,000 tonnes/year)
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -384,7 +443,7 @@ export default function SupplierRegistration() {
                   type="number"
                   placeholder="e.g., 5000"
                   value={annualCapacity}
-                  onChange={(e) => setAnnualCapacity(e.target.value)}
+                  onChange={e => setAnnualCapacity(e.target.value)}
                   className="font-mono"
                 />
               </div>
@@ -395,7 +454,7 @@ export default function SupplierRegistration() {
                   id="description"
                   placeholder="Describe your company, feedstock types, and capabilities..."
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={e => setDescription(e.target.value)}
                   rows={5}
                 />
                 <p className="text-xs text-muted-foreground">
@@ -409,23 +468,35 @@ export default function SupplierRegistration() {
                     <Info className="h-4 w-4 text-info" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground mb-2">Next Steps After Registration</h4>
+                    <h4 className="font-semibold text-foreground mb-2">
+                      Next Steps After Registration
+                    </h4>
                     <ul className="text-sm text-muted-foreground space-y-1.5">
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 text-info shrink-0 mt-0.5" />
-                        <span>Your registration will be reviewed by ABFI administrators</span>
+                        <span>
+                          Your registration will be reviewed by ABFI
+                          administrators
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 text-info shrink-0 mt-0.5" />
-                        <span>You'll be notified once your account is verified</span>
+                        <span>
+                          You'll be notified once your account is verified
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 text-info shrink-0 mt-0.5" />
-                        <span>After verification, you can start listing feedstocks</span>
+                        <span>
+                          After verification, you can start listing feedstocks
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 text-info shrink-0 mt-0.5" />
-                        <span>Upload certificates and quality test reports for ABFI rating</span>
+                        <span>
+                          Upload certificates and quality test reports for ABFI
+                          rating
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -433,7 +504,11 @@ export default function SupplierRegistration() {
               </div>
 
               <div className="flex justify-between gap-2 pt-4 border-t">
-                <Button variant="outline" onClick={() => setCurrentStep(2)} leftIcon={<ArrowLeft className="h-4 w-4" />}>
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStep(2)}
+                  leftIcon={<ArrowLeft className="h-4 w-4" />}
+                >
                   Previous
                 </Button>
                 <Button

@@ -1,9 +1,24 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge, RatingBadge as RatingBadgeComponent } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Badge,
+  RatingBadge as RatingBadgeComponent,
+} from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Award, TrendingUp, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion, useMotionValue, useTransform, animate, useInView } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  animate,
+  useInView,
+} from "framer-motion";
 import { useEffect, useRef } from "react";
 import { easeOut } from "@/lib/motion";
 
@@ -17,14 +32,62 @@ type ScoreTier = {
 };
 
 const SCORE_TIERS: ScoreTier[] = [
-  { tier: "A+", label: "Excellent", colorClass: "text-rating-a-plus", bgClass: "bg-rating-a-plus/10", min: 90 },
-  { tier: "A", label: "Very Good", colorClass: "text-rating-a", bgClass: "bg-rating-a/10", min: 80 },
-  { tier: "B+", label: "Good", colorClass: "text-rating-b-plus", bgClass: "bg-rating-b-plus/10", min: 70 },
-  { tier: "B", label: "Above Average", colorClass: "text-rating-b", bgClass: "bg-rating-b/10", min: 60 },
-  { tier: "C+", label: "Average", colorClass: "text-rating-c-plus", bgClass: "bg-rating-c-plus/10", min: 50 },
-  { tier: "C", label: "Below Average", colorClass: "text-rating-c", bgClass: "bg-rating-c/10", min: 40 },
-  { tier: "D", label: "Poor", colorClass: "text-rating-d", bgClass: "bg-rating-d/10", min: 25 },
-  { tier: "F", label: "Failing", colorClass: "text-rating-f", bgClass: "bg-rating-f/10", min: 0 },
+  {
+    tier: "A+",
+    label: "Excellent",
+    colorClass: "text-rating-a-plus",
+    bgClass: "bg-rating-a-plus/10",
+    min: 90,
+  },
+  {
+    tier: "A",
+    label: "Very Good",
+    colorClass: "text-rating-a",
+    bgClass: "bg-rating-a/10",
+    min: 80,
+  },
+  {
+    tier: "B+",
+    label: "Good",
+    colorClass: "text-rating-b-plus",
+    bgClass: "bg-rating-b-plus/10",
+    min: 70,
+  },
+  {
+    tier: "B",
+    label: "Above Average",
+    colorClass: "text-rating-b",
+    bgClass: "bg-rating-b/10",
+    min: 60,
+  },
+  {
+    tier: "C+",
+    label: "Average",
+    colorClass: "text-rating-c-plus",
+    bgClass: "bg-rating-c-plus/10",
+    min: 50,
+  },
+  {
+    tier: "C",
+    label: "Below Average",
+    colorClass: "text-rating-c",
+    bgClass: "bg-rating-c/10",
+    min: 40,
+  },
+  {
+    tier: "D",
+    label: "Poor",
+    colorClass: "text-rating-d",
+    bgClass: "bg-rating-d/10",
+    min: 25,
+  },
+  {
+    tier: "F",
+    label: "Failing",
+    colorClass: "text-rating-f",
+    bgClass: "bg-rating-f/10",
+    min: 0,
+  },
 ];
 
 function getScoreTier(score: number): ScoreTier {
@@ -60,11 +123,17 @@ export function ScoreCard({
   const percentage = (score / maxScore) * 100;
   const tier = getScoreTier(score);
 
-  const IconComponent = icon === "award" ? Award : icon === "trending" ? TrendingUp : Shield;
+  const IconComponent =
+    icon === "award" ? Award : icon === "trending" ? TrendingUp : Shield;
 
   if (variant === "compact") {
     return (
-      <div className={cn("flex items-center justify-between p-4 bg-card border rounded-xl", className)}>
+      <div
+        className={cn(
+          "flex items-center justify-between p-4 bg-card border rounded-xl",
+          className
+        )}
+      >
         <div className="flex items-center gap-3">
           <div className={cn("p-2 rounded-lg", tier.bgClass)}>
             <IconComponent className={cn("h-4 w-4", tier.colorClass)} />
@@ -72,7 +141,9 @@ export function ScoreCard({
           <span className="text-sm font-medium">{title}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className={cn("font-mono font-bold text-lg", tier.colorClass)}>{score}</span>
+          <span className={cn("font-mono font-bold text-lg", tier.colorClass)}>
+            {score}
+          </span>
           <span className="text-xs text-muted-foreground">/ {maxScore}</span>
         </div>
       </div>
@@ -88,10 +159,14 @@ export function ScoreCard({
               <IconComponent className="h-5 w-5 text-muted-foreground" />
               <span className="font-medium">{title}</span>
             </div>
-            <Badge variant="outline" className={cn(tier.colorClass)}>{tier.tier}</Badge>
+            <Badge variant="outline" className={cn(tier.colorClass)}>
+              {tier.tier}
+            </Badge>
           </div>
           <ScoreGauge score={score} size="lg" />
-          <p className="text-center text-sm text-muted-foreground mt-3">{tier.label}</p>
+          <p className="text-center text-sm text-muted-foreground mt-3">
+            {tier.label}
+          </p>
         </CardContent>
       </Card>
     );
@@ -108,9 +183,7 @@ export function ScoreCard({
               </div>
               {title}
             </CardTitle>
-            <div className={cn("metric-lg", tier.colorClass)}>
-              {score}
-            </div>
+            <div className={cn("metric-lg", tier.colorClass)}>{score}</div>
           </div>
           {description && (
             <CardDescription className="text-xs">{description}</CardDescription>
@@ -128,7 +201,10 @@ export function ScoreCard({
           )}
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Rating</span>
-            <Badge variant="outline" className={cn("font-mono font-semibold", tier.colorClass)}>
+            <Badge
+              variant="outline"
+              className={cn("font-mono font-semibold", tier.colorClass)}
+            >
               {tier.tier} - {tier.label}
             </Badge>
           </div>
@@ -153,17 +229,16 @@ export function ScoreCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-center">
-          <div className={cn("metric-xl", tier.colorClass)}>
-            {score}
-          </div>
+          <div className={cn("metric-xl", tier.colorClass)}>{score}</div>
           <div className="text-sm text-muted-foreground">out of {maxScore}</div>
-          <Badge variant="outline" className={cn("mt-2 font-mono", tier.colorClass)}>
+          <Badge
+            variant="outline"
+            className={cn("mt-2 font-mono", tier.colorClass)}
+          >
             {tier.tier}
           </Badge>
         </div>
-        {showProgress && (
-          <Progress value={percentage} className="h-2" />
-        )}
+        {showProgress && <Progress value={percentage} className="h-2" />}
       </CardContent>
     </Card>
   );
@@ -198,10 +273,34 @@ export function ScoreGauge({
   const displayScore = useMotionValue(0);
 
   const sizeConfig = {
-    sm: { outer: 48, inner: 40, stroke: 4, fontSize: "text-sm", tierSize: "text-[8px]" },
-    md: { outer: 64, inner: 54, stroke: 5, fontSize: "text-lg", tierSize: "text-[10px]" },
-    lg: { outer: 80, inner: 68, stroke: 6, fontSize: "text-2xl", tierSize: "text-xs" },
-    xl: { outer: 120, inner: 104, stroke: 8, fontSize: "text-4xl", tierSize: "text-sm" },
+    sm: {
+      outer: 48,
+      inner: 40,
+      stroke: 4,
+      fontSize: "text-sm",
+      tierSize: "text-[8px]",
+    },
+    md: {
+      outer: 64,
+      inner: 54,
+      stroke: 5,
+      fontSize: "text-lg",
+      tierSize: "text-[10px]",
+    },
+    lg: {
+      outer: 80,
+      inner: 68,
+      stroke: 6,
+      fontSize: "text-2xl",
+      tierSize: "text-xs",
+    },
+    xl: {
+      outer: 120,
+      inner: 104,
+      stroke: 8,
+      fontSize: "text-4xl",
+      tierSize: "text-sm",
+    },
   };
 
   const config = sizeConfig[size];
@@ -216,7 +315,7 @@ export function ScoreGauge({
   );
 
   // Transform display score to rounded integer
-  const roundedScore = useTransform(displayScore, (v) => Math.round(v));
+  const roundedScore = useTransform(displayScore, v => Math.round(v));
 
   // Animate when in view
   useEffect(() => {
@@ -242,7 +341,10 @@ export function ScoreGauge({
   return (
     <div
       ref={ref}
-      className={cn("relative inline-flex items-center justify-center mx-auto", className)}
+      className={cn(
+        "relative inline-flex items-center justify-center mx-auto",
+        className
+      )}
     >
       <svg
         width={config.outer}
@@ -276,7 +378,11 @@ export function ScoreGauge({
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <motion.span
-          className={cn("font-mono font-bold", config.fontSize, tier.colorClass)}
+          className={cn(
+            "font-mono font-bold",
+            config.fontSize,
+            tier.colorClass
+          )}
         >
           {roundedScore}
         </motion.span>
@@ -331,14 +437,17 @@ export function RatingBadge({
       case "GQ3":
         return { color: "bg-yellow-600 text-white", description: "Developing" };
       case "GQ4":
-        return { color: "bg-orange-600 text-white", description: "Provisional" };
+        return {
+          color: "bg-orange-600 text-white",
+          description: "Provisional",
+        };
       default:
         return { color: "bg-gray-500 text-white", description: "Unrated" };
     }
   };
 
   const info = getRatingInfo(rating);
-  
+
   const sizeClasses = {
     sm: "text-xs px-2 py-0.5",
     md: "text-sm px-3 py-1",
@@ -351,13 +460,17 @@ export function RatingBadge({
         <Badge className={`${info.color} ${sizeClasses[size]} font-bold`}>
           {rating}
         </Badge>
-        <span className="text-sm text-muted-foreground">{info.description}</span>
+        <span className="text-sm text-muted-foreground">
+          {info.description}
+        </span>
       </div>
     );
   }
 
   return (
-    <Badge className={`${info.color} ${sizeClasses[size]} font-bold ${className}`}>
+    <Badge
+      className={`${info.color} ${sizeClasses[size]} font-bold ${className}`}
+    >
       {rating}
     </Badge>
   );
@@ -373,18 +486,23 @@ interface ScoreBreakdownProps {
   className?: string;
 }
 
-export function ScoreBreakdown({ scores, className = "" }: ScoreBreakdownProps) {
+export function ScoreBreakdown({
+  scores,
+  className = "",
+}: ScoreBreakdownProps) {
   return (
     <div className={`space-y-3 ${className}`}>
       {scores.map((score, index) => {
-        const percentage = ((score.value / (score.maxValue || 100)) * 100);
+        const percentage = (score.value / (score.maxValue || 100)) * 100;
         return (
           <div key={index} className="space-y-1">
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-2">
                 <span className="text-muted-foreground">{score.label}</span>
                 {score.weight && (
-                  <span className="text-xs text-muted-foreground">({score.weight}%)</span>
+                  <span className="text-xs text-muted-foreground">
+                    ({score.weight}%)
+                  </span>
                 )}
               </div>
               <span className="font-medium">{score.value}</span>
@@ -426,8 +544,12 @@ export function ABFIScoreBadge({
 
   return (
     <div className={`inline-flex items-center gap-2 ${className}`}>
-      {showLabel && <span className="text-sm text-muted-foreground">ABFI Score:</span>}
-      <Badge className={`${getScoreColor(score)} ${sizeClasses[size]} font-bold`}>
+      {showLabel && (
+        <span className="text-sm text-muted-foreground">ABFI Score:</span>
+      )}
+      <Badge
+        className={`${getScoreColor(score)} ${sizeClasses[size]} font-bold`}
+      >
         {score}/100
       </Badge>
     </div>

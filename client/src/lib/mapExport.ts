@@ -33,7 +33,7 @@ export async function getFilteredFeatures(options: ExportOptions) {
     try {
       const response = await fetch(source);
       const data = await response.json();
-      
+
       // Filter features by state
       const filtered = data.features.filter((feature: any) => {
         const state = feature.properties.state;
@@ -128,8 +128,8 @@ export async function exportAsCSV(options: ExportOptions) {
 
   // Extract all unique property keys
   const allKeys = new Set<string>();
-  features.forEach((feature) => {
-    Object.keys(feature.properties).forEach((key) => allKeys.add(key));
+  features.forEach(feature => {
+    Object.keys(feature.properties).forEach(key => allKeys.add(key));
   });
 
   // Add geometry columns
@@ -138,11 +138,11 @@ export async function exportAsCSV(options: ExportOptions) {
   allKeys.add("geometry_type");
 
   const headers = Array.from(allKeys);
-  
+
   // Build CSV rows
-  const rows = features.map((feature) => {
+  const rows = features.map(feature => {
     const row: Record<string, any> = { ...feature.properties };
-    
+
     // Add geometry info
     if (feature.geometry.type === "Point") {
       row.longitude = feature.geometry.coordinates[0];
@@ -151,8 +151,12 @@ export async function exportAsCSV(options: ExportOptions) {
     } else if (feature.geometry.type === "Polygon") {
       // Use centroid for polygons
       const coords = feature.geometry.coordinates[0];
-      const avgLng = coords.reduce((sum: number, c: number[]) => sum + c[0], 0) / coords.length;
-      const avgLat = coords.reduce((sum: number, c: number[]) => sum + c[1], 0) / coords.length;
+      const avgLng =
+        coords.reduce((sum: number, c: number[]) => sum + c[0], 0) /
+        coords.length;
+      const avgLat =
+        coords.reduce((sum: number, c: number[]) => sum + c[1], 0) /
+        coords.length;
       row.longitude = avgLng;
       row.latitude = avgLat;
       row.geometry_type = "Polygon";
@@ -163,16 +167,18 @@ export async function exportAsCSV(options: ExportOptions) {
       row.geometry_type = "LineString";
     }
 
-    return headers.map((header) => {
-      const value = row[header];
-      if (value === null || value === undefined) return "";
-      // Escape commas and quotes
-      const stringValue = String(value);
-      if (stringValue.includes(",") || stringValue.includes('"')) {
-        return `"${stringValue.replace(/"/g, '""')}"`;
-      }
-      return stringValue;
-    }).join(",");
+    return headers
+      .map(header => {
+        const value = row[header];
+        if (value === null || value === undefined) return "";
+        // Escape commas and quotes
+        const stringValue = String(value);
+        if (stringValue.includes(",") || stringValue.includes('"')) {
+          return `"${stringValue.replace(/"/g, '""')}"`;
+        }
+        return stringValue;
+      })
+      .join(",");
   });
 
   const csv = [headers.join(","), ...rows].join("\n");

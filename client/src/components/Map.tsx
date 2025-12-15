@@ -103,7 +103,9 @@ const API_KEY = USE_PROXY ? FORGE_API_KEY : DIRECT_API_KEY;
 function loadMapScript() {
   return new Promise((resolve, reject) => {
     if (!API_KEY) {
-      console.error("No Google Maps API key configured. Set VITE_FRONTEND_FORGE_API_KEY or VITE_GOOGLE_MAPS_API_KEY.");
+      console.error(
+        "No Google Maps API key configured. Set VITE_FRONTEND_FORGE_API_KEY or VITE_GOOGLE_MAPS_API_KEY."
+      );
       reject(new Error("No API key"));
       return;
     }
@@ -121,7 +123,9 @@ function loadMapScript() {
       script.remove(); // Clean up immediately
     };
     script.onerror = () => {
-      console.error(`Failed to load Google Maps script${USE_PROXY ? " via proxy" : ""}`);
+      console.error(
+        `Failed to load Google Maps script${USE_PROXY ? " via proxy" : ""}`
+      );
       reject(new Error("Script load failed"));
     };
     document.head.appendChild(script);

@@ -74,13 +74,25 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path="/financial-onboarding" component={FinancialOnboarding} />
-      <Route path="/financial-onboarding/success" component={FinancialOnboardingSuccess} />
+      <Route
+        path="/financial-onboarding/success"
+        component={FinancialOnboardingSuccess}
+      />
       <Route path="/bankability-explainer" component={BankabilityExplainer} />
       <Route path="/grower-benefits" component={GrowerBenefits} />
       <Route path="/project-registration" component={ProjectRegistration} />
-            <Route path="/project-registration/flow" component={ProjectRegistrationFlow} />
-          <Route path="/project-registration/success" component={ProjectRegistrationSuccess} />
-          <Route path="/certificate-verification" component={CertificateVerification} />
+      <Route
+        path="/project-registration/flow"
+        component={ProjectRegistrationFlow}
+      />
+      <Route
+        path="/project-registration/success"
+        component={ProjectRegistrationSuccess}
+      />
+      <Route
+        path="/certificate-verification"
+        component={CertificateVerification}
+      />
       <Route path="/browse" component={Browse} />
       <Route path="/feedstock/:id" component={FeedstockDetail} />
       <Route path="/feedstock/edit/:id" component={FeedstockEdit} />
@@ -99,17 +111,35 @@ function Router() {
       <Route path="/buyer/profile" component={BuyerProfile} />
       <Route path="/notifications" component={Notifications} />
       <Route path="/quality-test/upload" component={QualityTestUpload} />
-      <Route path="/dashboard/projects/:projectId/agreements" component={SupplyAgreements} />
+      <Route
+        path="/dashboard/projects/:projectId/agreements"
+        component={SupplyAgreements}
+      />
       <Route path="/inquiries/respond/:inquiryId" component={InquiryResponse} />
-      <Route path="/bankability/qualify/:supplierId" component={GrowerQualification} />
-      <Route path="/bankability/assess/:projectId" component={BankabilityAssessment} />
+      <Route
+        path="/bankability/qualify/:supplierId"
+        component={GrowerQualification}
+      />
+      <Route
+        path="/bankability/assess/:projectId"
+        component={BankabilityAssessment}
+      />
       <Route path="/lender-portal" component={LenderPortal} />
       <Route path="/compliance-dashboard" component={ComplianceDashboard} />
       <Route path="/admin/evidence" component={EvidenceManagement} />
-          <Route path="/admin/assessor-workflow" component={AdminAssessorWorkflow} />
-          <Route path="/admin/users" component={AdminUserManagement} />
-      <Route path="/admin/monitoring-jobs" component={MonitoringJobsScheduler} />
-      <Route path="/bankability/concentration/:projectId" component={ConcentrationAnalysis} />
+      <Route
+        path="/admin/assessor-workflow"
+        component={AdminAssessorWorkflow}
+      />
+      <Route path="/admin/users" component={AdminUserManagement} />
+      <Route
+        path="/admin/monitoring-jobs"
+        component={MonitoringJobsScheduler}
+      />
+      <Route
+        path="/bankability/concentration/:projectId"
+        component={ConcentrationAnalysis}
+      />
       <Route path="/demand-signals/create" component={CreateDemandSignal} />
       <Route path="/demand-signals" component={BrowseDemandSignals} />
       <Route path="/demand-signals/:id" component={DemandSignalDetail} />
@@ -126,15 +156,39 @@ function Router() {
       <Route path="/map" component={MapView} />
       <Route path="/feedstock-map" component={FeedstockMap} />
       <Route path="/producer-registration" component={ProducerRegistration} />
-      <Route path="/producer-registration/account-setup" component={ProducerAccountSetup} />
-      <Route path="/producer-registration/property-map" component={ProducerPropertyMap} />
-      <Route path="/producer-registration/property-details" component={ProducerPropertyDetails} />
-      <Route path="/producer-registration/production-profile" component={ProducerProductionProfile} />
-      <Route path="/producer-registration/carbon-calculator" component={ProducerCarbonCalculator} />
-      <Route path="/producer-registration/contracts" component={ProducerContracts} />
-      <Route path="/producer-registration/marketplace-listing" component={ProducerMarketplaceListing} />
+      <Route
+        path="/producer-registration/account-setup"
+        component={ProducerAccountSetup}
+      />
+      <Route
+        path="/producer-registration/property-map"
+        component={ProducerPropertyMap}
+      />
+      <Route
+        path="/producer-registration/property-details"
+        component={ProducerPropertyDetails}
+      />
+      <Route
+        path="/producer-registration/production-profile"
+        component={ProducerProductionProfile}
+      />
+      <Route
+        path="/producer-registration/carbon-calculator"
+        component={ProducerCarbonCalculator}
+      />
+      <Route
+        path="/producer-registration/contracts"
+        component={ProducerContracts}
+      />
+      <Route
+        path="/producer-registration/marketplace-listing"
+        component={ProducerMarketplaceListing}
+      />
       <Route path="/producer-registration/review" component={ProducerReview} />
-      <Route path="/producer-registration/success" component={ProducerRegistrationSuccess} />
+      <Route
+        path="/producer-registration/success"
+        component={ProducerRegistrationSuccess}
+      />
       <Route path="/certificate/upload" component={CertificateUpload} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

@@ -1,8 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 import { Loader2 } from "lucide-react";
@@ -14,8 +26,10 @@ export default function FeedstockEdit() {
   const [, params] = useRoute("/feedstock/edit/:id");
   const feedstockId = params?.id ? parseInt(params.id) : 0;
   const [, setLocation] = useLocation();
-  
-  const { data: feedstock, isLoading } = trpc.feedstocks.getById.useQuery({ id: feedstockId });
+
+  const { data: feedstock, isLoading } = trpc.feedstocks.getById.useQuery({
+    id: feedstockId,
+  });
   const updateMutation = trpc.feedstocks.update.useMutation();
 
   const [formData, setFormData] = useState({
@@ -43,7 +57,8 @@ export default function FeedstockEdit() {
         longitude: feedstock.longitude || "",
         region: feedstock.region || "",
         annualCapacityTonnes: feedstock.annualCapacityTonnes?.toString() || "",
-        availableVolumeCurrent: feedstock.availableVolumeCurrent?.toString() || "",
+        availableVolumeCurrent:
+          feedstock.availableVolumeCurrent?.toString() || "",
         carbonIntensityValue: feedstock.carbonIntensityValue?.toString() || "",
         pricePerTonne: feedstock.pricePerTonne?.toString() || "",
         priceVisibility: (feedstock.priceVisibility as any) || "public",
@@ -54,7 +69,7 @@ export default function FeedstockEdit() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       await updateMutation.mutateAsync({
         id: feedstockId,
@@ -64,10 +79,18 @@ export default function FeedstockEdit() {
         latitude: formData.latitude || undefined,
         longitude: formData.longitude || undefined,
         region: formData.region || undefined,
-        annualCapacityTonnes: formData.annualCapacityTonnes ? parseInt(formData.annualCapacityTonnes) : undefined,
-        availableVolumeCurrent: formData.availableVolumeCurrent ? parseInt(formData.availableVolumeCurrent) : undefined,
-        carbonIntensityValue: formData.carbonIntensityValue ? parseInt(formData.carbonIntensityValue) : undefined,
-        pricePerTonne: formData.pricePerTonne ? parseInt(formData.pricePerTonne) : undefined,
+        annualCapacityTonnes: formData.annualCapacityTonnes
+          ? parseInt(formData.annualCapacityTonnes)
+          : undefined,
+        availableVolumeCurrent: formData.availableVolumeCurrent
+          ? parseInt(formData.availableVolumeCurrent)
+          : undefined,
+        carbonIntensityValue: formData.carbonIntensityValue
+          ? parseInt(formData.carbonIntensityValue)
+          : undefined,
+        pricePerTonne: formData.pricePerTonne
+          ? parseInt(formData.pricePerTonne)
+          : undefined,
         priceVisibility: formData.priceVisibility,
         description: formData.description || undefined,
       });
@@ -91,9 +114,7 @@ export default function FeedstockEdit() {
       <div className="min-h-screen flex items-center justify-center">
         <Card>
           <CardContent className="py-12">
-            <p className="text-center text-gray-600">
-              Feedstock not found
-            </p>
+            <p className="text-center text-gray-600">Feedstock not found</p>
           </CardContent>
         </Card>
       </div>
@@ -107,7 +128,8 @@ export default function FeedstockEdit() {
           <CardHeader>
             <CardTitle>Edit Feedstock</CardTitle>
             <CardDescription>
-              Update your feedstock listing - Category: {feedstock.category}, State: {feedstock.state}
+              Update your feedstock listing - Category: {feedstock.category},
+              State: {feedstock.state}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -116,11 +138,19 @@ export default function FeedstockEdit() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Category (cannot be changed)</Label>
-                  <Input value={feedstock.category} disabled className="bg-gray-100" />
+                  <Input
+                    value={feedstock.category}
+                    disabled
+                    className="bg-gray-100"
+                  />
                 </div>
                 <div>
                   <Label>State (cannot be changed)</Label>
-                  <Input value={feedstock.state} disabled className="bg-gray-100" />
+                  <Input
+                    value={feedstock.state}
+                    disabled
+                    className="bg-gray-100"
+                  />
                 </div>
               </div>
 
@@ -130,7 +160,9 @@ export default function FeedstockEdit() {
                 <Input
                   id="type"
                   value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  onChange={e =>
+                    setFormData({ ...formData, type: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -142,7 +174,9 @@ export default function FeedstockEdit() {
                   <Input
                     id="sourceName"
                     value={formData.sourceName}
-                    onChange={(e) => setFormData({ ...formData, sourceName: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, sourceName: e.target.value })
+                    }
                     placeholder="e.g., Smith Family Farm"
                   />
                 </div>
@@ -151,7 +185,9 @@ export default function FeedstockEdit() {
                   <Input
                     id="region"
                     value={formData.region}
-                    onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, region: e.target.value })
+                    }
                     placeholder="e.g., Riverina"
                   />
                 </div>
@@ -163,7 +199,9 @@ export default function FeedstockEdit() {
                 <Input
                   id="sourceAddress"
                   value={formData.sourceAddress}
-                  onChange={(e) => setFormData({ ...formData, sourceAddress: e.target.value })}
+                  onChange={e =>
+                    setFormData({ ...formData, sourceAddress: e.target.value })
+                  }
                 />
               </div>
 
@@ -174,7 +212,9 @@ export default function FeedstockEdit() {
                   <Input
                     id="latitude"
                     value={formData.latitude}
-                    onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, latitude: e.target.value })
+                    }
                     placeholder="-33.8688"
                   />
                 </div>
@@ -183,7 +223,9 @@ export default function FeedstockEdit() {
                   <Input
                     id="longitude"
                     value={formData.longitude}
-                    onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, longitude: e.target.value })
+                    }
                     placeholder="151.2093"
                   />
                 </div>
@@ -192,22 +234,36 @@ export default function FeedstockEdit() {
               {/* Capacity & Volume */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="annualCapacity">Annual Capacity (tonnes) *</Label>
+                  <Label htmlFor="annualCapacity">
+                    Annual Capacity (tonnes) *
+                  </Label>
                   <Input
                     id="annualCapacity"
                     type="number"
                     value={formData.annualCapacityTonnes}
-                    onChange={(e) => setFormData({ ...formData, annualCapacityTonnes: e.target.value })}
+                    onChange={e =>
+                      setFormData({
+                        ...formData,
+                        annualCapacityTonnes: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
                 <div>
-                  <Label htmlFor="availableVolume">Available Volume (tonnes) *</Label>
+                  <Label htmlFor="availableVolume">
+                    Available Volume (tonnes) *
+                  </Label>
                   <Input
                     id="availableVolume"
                     type="number"
                     value={formData.availableVolumeCurrent}
-                    onChange={(e) => setFormData({ ...formData, availableVolumeCurrent: e.target.value })}
+                    onChange={e =>
+                      setFormData({
+                        ...formData,
+                        availableVolumeCurrent: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
@@ -221,14 +277,24 @@ export default function FeedstockEdit() {
                     id="price"
                     type="number"
                     value={formData.pricePerTonne}
-                    onChange={(e) => setFormData({ ...formData, pricePerTonne: e.target.value })}
+                    onChange={e =>
+                      setFormData({
+                        ...formData,
+                        pricePerTonne: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
                   <Label htmlFor="priceVisibility">Price Visibility</Label>
                   <Select
                     value={formData.priceVisibility}
-                    onValueChange={(value) => setFormData({ ...formData, priceVisibility: value as any })}
+                    onValueChange={value =>
+                      setFormData({
+                        ...formData,
+                        priceVisibility: value as any,
+                      })
+                    }
                   >
                     <SelectTrigger id="priceVisibility">
                       <SelectValue />
@@ -246,7 +312,12 @@ export default function FeedstockEdit() {
                     id="carbon"
                     type="number"
                     value={formData.carbonIntensityValue}
-                    onChange={(e) => setFormData({ ...formData, carbonIntensityValue: e.target.value })}
+                    onChange={e =>
+                      setFormData({
+                        ...formData,
+                        carbonIntensityValue: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -257,7 +328,9 @@ export default function FeedstockEdit() {
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={e =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   rows={4}
                   placeholder="Additional details about this feedstock..."
                 />
@@ -266,10 +339,16 @@ export default function FeedstockEdit() {
               {/* Submit Buttons */}
               <div className="flex gap-4">
                 <Button type="submit" disabled={updateMutation.isPending}>
-                  {updateMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {updateMutation.isPending && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Save Changes
                 </Button>
-                <Button type="button" variant="outline" onClick={() => setLocation("/supplier/feedstocks")}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setLocation("/supplier/feedstocks")}
+                >
                   Cancel
                 </Button>
               </div>

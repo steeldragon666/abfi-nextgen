@@ -50,7 +50,10 @@ export function scoreToRating(score: number): string {
 /**
  * Calculate rating delta (number of notches)
  */
-export function calculateRatingDelta(baseRating: string, stressRating: string): number {
+export function calculateRatingDelta(
+  baseRating: string,
+  stressRating: string
+): number {
   const ratings = ["CC", "CCC", "B", "BB", "BBB", "A", "AA", "AAA"];
   const baseIndex = ratings.indexOf(baseRating);
   const stressIndex = ratings.indexOf(stressRating);
@@ -72,29 +75,36 @@ export async function runSupplierLossScenario(
   affectedAgreements: number[];
 }> {
   // Calculate base case
-  const baseVolumes = agreements.map((a) => a.committedVolume);
+  const baseVolumes = agreements.map(a => a.committedVolume);
   const baseHhi = calculateHHI(baseVolumes);
 
   // Calculate stress case (remove supplier)
-  const affectedAgreements = agreements.filter((a) => a.supplierId === supplierId);
-  const lostVolume = affectedAgreements.reduce((sum, a) => sum + a.committedVolume, 0);
+  const affectedAgreements = agreements.filter(
+    a => a.supplierId === supplierId
+  );
+  const lostVolume = affectedAgreements.reduce(
+    (sum, a) => sum + a.committedVolume,
+    0
+  );
   const totalVolume = baseVolumes.reduce((sum, v) => sum + v, 0);
-  const supplyShortfallPercent = totalVolume > 0 ? (lostVolume / totalVolume) * 100 : 0;
+  const supplyShortfallPercent =
+    totalVolume > 0 ? (lostVolume / totalVolume) * 100 : 0;
 
   const stressVolumes = agreements
-    .filter((a) => a.supplierId !== supplierId)
-    .map((a) => a.committedVolume);
+    .filter(a => a.supplierId !== supplierId)
+    .map(a => a.committedVolume);
   const stressHhi = calculateHHI(stressVolumes);
 
-  const remainingSuppliers = new Set(agreements.filter((a) => a.supplierId !== supplierId).map((a) => a.supplierId))
-    .size;
+  const remainingSuppliers = new Set(
+    agreements.filter(a => a.supplierId !== supplierId).map(a => a.supplierId)
+  ).size;
 
   return {
     baseHhi,
     stressHhi,
     supplyShortfallPercent: Math.round(supplyShortfallPercent),
     remainingSuppliers,
-    affectedAgreements: affectedAgreements.map((a) => a.id),
+    affectedAgreements: affectedAgreements.map(a => a.id),
   };
 }
 
@@ -112,11 +122,11 @@ export async function runSupplyShortfallScenario(
   remainingSuppliers: number;
 }> {
   // Calculate base case
-  const baseVolumes = agreements.map((a) => a.committedVolume);
+  const baseVolumes = agreements.map(a => a.committedVolume);
   const baseHhi = calculateHHI(baseVolumes);
 
   // Calculate stress case (reduce all volumes proportionally)
-  const stressVolumes = baseVolumes.map((v) => v * (1 - shortfallPercent / 100));
+  const stressVolumes = baseVolumes.map(v => v * (1 - shortfallPercent / 100));
   const stressHhi = calculateHHI(stressVolumes);
 
   return {
@@ -210,7 +220,11 @@ export async function runStressTest(params: {
   };
   baseScore: number;
   baseRating: string;
-  agreements: Array<{ id: number; supplierId: number; committedVolume: number }>;
+  agreements: Array<{
+    id: number;
+    supplierId: number;
+    committedVolume: number;
+  }>;
   covenants?: Array<{ type: string; threshold: number }>;
   testedBy: number;
 }): Promise<number> {
@@ -237,13 +251,19 @@ export async function runStressTest(params: {
     remainingSuppliers: number;
   };
 
-  if (params.scenarioType === "supplier_loss" && params.scenarioParams.supplierId) {
+  if (
+    params.scenarioType === "supplier_loss" &&
+    params.scenarioParams.supplierId
+  ) {
     stressMetrics = await runSupplierLossScenario(
       params.projectId,
       params.scenarioParams.supplierId,
       params.agreements
     );
-  } else if (params.scenarioType === "supply_shortfall" && params.scenarioParams.shortfallPercent) {
+  } else if (
+    params.scenarioType === "supply_shortfall" &&
+    params.scenarioParams.shortfallPercent
+  ) {
     stressMetrics = await runSupplyShortfallScenario(
       params.projectId,
       params.scenarioParams.shortfallPercent,
@@ -258,13 +278,19 @@ export async function runStressTest(params: {
   const hhiIncrease = stressMetrics.stressHhi - stressMetrics.baseHhi;
   const hhiPenalty = hhiIncrease > 0 ? Math.min(hhiIncrease / 100, 20) : 0; // Max 20 points penalty
 
-  const stressScore = Math.max(0, Math.round(params.baseScore - shortfallPenalty - hhiPenalty));
+  const stressScore = Math.max(
+    0,
+    Math.round(params.baseScore - shortfallPenalty - hhiPenalty)
+  );
   const stressRating = scoreToRating(stressScore);
   const ratingDelta = calculateRatingDelta(params.baseRating, stressRating);
 
   // Calculate Tier 1 coverage (simplified)
   const baseTier1Coverage = 100; // Placeholder
-  const stressTier1Coverage = Math.max(0, baseTier1Coverage - stressMetrics.supplyShortfallPercent);
+  const stressTier1Coverage = Math.max(
+    0,
+    baseTier1Coverage - stressMetrics.supplyShortfallPercent
+  );
 
   // Check covenant breaches
   const covenantBreaches = params.covenants
@@ -287,13 +313,17 @@ export async function runStressTest(params: {
 
   const recommendations: string[] = [];
   if (stressMetrics.supplyShortfallPercent > 20) {
-    recommendations.push("Diversify supplier base to reduce concentration risk");
+    recommendations.push(
+      "Diversify supplier base to reduce concentration risk"
+    );
   }
   if (stressMetrics.stressHhi > 2500) {
     recommendations.push("Add additional suppliers to reduce HHI below 2500");
   }
   if (covenantBreaches.length > 0) {
-    recommendations.push("Negotiate covenant headroom or implement mitigation measures");
+    recommendations.push(
+      "Negotiate covenant headroom or implement mitigation measures"
+    );
   }
 
   // Store results
@@ -346,7 +376,11 @@ export async function getStressTestResult(resultId: number) {
   const db = await getDb();
   if (!db) return null;
 
-  const results = await db.select().from(stressTestResults).where(eq(stressTestResults.id, resultId)).limit(1);
+  const results = await db
+    .select()
+    .from(stressTestResults)
+    .where(eq(stressTestResults.id, resultId))
+    .limit(1);
 
   return results[0] || null;
 }
@@ -358,7 +392,11 @@ export async function assessContractEnforceability(params: {
   agreementId: number;
   governingLaw: string;
   jurisdiction: string;
-  disputeResolution: "litigation" | "arbitration" | "mediation" | "expert_determination";
+  disputeResolution:
+    | "litigation"
+    | "arbitration"
+    | "mediation"
+    | "expert_determination";
   hasTerminationProtections: boolean;
   hasStepInRights: boolean;
   hasSecurityPackage: boolean;
@@ -369,14 +407,24 @@ export async function assessContractEnforceability(params: {
   if (!db) throw new Error("Database not available");
 
   // Score each component (0-10)
-  const jurisdictionScore = ["New South Wales", "Victoria", "Queensland"].includes(params.governingLaw) ? 10 : 7;
+  const jurisdictionScore = [
+    "New South Wales",
+    "Victoria",
+    "Queensland",
+  ].includes(params.governingLaw)
+    ? 10
+    : 7;
   const terminationClauseScore = params.hasTerminationProtections ? 10 : 3;
   const stepInRightsScore = params.hasStepInRights ? 10 : 0;
   const securityPackageScore = params.hasSecurityPackage ? 10 : 2;
   const remediesScore = params.hasRemedies ? 10 : 5;
 
   const overallScore =
-    jurisdictionScore + terminationClauseScore + stepInRightsScore + securityPackageScore + remediesScore;
+    jurisdictionScore +
+    terminationClauseScore +
+    stepInRightsScore +
+    securityPackageScore +
+    remediesScore;
 
   let rating: "strong" | "adequate" | "weak" | "very_weak";
   if (overallScore >= 40) rating = "strong";

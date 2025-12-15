@@ -13,13 +13,14 @@ This folder contains comprehensive documentation for the Australian Biofuels & F
 **Comprehensive Platform Overview**
 
 Complete documentation of the ABFI platform including:
+
 - Executive summary and industry context
 - Detailed value propositions for all user groups (Growers, Buyers, Logistics, Investors, Government)
 - Core platform features (Spot Marketplace, Futures Marketplace, Verification)
 - Platform as critical industry infrastructure
 - Development roadmap and evolution commitment
 
-*Best for: Deep understanding of the platform, investor materials, partnership discussions*
+_Best for: Deep understanding of the platform, investor materials, partnership discussions_
 
 ---
 
@@ -28,12 +29,13 @@ Complete documentation of the ABFI platform including:
 **Quick Reference Value Guide**
 
 Concise summary of value delivered to each stakeholder group:
+
 - Problem/Solution format for each user type
 - Key metrics and benefits tables
 - Network effects and infrastructure functions
 - Futures marketplace unique value explanation
 
-*Best for: Sales conversations, stakeholder presentations, quick reference*
+_Best for: Sales conversations, stakeholder presentations, quick reference_
 
 ---
 
@@ -42,6 +44,7 @@ Concise summary of value delivered to each stakeholder group:
 **Strategic Infrastructure Vision**
 
 Long-term strategic positioning document:
+
 - Australia's energy transition context
 - Scale of market opportunity
 - Infrastructure vs platform positioning
@@ -50,7 +53,7 @@ Long-term strategic positioning document:
 - Economic model and sustainability
 - Detailed development roadmap
 
-*Best for: Government engagement, investor pitches, strategic planning*
+_Best for: Government engagement, investor pitches, strategic planning_
 
 ---
 
@@ -58,13 +61,13 @@ Long-term strategic positioning document:
 
 ### User Groups Served
 
-| Group | Primary Documentation |
-|-------|----------------------|
+| Group               | Primary Documentation                       |
+| ------------------- | ------------------------------------------- |
 | Growers & Suppliers | PLATFORM_FEATURES.md, VALUE_PROPOSITIONS.md |
 | Buyers & Processors | PLATFORM_FEATURES.md, VALUE_PROPOSITIONS.md |
-| Logistics Providers | VALUE_PROPOSITIONS.md |
-| Investors & Lenders | STRATEGIC_VISION.md, VALUE_PROPOSITIONS.md |
-| Government & Policy | STRATEGIC_VISION.md |
+| Logistics Providers | VALUE_PROPOSITIONS.md                       |
+| Investors & Lenders | STRATEGIC_VISION.md, VALUE_PROPOSITIONS.md  |
+| Government & Policy | STRATEGIC_VISION.md                         |
 
 ### Core Concepts
 
@@ -85,24 +88,24 @@ Long-term strategic positioning document:
 
 ## Document Usage Guide
 
-| Need | Document | Section |
-|------|----------|---------|
-| Explain platform to new user | PLATFORM_FEATURES | User Groups & Value Propositions |
-| Investor pitch | STRATEGIC_VISION | Complete document |
-| Government briefing | STRATEGIC_VISION | Supporting Policy Objectives |
-| Sales call prep | VALUE_PROPOSITIONS | Relevant stakeholder section |
-| Technical integration | PLATFORM_FEATURES | Core Platform Features |
-| Futures feature explanation | PLATFORM_FEATURES | Futures Marketplace |
-| Development roadmap | STRATEGIC_VISION | Development Roadmap |
+| Need                         | Document           | Section                          |
+| ---------------------------- | ------------------ | -------------------------------- |
+| Explain platform to new user | PLATFORM_FEATURES  | User Groups & Value Propositions |
+| Investor pitch               | STRATEGIC_VISION   | Complete document                |
+| Government briefing          | STRATEGIC_VISION   | Supporting Policy Objectives     |
+| Sales call prep              | VALUE_PROPOSITIONS | Relevant stakeholder section     |
+| Technical integration        | PLATFORM_FEATURES  | Core Platform Features           |
+| Futures feature explanation  | PLATFORM_FEATURES  | Futures Marketplace              |
+| Development roadmap          | STRATEGIC_VISION   | Development Roadmap              |
 
 ---
 
 ## Updates
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | December 2024 | Initial documentation release |
+| Version | Date          | Changes                       |
+| ------- | ------------- | ----------------------------- |
+| 1.0     | December 2024 | Initial documentation release |
 
 ---
 
-*ABFI.io — Connecting Australia's Bioeconomy*
+_ABFI.io — Connecting Australia's Bioeconomy_

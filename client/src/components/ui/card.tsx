@@ -11,8 +11,10 @@ const cardVariants = cva(
         default: "shadow-sm transition-shadow duration-200",
         elevated: "shadow-lg border-transparent transition-shadow duration-200",
         outlined: "shadow-none border-2 transition-colors duration-200",
-        glass: "bg-card/80 backdrop-blur-md shadow-lg border-white/10 transition-all duration-200",
-        premium: "shadow-md border-primary/10 bg-gradient-to-br from-card to-card/95 transition-all duration-200",
+        glass:
+          "bg-card/80 backdrop-blur-md shadow-lg border-white/10 transition-all duration-200",
+        premium:
+          "shadow-md border-primary/10 bg-gradient-to-br from-card to-card/95 transition-all duration-200",
         stats: "stats-card",
       },
       padding: {
@@ -23,7 +25,8 @@ const cardVariants = cva(
       },
       hover: {
         true: "hover:shadow-lg hover:border-primary/20 hover:-translate-y-0.5 cursor-pointer transition-[transform,box-shadow,border-color] duration-150",
-        subtle: "hover:shadow-md hover:border-border/80 cursor-pointer transition-[box-shadow,border-color] duration-150",
+        subtle:
+          "hover:shadow-md hover:border-border/80 cursor-pointer transition-[box-shadow,border-color] duration-150",
         false: "",
       },
     },
@@ -36,7 +39,8 @@ const cardVariants = cva(
 );
 
 export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardVariants> {}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -135,14 +139,31 @@ export interface StatsCardProps {
   className?: string;
 }
 
-const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps & React.HTMLAttributes<HTMLDivElement>>(
-  ({ title, value, description, icon, trend, variant = "default", size = "default", className, ...props }, ref) => {
+const StatsCard = React.forwardRef<
+  HTMLDivElement,
+  StatsCardProps & React.HTMLAttributes<HTMLDivElement>
+>(
+  (
+    {
+      title,
+      value,
+      description,
+      icon,
+      trend,
+      variant = "default",
+      size = "default",
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const variantStyles = {
       default: "border-border hover:border-primary/20",
       success: "border-success/30 bg-success/5 hover:border-success/40",
       warning: "border-warning/30 bg-warning/5 hover:border-warning/40",
       info: "border-info/30 bg-info/5 hover:border-info/40",
-      premium: "border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 hover:border-primary/30",
+      premium:
+        "border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 hover:border-primary/30",
     };
 
     const iconVariantStyles = {
@@ -191,20 +212,28 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps & React.HTMLAt
         <CardContent className={sizes.card}>
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1.5 min-w-0 flex-1">
-              <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
+              <p className="text-sm font-medium text-muted-foreground truncate">
+                {title}
+              </p>
               <div className="flex items-baseline gap-2 flex-wrap">
-                <p className={cn(
-                  "font-semibold text-foreground tracking-tight tabular-nums",
-                  sizes.value
-                )}>
+                <p
+                  className={cn(
+                    "font-semibold text-foreground tracking-tight tabular-nums",
+                    sizes.value
+                  )}
+                >
                   {value}
                 </p>
                 {trend && (
-                  <span className={cn(
-                    "inline-flex items-center gap-0.5 text-sm font-semibold tabular-nums",
-                    trendColors[trend.direction]
-                  )}>
-                    <span className="text-xs">{trendArrows[trend.direction]}</span>
+                  <span
+                    className={cn(
+                      "inline-flex items-center gap-0.5 text-sm font-semibold tabular-nums",
+                      trendColors[trend.direction]
+                    )}
+                  >
+                    <span className="text-xs">
+                      {trendArrows[trend.direction]}
+                    </span>
                     {Math.abs(trend.value)}%
                   </span>
                 )}
@@ -214,11 +243,13 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps & React.HTMLAt
               )}
             </div>
             {icon && (
-              <div className={cn(
-                "rounded-lg shrink-0 transition-transform duration-200 hover:scale-105",
-                iconVariantStyles[variant],
-                sizes.icon
-              )}>
+              <div
+                className={cn(
+                  "rounded-lg shrink-0 transition-transform duration-200 hover:scale-105",
+                  iconVariantStyles[variant],
+                  sizes.icon
+                )}
+              >
                 {icon}
               </div>
             )}

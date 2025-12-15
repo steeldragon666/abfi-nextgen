@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import { useParams, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,42 +16,53 @@ import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { trpc } from "@/lib/trpc";
-import { ArrowLeft, TrendingUp, Shield, Users, FileText, AlertCircle, CheckCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  TrendingUp,
+  Shield,
+  Users,
+  FileText,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
 
 export default function BankabilityAssessment() {
   const { projectId } = useParams<{ projectId: string }>();
   const [, setLocation] = useLocation();
   const { user, loading: authLoading } = useAuth();
-  
+
   // Assessment scores (0-100)
   const [volumeSecurityScore, setVolumeSecurityScore] = useState(0);
   const [counterpartyQualityScore, setCounterpartyQualityScore] = useState(0);
   const [contractStructureScore, setContractStructureScore] = useState(0);
   const [concentrationRiskScore, setConcentrationRiskScore] = useState(0);
   const [operationalReadinessScore, setOperationalReadinessScore] = useState(0);
-  
+
   const [strengths, setStrengths] = useState("");
   const [monitoringItems, setMonitoringItems] = useState("");
   const [error, setError] = useState<string | null>(null);
-  
-  const { data: project, isLoading: projectLoading } = trpc.bankability.getProjectById.useQuery(
-    { id: parseInt(projectId!) },
-    { enabled: !!projectId }
-  );
-  
-  const { data: agreements, isLoading: agreementsLoading } = trpc.bankability.getProjectAgreements.useQuery(
-    { projectId: parseInt(projectId!) },
-    { enabled: !!projectId }
-  );
-  
-  const createAssessmentMutation = trpc.bankability.createAssessment.useMutation({
-    onSuccess: () => {
-      setLocation("/bankability");
-    },
-    onError: (error) => {
-      setError(error.message || "Failed to create assessment");
-    },
-  });
+
+  const { data: project, isLoading: projectLoading } =
+    trpc.bankability.getProjectById.useQuery(
+      { id: parseInt(projectId!) },
+      { enabled: !!projectId }
+    );
+
+  const { data: agreements, isLoading: agreementsLoading } =
+    trpc.bankability.getProjectAgreements.useQuery(
+      { projectId: parseInt(projectId!) },
+      { enabled: !!projectId }
+    );
+
+  const createAssessmentMutation =
+    trpc.bankability.createAssessment.useMutation({
+      onSuccess: () => {
+        setLocation("/bankability");
+      },
+      onError: error => {
+        setError(error.message || "Failed to create assessment");
+      },
+    });
 
   if (authLoading || !user) {
     return (
@@ -90,30 +107,66 @@ export default function BankabilityAssessment() {
 
   // Calculate composite score (weighted average)
   const weights = {
-    volumeSecurity: 0.30,
+    volumeSecurity: 0.3,
     counterpartyQuality: 0.25,
-    contractStructure: 0.20,
+    contractStructure: 0.2,
     concentrationRisk: 0.15,
-    operationalReadiness: 0.10,
+    operationalReadiness: 0.1,
   };
-  
+
   const compositeScore = Math.round(
     volumeSecurityScore * weights.volumeSecurity +
-    counterpartyQualityScore * weights.counterpartyQuality +
-    contractStructureScore * weights.contractStructure +
-    concentrationRiskScore * weights.concentrationRisk +
-    operationalReadinessScore * weights.operationalReadiness
+      counterpartyQualityScore * weights.counterpartyQuality +
+      contractStructureScore * weights.contractStructure +
+      concentrationRiskScore * weights.concentrationRisk +
+      operationalReadinessScore * weights.operationalReadiness
   );
 
   // Determine rating based on composite score
-  const getRating = (score: number): { rating: string; description: string; color: string } => {
-    if (score >= 90) return { rating: "AAA", description: "Exceptional bankability", color: "text-green-600" };
-    if (score >= 85) return { rating: "AA", description: "Very strong bankability", color: "text-green-600" };
-    if (score >= 80) return { rating: "A", description: "Strong bankability", color: "text-blue-600" };
-    if (score >= 70) return { rating: "BBB", description: "Good bankability", color: "text-blue-600" };
-    if (score >= 60) return { rating: "BB", description: "Adequate bankability", color: "text-yellow-600" };
-    if (score >= 50) return { rating: "B", description: "Marginal bankability", color: "text-orange-600" };
-    return { rating: "CCC", description: "Weak bankability", color: "text-red-600" };
+  const getRating = (
+    score: number
+  ): { rating: string; description: string; color: string } => {
+    if (score >= 90)
+      return {
+        rating: "AAA",
+        description: "Exceptional bankability",
+        color: "text-green-600",
+      };
+    if (score >= 85)
+      return {
+        rating: "AA",
+        description: "Very strong bankability",
+        color: "text-green-600",
+      };
+    if (score >= 80)
+      return {
+        rating: "A",
+        description: "Strong bankability",
+        color: "text-blue-600",
+      };
+    if (score >= 70)
+      return {
+        rating: "BBB",
+        description: "Good bankability",
+        color: "text-blue-600",
+      };
+    if (score >= 60)
+      return {
+        rating: "BB",
+        description: "Adequate bankability",
+        color: "text-yellow-600",
+      };
+    if (score >= 50)
+      return {
+        rating: "B",
+        description: "Marginal bankability",
+        color: "text-orange-600",
+      };
+    return {
+      rating: "CCC",
+      description: "Weak bankability",
+      color: "text-red-600",
+    };
   };
 
   const rating = getRating(compositeScore);
@@ -165,15 +218,15 @@ export default function BankabilityAssessment() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (compositeScore === 0) {
       setError("Please provide scores for all criteria");
       return;
     }
-    
+
     // Generate assessment number
-    const assessmentNumber = `ABFI-BANK-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 100000)).padStart(5, '0')}`;
-    
+    const assessmentNumber = `ABFI-BANK-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 100000)).padStart(5, "0")}`;
+
     createAssessmentMutation.mutate({
       projectId: parseInt(projectId!),
       assessmentNumber,
@@ -187,8 +240,12 @@ export default function BankabilityAssessment() {
       rating: rating.rating as any,
       ratingDescription: rating.description,
       ...supplyMetrics,
-      strengths: strengths ? strengths.split('\n').filter(s => s.trim()) : undefined,
-      monitoringItems: monitoringItems ? monitoringItems.split('\n').filter(s => s.trim()) : undefined,
+      strengths: strengths
+        ? strengths.split("\n").filter(s => s.trim())
+        : undefined,
+      monitoringItems: monitoringItems
+        ? monitoringItems.split("\n").filter(s => s.trim())
+        : undefined,
       status: "submitted",
     });
   };
@@ -214,9 +271,7 @@ export default function BankabilityAssessment() {
                   <TrendingUp className="h-5 w-5" />
                   Bankability Assessment
                 </CardTitle>
-                <CardDescription>
-                  Project: {project.name}
-                </CardDescription>
+                <CardDescription>Project: {project.name}</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -224,16 +279,20 @@ export default function BankabilityAssessment() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <div>
-                        <Label className="font-semibold">Volume Security (30%)</Label>
+                        <Label className="font-semibold">
+                          Volume Security (30%)
+                        </Label>
                         <p className="text-xs text-muted-foreground mt-1">
                           Tier 1 coverage, total secured volume, flex bands
                         </p>
                       </div>
-                      <span className="text-sm font-medium">{volumeSecurityScore}/100</span>
+                      <span className="text-sm font-medium">
+                        {volumeSecurityScore}/100
+                      </span>
                     </div>
                     <Slider
                       value={[volumeSecurityScore]}
-                      onValueChange={(v) => setVolumeSecurityScore(v[0])}
+                      onValueChange={v => setVolumeSecurityScore(v[0])}
                       max={100}
                       step={5}
                       className="w-full"
@@ -244,16 +303,21 @@ export default function BankabilityAssessment() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <div>
-                        <Label className="font-semibold">Counterparty Quality (25%)</Label>
+                        <Label className="font-semibold">
+                          Counterparty Quality (25%)
+                        </Label>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Grower qualifications, financial strength, track record
+                          Grower qualifications, financial strength, track
+                          record
                         </p>
                       </div>
-                      <span className="text-sm font-medium">{counterpartyQualityScore}/100</span>
+                      <span className="text-sm font-medium">
+                        {counterpartyQualityScore}/100
+                      </span>
                     </div>
                     <Slider
                       value={[counterpartyQualityScore]}
-                      onValueChange={(v) => setCounterpartyQualityScore(v[0])}
+                      onValueChange={v => setCounterpartyQualityScore(v[0])}
                       max={100}
                       step={5}
                       className="w-full"
@@ -264,16 +328,21 @@ export default function BankabilityAssessment() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <div>
-                        <Label className="font-semibold">Contract Structure (20%)</Label>
+                        <Label className="font-semibold">
+                          Contract Structure (20%)
+                        </Label>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Take-or-pay terms, pricing mechanisms, security packages
+                          Take-or-pay terms, pricing mechanisms, security
+                          packages
                         </p>
                       </div>
-                      <span className="text-sm font-medium">{contractStructureScore}/100</span>
+                      <span className="text-sm font-medium">
+                        {contractStructureScore}/100
+                      </span>
                     </div>
                     <Slider
                       value={[contractStructureScore]}
-                      onValueChange={(v) => setContractStructureScore(v[0])}
+                      onValueChange={v => setContractStructureScore(v[0])}
                       max={100}
                       step={5}
                       className="w-full"
@@ -284,16 +353,21 @@ export default function BankabilityAssessment() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <div>
-                        <Label className="font-semibold">Concentration Risk (15%)</Label>
+                        <Label className="font-semibold">
+                          Concentration Risk (15%)
+                        </Label>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Supplier HHI, geographic diversity, single event exposure
+                          Supplier HHI, geographic diversity, single event
+                          exposure
                         </p>
                       </div>
-                      <span className="text-sm font-medium">{concentrationRiskScore}/100</span>
+                      <span className="text-sm font-medium">
+                        {concentrationRiskScore}/100
+                      </span>
                     </div>
                     <Slider
                       value={[concentrationRiskScore]}
-                      onValueChange={(v) => setConcentrationRiskScore(v[0])}
+                      onValueChange={v => setConcentrationRiskScore(v[0])}
                       max={100}
                       step={5}
                       className="w-full"
@@ -304,16 +378,20 @@ export default function BankabilityAssessment() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <div>
-                        <Label className="font-semibold">Operational Readiness (10%)</Label>
+                        <Label className="font-semibold">
+                          Operational Readiness (10%)
+                        </Label>
                         <p className="text-xs text-muted-foreground mt-1">
                           Project status, timeline, regulatory approvals
                         </p>
                       </div>
-                      <span className="text-sm font-medium">{operationalReadinessScore}/100</span>
+                      <span className="text-sm font-medium">
+                        {operationalReadinessScore}/100
+                      </span>
                     </div>
                     <Slider
                       value={[operationalReadinessScore]}
-                      onValueChange={(v) => setOperationalReadinessScore(v[0])}
+                      onValueChange={v => setOperationalReadinessScore(v[0])}
                       max={100}
                       step={5}
                       className="w-full"
@@ -331,7 +409,7 @@ export default function BankabilityAssessment() {
                       rows={4}
                       placeholder="List key strengths (one per line)&#10;- Strong Tier 1 coverage at 95%&#10;- Diverse supplier base with low HHI&#10;- Long-term contracts averaging 18 years"
                       value={strengths}
-                      onChange={(e) => setStrengths(e.target.value)}
+                      onChange={e => setStrengths(e.target.value)}
                     />
                   </div>
 
@@ -346,7 +424,7 @@ export default function BankabilityAssessment() {
                       rows={4}
                       placeholder="List items requiring monitoring (one per line)&#10;- Monitor supplier X financial performance&#10;- Track contract renewals due in 2026&#10;- Review pricing mechanisms annually"
                       value={monitoringItems}
-                      onChange={(e) => setMonitoringItems(e.target.value)}
+                      onChange={e => setMonitoringItems(e.target.value)}
                     />
                   </div>
 
@@ -362,7 +440,9 @@ export default function BankabilityAssessment() {
                       disabled={createAssessmentMutation.isPending}
                       className="flex-1"
                     >
-                      {createAssessmentMutation.isPending ? "Submitting..." : "Submit Assessment"}
+                      {createAssessmentMutation.isPending
+                        ? "Submitting..."
+                        : "Submit Assessment"}
                     </Button>
                     <Button
                       type="button"
@@ -394,44 +474,70 @@ export default function BankabilityAssessment() {
                   <div className="text-sm text-muted-foreground mb-1">
                     Composite Score: {compositeScore}/100
                   </div>
-                  <div className="text-sm font-medium">{rating.description}</div>
+                  <div className="text-sm font-medium">
+                    {rating.description}
+                  </div>
                 </div>
 
                 <div className="space-y-3 text-sm">
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-muted-foreground">Volume Security</span>
+                      <span className="text-muted-foreground">
+                        Volume Security
+                      </span>
                       <span className="font-medium">{volumeSecurityScore}</span>
                     </div>
                     <Progress value={volumeSecurityScore} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-muted-foreground">Counterparty Quality</span>
-                      <span className="font-medium">{counterpartyQualityScore}</span>
+                      <span className="text-muted-foreground">
+                        Counterparty Quality
+                      </span>
+                      <span className="font-medium">
+                        {counterpartyQualityScore}
+                      </span>
                     </div>
-                    <Progress value={counterpartyQualityScore} className="h-2" />
+                    <Progress
+                      value={counterpartyQualityScore}
+                      className="h-2"
+                    />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-muted-foreground">Contract Structure</span>
-                      <span className="font-medium">{contractStructureScore}</span>
+                      <span className="text-muted-foreground">
+                        Contract Structure
+                      </span>
+                      <span className="font-medium">
+                        {contractStructureScore}
+                      </span>
                     </div>
                     <Progress value={contractStructureScore} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-muted-foreground">Concentration Risk</span>
-                      <span className="font-medium">{concentrationRiskScore}</span>
+                      <span className="text-muted-foreground">
+                        Concentration Risk
+                      </span>
+                      <span className="font-medium">
+                        {concentrationRiskScore}
+                      </span>
                     </div>
                     <Progress value={concentrationRiskScore} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-muted-foreground">Operational Readiness</span>
-                      <span className="font-medium">{operationalReadinessScore}</span>
+                      <span className="text-muted-foreground">
+                        Operational Readiness
+                      </span>
+                      <span className="font-medium">
+                        {operationalReadinessScore}
+                      </span>
                     </div>
-                    <Progress value={operationalReadinessScore} className="h-2" />
+                    <Progress
+                      value={operationalReadinessScore}
+                      className="h-2"
+                    />
                   </div>
                 </div>
               </CardContent>
@@ -446,24 +552,36 @@ export default function BankabilityAssessment() {
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total Agreements</span>
-                  <span className="font-medium">{supplyMetrics.totalAgreements}</span>
+                  <span className="text-muted-foreground">
+                    Total Agreements
+                  </span>
+                  <span className="font-medium">
+                    {supplyMetrics.totalAgreements}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tier 1 Coverage</span>
-                  <span className="font-medium">{supplyMetrics.tier1Percent}%</span>
+                  <span className="font-medium">
+                    {supplyMetrics.tier1Percent}%
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tier 2 Coverage</span>
-                  <span className="font-medium">{supplyMetrics.tier2Percent}%</span>
+                  <span className="font-medium">
+                    {supplyMetrics.tier2Percent}%
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Options</span>
-                  <span className="font-medium">{supplyMetrics.optionsPercent}%</span>
+                  <span className="font-medium">
+                    {supplyMetrics.optionsPercent}%
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">ROFR</span>
-                  <span className="font-medium">{supplyMetrics.rofrPercent}%</span>
+                  <span className="font-medium">
+                    {supplyMetrics.rofrPercent}%
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -474,19 +592,31 @@ export default function BankabilityAssessment() {
               </CardHeader>
               <CardContent className="space-y-2 text-xs">
                 <div>
-                  <Badge className="bg-green-100 text-green-800 mb-1">AAA-AA</Badge>
-                  <p className="text-muted-foreground">Exceptional to very strong (85-100)</p>
+                  <Badge className="bg-green-100 text-green-800 mb-1">
+                    AAA-AA
+                  </Badge>
+                  <p className="text-muted-foreground">
+                    Exceptional to very strong (85-100)
+                  </p>
                 </div>
                 <div>
-                  <Badge className="bg-blue-100 text-blue-800 mb-1">A-BBB</Badge>
-                  <p className="text-muted-foreground">Strong to good (70-84)</p>
+                  <Badge className="bg-blue-100 text-blue-800 mb-1">
+                    A-BBB
+                  </Badge>
+                  <p className="text-muted-foreground">
+                    Strong to good (70-84)
+                  </p>
                 </div>
                 <div>
-                  <Badge className="bg-yellow-100 text-yellow-800 mb-1">BB</Badge>
+                  <Badge className="bg-yellow-100 text-yellow-800 mb-1">
+                    BB
+                  </Badge>
                   <p className="text-muted-foreground">Adequate (60-69)</p>
                 </div>
                 <div>
-                  <Badge className="bg-orange-100 text-orange-800 mb-1">B</Badge>
+                  <Badge className="bg-orange-100 text-orange-800 mb-1">
+                    B
+                  </Badge>
                   <p className="text-muted-foreground">Marginal (50-59)</p>
                 </div>
                 <div>

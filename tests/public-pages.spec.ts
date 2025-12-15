@@ -7,7 +7,9 @@ test.describe("Public Pages", () => {
 
       // Check for about page content
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      await expect(page.locator("body")).toContainText(/about|mission|bioenergy/i);
+      await expect(page.locator("body")).toContainText(
+        /about|mission|bioenergy/i
+      );
     });
 
     test("should have navigation back to home", async ({ page }) => {
@@ -40,7 +42,9 @@ test.describe("Public Pages", () => {
       await page.goto("/pricing");
 
       // Look for signup/get started buttons
-      await expect(page.getByRole("link", { name: /get started|sign up|start/i }).first()).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: /get started|sign up|start/i }).first()
+      ).toBeVisible();
     });
   });
 });

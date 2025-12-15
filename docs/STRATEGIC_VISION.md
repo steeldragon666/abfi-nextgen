@@ -19,12 +19,12 @@ Biofuels and sustainable biomass represent a critical pathway addressing all fou
 
 ### The Scale of Opportunity
 
-| Metric | Current State | 2030 Potential | 2050 Vision |
-|--------|---------------|----------------|-------------|
-| Domestic biofuel production | ~500 ML/year | 3,000+ ML/year | 10,000+ ML/year |
-| Biomass feedstock demand | ~2 MT/year | 15+ MT/year | 50+ MT/year |
-| Regional jobs | ~5,000 | 25,000+ | 100,000+ |
-| Emissions avoided | ~0.5 MT CO2e | 5+ MT CO2e | 20+ MT CO2e |
+| Metric                      | Current State | 2030 Potential | 2050 Vision     |
+| --------------------------- | ------------- | -------------- | --------------- |
+| Domestic biofuel production | ~500 ML/year  | 3,000+ ML/year | 10,000+ ML/year |
+| Biomass feedstock demand    | ~2 MT/year    | 15+ MT/year    | 50+ MT/year     |
+| Regional jobs               | ~5,000        | 25,000+        | 100,000+        |
+| Emissions avoided           | ~0.5 MT CO2e  | 5+ MT CO2e     | 20+ MT CO2e     |
 
 ### Why It Hasn't Scaled
 
@@ -54,14 +54,14 @@ ABFI.io is not simply a marketplace—it is **critical industry infrastructure**
 
 **Core Infrastructure Functions:**
 
-| Function | Description | Industry Impact |
-|----------|-------------|-----------------|
-| **Discovery** | Buyers find sellers; sellers find buyers | Reduces search costs, expands market participation |
-| **Verification** | Counterparty credentials validated | Enables trust between strangers |
-| **Price Transparency** | Market pricing visible to all | Efficient resource allocation |
-| **Commitment Mechanisms** | Futures enable forward contracts | De-risks long-term investment |
-| **Standardisation** | Common specifications and terms | Reduces transaction costs |
-| **Data Generation** | Aggregate market intelligence | Informs policy and investment |
+| Function                  | Description                              | Industry Impact                                    |
+| ------------------------- | ---------------------------------------- | -------------------------------------------------- |
+| **Discovery**             | Buyers find sellers; sellers find buyers | Reduces search costs, expands market participation |
+| **Verification**          | Counterparty credentials validated       | Enables trust between strangers                    |
+| **Price Transparency**    | Market pricing visible to all            | Efficient resource allocation                      |
+| **Commitment Mechanisms** | Futures enable forward contracts         | De-risks long-term investment                      |
+| **Standardisation**       | Common specifications and terms          | Reduces transaction costs                          |
+| **Data Generation**       | Aggregate market intelligence            | Informs policy and investment                      |
 
 ### Infrastructure vs. Platform
 
@@ -88,18 +88,19 @@ Perennial energy crops represent the **optimal feedstock pathway**:
 
 But perennial crops face a unique investment challenge:
 
-| Factor | Challenge | Impact |
-|--------|-----------|--------|
-| Establishment period | 3-7 years before first harvest | High upfront capital, long payback |
-| Productive life | 15-25+ years | Requires very long-term contracts |
-| Sunk costs | Cannot repurpose established plantings | High commitment once planted |
-| Market uncertainty | Will buyers exist in 10+ years? | Cannot predict future demand |
+| Factor               | Challenge                              | Impact                             |
+| -------------------- | -------------------------------------- | ---------------------------------- |
+| Establishment period | 3-7 years before first harvest         | High upfront capital, long payback |
+| Productive life      | 15-25+ years                           | Requires very long-term contracts  |
+| Sunk costs           | Cannot repurpose established plantings | High commitment once planted       |
+| Market uncertainty   | Will buyers exist in 10+ years?        | Cannot predict future demand       |
 
 ### How Futures Solves This
 
 The ABFI Futures Marketplace enables **pre-commitment** that de-risks long-horizon investment:
 
 **For Growers:**
+
 ```
 Year 0: List projected yields for Years 5-25
 Year 0: Receive EOIs from buyers for 60-80% of volume
@@ -110,6 +111,7 @@ Year 5+: Deliver against committed contracts
 ```
 
 **For Buyers/Processors:**
+
 ```
 Year 0: Browse available future supply projections
 Year 0: Submit EOIs to multiple growers (supply diversity)
@@ -120,6 +122,7 @@ Year 5+: Receive contracted feedstock
 ```
 
 **For Lenders:**
+
 ```
 Year 0: Assess borrower's contracted offtake (processor)
 Year 0: Assess borrower's contracted sales (grower)
@@ -131,13 +134,13 @@ Year 0: Approve financing based on de-risked cash flows
 
 The Futures Marketplace doesn't just facilitate transactions—it **creates markets** that didn't previously exist:
 
-| Without Futures | With Futures |
-|-----------------|--------------|
-| No price signals for future supply | Published price indications guide investment |
-| Bilateral negotiations, high friction | Standardised EOI process, low friction |
-| Information asymmetry | Transparent market data |
-| Spot-only transactions | Forward commitment possible |
-| Individual negotiations | Market-based price discovery |
+| Without Futures                       | With Futures                                 |
+| ------------------------------------- | -------------------------------------------- |
+| No price signals for future supply    | Published price indications guide investment |
+| Bilateral negotiations, high friction | Standardised EOI process, low friction       |
+| Information asymmetry                 | Transparent market data                      |
+| Spot-only transactions                | Forward commitment possible                  |
+| Individual negotiations               | Market-based price discovery                 |
 
 ---
 
@@ -189,14 +192,14 @@ This network position creates durable competitive advantage and industry alignme
 
 ABFI directly supports multiple government policy objectives:
 
-| Policy Area | Objective | ABFI Contribution |
-|-------------|-----------|-------------------|
-| **Net Zero Emissions** | Reduce transport emissions | Enables biofuel supply chains |
-| **Energy Security** | Domestic fuel production | Coordinates domestic feedstock |
-| **Regional Development** | Rural economic opportunity | Creates markets for farm products |
-| **Agricultural Diversification** | New crop opportunities | Demand signals for new crops |
-| **Manufacturing Renaissance** | Onshore processing | Supply certainty for refineries |
-| **Export Development** | New export industries | Builds production capacity |
+| Policy Area                      | Objective                  | ABFI Contribution                 |
+| -------------------------------- | -------------------------- | --------------------------------- |
+| **Net Zero Emissions**           | Reduce transport emissions | Enables biofuel supply chains     |
+| **Energy Security**              | Domestic fuel production   | Coordinates domestic feedstock    |
+| **Regional Development**         | Rural economic opportunity | Creates markets for farm products |
+| **Agricultural Diversification** | New crop opportunities     | Demand signals for new crops      |
+| **Manufacturing Renaissance**    | Onshore processing         | Supply certainty for refineries   |
+| **Export Development**           | New export industries      | Builds production capacity        |
 
 ### Data for Policy
 
@@ -210,6 +213,7 @@ ABFI generates data valuable for policy design and evaluation:
 - **Regional distribution**: Geographic spread of economic activity
 
 This data can inform:
+
 - Incentive program design
 - Infrastructure investment prioritisation
 - Regulatory framework development
@@ -224,21 +228,25 @@ This data can inform:
 ABFI is committed to evolving with the industry we serve. Our platform development is guided by:
 
 **1. Stakeholder-Driven Roadmap**
+
 - Regular consultation with growers, buyers, service providers
 - Advisory panels representing key stakeholder groups
 - Feature prioritisation based on market needs
 
 **2. Technology Adoption**
+
 - Integration of emerging technologies as they mature
 - Focus on technologies that improve coordination efficiency
 - Pragmatic adoption—proven value before deployment
 
 **3. Interoperability**
+
 - Open APIs enabling third-party integration
 - Data portability for platform participants
 - Partnership-oriented rather than walled garden
 
 **4. Sustainability Integration**
+
 - Carbon accounting and reporting capabilities
 - Certification scheme integration
 - ESG data for investment and compliance
@@ -246,12 +254,14 @@ ABFI is committed to evolving with the industry we serve. Our platform developme
 ### Development Roadmap
 
 **Phase 1: Market Foundation (Current)**
+
 - Spot marketplace for immediate feedstock trading
 - Futures marketplace for long-term commitment
 - Supplier verification and profiles
 - Basic analytics and reporting
 
 **Phase 2: Efficiency Enhancement (2025-2026)**
+
 - Logistics integration and route optimisation
 - Advanced analytics with predictive capability
 - Mobile applications for field operations
@@ -259,6 +269,7 @@ ABFI is committed to evolving with the industry we serve. Our platform developme
 - API ecosystem for third-party developers
 
 **Phase 3: Intelligence Platform (2026-2028)**
+
 - AI-powered supply-demand matching
 - Automated quality verification (IoT integration)
 - Blockchain provenance and contract execution
@@ -266,6 +277,7 @@ ABFI is committed to evolving with the industry we serve. Our platform developme
 - Insurance product integration
 
 **Phase 4: Ecosystem Platform (2028+)**
+
 - International market connections
 - Real-time satellite monitoring integration
 - Tokenised futures for liquidity
@@ -280,17 +292,18 @@ ABFI is committed to evolving with the industry we serve. Our platform developme
 
 ABFI operates on a model designed for long-term sustainability:
 
-| Revenue Stream | Description | Alignment |
-|----------------|-------------|-----------|
-| Transaction fees | Small % of completed trades | Success-aligned |
-| Subscription access | Premium features for power users | Value-aligned |
-| Data services | Anonymised market intelligence | Ecosystem value |
-| Verification services | Supplier credentialing | Trust infrastructure |
-| API access | Third-party integration | Ecosystem growth |
+| Revenue Stream        | Description                      | Alignment            |
+| --------------------- | -------------------------------- | -------------------- |
+| Transaction fees      | Small % of completed trades      | Success-aligned      |
+| Subscription access   | Premium features for power users | Value-aligned        |
+| Data services         | Anonymised market intelligence   | Ecosystem value      |
+| Verification services | Supplier credentialing           | Trust infrastructure |
+| API access            | Third-party integration          | Ecosystem growth     |
 
 ### Cost Efficiency
 
 As infrastructure, we prioritise efficiency:
+
 - Technology costs amortised across growing user base
 - Network effects reduce customer acquisition costs over time
 - Standardisation reduces per-transaction operating costs
@@ -326,33 +339,33 @@ The opportunity is immense. The challenge is coordination. The solution is infra
 
 ### Australian Biomass Potential
 
-| Feedstock Category | Estimated Available (MT/year) | Notes |
-|--------------------|------------------------------|-------|
-| Agricultural residues | 30-40 | Stubble, straw, bagasse |
-| Forestry residues | 10-15 | Processing waste, harvest residue |
-| Purpose-grown crops | 20-50+ (potential) | Requires market development |
-| Organic waste | 8-10 | MSW organic fraction |
+| Feedstock Category    | Estimated Available (MT/year) | Notes                             |
+| --------------------- | ----------------------------- | --------------------------------- |
+| Agricultural residues | 30-40                         | Stubble, straw, bagasse           |
+| Forestry residues     | 10-15                         | Processing waste, harvest residue |
+| Purpose-grown crops   | 20-50+ (potential)            | Requires market development       |
+| Organic waste         | 8-10                          | MSW organic fraction              |
 
 ### Biofuel Demand Projections
 
-| Sector | 2024 Demand | 2030 Projection | 2050 Projection |
-|--------|-------------|-----------------|-----------------|
-| Road transport | ~500 ML | 2,000 ML | 5,000+ ML |
-| Aviation (SAF) | ~0 | 500 ML | 3,000+ ML |
-| Marine | ~0 | 200 ML | 1,000+ ML |
-| Industrial | ~200 ML | 500 ML | 1,500+ ML |
+| Sector         | 2024 Demand | 2030 Projection | 2050 Projection |
+| -------------- | ----------- | --------------- | --------------- |
+| Road transport | ~500 ML     | 2,000 ML        | 5,000+ ML       |
+| Aviation (SAF) | ~0          | 500 ML          | 3,000+ ML       |
+| Marine         | ~0          | 200 ML          | 1,000+ ML       |
+| Industrial     | ~200 ML     | 500 ML          | 1,500+ ML       |
 
 ### Employment Potential
 
-| Value Chain Segment | Jobs per 1,000 MT feedstock |
-|--------------------|-----------------------------|
-| Feedstock production | 2-5 (varies by crop type) |
-| Logistics & handling | 1-2 |
-| Processing | 1-3 (capital intensity varies) |
-| Support services | 0.5-1 |
+| Value Chain Segment  | Jobs per 1,000 MT feedstock    |
+| -------------------- | ------------------------------ |
+| Feedstock production | 2-5 (varies by crop type)      |
+| Logistics & handling | 1-2                            |
+| Processing           | 1-3 (capital intensity varies) |
+| Support services     | 0.5-1                          |
 
 ---
 
-*ABFI.io — Infrastructure for Australia's Bioeconomy*
+_ABFI.io — Infrastructure for Australia's Bioeconomy_
 
-*Version 1.0 | December 2024*
+_Version 1.0 | December 2024_

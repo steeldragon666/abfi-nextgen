@@ -6,7 +6,9 @@ test.describe("Carbon Calculator", () => {
   });
 
   test("should display calculator page", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: /carbon intensity/i })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /carbon intensity/i })
+    ).toBeVisible();
   });
 
   test("should have input for carbon intensity value", async ({ page }) => {
@@ -63,7 +65,9 @@ test.describe("Carbon Calculator", () => {
 
   test("should display educational content", async ({ page }) => {
     // Should have explanation of carbon intensity
-    await expect(page.getByText(/gCO2e\/MJ|greenhouse|emissions/i)).toBeVisible();
+    await expect(
+      page.getByText(/gCO2e\/MJ|greenhouse|emissions/i)
+    ).toBeVisible();
   });
 
   test("should show rating scale explanation", async ({ page }) => {

@@ -2,15 +2,34 @@ import { useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { trpc } from "@/lib/trpc";
-import { ArrowLeft, MessageSquare, Package, Calendar, DollarSign, Truck } from "lucide-react";
+import {
+  ArrowLeft,
+  MessageSquare,
+  Package,
+  Calendar,
+  DollarSign,
+  Truck,
+} from "lucide-react";
 import { formatDate } from "@/const";
 
 export default function InquiryResponse() {
@@ -18,25 +37,27 @@ export default function InquiryResponse() {
   const [, setLocation] = useLocation();
   const { user, loading: authLoading } = useAuth();
   const [error, setError] = useState<string | null>(null);
-  
+
   const [response, setResponse] = useState("");
   const [pricePerTonne, setPricePerTonne] = useState("");
   const [availableVolume, setAvailableVolume] = useState("");
   const [deliveryTimeframe, setDeliveryTimeframe] = useState("");
   const [deliveryTerms, setDeliveryTerms] = useState("");
   const [minimumOrder, setMinimumOrder] = useState("");
-  const [responseStatus, setResponseStatus] = useState<"accept" | "decline" | "negotiate">("accept");
-  
+  const [responseStatus, setResponseStatus] = useState<
+    "accept" | "decline" | "negotiate"
+  >("accept");
+
   const { data: inquiry, isLoading } = trpc.inquiries.getById.useQuery(
     { id: parseInt(inquiryId!) },
     { enabled: !!inquiryId && !!user }
   );
-  
+
   const respondMutation = trpc.inquiries.respond.useMutation({
     onSuccess: () => {
       setLocation("/inquiries/supplier");
     },
-    onError: (error) => {
+    onError: error => {
       setError(error.message || "Failed to send response");
     },
   });
@@ -84,12 +105,12 @@ export default function InquiryResponse() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!response.trim()) {
       setError("Please provide a response message");
       return;
     }
-    
+
     respondMutation.mutate({
       inquiryId: parseInt(inquiryId!),
       response: response.trim(),
@@ -104,12 +125,18 @@ export default function InquiryResponse() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "pending": return "bg-yellow-100 text-yellow-800";
-      case "responded": return "bg-blue-100 text-blue-800";
-      case "accepted": return "bg-green-100 text-green-800";
-      case "declined": return "bg-red-100 text-red-800";
-      case "closed": return "bg-gray-100 text-gray-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "responded":
+        return "bg-blue-100 text-blue-800";
+      case "accepted":
+        return "bg-green-100 text-green-800";
+      case "declined":
+        return "bg-red-100 text-red-800";
+      case "closed":
+        return "bg-gray-100 text-gray-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -158,37 +185,51 @@ export default function InquiryResponse() {
                     <Package className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <span className="text-muted-foreground">Feedstock:</span>{" "}
-                      <span className="font-medium">ABFI-{inquiry.feedstockId}</span>
+                      <span className="font-medium">
+                        ABFI-{inquiry.feedstockId}
+                      </span>
                     </div>
                   </div>
                 )}
-                
+
                 {inquiry.volumeRequired && (
                   <div className="flex items-center gap-2">
                     <Package className="h-4 w-4 text-muted-foreground" />
                     <div>
-                      <span className="text-muted-foreground">Volume Needed:</span>{" "}
-                      <span className="font-medium">{inquiry.volumeRequired.toLocaleString()} tonnes</span>
+                      <span className="text-muted-foreground">
+                        Volume Needed:
+                      </span>{" "}
+                      <span className="font-medium">
+                        {inquiry.volumeRequired.toLocaleString()} tonnes
+                      </span>
                     </div>
                   </div>
                 )}
-                
+
                 {inquiry.deliveryLocation && (
                   <div className="flex items-center gap-2">
                     <Truck className="h-4 w-4 text-muted-foreground" />
                     <div>
-                      <span className="text-muted-foreground">Delivery To:</span>{" "}
-                      <span className="font-medium">{inquiry.deliveryLocation}</span>
+                      <span className="text-muted-foreground">
+                        Delivery To:
+                      </span>{" "}
+                      <span className="font-medium">
+                        {inquiry.deliveryLocation}
+                      </span>
                     </div>
                   </div>
                 )}
-                
+
                 {inquiry.deliveryTimeframeStart && (
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <div>
-                      <span className="text-muted-foreground">Target Date:</span>{" "}
-                      <span className="font-medium">{formatDate(inquiry.deliveryTimeframeStart)}</span>
+                      <span className="text-muted-foreground">
+                        Target Date:
+                      </span>{" "}
+                      <span className="font-medium">
+                        {formatDate(inquiry.deliveryTimeframeStart)}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -196,15 +237,23 @@ export default function InquiryResponse() {
 
               {inquiry.message && (
                 <div className="bg-muted p-4 rounded-lg">
-                  <div className="text-sm font-medium mb-2">Buyer's Message:</div>
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">{inquiry.message}</p>
+                  <div className="text-sm font-medium mb-2">
+                    Buyer's Message:
+                  </div>
+                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                    {inquiry.message}
+                  </p>
                 </div>
               )}
 
               {inquiry.responseMessage && (
                 <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
-                  <div className="text-sm font-medium mb-2 text-green-900">Your Previous Response:</div>
-                  <p className="text-sm text-green-800 whitespace-pre-wrap">{inquiry.responseMessage}</p>
+                  <div className="text-sm font-medium mb-2 text-green-900">
+                    Your Previous Response:
+                  </div>
+                  <p className="text-sm text-green-800 whitespace-pre-wrap">
+                    {inquiry.responseMessage}
+                  </p>
                   {inquiry.respondedAt && (
                     <div className="text-xs text-green-600 mt-2">
                       Sent on {formatDate(inquiry.respondedAt)}
@@ -227,14 +276,23 @@ export default function InquiryResponse() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="responseType">Response Type</Label>
-                  <Select value={responseStatus} onValueChange={(value: any) => setResponseStatus(value)}>
+                  <Select
+                    value={responseStatus}
+                    onValueChange={(value: any) => setResponseStatus(value)}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="accept">Accept - Can fulfill request</SelectItem>
-                      <SelectItem value="negotiate">Negotiate - Partial fulfillment or different terms</SelectItem>
-                      <SelectItem value="decline">Decline - Cannot fulfill</SelectItem>
+                      <SelectItem value="accept">
+                        Accept - Can fulfill request
+                      </SelectItem>
+                      <SelectItem value="negotiate">
+                        Negotiate - Partial fulfillment or different terms
+                      </SelectItem>
+                      <SelectItem value="decline">
+                        Decline - Cannot fulfill
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -253,7 +311,7 @@ export default function InquiryResponse() {
                           step="0.01"
                           placeholder="e.g., 450.00"
                           value={pricePerTonne}
-                          onChange={(e) => setPricePerTonne(e.target.value)}
+                          onChange={e => setPricePerTonne(e.target.value)}
                         />
                       </div>
 
@@ -267,7 +325,7 @@ export default function InquiryResponse() {
                           type="number"
                           placeholder="e.g., 5000"
                           value={availableVolume}
-                          onChange={(e) => setAvailableVolume(e.target.value)}
+                          onChange={e => setAvailableVolume(e.target.value)}
                         />
                       </div>
                     </div>
@@ -282,7 +340,7 @@ export default function InquiryResponse() {
                           id="deliveryTimeframe"
                           placeholder="e.g., 2-4 weeks"
                           value={deliveryTimeframe}
-                          onChange={(e) => setDeliveryTimeframe(e.target.value)}
+                          onChange={e => setDeliveryTimeframe(e.target.value)}
                         />
                       </div>
 
@@ -296,7 +354,7 @@ export default function InquiryResponse() {
                           type="number"
                           placeholder="e.g., 500"
                           value={minimumOrder}
-                          onChange={(e) => setMinimumOrder(e.target.value)}
+                          onChange={e => setMinimumOrder(e.target.value)}
                         />
                       </div>
                     </div>
@@ -310,7 +368,7 @@ export default function InquiryResponse() {
                         id="deliveryTerms"
                         placeholder="e.g., FOB, CIF, Ex-Works"
                         value={deliveryTerms}
-                        onChange={(e) => setDeliveryTerms(e.target.value)}
+                        onChange={e => setDeliveryTerms(e.target.value)}
                       />
                     </div>
                   </>
@@ -329,11 +387,12 @@ export default function InquiryResponse() {
                         : "Provide additional details about your offering, payment terms, quality specifications, etc..."
                     }
                     value={response}
-                    onChange={(e) => setResponse(e.target.value)}
+                    onChange={e => setResponse(e.target.value)}
                     required
                   />
                   <p className="text-xs text-muted-foreground">
-                    This message will be sent to the buyer along with your pricing and terms
+                    This message will be sent to the buyer along with your
+                    pricing and terms
                   </p>
                 </div>
 

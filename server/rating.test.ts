@@ -8,7 +8,12 @@ import {
   getCarbonIntensityGrade,
   getAbfiScoreGrade,
 } from "./rating";
-import type { Feedstock, Certificate, QualityTest, Transaction } from "../drizzle/schema";
+import type {
+  Feedstock,
+  Certificate,
+  QualityTest,
+  Transaction,
+} from "../drizzle/schema";
 
 describe("ABFI Rating System", () => {
   describe("Carbon Intensity Score", () => {
@@ -46,7 +51,10 @@ describe("ABFI Rating System", () => {
         verificationLevel: "abfi_certified",
       };
       const certificates: Certificate[] = [];
-      const score = calculateSustainabilityScore(feedstock as Feedstock, certificates);
+      const score = calculateSustainabilityScore(
+        feedstock as Feedstock,
+        certificates
+      );
       expect(score).toBeGreaterThanOrEqual(50);
     });
 
@@ -65,7 +73,10 @@ describe("ABFI Rating System", () => {
           updatedAt: new Date(),
         } as Certificate,
       ];
-      const score = calculateSustainabilityScore(feedstock as Feedstock, certificates);
+      const score = calculateSustainabilityScore(
+        feedstock as Feedstock,
+        certificates
+      );
       expect(score).toBeGreaterThan(40); // Should get 40 points for ISCC_EU
     });
 
@@ -78,7 +89,10 @@ describe("ABFI Rating System", () => {
       const feedstockCertified: Partial<Feedstock> = {
         verificationLevel: "abfi_certified",
       };
-      const score2 = calculateSustainabilityScore(feedstockCertified as Feedstock, []);
+      const score2 = calculateSustainabilityScore(
+        feedstockCertified as Feedstock,
+        []
+      );
 
       expect(score1).toBeLessThan(score2);
     });
@@ -113,7 +127,9 @@ describe("ABFI Rating System", () => {
         updatedAt: new Date(),
       } as QualityTest;
 
-      const score = calculateQualityScore(feedstock as Feedstock, [qualityTest]);
+      const score = calculateQualityScore(feedstock as Feedstock, [
+        qualityTest,
+      ]);
       expect(score).toBeGreaterThan(90); // All parameters are excellent
     });
 
@@ -136,7 +152,9 @@ describe("ABFI Rating System", () => {
         updatedAt: new Date(),
       } as QualityTest;
 
-      const score = calculateQualityScore(feedstock as Feedstock, [qualityTest]);
+      const score = calculateQualityScore(feedstock as Feedstock, [
+        qualityTest,
+      ]);
       expect(score).toBeGreaterThan(85); // Good quality UCO
     });
   });

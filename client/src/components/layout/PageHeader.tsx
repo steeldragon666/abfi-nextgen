@@ -45,16 +45,51 @@ interface NavGroup {
 }
 
 const marketplaceItems: NavItem[] = [
-  { label: "Futures Marketplace", href: "/futures", icon: TrendingUp, description: "Browse long-term supply contracts" },
-  { label: "Demand Signals", href: "/demand-signals", icon: BarChart3, description: "View buyer requirements" },
-  { label: "Browse Feedstocks", href: "/browse", icon: TreeDeciduous, description: "Explore available biomass" },
+  {
+    label: "Futures Marketplace",
+    href: "/futures",
+    icon: TrendingUp,
+    description: "Browse long-term supply contracts",
+  },
+  {
+    label: "Demand Signals",
+    href: "/demand-signals",
+    icon: BarChart3,
+    description: "View buyer requirements",
+  },
+  {
+    label: "Browse Feedstocks",
+    href: "/browse",
+    icon: TreeDeciduous,
+    description: "Explore available biomass",
+  },
 ];
 
 const resourcesItems: NavItem[] = [
-  { label: "For Growers", href: "/for-growers", icon: TreeDeciduous, description: "Benefits for producers" },
-  { label: "For Developers", href: "/for-developers", icon: Building2, description: "Project development tools" },
-  { label: "For Lenders", href: "/for-lenders", icon: Banknote, description: "Risk assessment framework" },
-  { label: "Platform Features", href: "/platform-features", icon: FileText, description: "Full feature overview" },
+  {
+    label: "For Growers",
+    href: "/for-growers",
+    icon: TreeDeciduous,
+    description: "Benefits for producers",
+  },
+  {
+    label: "For Developers",
+    href: "/for-developers",
+    icon: Building2,
+    description: "Project development tools",
+  },
+  {
+    label: "For Lenders",
+    href: "/for-lenders",
+    icon: Banknote,
+    description: "Risk assessment framework",
+  },
+  {
+    label: "Platform Features",
+    href: "/platform-features",
+    icon: FileText,
+    description: "Full feature overview",
+  },
 ];
 
 interface PageHeaderProps {
@@ -62,12 +97,16 @@ interface PageHeaderProps {
   className?: string;
 }
 
-export function PageHeader({ variant = "default", className }: PageHeaderProps) {
+export function PageHeader({
+  variant = "default",
+  className,
+}: PageHeaderProps) {
   const { isAuthenticated } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
 
-  const isActive = (href: string) => location === href || location.startsWith(href + "/");
+  const isActive = (href: string) =>
+    location === href || location.startsWith(href + "/");
 
   const headerClasses = cn(
     "border-b sticky top-0 z-50 backdrop-blur-md",
@@ -95,15 +134,33 @@ export function PageHeader({ variant = "default", className }: PageHeaderProps) 
         {/* Logo */}
         <Link href="/">
           <div className="flex items-center gap-3 group cursor-pointer">
-            <div className={cn(
-              "p-2 rounded-xl transition-colors",
-              variant === "default" ? "bg-primary/10 group-hover:bg-primary/20" : "bg-white/10 group-hover:bg-white/20"
-            )}>
-              <Leaf className={cn("h-6 w-6", variant === "default" ? "text-primary" : "text-white")} />
+            <div
+              className={cn(
+                "p-2 rounded-xl transition-colors",
+                variant === "default"
+                  ? "bg-primary/10 group-hover:bg-primary/20"
+                  : "bg-white/10 group-hover:bg-white/20"
+              )}
+            >
+              <Leaf
+                className={cn(
+                  "h-6 w-6",
+                  variant === "default" ? "text-primary" : "text-white"
+                )}
+              />
             </div>
             <div className="flex flex-col">
-              <span className={cn("text-xl font-bold font-display", textClasses)}>ABFI</span>
-              <span className={cn("text-[10px] -mt-1 hidden sm:block", mutedClasses)}>
+              <span
+                className={cn("text-xl font-bold font-display", textClasses)}
+              >
+                ABFI
+              </span>
+              <span
+                className={cn(
+                  "text-[10px] -mt-1 hidden sm:block",
+                  mutedClasses
+                )}
+              >
                 Bank-Grade Infrastructure
               </span>
             </div>
@@ -120,7 +177,9 @@ export function PageHeader({ variant = "default", className }: PageHeaderProps) 
                 size="sm"
                 className={cn(
                   "gap-1",
-                  isActive("/futures") || isActive("/demand-signals") || isActive("/browse")
+                  isActive("/futures") ||
+                    isActive("/demand-signals") ||
+                    isActive("/browse")
                     ? "bg-primary/10 text-primary"
                     : ""
                 )}
@@ -130,16 +189,22 @@ export function PageHeader({ variant = "default", className }: PageHeaderProps) 
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-64">
-              <DropdownMenuLabel className="text-xs text-muted-foreground">Browse Supply</DropdownMenuLabel>
-              {marketplaceItems.map((item) => (
+              <DropdownMenuLabel className="text-xs text-muted-foreground">
+                Browse Supply
+              </DropdownMenuLabel>
+              {marketplaceItems.map(item => (
                 <DropdownMenuItem key={item.href} asChild>
                   <Link href={item.href} className="cursor-pointer">
                     <div className="flex items-start gap-3 py-1">
-                      {item.icon && <item.icon className="h-4 w-4 mt-0.5 text-primary" />}
+                      {item.icon && (
+                        <item.icon className="h-4 w-4 mt-0.5 text-primary" />
+                      )}
                       <div>
                         <div className="font-medium">{item.label}</div>
                         {item.description && (
-                          <div className="text-xs text-muted-foreground">{item.description}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {item.description}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -153,7 +218,9 @@ export function PageHeader({ variant = "default", className }: PageHeaderProps) 
             <Button
               variant="ghost"
               size="sm"
-              className={isActive("/bankability") ? "bg-primary/10 text-primary" : ""}
+              className={
+                isActive("/bankability") ? "bg-primary/10 text-primary" : ""
+              }
             >
               Bankability
             </Button>
@@ -163,7 +230,9 @@ export function PageHeader({ variant = "default", className }: PageHeaderProps) 
             <Button
               variant="ghost"
               size="sm"
-              className={isActive("/feedstock-map") ? "bg-primary/10 text-primary" : ""}
+              className={
+                isActive("/feedstock-map") ? "bg-primary/10 text-primary" : ""
+              }
             >
               <Map className="h-4 w-4 mr-1" />
               Map
@@ -179,16 +248,22 @@ export function PageHeader({ variant = "default", className }: PageHeaderProps) 
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-64">
-              <DropdownMenuLabel className="text-xs text-muted-foreground">Learn More</DropdownMenuLabel>
-              {resourcesItems.map((item) => (
+              <DropdownMenuLabel className="text-xs text-muted-foreground">
+                Learn More
+              </DropdownMenuLabel>
+              {resourcesItems.map(item => (
                 <DropdownMenuItem key={item.href} asChild>
                   <Link href={item.href} className="cursor-pointer">
                     <div className="flex items-start gap-3 py-1">
-                      {item.icon && <item.icon className="h-4 w-4 mt-0.5 text-primary" />}
+                      {item.icon && (
+                        <item.icon className="h-4 w-4 mt-0.5 text-primary" />
+                      )}
                       <div>
                         <div className="font-medium">{item.label}</div>
                         {item.description && (
-                          <div className="text-xs text-muted-foreground">{item.description}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {item.description}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -244,7 +319,7 @@ export function PageHeader({ variant = "default", className }: PageHeaderProps) 
               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2">
                 Marketplace
               </div>
-              {marketplaceItems.map((item) => (
+              {marketplaceItems.map(item => (
                 <Link key={item.href} href={item.href}>
                   <Button
                     variant="ghost"
@@ -281,7 +356,9 @@ export function PageHeader({ variant = "default", className }: PageHeaderProps) 
                   variant="ghost"
                   className={cn(
                     "w-full justify-start gap-3",
-                    isActive("/feedstock-map") ? "bg-primary/10 text-primary" : ""
+                    isActive("/feedstock-map")
+                      ? "bg-primary/10 text-primary"
+                      : ""
                   )}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -293,7 +370,7 @@ export function PageHeader({ variant = "default", className }: PageHeaderProps) 
               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2 mt-2">
                 Resources
               </div>
-              {resourcesItems.map((item) => (
+              {resourcesItems.map(item => (
                 <Link key={item.href} href={item.href}>
                   <Button
                     variant="ghost"
@@ -309,7 +386,10 @@ export function PageHeader({ variant = "default", className }: PageHeaderProps) 
               <div className="border-t mt-4 pt-4">
                 {isAuthenticated ? (
                   <Link href="/dashboard">
-                    <Button className="w-full" onClick={() => setMobileMenuOpen(false)}>
+                    <Button
+                      className="w-full"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
                       Dashboard
                       <ArrowRight className="h-4 w-4 ml-1" />
                     </Button>

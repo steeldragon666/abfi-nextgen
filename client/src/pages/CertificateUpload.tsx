@@ -1,9 +1,21 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { ArrowLeft, FileText, Leaf, Upload } from "lucide-react";
 import { useState } from "react";
@@ -11,7 +23,10 @@ import { Link, Redirect, useLocation, useSearch } from "wouter";
 import { toast } from "sonner";
 
 const CERTIFICATE_TYPES = [
-  { value: "ISCC", label: "ISCC (International Sustainability & Carbon Certification)" },
+  {
+    value: "ISCC",
+    label: "ISCC (International Sustainability & Carbon Certification)",
+  },
   { value: "RSB", label: "RSB (Roundtable on Sustainable Biomaterials)" },
   { value: "RED_II", label: "RED II (Renewable Energy Directive)" },
   { value: "ABFI", label: "ABFI Certification" },
@@ -103,12 +118,7 @@ export default function CertificateUpload() {
   };
 
   const canSubmit =
-    certificateType &&
-    issuer &&
-    issueDate &&
-    expiryDate &&
-    file &&
-    !uploading;
+    certificateType && issuer && issueDate && expiryDate && file && !uploading;
 
   if (!isAuthenticated) {
     return <Redirect to="/dashboard" />;
@@ -141,7 +151,8 @@ export default function CertificateUpload() {
           <CardHeader>
             <CardTitle>Feedstock Not Found</CardTitle>
             <CardDescription>
-              The feedstock you're trying to add a certificate to could not be found
+              The feedstock you're trying to add a certificate to could not be
+              found
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -178,7 +189,9 @@ export default function CertificateUpload() {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-2">
             <FileText className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold text-primary">Upload Certificate</h1>
+            <h1 className="text-4xl font-bold text-primary">
+              Upload Certificate
+            </h1>
           </div>
           <p className="text-gray-600">
             Add certification documents to improve your ABFI rating
@@ -198,7 +211,9 @@ export default function CertificateUpload() {
               </div>
               <div className="text-right">
                 <p className="text-sm text-gray-600">Current ABFI Score</p>
-                <p className="text-2xl font-bold text-primary">{feedstock.abfiScore || 'N/A'}</p>
+                <p className="text-2xl font-bold text-primary">
+                  {feedstock.abfiScore || "N/A"}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -209,19 +224,23 @@ export default function CertificateUpload() {
           <CardHeader>
             <CardTitle>Certificate Details</CardTitle>
             <CardDescription>
-              Provide information about the certification document you're uploading
+              Provide information about the certification document you're
+              uploading
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="certificateType">Certificate Type *</Label>
-                <Select value={certificateType} onValueChange={setCertificateType}>
+                <Select
+                  value={certificateType}
+                  onValueChange={setCertificateType}
+                >
                   <SelectTrigger id="certificateType">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {CERTIFICATE_TYPES.map((type) => (
+                    {CERTIFICATE_TYPES.map(type => (
                       <SelectItem key={type.value} value={type.value}>
                         {type.label}
                       </SelectItem>
@@ -236,7 +255,7 @@ export default function CertificateUpload() {
                   id="issuer"
                   placeholder="e.g., ISCC System GmbH"
                   value={issuer}
-                  onChange={(e) => setIssuer(e.target.value)}
+                  onChange={e => setIssuer(e.target.value)}
                 />
               </div>
             </div>
@@ -248,7 +267,7 @@ export default function CertificateUpload() {
                   id="certificateNumber"
                   placeholder="e.g., ISCC-AU-123456"
                   value={certificateNumber}
-                  onChange={(e) => setCertificateNumber(e.target.value)}
+                  onChange={e => setCertificateNumber(e.target.value)}
                 />
               </div>
             </div>
@@ -260,7 +279,7 @@ export default function CertificateUpload() {
                   id="issueDate"
                   type="date"
                   value={issueDate}
-                  onChange={(e) => setIssueDate(e.target.value)}
+                  onChange={e => setIssueDate(e.target.value)}
                 />
               </div>
 
@@ -270,7 +289,7 @@ export default function CertificateUpload() {
                   id="expiryDate"
                   type="date"
                   value={expiryDate}
-                  onChange={(e) => setExpiryDate(e.target.value)}
+                  onChange={e => setExpiryDate(e.target.value)}
                 />
               </div>
             </div>
@@ -290,11 +309,16 @@ export default function CertificateUpload() {
                           <span className="font-semibold">{file.name}</span>
                         ) : (
                           <>
-                            <span className="font-semibold">Click to upload</span> or drag and drop
+                            <span className="font-semibold">
+                              Click to upload
+                            </span>{" "}
+                            or drag and drop
                           </>
                         )}
                       </p>
-                      <p className="text-xs text-gray-500">PDF, JPG, PNG (MAX. 10MB)</p>
+                      <p className="text-xs text-gray-500">
+                        PDF, JPG, PNG (MAX. 10MB)
+                      </p>
                     </div>
                     <input
                       id="file"
@@ -309,7 +333,9 @@ export default function CertificateUpload() {
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-900 mb-2">Benefits of Certification</h4>
+              <h4 className="font-semibold text-blue-900 mb-2">
+                Benefits of Certification
+              </h4>
               <ul className="text-sm text-blue-800 space-y-1">
                 <li>• Improves your sustainability score in the ABFI rating</li>
                 <li>• Increases buyer confidence and trust</li>
@@ -322,10 +348,7 @@ export default function CertificateUpload() {
               <Link href="/dashboard">
                 <Button variant="outline">Cancel</Button>
               </Link>
-              <Button
-                onClick={handleSubmit}
-                disabled={!canSubmit}
-              >
+              <Button onClick={handleSubmit} disabled={!canSubmit}>
                 {uploading ? "Uploading..." : "Upload Certificate"}
               </Button>
             </div>

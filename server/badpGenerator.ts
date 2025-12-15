@@ -1,9 +1,9 @@
 /**
  * Biological Asset Data Pack (BADP) Generator
- * 
+ *
  * Generates comprehensive documentation packages for biological assets
  * suitable for green bonds, project finance, and institutional investors.
- * 
+ *
  * Revenue: $75,000 - $300,000 per asset pack
  */
 
@@ -21,13 +21,13 @@ export interface BADPAssetData {
     longitude?: number;
     landArea?: number; // hectares
   };
-  
+
   // Lifecycle Parameters
   plantingDate?: string;
   maturityDate?: string;
   harvestCycle?: string; // e.g., "Annual", "3-year rotation"
   expectedLifespan?: number; // years
-  
+
   // Verified Yield Curves
   yieldData: {
     p50: number[]; // tonnes/year for each year
@@ -36,7 +36,7 @@ export interface BADPAssetData {
     methodology: string;
     historicalValidation?: string;
   };
-  
+
   // Carbon Performance
   carbonProfile: {
     intensityGco2eMj: number;
@@ -44,7 +44,7 @@ export interface BADPAssetData {
     projectionMethodology: string;
     sequestrationRate?: number; // tCO2e/ha/year
   };
-  
+
   // Contracted Offtake
   offtakeContracts: Array<{
     buyer: string;
@@ -54,7 +54,7 @@ export interface BADPAssetData {
     startDate: string;
     endDate: string;
   }>;
-  
+
   // Counterparty Risk
   supplierProfile: {
     name: string;
@@ -63,7 +63,7 @@ export interface BADPAssetData {
     financialStrength: string;
     creditRating?: string;
   };
-  
+
   // Risk Analysis
   riskAssessment: {
     concentrationRisk: string; // HHI score
@@ -71,21 +71,21 @@ export interface BADPAssetData {
     climateRisk: string;
     operationalRisk: string;
   };
-  
+
   // Historical Performance
   historicalData?: {
     actualYields: number[];
     varianceFromProjected: number[];
     deliveryReliability: number; // percentage
   };
-  
+
   // Stress Scenarios
   stressScenarios: Array<{
     scenario: string;
     impact: string;
     mitigationStrategy: string;
   }>;
-  
+
   // ABFI Rating
   abfiRating: {
     score: number;
@@ -95,7 +95,7 @@ export interface BADPAssetData {
     qualityScore: number;
     reliabilityScore: number;
   };
-  
+
   // Bankability Assessment
   bankabilityRating?: {
     rating: string; // AAA, AA, A, etc.
@@ -104,7 +104,7 @@ export interface BADPAssetData {
     counterpartyScore: number;
     contractScore: number;
   };
-  
+
   // Document Metadata
   badpNumber: string;
   issueDate: string;
@@ -138,7 +138,9 @@ export async function generateBADP(data: BADPAssetData): Promise<Buffer> {
 
   doc.setFontSize(12);
   doc.setFont("helvetica", "normal");
-  doc.text(`BADP No: ${data.badpNumber}`, pageWidth / 2, 50, { align: "center" });
+  doc.text(`BADP No: ${data.badpNumber}`, pageWidth / 2, 50, {
+    align: "center",
+  });
 
   yPos = 80;
   doc.setTextColor(55, 65, 81);
@@ -149,20 +151,24 @@ export async function generateBADP(data: BADPAssetData): Promise<Buffer> {
   yPos += 10;
   doc.setFontSize(12);
   doc.setFont("helvetica", "normal");
-  doc.text(`${data.assetType} | ${data.location.state}`, pageWidth / 2, yPos, { align: "center" });
+  doc.text(`${data.assetType} | ${data.location.state}`, pageWidth / 2, yPos, {
+    align: "center",
+  });
 
   // Rating badges
   yPos += 20;
   const badgeY = yPos;
-  
+
   // ABFI Rating
   doc.setFillColor(16, 185, 129);
   doc.circle(pageWidth / 2 - 30, badgeY, 15, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
-  doc.text(data.abfiRating.grade, pageWidth / 2 - 30, badgeY + 2, { align: "center" });
-  
+  doc.text(data.abfiRating.grade, pageWidth / 2 - 30, badgeY + 2, {
+    align: "center",
+  });
+
   doc.setTextColor(55, 65, 81);
   doc.setFontSize(9);
   doc.text("ABFI Rating", pageWidth / 2 - 30, badgeY + 20, { align: "center" });
@@ -174,19 +180,35 @@ export async function generateBADP(data: BADPAssetData): Promise<Buffer> {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
-    doc.text(data.bankabilityRating.rating, pageWidth / 2 + 30, badgeY + 2, { align: "center" });
-    
+    doc.text(data.bankabilityRating.rating, pageWidth / 2 + 30, badgeY + 2, {
+      align: "center",
+    });
+
     doc.setTextColor(55, 65, 81);
     doc.setFontSize(9);
-    doc.text("Bankability", pageWidth / 2 + 30, badgeY + 20, { align: "center" });
+    doc.text("Bankability", pageWidth / 2 + 30, badgeY + 20, {
+      align: "center",
+    });
   }
 
   // Footer
   doc.setFontSize(8);
   doc.setTextColor(107, 114, 128);
-  doc.text(`Prepared for: ${data.preparedFor}`, pageWidth / 2, pageHeight - 30, { align: "center" });
-  doc.text(`Issue Date: ${data.issueDate}`, pageWidth / 2, pageHeight - 25, { align: "center" });
-  doc.text("CONFIDENTIAL - For Institutional Investors Only", pageWidth / 2, pageHeight - 15, { align: "center" });
+  doc.text(
+    `Prepared for: ${data.preparedFor}`,
+    pageWidth / 2,
+    pageHeight - 30,
+    { align: "center" }
+  );
+  doc.text(`Issue Date: ${data.issueDate}`, pageWidth / 2, pageHeight - 25, {
+    align: "center",
+  });
+  doc.text(
+    "CONFIDENTIAL - For Institutional Investors Only",
+    pageWidth / 2,
+    pageHeight - 15,
+    { align: "center" }
+  );
 
   // === PAGE 2: EXECUTIVE SUMMARY ===
   doc.addPage();
@@ -243,11 +265,16 @@ export async function generateBADP(data: BADPAssetData): Promise<Buffer> {
 
   yPos += 7;
   doc.setFont("helvetica", "normal");
-  const avgYield = data.yieldData.p50.reduce((a, b) => a + b, 0) / data.yieldData.p50.length;
+  const avgYield =
+    data.yieldData.p50.reduce((a, b) => a + b, 0) / data.yieldData.p50.length;
   doc.text(`Average: ${avgYield.toFixed(0)} tonnes/year`, 20, yPos);
 
   yPos += 6;
-  doc.text(`Range: ${Math.min(...data.yieldData.p50)} - ${Math.max(...data.yieldData.p50)} tonnes/year`, 20, yPos);
+  doc.text(
+    `Range: ${Math.min(...data.yieldData.p50)} - ${Math.max(...data.yieldData.p50)} tonnes/year`,
+    20,
+    yPos
+  );
 
   // Carbon Performance
   yPos += 12;
@@ -270,7 +297,10 @@ export async function generateBADP(data: BADPAssetData): Promise<Buffer> {
 
   yPos += 7;
   doc.setFont("helvetica", "normal");
-  const totalContracted = data.offtakeContracts.reduce((sum, c) => sum + c.volumeTonnes, 0);
+  const totalContracted = data.offtakeContracts.reduce(
+    (sum, c) => sum + c.volumeTonnes,
+    0
+  );
   doc.text(`Total Contracted Volume:`, 20, yPos);
   doc.text(`${totalContracted.toLocaleString()} tonnes/year`, 70, yPos);
 
@@ -317,7 +347,11 @@ export async function generateBADP(data: BADPAssetData): Promise<Buffer> {
 
   if (data.yieldData.historicalValidation) {
     yPos += 5;
-    doc.text(`Historical Validation: ${data.yieldData.historicalValidation}`, 20, yPos);
+    doc.text(
+      `Historical Validation: ${data.yieldData.historicalValidation}`,
+      20,
+      yPos
+    );
   }
 
   // === PAGE 4: RISK ASSESSMENT ===

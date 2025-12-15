@@ -33,14 +33,14 @@ export async function uploadEvidenceFile(
   // Calculate hash first
   const fileHash = calculateFileHash(buffer);
   const fileSize = buffer.length;
-  
+
   // Generate S3 key using hash (prevents enumeration, ensures uniqueness)
   const extension = originalFilename.split(".").pop() || "bin";
   const fileKey = `evidence/${fileHash.substring(0, 2)}/${fileHash}.${extension}`;
-  
+
   // Upload to S3
   const { url } = await storagePut(fileKey, buffer, mimeType);
-  
+
   return {
     fileUrl: url,
     fileHash,
@@ -57,11 +57,16 @@ export function generateSnapshotHash(
   frozenEvidenceSet: Array<{ evidenceId: number; fileHash: string }>
 ): string {
   // Create deterministic JSON string (sorted keys)
-  const scoreString = JSON.stringify(frozenScoreData, Object.keys(frozenScoreData).sort());
-  const evidenceString = JSON.stringify(
-    frozenEvidenceSet.map(e => ({ id: e.evidenceId, hash: e.fileHash })).sort((a, b) => a.id - b.id)
+  const scoreString = JSON.stringify(
+    frozenScoreData,
+    Object.keys(frozenScoreData).sort()
   );
-  
+  const evidenceString = JSON.stringify(
+    frozenEvidenceSet
+      .map(e => ({ id: e.evidenceId, hash: e.fileHash }))
+      .sort((a, b) => a.id - b.id)
+  );
+
   const combined = scoreString + evidenceString;
   return crypto.createHash("sha256").update(combined).digest("hex");
 }
@@ -132,21 +137,26 @@ export function validateEvidenceMetadata(
   evidenceType: string,
   metadata: Record<string, any>
 ): { valid: boolean; errors: string[] } {
-  const schema = EVIDENCE_TYPE_SCHEMAS[evidenceType as keyof typeof EVIDENCE_TYPE_SCHEMAS];
-  
+  const schema =
+    EVIDENCE_TYPE_SCHEMAS[evidenceType as keyof typeof EVIDENCE_TYPE_SCHEMAS];
+
   if (!schema) {
     return { valid: false, errors: [`Unknown evidence type: ${evidenceType}`] };
   }
-  
+
   const errors: string[] = [];
-  
+
   // Check required fields
   for (const field of schema.required) {
-    if (!(field in metadata) || metadata[field] === null || metadata[field] === undefined) {
+    if (
+      !(field in metadata) ||
+      metadata[field] === null ||
+      metadata[field] === undefined
+    ) {
       errors.push(`Missing required field: ${field}`);
     }
   }
-  
+
   return {
     valid: errors.length === 0,
     errors,
@@ -156,13 +166,16 @@ export function validateEvidenceMetadata(
 /**
  * Check if evidence is expiring soon
  */
-export function isEvidenceExpiringSoon(expiryDate: Date | null, daysThreshold: number = 30): boolean {
+export function isEvidenceExpiringSoon(
+  expiryDate: Date | null,
+  daysThreshold: number = 30
+): boolean {
   if (!expiryDate) return false;
-  
+
   const now = new Date();
   const threshold = new Date();
   threshold.setDate(threshold.getDate() + daysThreshold);
-  
+
   return expiryDate <= threshold && expiryDate > now;
 }
 
@@ -181,8 +194,13 @@ export function buildEvidenceLineage(
   currentEvidence: any,
   allEvidence: any[]
 ): Array<{ id: number; version: number; date: Date; supersededBy?: number }> {
-  const lineage: Array<{ id: number; version: number; date: Date; supersededBy?: number }> = [];
-  
+  const lineage: Array<{
+    id: number;
+    version: number;
+    date: Date;
+    supersededBy?: number;
+  }> = [];
+
   // Start from current and walk backwards
   let current = currentEvidence;
   while (current) {
@@ -192,11 +210,11 @@ export function buildEvidenceLineage(
       date: current.createdAt,
       supersededBy: current.supersededById,
     });
-    
+
     // Find predecessor (evidence that was superseded by current)
     const predecessor = allEvidence.find(e => e.supersededById === current.id);
     current = predecessor;
   }
-  
+
   return lineage;
 }

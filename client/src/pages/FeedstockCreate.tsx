@@ -1,9 +1,21 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AUSTRALIAN_STATES, FEEDSTOCK_CATEGORIES } from "@/const";
 import { trpc } from "@/lib/trpc";
@@ -36,7 +48,9 @@ export default function FeedstockCreate() {
 
   const createMutation = trpc.feedstocks.create.useMutation({
     onSuccess: () => {
-      toast.success("Feedstock created successfully! Pending admin verification.");
+      toast.success(
+        "Feedstock created successfully! Pending admin verification."
+      );
       setLocation("/dashboard");
     },
     onError: (error: any) => {
@@ -59,14 +73,22 @@ export default function FeedstockCreate() {
       annualCapacityTonnes: parseInt(annualCapacity),
       availableVolumeCurrent: parseInt(availableVolume),
       pricePerTonne: pricePerTonne ? parseFloat(pricePerTonne) : undefined,
-      carbonIntensityValue: carbonIntensity ? parseFloat(carbonIntensity) : undefined,
-      moistureContent: moistureContent ? parseFloat(moistureContent) : undefined,
+      carbonIntensityValue: carbonIntensity
+        ? parseFloat(carbonIntensity)
+        : undefined,
+      moistureContent: moistureContent
+        ? parseFloat(moistureContent)
+        : undefined,
     };
-    
+
     if (productionMethod) {
-      payload.productionMethod = productionMethod as "crop" | "waste" | "residue" | "processing_byproduct";
+      payload.productionMethod = productionMethod as
+        | "crop"
+        | "waste"
+        | "residue"
+        | "processing_byproduct";
     }
-    
+
     createMutation.mutate(payload);
   };
 
@@ -90,7 +112,8 @@ export default function FeedstockCreate() {
           <CardHeader>
             <CardTitle>Supplier Profile Required</CardTitle>
             <CardDescription>
-              You need to register as a supplier before creating feedstock listings
+              You need to register as a supplier before creating feedstock
+              listings
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -127,7 +150,9 @@ export default function FeedstockCreate() {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-2">
             <Package className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold text-primary">List New Feedstock</h1>
+            <h1 className="text-4xl font-bold text-primary">
+              List New Feedstock
+            </h1>
           </div>
           <p className="text-gray-600">
             Add a new feedstock to the ABFI marketplace
@@ -138,8 +163,8 @@ export default function FeedstockCreate() {
           <CardHeader>
             <CardTitle>Feedstock Details</CardTitle>
             <CardDescription>
-              Provide information about your feedstock supply. All listings are subject to
-              admin verification before going live.
+              Provide information about your feedstock supply. All listings are
+              subject to admin verification before going live.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -155,7 +180,7 @@ export default function FeedstockCreate() {
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {FEEDSTOCK_CATEGORIES.map((cat) => (
+                      {FEEDSTOCK_CATEGORIES.map(cat => (
                         <SelectItem key={cat.value} value={cat.value}>
                           {cat.label}
                         </SelectItem>
@@ -170,7 +195,7 @@ export default function FeedstockCreate() {
                     id="type"
                     placeholder="e.g., Canola, UCO Grade A, Bamboo P-Grade"
                     value={type}
-                    onChange={(e) => setType(e.target.value)}
+                    onChange={e => setType(e.target.value)}
                   />
                   <p className="text-sm text-gray-500 mt-1">
                     Be specific about the feedstock variety or grade
@@ -184,7 +209,7 @@ export default function FeedstockCreate() {
                   id="description"
                   placeholder="Describe your feedstock, production process, certifications, and any unique qualities..."
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={e => setDescription(e.target.value)}
                   rows={4}
                 />
               </div>
@@ -202,7 +227,7 @@ export default function FeedstockCreate() {
                       <SelectValue placeholder="Select state" />
                     </SelectTrigger>
                     <SelectContent>
-                      {AUSTRALIAN_STATES.map((s) => (
+                      {AUSTRALIAN_STATES.map(s => (
                         <SelectItem key={s.value} value={s.value}>
                           {s.label}
                         </SelectItem>
@@ -212,12 +237,14 @@ export default function FeedstockCreate() {
                 </div>
 
                 <div>
-                  <Label htmlFor="locationDescription">Location Description</Label>
+                  <Label htmlFor="locationDescription">
+                    Location Description
+                  </Label>
                   <Input
                     id="locationDescription"
                     placeholder="e.g., Central NSW, 200km from Sydney"
                     value={locationDescription}
-                    onChange={(e) => setLocationDescription(e.target.value)}
+                    onChange={e => setLocationDescription(e.target.value)}
                   />
                 </div>
               </div>
@@ -229,24 +256,28 @@ export default function FeedstockCreate() {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="annualCapacity">Annual Capacity (tonnes) *</Label>
+                  <Label htmlFor="annualCapacity">
+                    Annual Capacity (tonnes) *
+                  </Label>
                   <Input
                     id="annualCapacity"
                     type="number"
                     placeholder="e.g., 5000"
                     value={annualCapacity}
-                    onChange={(e) => setAnnualCapacity(e.target.value)}
+                    onChange={e => setAnnualCapacity(e.target.value)}
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="availableVolume">Currently Available (tonnes) *</Label>
+                  <Label htmlFor="availableVolume">
+                    Currently Available (tonnes) *
+                  </Label>
                   <Input
                     id="availableVolume"
                     type="number"
                     placeholder="e.g., 1000"
                     value={availableVolume}
-                    onChange={(e) => setAvailableVolume(e.target.value)}
+                    onChange={e => setAvailableVolume(e.target.value)}
                   />
                 </div>
               </div>
@@ -260,7 +291,7 @@ export default function FeedstockCreate() {
                     step="0.01"
                     placeholder="e.g., 450.00"
                     value={pricePerTonne}
-                    onChange={(e) => setPricePerTonne(e.target.value)}
+                    onChange={e => setPricePerTonne(e.target.value)}
                   />
                   <p className="text-sm text-gray-500 mt-1">
                     Optional - can be negotiated with buyers
@@ -269,14 +300,19 @@ export default function FeedstockCreate() {
 
                 <div>
                   <Label htmlFor="productionMethod">Production Method</Label>
-                  <Select value={productionMethod} onValueChange={setProductionMethod}>
+                  <Select
+                    value={productionMethod}
+                    onValueChange={setProductionMethod}
+                  >
                     <SelectTrigger id="productionMethod">
                       <SelectValue placeholder="Select method" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="crop">Crop</SelectItem>
                       <SelectItem value="waste">Waste Collection</SelectItem>
-                      <SelectItem value="byproduct">Industrial Byproduct</SelectItem>
+                      <SelectItem value="byproduct">
+                        Industrial Byproduct
+                      </SelectItem>
                       <SelectItem value="forestry">Forestry</SelectItem>
                       <SelectItem value="aquaculture">Aquaculture</SelectItem>
                     </SelectContent>
@@ -291,14 +327,16 @@ export default function FeedstockCreate() {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="carbonIntensity">Carbon Intensity (gCO2e/MJ)</Label>
+                  <Label htmlFor="carbonIntensity">
+                    Carbon Intensity (gCO2e/MJ)
+                  </Label>
                   <Input
                     id="carbonIntensity"
                     type="number"
                     step="0.1"
                     placeholder="e.g., 25.5"
                     value={carbonIntensity}
-                    onChange={(e) => setCarbonIntensity(e.target.value)}
+                    onChange={e => setCarbonIntensity(e.target.value)}
                   />
                   <p className="text-sm text-gray-500 mt-1">
                     Lower values receive higher ABFI ratings
@@ -313,7 +351,7 @@ export default function FeedstockCreate() {
                     step="0.1"
                     placeholder="e.g., 8.5"
                     value={moistureContent}
-                    onChange={(e) => setMoistureContent(e.target.value)}
+                    onChange={e => setMoistureContent(e.target.value)}
                   />
                 </div>
               </div>
@@ -321,12 +359,22 @@ export default function FeedstockCreate() {
 
             {/* Info Box */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-900 mb-2">After Submission</h4>
+              <h4 className="font-semibold text-blue-900 mb-2">
+                After Submission
+              </h4>
               <ul className="text-sm text-blue-800 space-y-1">
-                <li>• Your feedstock will be reviewed by ABFI administrators</li>
-                <li>• Upload certificates and quality test reports to improve your ABFI rating</li>
+                <li>
+                  • Your feedstock will be reviewed by ABFI administrators
+                </li>
+                <li>
+                  • Upload certificates and quality test reports to improve your
+                  ABFI rating
+                </li>
                 <li>• Once verified, your listing will be visible to buyers</li>
-                <li>• You'll receive inquiries from interested buyers via the platform</li>
+                <li>
+                  • You'll receive inquiries from interested buyers via the
+                  platform
+                </li>
               </ul>
             </div>
 

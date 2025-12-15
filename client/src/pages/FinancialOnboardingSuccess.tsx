@@ -29,8 +29,9 @@ export default function FinancialOnboardingSuccess() {
             Institution Onboarding Complete
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Your financial institution profile has been successfully submitted. 
-            Our compliance team will review your credentials and activate your access within 5-7 business days.
+            Your financial institution profile has been successfully submitted.
+            Our compliance team will review your credentials and activate your
+            access within 5-7 business days.
           </p>
         </div>
 
@@ -40,20 +41,27 @@ export default function FinancialOnboardingSuccess() {
             <CardContent className="p-8">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <p className="text-sm text-gray-400 mb-1">Institution Reference</p>
+                  <p className="text-sm text-gray-400 mb-1">
+                    Institution Reference
+                  </p>
                   <p className="text-2xl font-mono font-bold text-[#c9a962]">
-                    FIN-{new Date().getFullYear()}-{Math.random().toString(36).substr(2, 6).toUpperCase()}
+                    FIN-{new Date().getFullYear()}-
+                    {Math.random().toString(36).substr(2, 6).toUpperCase()}
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-gray-400 mb-1">Submitted</p>
-                  <p className="text-lg font-semibold">{new Date().toLocaleDateString()}</p>
+                  <p className="text-lg font-semibold">
+                    {new Date().toLocaleDateString()}
+                  </p>
                 </div>
               </div>
-              
+
               <div className="border-t border-gray-700 pt-6">
                 <p className="text-sm text-gray-400 mb-4">
-                  Save this reference number for tracking your onboarding status. You'll receive email updates at each stage of the compliance review.
+                  Save this reference number for tracking your onboarding
+                  status. You'll receive email updates at each stage of the
+                  compliance review.
                 </p>
               </div>
             </CardContent>
@@ -62,16 +70,21 @@ export default function FinancialOnboardingSuccess() {
 
         {/* Next Steps */}
         <div className="max-w-3xl mx-auto mb-12">
-          <h2 className="text-2xl font-serif font-bold mb-6 text-center">Onboarding Process</h2>
+          <h2 className="text-2xl font-serif font-bold mb-6 text-center">
+            Onboarding Process
+          </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="bg-[#111820]/60 border-[#c9a962]/10 backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="w-12 h-12 bg-[#c9a962]/10 rounded-lg flex items-center justify-center mb-4">
                   <Shield className="w-6 h-6 text-[#c9a962]" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Compliance Review</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  Compliance Review
+                </h3>
                 <p className="text-sm text-gray-400">
-                  Our team will verify your ABN, regulatory credentials, and authorized representative details.
+                  Our team will verify your ABN, regulatory credentials, and
+                  authorized representative details.
                 </p>
               </CardContent>
             </Card>
@@ -83,7 +96,8 @@ export default function FinancialOnboardingSuccess() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Review Timeline</h3>
                 <p className="text-sm text-gray-400">
-                  Expect account activation within 5-7 business days. Additional documentation may be requested for verification.
+                  Expect account activation within 5-7 business days. Additional
+                  documentation may be requested for verification.
                 </p>
               </CardContent>
             </Card>
@@ -93,9 +107,12 @@ export default function FinancialOnboardingSuccess() {
                 <div className="w-12 h-12 bg-[#c9a962]/10 rounded-lg flex items-center justify-center mb-4">
                   <Mail className="w-6 h-6 text-[#c9a962]" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Access Activation</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  Access Activation
+                </h3>
                 <p className="text-sm text-gray-400">
-                  Once approved, you'll receive login credentials and access to your selected data tier.
+                  Once approved, you'll receive login credentials and access to
+                  your selected data tier.
                 </p>
               </CardContent>
             </Card>
@@ -114,28 +131,36 @@ export default function FinancialOnboardingSuccess() {
                   <Check className="w-5 h-5 text-[#c9a962] mt-0.5" />
                   <div>
                     <p className="font-semibold">Bankability Assessments</p>
-                    <p className="text-sm text-gray-400">Access project creditworthiness scores</p>
+                    <p className="text-sm text-gray-400">
+                      Access project creditworthiness scores
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#c9a962] mt-0.5" />
                   <div>
                     <p className="font-semibold">Supply Chain Data</p>
-                    <p className="text-sm text-gray-400">Verified feedstock availability metrics</p>
+                    <p className="text-sm text-gray-400">
+                      Verified feedstock availability metrics
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#c9a962] mt-0.5" />
                   <div>
                     <p className="font-semibold">Market Intelligence</p>
-                    <p className="text-sm text-gray-400">Real-time pricing and demand signals</p>
+                    <p className="text-sm text-gray-400">
+                      Real-time pricing and demand signals
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#c9a962] mt-0.5" />
                   <div>
                     <p className="font-semibold">Risk Analytics</p>
-                    <p className="text-sm text-gray-400">Concentration and counterparty risk metrics</p>
+                    <p className="text-sm text-gray-400">
+                      Concentration and counterparty risk metrics
+                    </p>
                   </div>
                 </div>
               </div>
@@ -146,7 +171,7 @@ export default function FinancialOnboardingSuccess() {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/">
-            <Button 
+            <Button
               size="lg"
               variant="outline"
               className="bg-transparent border-[#c9a962] text-[#c9a962] hover:bg-[#c9a962]/10"
@@ -155,7 +180,7 @@ export default function FinancialOnboardingSuccess() {
             </Button>
           </Link>
           <Link href="/bankability-explainer">
-            <Button 
+            <Button
               size="lg"
               className="bg-gradient-to-r from-[#c9a962] to-[#a88a4a] hover:from-[#a88a4a] hover:to-[#8a6e3a] text-white"
             >
@@ -167,9 +192,11 @@ export default function FinancialOnboardingSuccess() {
 
         {/* Support Information */}
         <div className="mt-16 text-center">
-          <p className="text-gray-400 mb-2">Questions about your application?</p>
-          <a 
-            href="mailto:institutions@biofeedau.com.au" 
+          <p className="text-gray-400 mb-2">
+            Questions about your application?
+          </p>
+          <a
+            href="mailto:institutions@biofeedau.com.au"
             className="text-[#c9a962] hover:underline font-semibold"
           >
             institutions@biofeedau.com.au

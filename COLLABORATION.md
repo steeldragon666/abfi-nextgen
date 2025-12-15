@@ -10,12 +10,14 @@ The ABFI platform code is now available on GitHub at:
 ### Initial Setup
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/powerplantnrg/abfi-platform.git
    cd abfi-platform
    ```
 
 2. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
@@ -33,11 +35,13 @@ The ABFI platform code is now available on GitHub at:
 ### Daily Workflow
 
 1. **Always pull latest changes before starting work:**
+
    ```bash
    git pull origin main
    ```
 
 2. **Create a feature branch for your work:**
+
    ```bash
    git checkout -b feature/your-feature-name
    # or
@@ -45,12 +49,14 @@ The ABFI platform code is now available on GitHub at:
    ```
 
 3. **Make your changes and commit frequently:**
+
    ```bash
    git add .
    git commit -m "Clear description of what changed"
    ```
 
 4. **Push your branch to GitHub:**
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -73,11 +79,13 @@ The ABFI platform code is now available on GitHub at:
 Write clear, descriptive commit messages:
 
 **Good:**
+
 - `Add supplier response submission form to demand signals`
 - `Fix TypeScript error in bankability assessment router`
 - `Update README with deployment instructions`
 
 **Bad:**
+
 - `Fixed stuff`
 - `WIP`
 - `Updates`
@@ -128,15 +136,17 @@ abfi-platform/
 ### Database Changes
 
 1. **Update schema:**
+
    ```typescript
    // Edit drizzle/schema.ts
-   export const newTable = mysqlTable('new_table', {
-     id: int('id').primaryKey().autoincrement(),
+   export const newTable = mysqlTable("new_table", {
+     id: int("id").primaryKey().autoincrement(),
      // ... fields
    });
    ```
 
 2. **Generate and apply migration:**
+
    ```bash
    pnpm db:push
    ```
@@ -172,6 +182,7 @@ abfi-platform/
 If you encounter merge conflicts:
 
 1. **Pull latest changes:**
+
    ```bash
    git pull origin main
    ```
@@ -183,6 +194,7 @@ If you encounter merge conflicts:
    - Remove conflict markers
 
 3. **Test after resolving:**
+
    ```bash
    pnpm dev  # Ensure server starts
    pnpm tsc --noEmit  # Check TypeScript
@@ -204,6 +216,7 @@ If you encounter merge conflicts:
 ## Deployment
 
 The platform is deployed via Manus hosting:
+
 - **Staging:** Automatic deployment from `main` branch
 - **Production:** Manual deployment after checkpoint creation
 - **Database:** Managed by Manus (connection string in env vars)

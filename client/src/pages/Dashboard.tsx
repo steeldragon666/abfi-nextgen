@@ -1,20 +1,48 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, StatsCard } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  StatsCard,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { Award, Building2, Leaf, Package, ShoppingCart, Shield, TrendingUp, CheckCircle, Clock, FileText, Search, Bell, ArrowRight } from "lucide-react";
+import {
+  Award,
+  Building2,
+  Leaf,
+  Package,
+  ShoppingCart,
+  Shield,
+  TrendingUp,
+  CheckCircle,
+  Clock,
+  FileText,
+  Search,
+  Bell,
+  ArrowRight,
+} from "lucide-react";
 import { Link, Redirect } from "wouter";
 import { cn } from "@/lib/utils";
-import { PageWrapper, FadeInUp, StaggerContainer, StaggerItem, HoverCard } from "@/components/ui/motion";
+import {
+  PageWrapper,
+  FadeInUp,
+  StaggerContainer,
+  StaggerItem,
+  HoverCard,
+} from "@/components/ui/motion";
 
 export default function Dashboard() {
   const { user, isAuthenticated, loading } = useAuth();
-  const { data: profile, isLoading: profileLoading } = trpc.auth.getProfile.useQuery(undefined, {
-    enabled: isAuthenticated,
-  });
+  const { data: profile, isLoading: profileLoading } =
+    trpc.auth.getProfile.useQuery(undefined, {
+      enabled: isAuthenticated,
+    });
 
   if (loading || profileLoading) {
     return (
@@ -44,7 +72,7 @@ export default function Dashboard() {
   // Check if user has supplier or buyer profile
   const hasSupplier = !!profile?.supplier;
   const hasBuyer = !!profile?.buyer;
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === "admin";
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,7 +97,9 @@ export default function Dashboard() {
               </Button>
             </Link>
             <Link href="/browse">
-              <Button variant="outline" size="sm">Browse Feedstocks</Button>
+              <Button variant="outline" size="sm">
+                Browse Feedstocks
+              </Button>
             </Link>
           </div>
         </div>
@@ -80,7 +110,10 @@ export default function Dashboard() {
         <FadeInUp className="mb-8">
           <h1 className="heading-1 text-foreground mb-2">Dashboard</h1>
           <p className="text-muted-foreground body-lg">
-            Welcome back, <span className="font-medium text-foreground">{user?.name || 'User'}</span>
+            Welcome back,{" "}
+            <span className="font-medium text-foreground">
+              {user?.name || "User"}
+            </span>
           </p>
         </FadeInUp>
 
@@ -95,10 +128,17 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <CardTitle className="text-lg">Admin Access</CardTitle>
-                    <CardDescription>You have administrative privileges</CardDescription>
+                    <CardDescription>
+                      You have administrative privileges
+                    </CardDescription>
                   </div>
                 </div>
-                <Badge variant="outline" className="text-primary border-primary/30">Admin</Badge>
+                <Badge
+                  variant="outline"
+                  className="text-primary border-primary/30"
+                >
+                  Admin
+                </Badge>
               </div>
             </CardHeader>
             <CardContent>
@@ -115,7 +155,11 @@ export default function Dashboard() {
                       Review supplier and feedstock submissions
                     </p>
                     <Link href="/admin">
-                      <Button className="w-full" size="sm" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                      <Button
+                        className="w-full"
+                        size="sm"
+                        rightIcon={<ArrowRight className="h-4 w-4" />}
+                      >
                         View Queue
                       </Button>
                     </Link>
@@ -170,9 +214,12 @@ export default function Dashboard() {
                     <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4 group-hover:bg-primary/20 transition-colors">
                       <Building2 className="h-8 w-8 text-primary" />
                     </div>
-                    <CardTitle className="heading-3">Register as Supplier</CardTitle>
+                    <CardTitle className="heading-3">
+                      Register as Supplier
+                    </CardTitle>
                     <CardDescription className="body-lg">
-                      List your biofuel feedstocks and connect with buyers across Australia
+                      List your biofuel feedstocks and connect with buyers
+                      across Australia
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -197,7 +244,11 @@ export default function Dashboard() {
                       </li>
                     </ul>
                     <Link href="/supplier/register">
-                      <Button className="w-full" size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                      <Button
+                        className="w-full"
+                        size="lg"
+                        rightIcon={<ArrowRight className="h-4 w-4" />}
+                      >
                         Create Supplier Profile
                       </Button>
                     </Link>
@@ -213,7 +264,9 @@ export default function Dashboard() {
                     <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4 group-hover:bg-primary/20 transition-colors">
                       <ShoppingCart className="h-8 w-8 text-primary" />
                     </div>
-                    <CardTitle className="heading-3">Register as Buyer</CardTitle>
+                    <CardTitle className="heading-3">
+                      Register as Buyer
+                    </CardTitle>
                     <CardDescription className="body-lg">
                       Source verified biofuel feedstocks from trusted suppliers
                     </CardDescription>
@@ -240,7 +293,11 @@ export default function Dashboard() {
                       </li>
                     </ul>
                     <Link href="/buyer/register">
-                      <Button className="w-full" size="lg" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                      <Button
+                        className="w-full"
+                        size="lg"
+                        rightIcon={<ArrowRight className="h-4 w-4" />}
+                      >
                         Create Buyer Profile
                       </Button>
                     </Link>
@@ -272,13 +329,15 @@ export default function Dashboard() {
                 <Card>
                   <CardContent className="p-5">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className={cn(
-                        "p-2 rounded-lg",
-                        profile.supplier?.verificationStatus === 'verified'
-                          ? "bg-success/10"
-                          : "bg-warning/10"
-                      )}>
-                        {profile.supplier?.verificationStatus === 'verified' ? (
+                      <div
+                        className={cn(
+                          "p-2 rounded-lg",
+                          profile.supplier?.verificationStatus === "verified"
+                            ? "bg-success/10"
+                            : "bg-warning/10"
+                        )}
+                      >
+                        {profile.supplier?.verificationStatus === "verified" ? (
                           <CheckCircle className="h-5 w-5 text-success" />
                         ) : (
                           <Clock className="h-5 w-5 text-warning" />
@@ -287,7 +346,10 @@ export default function Dashboard() {
                       <div>
                         <p className="font-medium">Verification Status</p>
                         <p className="text-sm text-muted-foreground capitalize">
-                          {profile.supplier?.verificationStatus?.replace('_', ' ') || 'Pending'}
+                          {profile.supplier?.verificationStatus?.replace(
+                            "_",
+                            " "
+                          ) || "Pending"}
                         </p>
                       </div>
                     </div>
@@ -333,11 +395,17 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <p className="font-medium">Browse Feedstocks</p>
-                        <p className="text-sm text-muted-foreground">Find verified suppliers</p>
+                        <p className="text-sm text-muted-foreground">
+                          Find verified suppliers
+                        </p>
                       </div>
                     </div>
                     <Link href="/browse">
-                      <Button className="w-full" size="sm" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                      <Button
+                        className="w-full"
+                        size="sm"
+                        rightIcon={<ArrowRight className="h-4 w-4" />}
+                      >
                         Start Searching
                       </Button>
                     </Link>
@@ -356,26 +424,38 @@ export default function Dashboard() {
           <CardContent>
             <div className="flex flex-wrap gap-3">
               <Link href="/browse">
-                <Button variant="outline" leftIcon={<Search className="h-4 w-4" />}>
+                <Button
+                  variant="outline"
+                  leftIcon={<Search className="h-4 w-4" />}
+                >
                   Browse Feedstocks
                 </Button>
               </Link>
               {hasSupplier && (
                 <Link href="/feedstock/create">
-                  <Button variant="outline" leftIcon={<Package className="h-4 w-4" />}>
+                  <Button
+                    variant="outline"
+                    leftIcon={<Package className="h-4 w-4" />}
+                  >
                     Add New Feedstock
                   </Button>
                 </Link>
               )}
               {hasBuyer && (
                 <Link href="/saved-searches">
-                  <Button variant="outline" leftIcon={<Search className="h-4 w-4" />}>
+                  <Button
+                    variant="outline"
+                    leftIcon={<Search className="h-4 w-4" />}
+                  >
                     Create Saved Search
                   </Button>
                 </Link>
               )}
               <Link href="/notifications">
-                <Button variant="outline" leftIcon={<Bell className="h-4 w-4" />}>
+                <Button
+                  variant="outline"
+                  leftIcon={<Bell className="h-4 w-4" />}
+                >
                   View Notifications
                 </Button>
               </Link>

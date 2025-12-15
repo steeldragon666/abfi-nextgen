@@ -1,6 +1,12 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
@@ -63,7 +69,8 @@ const MOCK_FUTURES = {
   id: 1,
   futuresId: "FUT-2025-0012",
   title: "Premium Eucalyptus Plantation - Hunter Valley",
-  description: "High-quality eucalyptus plantation established in 2020, using advanced silviculture practices. Located in prime growing region with excellent rainfall and soil conditions. Expected to produce consistent biomass yields over the projection period.",
+  description:
+    "High-quality eucalyptus plantation established in 2020, using advanced silviculture practices. Located in prime growing region with excellent rainfall and soil conditions. Expected to produce consistent biomass yields over the projection period.",
   cropType: "eucalyptus",
   cropVariety: "Eucalyptus grandis x camaldulensis",
   state: "NSW",
@@ -78,7 +85,8 @@ const MOCK_FUTURES = {
   totalAvailableTonnes: "340000",
   indicativePricePerTonne: "135.00",
   priceEscalationPercent: "2.5",
-  pricingNotes: "Volume discounts available for contracts >50,000 tonnes. Price includes delivery to major ports within 200km.",
+  pricingNotes:
+    "Volume discounts available for contracts >50,000 tonnes. Price includes delivery to major ports within 200km.",
   expectedCarbonIntensity: "12.5",
   expectedMoistureContent: "35",
   expectedEnergyContent: "18.5",
@@ -89,22 +97,134 @@ const MOCK_FUTURES = {
 };
 
 const MOCK_PROJECTIONS = [
-  { projectionYear: 2025, projectedTonnes: "5000", contractedTonnes: "2000", confidencePercent: 90, harvestSeason: "autumn", notes: "Initial thinning" },
-  { projectionYear: 2026, projectedTonnes: "12000", contractedTonnes: "5000", confidencePercent: 85, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2027, projectedTonnes: "25000", contractedTonnes: "10000", confidencePercent: 80, harvestSeason: "autumn", notes: "First major harvest" },
-  { projectionYear: 2028, projectedTonnes: "28000", contractedTonnes: "12000", confidencePercent: 80, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2029, projectedTonnes: "30000", contractedTonnes: "15000", confidencePercent: 75, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2030, projectedTonnes: "32000", contractedTonnes: "10000", confidencePercent: 75, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2031, projectedTonnes: "32000", contractedTonnes: "8000", confidencePercent: 70, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2032, projectedTonnes: "32000", contractedTonnes: "5000", confidencePercent: 70, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2033, projectedTonnes: "30000", contractedTonnes: "3000", confidencePercent: 65, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2034, projectedTonnes: "28000", contractedTonnes: "2000", confidencePercent: 65, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2035, projectedTonnes: "28000", contractedTonnes: "3000", confidencePercent: 60, harvestSeason: "autumn", notes: "Second rotation begins" },
-  { projectionYear: 2036, projectedTonnes: "25000", contractedTonnes: "5000", confidencePercent: 60, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2037, projectedTonnes: "28000", contractedTonnes: "3000", confidencePercent: 55, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2038, projectedTonnes: "30000", contractedTonnes: "2000", confidencePercent: 55, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2039, projectedTonnes: "30000", contractedTonnes: "0", confidencePercent: 50, harvestSeason: "autumn", notes: "" },
-  { projectionYear: 2040, projectedTonnes: "30000", contractedTonnes: "0", confidencePercent: 50, harvestSeason: "autumn", notes: "" },
+  {
+    projectionYear: 2025,
+    projectedTonnes: "5000",
+    contractedTonnes: "2000",
+    confidencePercent: 90,
+    harvestSeason: "autumn",
+    notes: "Initial thinning",
+  },
+  {
+    projectionYear: 2026,
+    projectedTonnes: "12000",
+    contractedTonnes: "5000",
+    confidencePercent: 85,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2027,
+    projectedTonnes: "25000",
+    contractedTonnes: "10000",
+    confidencePercent: 80,
+    harvestSeason: "autumn",
+    notes: "First major harvest",
+  },
+  {
+    projectionYear: 2028,
+    projectedTonnes: "28000",
+    contractedTonnes: "12000",
+    confidencePercent: 80,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2029,
+    projectedTonnes: "30000",
+    contractedTonnes: "15000",
+    confidencePercent: 75,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2030,
+    projectedTonnes: "32000",
+    contractedTonnes: "10000",
+    confidencePercent: 75,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2031,
+    projectedTonnes: "32000",
+    contractedTonnes: "8000",
+    confidencePercent: 70,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2032,
+    projectedTonnes: "32000",
+    contractedTonnes: "5000",
+    confidencePercent: 70,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2033,
+    projectedTonnes: "30000",
+    contractedTonnes: "3000",
+    confidencePercent: 65,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2034,
+    projectedTonnes: "28000",
+    contractedTonnes: "2000",
+    confidencePercent: 65,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2035,
+    projectedTonnes: "28000",
+    contractedTonnes: "3000",
+    confidencePercent: 60,
+    harvestSeason: "autumn",
+    notes: "Second rotation begins",
+  },
+  {
+    projectionYear: 2036,
+    projectedTonnes: "25000",
+    contractedTonnes: "5000",
+    confidencePercent: 60,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2037,
+    projectedTonnes: "28000",
+    contractedTonnes: "3000",
+    confidencePercent: 55,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2038,
+    projectedTonnes: "30000",
+    contractedTonnes: "2000",
+    confidencePercent: 55,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2039,
+    projectedTonnes: "30000",
+    contractedTonnes: "0",
+    confidencePercent: 50,
+    harvestSeason: "autumn",
+    notes: "",
+  },
+  {
+    projectionYear: 2040,
+    projectedTonnes: "30000",
+    contractedTonnes: "0",
+    confidencePercent: 50,
+    harvestSeason: "autumn",
+    notes: "",
+  },
 ];
 
 const MOCK_EOIS = [
@@ -119,7 +239,8 @@ const MOCK_EOIS = [
     offeredPricePerTonne: "140.00",
     deliveryLocation: "Port of Newcastle",
     deliveryFrequency: "quarterly",
-    additionalTerms: "Interested in long-term partnership. Can provide offtake guarantee.",
+    additionalTerms:
+      "Interested in long-term partnership. Can provide offtake guarantee.",
     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     buyer: {
       id: 1,
@@ -139,7 +260,8 @@ const MOCK_EOIS = [
     offeredPricePerTonne: "138.50",
     deliveryLocation: "Sydney Processing Hub",
     deliveryFrequency: "monthly",
-    additionalTerms: "Major biofuel producer seeking reliable long-term supply. Can provide advance payments.",
+    additionalTerms:
+      "Major biofuel producer seeking reliable long-term supply. Can provide advance payments.",
     createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     buyer: {
       id: 2,
@@ -159,7 +281,8 @@ const MOCK_EOIS = [
     offeredPricePerTonne: "132.00",
     deliveryLocation: "Brisbane Industrial Park",
     deliveryFrequency: "quarterly",
-    supplierResponse: "Thank you for your interest. We are pleased to accept and look forward to finalizing the contract.",
+    supplierResponse:
+      "Thank you for your interest. We are pleased to accept and look forward to finalizing the contract.",
     respondedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
     createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
     buyer: {
@@ -251,7 +374,7 @@ const getEOIStatusColor = (status: string) => {
 };
 
 const formatStatusLabel = (status: string) => {
-  return status.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  return status.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
 };
 
 export default function FuturesDetailSupplier() {
@@ -267,23 +390,34 @@ export default function FuturesDetailSupplier() {
   const [respondDialogOpen, setRespondDialogOpen] = useState(false);
   const [selectedEOI, setSelectedEOI] = useState<any>(null);
   const [responseText, setResponseText] = useState("");
-  const [respondAction, setRespondAction] = useState<"accepted" | "declined" | "under_review">("under_review");
+  const [respondAction, setRespondAction] = useState<
+    "accepted" | "declined" | "under_review"
+  >("under_review");
 
   const utils = trpc.useUtils();
 
-  const { data: apiData, isLoading, error } = trpc.futures.getById.useQuery(
+  const {
+    data: apiData,
+    isLoading,
+    error,
+  } = trpc.futures.getById.useQuery(
     { id: futuresId },
     { enabled: !!user && futuresId > 0 }
   );
 
-  const { data: apiEois, isLoading: loadingEOIs } = trpc.futures.getEOIsForFutures.useQuery(
-    { futuresId },
-    { enabled: !!user && futuresId > 0 && (apiData?.isOwner || !apiData) }
-  );
+  const { data: apiEois, isLoading: loadingEOIs } =
+    trpc.futures.getEOIsForFutures.useQuery(
+      { futuresId },
+      { enabled: !!user && futuresId > 0 && (apiData?.isOwner || !apiData) }
+    );
 
   // Use mock data if API returns empty
   const isUsingMockData = !apiData;
-  const data = apiData || { futures: MOCK_FUTURES, projections: MOCK_PROJECTIONS, isOwner: true };
+  const data = apiData || {
+    futures: MOCK_FUTURES,
+    projections: MOCK_PROJECTIONS,
+    isOwner: true,
+  };
   const eois = apiEois && apiEois.length > 0 ? apiEois : MOCK_EOIS;
 
   const publishMutation = trpc.futures.publish.useMutation({
@@ -291,7 +425,7 @@ export default function FuturesDetailSupplier() {
       toast.success("Futures listing published!");
       utils.futures.getById.invalidate({ id: futuresId });
     },
-    onError: (error) => toast.error(error.message),
+    onError: error => toast.error(error.message),
   });
 
   const unpublishMutation = trpc.futures.unpublish.useMutation({
@@ -299,7 +433,7 @@ export default function FuturesDetailSupplier() {
       toast.success("Futures listing unpublished");
       utils.futures.getById.invalidate({ id: futuresId });
     },
-    onError: (error) => toast.error(error.message),
+    onError: error => toast.error(error.message),
   });
 
   const deleteMutation = trpc.futures.delete.useMutation({
@@ -307,7 +441,7 @@ export default function FuturesDetailSupplier() {
       toast.success("Futures listing deleted");
       setLocation("/supplier/futures");
     },
-    onError: (error) => toast.error(error.message),
+    onError: error => toast.error(error.message),
   });
 
   const respondMutation = trpc.futures.respondToEOI.useMutation({
@@ -318,7 +452,7 @@ export default function FuturesDetailSupplier() {
       setResponseText("");
       utils.futures.getEOIsForFutures.invalidate({ futuresId });
     },
-    onError: (error) => toast.error(error.message),
+    onError: error => toast.error(error.message),
   });
 
   if (authLoading || !user) {
@@ -354,7 +488,8 @@ export default function FuturesDetailSupplier() {
               <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">Futures Not Found</h3>
               <p className="text-muted-foreground mb-4">
-                {error?.message || "The futures listing you're looking for doesn't exist."}
+                {error?.message ||
+                  "The futures listing you're looking for doesn't exist."}
               </p>
               <Link href="/supplier/futures">
                 <Button variant="outline">Back to Futures</Button>
@@ -376,7 +511,9 @@ export default function FuturesDetailSupplier() {
             <CardContent className="py-8 text-center">
               <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">Access Denied</h3>
-              <p className="text-muted-foreground mb-4">You don't have permission to view this futures listing.</p>
+              <p className="text-muted-foreground mb-4">
+                You don't have permission to view this futures listing.
+              </p>
               <Link href="/supplier/futures">
                 <Button variant="outline">Back to Futures</Button>
               </Link>
@@ -390,13 +527,20 @@ export default function FuturesDetailSupplier() {
   const totalProjected = parseFloat(futures.totalProjectedTonnes || "0");
   const totalContracted = parseFloat(futures.totalContractedTonnes || "0");
   const totalAvailable = parseFloat(futures.totalAvailableTonnes || "0");
-  const contractedPercent = totalProjected > 0 ? (totalContracted / totalProjected) * 100 : 0;
-  const availablePercent = totalProjected > 0 ? (totalAvailable / totalProjected) * 100 : 100;
+  const contractedPercent =
+    totalProjected > 0 ? (totalContracted / totalProjected) * 100 : 0;
+  const availablePercent =
+    totalProjected > 0 ? (totalAvailable / totalProjected) * 100 : 100;
 
-  const pendingEOIs = eois?.filter((e: any) => ["pending", "under_review"].includes(e.status)) || [];
+  const pendingEOIs =
+    eois?.filter((e: any) => ["pending", "under_review"].includes(e.status)) ||
+    [];
   const acceptedEOIs = eois?.filter((e: any) => e.status === "accepted") || [];
 
-  const openRespondDialog = (eoi: any, action: "accepted" | "declined" | "under_review") => {
+  const openRespondDialog = (
+    eoi: any,
+    action: "accepted" | "declined" | "under_review"
+  ) => {
     setSelectedEOI(eoi);
     setRespondAction(action);
     setResponseText("");
@@ -423,7 +567,10 @@ export default function FuturesDetailSupplier() {
         <div className="container mx-auto px-4 py-12 lg:py-16 relative z-10">
           {/* Back Link */}
           <Link href="/supplier/futures">
-            <Button variant="ghost" className="mb-6 text-white/80 hover:text-white hover:bg-white/10">
+            <Button
+              variant="ghost"
+              className="mb-6 text-white/80 hover:text-white hover:bg-white/10"
+            >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to My Futures
             </Button>
@@ -432,12 +579,18 @@ export default function FuturesDetailSupplier() {
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div className="flex items-start gap-4">
               <div className="p-4 bg-white/20 backdrop-blur-sm rounded-2xl">
-                {CROP_TYPE_ICONS[futures.cropType] || <Sprout className="h-8 w-8" />}
+                {CROP_TYPE_ICONS[futures.cropType] || (
+                  <Sprout className="h-8 w-8" />
+                )}
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-3 mb-2">
-                  <h1 className="text-3xl md:text-4xl font-bold">{futures.futuresId}</h1>
-                  <Badge className={getStatusColor(futures.status)}>{formatStatusLabel(futures.status)}</Badge>
+                  <h1 className="text-3xl md:text-4xl font-bold">
+                    {futures.futuresId}
+                  </h1>
+                  <Badge className={getStatusColor(futures.status)}>
+                    {formatStatusLabel(futures.status)}
+                  </Badge>
                   {isUsingMockData && (
                     <Badge className="bg-amber-500/90 text-white border-amber-400">
                       <Sparkles className="h-3.5 w-3.5 mr-1.5" />
@@ -449,7 +602,8 @@ export default function FuturesDetailSupplier() {
                 <div className="flex flex-wrap gap-4 text-sm text-emerald-200">
                   <div className="flex items-center gap-1.5">
                     <MapPin className="h-4 w-4" />
-                    {futures.state}{futures.region && `, ${futures.region}`}
+                    {futures.state}
+                    {futures.region && `, ${futures.region}`}
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Calendar className="h-4 w-4" />
@@ -468,7 +622,10 @@ export default function FuturesDetailSupplier() {
               {futures.status === "draft" && !isUsingMockData && (
                 <>
                   <Link href={`/supplier/futures/create?edit=${futures.id}`}>
-                    <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                    <Button
+                      variant="outline"
+                      className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                    >
                       <Edit className="h-4 w-4 mr-2" />
                       Edit
                     </Button>
@@ -483,22 +640,30 @@ export default function FuturesDetailSupplier() {
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button variant="outline" className="bg-red-500/20 border-red-300/50 text-white hover:bg-red-500/30">
+                      <Button
+                        variant="outline"
+                        className="bg-red-500/20 border-red-300/50 text-white hover:bg-red-500/30"
+                      >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Futures Listing?</AlertDialogTitle>
+                        <AlertDialogTitle>
+                          Delete Futures Listing?
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete this futures listing.
+                          This action cannot be undone. This will permanently
+                          delete this futures listing.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                          onClick={() => deleteMutation.mutate({ id: futures.id })}
+                          onClick={() =>
+                            deleteMutation.mutate({ id: futures.id })
+                          }
                           className="bg-destructive text-destructive-foreground"
                         >
                           Delete
@@ -509,7 +674,11 @@ export default function FuturesDetailSupplier() {
                 </>
               )}
               {futures.status === "active" && !isUsingMockData && (
-                <Button variant="outline" onClick={() => unpublishMutation.mutate({ id: futures.id })} className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <Button
+                  variant="outline"
+                  onClick={() => unpublishMutation.mutate({ id: futures.id })}
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                >
                   <EyeOff className="h-4 w-4 mr-2" />
                   Unpublish
                 </Button>
@@ -521,19 +690,27 @@ export default function FuturesDetailSupplier() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
               <p className="text-emerald-200 text-sm mb-1">Total Projected</p>
-              <p className="text-2xl font-bold font-mono">{totalProjected.toLocaleString()}t</p>
+              <p className="text-2xl font-bold font-mono">
+                {totalProjected.toLocaleString()}t
+              </p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
               <p className="text-emerald-200 text-sm mb-1">Contracted</p>
-              <p className="text-2xl font-bold font-mono text-blue-300">{totalContracted.toLocaleString()}t</p>
+              <p className="text-2xl font-bold font-mono text-blue-300">
+                {totalContracted.toLocaleString()}t
+              </p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
               <p className="text-emerald-200 text-sm mb-1">Available</p>
-              <p className="text-2xl font-bold font-mono text-emerald-300">{totalAvailable.toLocaleString()}t</p>
+              <p className="text-2xl font-bold font-mono text-emerald-300">
+                {totalAvailable.toLocaleString()}t
+              </p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
               <p className="text-emerald-200 text-sm mb-1">Pending EOIs</p>
-              <p className="text-2xl font-bold font-mono text-yellow-300">{pendingEOIs.length}</p>
+              <p className="text-2xl font-bold font-mono text-yellow-300">
+                {pendingEOIs.length}
+              </p>
             </div>
           </div>
         </div>
@@ -576,24 +753,40 @@ export default function FuturesDetailSupplier() {
                 <CardContent className="space-y-6">
                   <div className="grid md:grid-cols-3 gap-4">
                     <div className="bg-muted/50 rounded-xl p-5 text-center">
-                      <p className="text-sm text-muted-foreground mb-1">Total Projected</p>
-                      <p className="text-3xl font-bold font-mono">{totalProjected.toLocaleString()}t</p>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Total Projected
+                      </p>
+                      <p className="text-3xl font-bold font-mono">
+                        {totalProjected.toLocaleString()}t
+                      </p>
                     </div>
                     <div className="bg-blue-50 rounded-xl p-5 text-center border border-blue-100">
                       <p className="text-sm text-blue-600 mb-1">Contracted</p>
-                      <p className="text-3xl font-bold font-mono text-blue-700">{totalContracted.toLocaleString()}t</p>
-                      <p className="text-xs text-blue-500 mt-1">{contractedPercent.toFixed(1)}% of total</p>
+                      <p className="text-3xl font-bold font-mono text-blue-700">
+                        {totalContracted.toLocaleString()}t
+                      </p>
+                      <p className="text-xs text-blue-500 mt-1">
+                        {contractedPercent.toFixed(1)}% of total
+                      </p>
                     </div>
                     <div className="bg-emerald-50 rounded-xl p-5 text-center border border-emerald-100">
                       <p className="text-sm text-emerald-600 mb-1">Available</p>
-                      <p className="text-3xl font-bold font-mono text-emerald-700">{totalAvailable.toLocaleString()}t</p>
-                      <p className="text-xs text-emerald-500 mt-1">{availablePercent.toFixed(1)}% of total</p>
+                      <p className="text-3xl font-bold font-mono text-emerald-700">
+                        {totalAvailable.toLocaleString()}t
+                      </p>
+                      <p className="text-xs text-emerald-500 mt-1">
+                        {availablePercent.toFixed(1)}% of total
+                      </p>
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Availability Progress</span>
-                      <span className="font-medium">{Math.round(availablePercent)}% available</span>
+                      <span className="text-muted-foreground">
+                        Availability Progress
+                      </span>
+                      <span className="font-medium">
+                        {Math.round(availablePercent)}% available
+                      </span>
                     </div>
                     <div className="relative h-4 bg-muted rounded-full overflow-hidden">
                       <div
@@ -602,13 +795,18 @@ export default function FuturesDetailSupplier() {
                       />
                       <div
                         className="absolute top-0 h-full bg-emerald-500 transition-all"
-                        style={{ left: `${contractedPercent}%`, width: `${availablePercent}%` }}
+                        style={{
+                          left: `${contractedPercent}%`,
+                          width: `${availablePercent}%`,
+                        }}
                       />
                     </div>
                     <div className="flex gap-4 mt-2 text-xs">
                       <div className="flex items-center gap-1.5">
                         <div className="w-3 h-3 bg-blue-500 rounded" />
-                        <span>Contracted ({contractedPercent.toFixed(1)}%)</span>
+                        <span>
+                          Contracted ({contractedPercent.toFixed(1)}%)
+                        </span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="w-3 h-3 bg-emerald-500 rounded" />
@@ -629,12 +827,18 @@ export default function FuturesDetailSupplier() {
                   <CardContent className="space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="p-3 bg-emerald-100 rounded-xl">
-                        {CROP_TYPE_ICONS[futures.cropType] || <Sprout className="h-6 w-6 text-emerald-600" />}
+                        {CROP_TYPE_ICONS[futures.cropType] || (
+                          <Sprout className="h-6 w-6 text-emerald-600" />
+                        )}
                       </div>
                       <div>
-                        <p className="font-semibold text-lg">{CROP_TYPE_LABELS[futures.cropType]}</p>
+                        <p className="font-semibold text-lg">
+                          {CROP_TYPE_LABELS[futures.cropType]}
+                        </p>
                         {futures.cropVariety && (
-                          <p className="text-sm text-muted-foreground">{futures.cropVariety}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {futures.cropVariety}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -649,19 +853,34 @@ export default function FuturesDetailSupplier() {
 
                     <div className="grid grid-cols-2 gap-4 pt-3 border-t">
                       <div>
-                        <p className="text-sm text-muted-foreground">Land Area</p>
-                        <p className="font-semibold font-mono">{parseFloat(futures.landAreaHectares).toLocaleString()} ha</p>
+                        <p className="text-sm text-muted-foreground">
+                          Land Area
+                        </p>
+                        <p className="font-semibold font-mono">
+                          {parseFloat(
+                            futures.landAreaHectares
+                          ).toLocaleString()}{" "}
+                          ha
+                        </p>
                       </div>
                       <div>
-                        <p className="text-sm text-muted-foreground">Land Status</p>
-                        <p className="font-semibold">{LAND_STATUS_LABELS[futures.landStatus || "owned"]}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Land Status
+                        </p>
+                        <p className="font-semibold">
+                          {LAND_STATUS_LABELS[futures.landStatus || "owned"]}
+                        </p>
                       </div>
                     </div>
 
                     {futures.description && (
                       <div className="pt-3 border-t">
-                        <p className="text-sm text-muted-foreground mb-2">Description</p>
-                        <p className="text-sm leading-relaxed">{futures.description}</p>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          Description
+                        </p>
+                        <p className="text-sm leading-relaxed">
+                          {futures.description}
+                        </p>
                       </div>
                     )}
                   </CardContent>
@@ -676,14 +895,23 @@ export default function FuturesDetailSupplier() {
                     <div className="flex items-center gap-2 text-sm p-3 bg-muted/30 rounded-lg">
                       <Calendar className="h-4 w-4 text-muted-foreground" />
                       <span className="font-medium">
-                        {futures.projectionStartYear} - {futures.projectionEndYear} ({futures.projectionEndYear - futures.projectionStartYear + 1} years)
+                        {futures.projectionStartYear} -{" "}
+                        {futures.projectionEndYear} (
+                        {futures.projectionEndYear -
+                          futures.projectionStartYear +
+                          1}{" "}
+                        years)
                       </span>
                     </div>
 
                     {futures.firstHarvestYear && (
                       <div className="text-sm p-3 bg-emerald-50 rounded-lg border border-emerald-100">
-                        <span className="text-emerald-700">First Harvest: </span>
-                        <span className="font-semibold text-emerald-800">{futures.firstHarvestYear}</span>
+                        <span className="text-emerald-700">
+                          First Harvest:{" "}
+                        </span>
+                        <span className="font-semibold text-emerald-800">
+                          {futures.firstHarvestYear}
+                        </span>
                       </div>
                     )}
 
@@ -694,7 +922,9 @@ export default function FuturesDetailSupplier() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="p-3 bg-teal-50 rounded-lg border border-teal-100">
-                          <p className="text-xs text-teal-600 mb-1">Indicative Price</p>
+                          <p className="text-xs text-teal-600 mb-1">
+                            Indicative Price
+                          </p>
                           <p className="font-bold text-lg text-teal-800 font-mono">
                             {futures.indicativePricePerTonne
                               ? `$${parseFloat(futures.indicativePricePerTonne).toFixed(2)}/t`
@@ -702,38 +932,64 @@ export default function FuturesDetailSupplier() {
                           </p>
                         </div>
                         <div className="p-3 bg-muted/50 rounded-lg">
-                          <p className="text-xs text-muted-foreground mb-1">Annual Escalation</p>
-                          <p className="font-bold text-lg font-mono">{futures.priceEscalationPercent || "2.5"}%</p>
+                          <p className="text-xs text-muted-foreground mb-1">
+                            Annual Escalation
+                          </p>
+                          <p className="font-bold text-lg font-mono">
+                            {futures.priceEscalationPercent || "2.5"}%
+                          </p>
                         </div>
                       </div>
                       {futures.pricingNotes && (
-                        <p className="text-sm text-muted-foreground mt-3 italic">{futures.pricingNotes}</p>
+                        <p className="text-sm text-muted-foreground mt-3 italic">
+                          {futures.pricingNotes}
+                        </p>
                       )}
                     </div>
 
                     {/* Quality Parameters */}
-                    {(futures.expectedCarbonIntensity || futures.expectedMoistureContent || futures.expectedEnergyContent) && (
+                    {(futures.expectedCarbonIntensity ||
+                      futures.expectedMoistureContent ||
+                      futures.expectedEnergyContent) && (
                       <div className="pt-3 border-t">
-                        <p className="text-sm font-semibold mb-3">Expected Quality</p>
+                        <p className="text-sm font-semibold mb-3">
+                          Expected Quality
+                        </p>
                         <div className="grid grid-cols-3 gap-3">
                           {futures.expectedCarbonIntensity && (
                             <div className="text-center p-2 bg-muted/30 rounded-lg">
-                              <p className="text-xs text-muted-foreground">Carbon</p>
-                              <p className="font-semibold font-mono text-sm">{futures.expectedCarbonIntensity}</p>
-                              <p className="text-[10px] text-muted-foreground">kg CO₂e/t</p>
+                              <p className="text-xs text-muted-foreground">
+                                Carbon
+                              </p>
+                              <p className="font-semibold font-mono text-sm">
+                                {futures.expectedCarbonIntensity}
+                              </p>
+                              <p className="text-[10px] text-muted-foreground">
+                                kg CO₂e/t
+                              </p>
                             </div>
                           )}
                           {futures.expectedMoistureContent && (
                             <div className="text-center p-2 bg-muted/30 rounded-lg">
-                              <p className="text-xs text-muted-foreground">Moisture</p>
-                              <p className="font-semibold font-mono text-sm">{futures.expectedMoistureContent}%</p>
+                              <p className="text-xs text-muted-foreground">
+                                Moisture
+                              </p>
+                              <p className="font-semibold font-mono text-sm">
+                                {futures.expectedMoistureContent}%
+                              </p>
                             </div>
                           )}
                           {futures.expectedEnergyContent && (
                             <div className="text-center p-2 bg-muted/30 rounded-lg">
-                              <p className="text-xs text-muted-foreground">Energy</p>
-                              <p className="font-semibold font-mono text-sm">{futures.expectedEnergyContent}</p>
-                              <p className="text-[10px] text-muted-foreground">GJ/t</p>
+                              <p className="text-xs text-muted-foreground">
+                                Energy
+                              </p>
+                              <p className="font-semibold font-mono text-sm">
+                                {futures.expectedEnergyContent}
+                              </p>
+                              <p className="text-[10px] text-muted-foreground">
+                                GJ/t
+                              </p>
                             </div>
                           )}
                         </div>
@@ -746,8 +1002,12 @@ export default function FuturesDetailSupplier() {
               {/* Timestamps */}
               <div className="text-sm text-muted-foreground flex flex-wrap gap-4">
                 <span>Created {formatDate(futures.createdAt)}</span>
-                {futures.publishedAt && <span>• Published {formatDate(futures.publishedAt)}</span>}
-                {futures.updatedAt && <span>• Updated {formatDate(futures.updatedAt)}</span>}
+                {futures.publishedAt && (
+                  <span>• Published {formatDate(futures.publishedAt)}</span>
+                )}
+                {futures.updatedAt && (
+                  <span>• Updated {formatDate(futures.updatedAt)}</span>
+                )}
               </div>
             </TabsContent>
 
@@ -761,10 +1021,14 @@ export default function FuturesDetailSupplier() {
                         <BarChart3 className="h-5 w-5 text-teal-600" />
                         Yield Projections
                       </CardTitle>
-                      <CardDescription>Year-by-year projected and contracted volumes</CardDescription>
+                      <CardDescription>
+                        Year-by-year projected and contracted volumes
+                      </CardDescription>
                     </div>
                     {futures.status === "draft" && !isUsingMockData && (
-                      <Link href={`/supplier/futures/create?edit=${futures.id}`}>
+                      <Link
+                        href={`/supplier/futures/create?edit=${futures.id}`}
+                      >
                         <Button variant="outline" size="sm">
                           <Edit className="h-4 w-4 mr-2" />
                           Edit Projections
@@ -779,33 +1043,75 @@ export default function FuturesDetailSupplier() {
                       <table className="w-full">
                         <thead>
                           <tr className="border-b bg-muted/30">
-                            <th className="text-left py-3 px-4 font-semibold">Year</th>
-                            <th className="text-right py-3 px-4 font-semibold">Projected (t)</th>
-                            <th className="text-right py-3 px-4 font-semibold">Contracted (t)</th>
-                            <th className="text-right py-3 px-4 font-semibold">Available (t)</th>
-                            <th className="text-center py-3 px-4 font-semibold">Confidence</th>
-                            <th className="text-left py-3 px-4 font-semibold">Season</th>
-                            <th className="text-left py-3 px-4 font-semibold">Notes</th>
+                            <th className="text-left py-3 px-4 font-semibold">
+                              Year
+                            </th>
+                            <th className="text-right py-3 px-4 font-semibold">
+                              Projected (t)
+                            </th>
+                            <th className="text-right py-3 px-4 font-semibold">
+                              Contracted (t)
+                            </th>
+                            <th className="text-right py-3 px-4 font-semibold">
+                              Available (t)
+                            </th>
+                            <th className="text-center py-3 px-4 font-semibold">
+                              Confidence
+                            </th>
+                            <th className="text-left py-3 px-4 font-semibold">
+                              Season
+                            </th>
+                            <th className="text-left py-3 px-4 font-semibold">
+                              Notes
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
                           {projections.map((p: any, index: number) => {
-                            const projected = parseFloat(p.projectedTonnes || "0");
-                            const contracted = parseFloat(p.contractedTonnes || "0");
+                            const projected = parseFloat(
+                              p.projectedTonnes || "0"
+                            );
+                            const contracted = parseFloat(
+                              p.contractedTonnes || "0"
+                            );
                             const available = projected - contracted;
                             return (
-                              <tr key={p.projectionYear} className={index % 2 === 0 ? "bg-muted/10" : ""}>
-                                <td className="py-3 px-4 font-semibold">{p.projectionYear}</td>
-                                <td className="py-3 px-4 text-right font-mono">{projected.toLocaleString()}</td>
-                                <td className="py-3 px-4 text-right font-mono text-blue-600">{contracted.toLocaleString()}</td>
-                                <td className="py-3 px-4 text-right font-mono text-emerald-600">{available.toLocaleString()}</td>
+                              <tr
+                                key={p.projectionYear}
+                                className={index % 2 === 0 ? "bg-muted/10" : ""}
+                              >
+                                <td className="py-3 px-4 font-semibold">
+                                  {p.projectionYear}
+                                </td>
+                                <td className="py-3 px-4 text-right font-mono">
+                                  {projected.toLocaleString()}
+                                </td>
+                                <td className="py-3 px-4 text-right font-mono text-blue-600">
+                                  {contracted.toLocaleString()}
+                                </td>
+                                <td className="py-3 px-4 text-right font-mono text-emerald-600">
+                                  {available.toLocaleString()}
+                                </td>
                                 <td className="py-3 px-4 text-center">
-                                  <Badge variant="outline" className={p.confidencePercent >= 70 ? "border-emerald-200 text-emerald-700" : p.confidencePercent >= 50 ? "border-yellow-200 text-yellow-700" : "border-red-200 text-red-700"}>
+                                  <Badge
+                                    variant="outline"
+                                    className={
+                                      p.confidencePercent >= 70
+                                        ? "border-emerald-200 text-emerald-700"
+                                        : p.confidencePercent >= 50
+                                          ? "border-yellow-200 text-yellow-700"
+                                          : "border-red-200 text-red-700"
+                                    }
+                                  >
                                     {p.confidencePercent || 80}%
                                   </Badge>
                                 </td>
-                                <td className="py-3 px-4 capitalize text-sm">{p.harvestSeason || "-"}</td>
-                                <td className="py-3 px-4 text-sm text-muted-foreground max-w-[200px] truncate">{p.notes || "-"}</td>
+                                <td className="py-3 px-4 capitalize text-sm">
+                                  {p.harvestSeason || "-"}
+                                </td>
+                                <td className="py-3 px-4 text-sm text-muted-foreground max-w-[200px] truncate">
+                                  {p.notes || "-"}
+                                </td>
                               </tr>
                             );
                           })}
@@ -813,9 +1119,15 @@ export default function FuturesDetailSupplier() {
                         <tfoot className="border-t-2 bg-muted/30">
                           <tr className="font-bold">
                             <td className="py-3 px-4">Total</td>
-                            <td className="py-3 px-4 text-right font-mono">{totalProjected.toLocaleString()}</td>
-                            <td className="py-3 px-4 text-right font-mono text-blue-600">{totalContracted.toLocaleString()}</td>
-                            <td className="py-3 px-4 text-right font-mono text-emerald-600">{totalAvailable.toLocaleString()}</td>
+                            <td className="py-3 px-4 text-right font-mono">
+                              {totalProjected.toLocaleString()}
+                            </td>
+                            <td className="py-3 px-4 text-right font-mono text-blue-600">
+                              {totalContracted.toLocaleString()}
+                            </td>
+                            <td className="py-3 px-4 text-right font-mono text-emerald-600">
+                              {totalAvailable.toLocaleString()}
+                            </td>
                             <td colSpan={3}></td>
                           </tr>
                         </tfoot>
@@ -824,9 +1136,13 @@ export default function FuturesDetailSupplier() {
                   ) : (
                     <div className="text-center py-12 text-muted-foreground">
                       <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p className="font-medium mb-2">No yield projections added yet</p>
+                      <p className="font-medium mb-2">
+                        No yield projections added yet
+                      </p>
                       {futures.status === "draft" && !isUsingMockData && (
-                        <Link href={`/supplier/futures/create?edit=${futures.id}`}>
+                        <Link
+                          href={`/supplier/futures/create?edit=${futures.id}`}
+                        >
                           <Button className="mt-4">Add Projections</Button>
                         </Link>
                       )}
@@ -846,14 +1162,23 @@ export default function FuturesDetailSupplier() {
                         <Users className="h-5 w-5 text-teal-600" />
                         Expressions of Interest
                       </CardTitle>
-                      <CardDescription>Review and respond to buyer interest in your futures listing</CardDescription>
+                      <CardDescription>
+                        Review and respond to buyer interest in your futures
+                        listing
+                      </CardDescription>
                     </div>
                     <div className="flex gap-2">
-                      <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                      <Badge
+                        variant="outline"
+                        className="bg-yellow-50 text-yellow-700 border-yellow-200"
+                      >
                         <Clock className="h-3.5 w-3.5 mr-1" />
                         {pendingEOIs.length} Pending
                       </Badge>
-                      <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                      <Badge
+                        variant="outline"
+                        className="bg-emerald-50 text-emerald-700 border-emerald-200"
+                      >
                         <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
                         {acceptedEOIs.length} Accepted
                       </Badge>
@@ -863,7 +1188,7 @@ export default function FuturesDetailSupplier() {
                 <CardContent>
                   {loadingEOIs ? (
                     <div className="space-y-4">
-                      {[1, 2, 3].map((i) => (
+                      {[1, 2, 3].map(i => (
                         <Skeleton key={i} className="h-32 w-full" />
                       ))}
                     </div>
@@ -877,8 +1202,12 @@ export default function FuturesDetailSupplier() {
                           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-4">
                             <div>
                               <div className="flex items-center gap-2 mb-1">
-                                <span className="font-bold text-lg">{eoi.eoiReference}</span>
-                                <Badge className={getEOIStatusColor(eoi.status)}>
+                                <span className="font-bold text-lg">
+                                  {eoi.eoiReference}
+                                </span>
+                                <Badge
+                                  className={getEOIStatusColor(eoi.status)}
+                                >
                                   {EOI_STATUS_LABELS[eoi.status]}
                                 </Badge>
                               </div>
@@ -887,37 +1216,44 @@ export default function FuturesDetailSupplier() {
                               </p>
                             </div>
 
-                            {["pending", "under_review"].includes(eoi.status) && !isUsingMockData && (
-                              <div className="flex flex-wrap gap-2">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => openRespondDialog(eoi, "under_review")}
-                                  className="border-blue-200 text-blue-600 hover:bg-blue-50"
-                                >
-                                  <Clock className="h-4 w-4 mr-1" />
-                                  Review
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => openRespondDialog(eoi, "accepted")}
-                                  className="border-emerald-200 text-emerald-600 hover:bg-emerald-50"
-                                >
-                                  <CheckCircle2 className="h-4 w-4 mr-1" />
-                                  Accept
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => openRespondDialog(eoi, "declined")}
-                                  className="border-red-200 text-red-600 hover:bg-red-50"
-                                >
-                                  <XCircle className="h-4 w-4 mr-1" />
-                                  Decline
-                                </Button>
-                              </div>
-                            )}
+                            {["pending", "under_review"].includes(eoi.status) &&
+                              !isUsingMockData && (
+                                <div className="flex flex-wrap gap-2">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      openRespondDialog(eoi, "under_review")
+                                    }
+                                    className="border-blue-200 text-blue-600 hover:bg-blue-50"
+                                  >
+                                    <Clock className="h-4 w-4 mr-1" />
+                                    Review
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      openRespondDialog(eoi, "accepted")
+                                    }
+                                    className="border-emerald-200 text-emerald-600 hover:bg-emerald-50"
+                                  >
+                                    <CheckCircle2 className="h-4 w-4 mr-1" />
+                                    Accept
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      openRespondDialog(eoi, "declined")
+                                    }
+                                    className="border-red-200 text-red-600 hover:bg-red-50"
+                                  >
+                                    <XCircle className="h-4 w-4 mr-1" />
+                                    Decline
+                                  </Button>
+                                </div>
+                              )}
                           </div>
 
                           {/* Buyer Info */}
@@ -925,17 +1261,25 @@ export default function FuturesDetailSupplier() {
                             <div className="bg-muted/30 rounded-lg p-4 mb-4">
                               <div className="flex items-center gap-2 mb-2">
                                 <Building2 className="h-4 w-4 text-teal-600" />
-                                <span className="font-semibold">{eoi.buyer.companyName}</span>
+                                <span className="font-semibold">
+                                  {eoi.buyer.companyName}
+                                </span>
                               </div>
                               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                                 {eoi.buyer.contactEmail && (
-                                  <a href={`mailto:${eoi.buyer.contactEmail}`} className="flex items-center gap-1.5 hover:text-teal-600 transition-colors">
+                                  <a
+                                    href={`mailto:${eoi.buyer.contactEmail}`}
+                                    className="flex items-center gap-1.5 hover:text-teal-600 transition-colors"
+                                  >
                                     <Mail className="h-3.5 w-3.5" />
                                     {eoi.buyer.contactEmail}
                                   </a>
                                 )}
                                 {eoi.buyer.contactPhone && (
-                                  <a href={`tel:${eoi.buyer.contactPhone}`} className="flex items-center gap-1.5 hover:text-teal-600 transition-colors">
+                                  <a
+                                    href={`tel:${eoi.buyer.contactPhone}`}
+                                    className="flex items-center gap-1.5 hover:text-teal-600 transition-colors"
+                                  >
                                     <Phone className="h-3.5 w-3.5" />
                                     {eoi.buyer.contactPhone}
                                   </a>
@@ -947,21 +1291,39 @@ export default function FuturesDetailSupplier() {
                           {/* EOI Details */}
                           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm p-4 bg-muted/20 rounded-lg">
                             <div>
-                              <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Period</p>
+                              <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">
+                                Period
+                              </p>
                               <p className="font-semibold">
                                 {eoi.interestStartYear} - {eoi.interestEndYear}
                               </p>
                             </div>
                             <div>
-                              <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Annual Volume</p>
-                              <p className="font-semibold font-mono">{parseFloat(eoi.annualVolumeTonnes).toLocaleString()}t</p>
+                              <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">
+                                Annual Volume
+                              </p>
+                              <p className="font-semibold font-mono">
+                                {parseFloat(
+                                  eoi.annualVolumeTonnes
+                                ).toLocaleString()}
+                                t
+                              </p>
                             </div>
                             <div>
-                              <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Total Volume</p>
-                              <p className="font-semibold font-mono">{parseFloat(eoi.totalVolumeTonnes).toLocaleString()}t</p>
+                              <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">
+                                Total Volume
+                              </p>
+                              <p className="font-semibold font-mono">
+                                {parseFloat(
+                                  eoi.totalVolumeTonnes
+                                ).toLocaleString()}
+                                t
+                              </p>
                             </div>
                             <div>
-                              <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Offered Price</p>
+                              <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">
+                                Offered Price
+                              </p>
                               <p className="font-semibold font-mono">
                                 {eoi.offeredPricePerTonne
                                   ? `$${parseFloat(eoi.offeredPricePerTonne).toFixed(2)}/t`
@@ -974,23 +1336,40 @@ export default function FuturesDetailSupplier() {
                             <div className="mt-4 pt-4 border-t text-sm">
                               {eoi.deliveryLocation && (
                                 <p className="mb-1">
-                                  <span className="text-muted-foreground">Delivery: </span>
-                                  <span className="font-medium">{eoi.deliveryLocation}</span>
-                                  {eoi.deliveryFrequency && <span className="text-muted-foreground"> ({eoi.deliveryFrequency})</span>}
+                                  <span className="text-muted-foreground">
+                                    Delivery:{" "}
+                                  </span>
+                                  <span className="font-medium">
+                                    {eoi.deliveryLocation}
+                                  </span>
+                                  {eoi.deliveryFrequency && (
+                                    <span className="text-muted-foreground">
+                                      {" "}
+                                      ({eoi.deliveryFrequency})
+                                    </span>
+                                  )}
                                 </p>
                               )}
                               {eoi.additionalTerms && (
-                                <p className="text-muted-foreground mt-2 italic">"{eoi.additionalTerms}"</p>
+                                <p className="text-muted-foreground mt-2 italic">
+                                  "{eoi.additionalTerms}"
+                                </p>
                               )}
                             </div>
                           )}
 
                           {eoi.supplierResponse && (
                             <div className="mt-4 p-4 bg-teal-50 border border-teal-100 rounded-lg">
-                              <p className="text-sm font-semibold text-teal-800 mb-1">Your Response:</p>
-                              <p className="text-sm text-teal-700">{eoi.supplierResponse}</p>
+                              <p className="text-sm font-semibold text-teal-800 mb-1">
+                                Your Response:
+                              </p>
+                              <p className="text-sm text-teal-700">
+                                {eoi.supplierResponse}
+                              </p>
                               {eoi.respondedAt && (
-                                <p className="text-xs text-teal-600 mt-2">Responded {formatDate(eoi.respondedAt)}</p>
+                                <p className="text-xs text-teal-600 mt-2">
+                                  Responded {formatDate(eoi.respondedAt)}
+                                </p>
                               )}
                             </div>
                           )}
@@ -1000,9 +1379,14 @@ export default function FuturesDetailSupplier() {
                   ) : (
                     <div className="text-center py-12 text-muted-foreground">
                       <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p className="font-medium mb-2">No expressions of interest yet</p>
+                      <p className="font-medium mb-2">
+                        No expressions of interest yet
+                      </p>
                       {futures.status === "draft" && (
-                        <p className="text-sm">Publish your listing to start receiving EOIs from buyers</p>
+                        <p className="text-sm">
+                          Publish your listing to start receiving EOIs from
+                          buyers
+                        </p>
                       )}
                     </div>
                   )}
@@ -1038,17 +1422,19 @@ export default function FuturesDetailSupplier() {
 
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium">Response Message (optional)</label>
+              <label className="text-sm font-medium">
+                Response Message (optional)
+              </label>
               <Textarea
                 placeholder={
                   respondAction === "accepted"
                     ? "Thank you for your interest. We would like to proceed with contract negotiations..."
                     : respondAction === "declined"
-                    ? "Thank you for your interest. Unfortunately..."
-                    : "We are currently reviewing your EOI and will respond shortly..."
+                      ? "Thank you for your interest. Unfortunately..."
+                      : "We are currently reviewing your EOI and will respond shortly..."
                 }
                 value={responseText}
-                onChange={(e) => setResponseText(e.target.value)}
+                onChange={e => setResponseText(e.target.value)}
                 rows={4}
                 className="mt-2"
               />
@@ -1056,7 +1442,10 @@ export default function FuturesDetailSupplier() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRespondDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setRespondDialogOpen(false)}
+            >
               Cancel
             </Button>
             <Button
@@ -1066,8 +1455,8 @@ export default function FuturesDetailSupplier() {
                 respondAction === "accepted"
                   ? "bg-emerald-600 hover:bg-emerald-700"
                   : respondAction === "declined"
-                  ? "bg-red-600 hover:bg-red-700"
-                  : ""
+                    ? "bg-red-600 hover:bg-red-700"
+                    : ""
               }
             >
               {respondMutation.isPending ? "Sending..." : "Send Response"}

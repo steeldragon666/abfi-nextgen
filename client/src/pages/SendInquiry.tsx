@@ -1,6 +1,12 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -64,7 +70,11 @@ export default function SendInquiry() {
     });
   };
 
-  const canSubmit = volumeRequired && deliveryLocation && message && parseInt(volumeRequired) > 0;
+  const canSubmit =
+    volumeRequired &&
+    deliveryLocation &&
+    message &&
+    parseInt(volumeRequired) > 0;
 
   if (!isAuthenticated) {
     return <Redirect to="/dashboard" />;
@@ -134,11 +144,11 @@ export default function SendInquiry() {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-2">
             <MessageSquare className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold text-primary">Send Inquiry (RFQ)</h1>
+            <h1 className="text-4xl font-bold text-primary">
+              Send Inquiry (RFQ)
+            </h1>
           </div>
-          <p className="text-gray-600">
-            Request a quote for this feedstock
-          </p>
+          <p className="text-gray-600">Request a quote for this feedstock</p>
         </div>
 
         {/* Feedstock Summary */}
@@ -162,16 +172,22 @@ export default function SendInquiry() {
               </div>
               <div>
                 <p className="text-sm text-gray-600">Annual Capacity</p>
-                <p className="font-medium">{feedstock.annualCapacityTonnes.toLocaleString()} tonnes</p>
+                <p className="font-medium">
+                  {feedstock.annualCapacityTonnes.toLocaleString()} tonnes
+                </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Available Now</p>
-                <p className="font-medium">{feedstock.availableVolumeCurrent.toLocaleString()} tonnes</p>
+                <p className="font-medium">
+                  {feedstock.availableVolumeCurrent.toLocaleString()} tonnes
+                </p>
               </div>
               {feedstock.pricePerTonne && (
                 <div>
                   <p className="text-sm text-gray-600">Price</p>
-                  <p className="font-medium">${feedstock.pricePerTonne.toLocaleString()}/tonne</p>
+                  <p className="font-medium">
+                    ${feedstock.pricePerTonne.toLocaleString()}/tonne
+                  </p>
                 </div>
               )}
             </div>
@@ -183,23 +199,26 @@ export default function SendInquiry() {
           <CardHeader>
             <CardTitle>Your Requirements</CardTitle>
             <CardDescription>
-              Provide details about your feedstock requirements. The supplier will receive
-              your inquiry and respond directly.
+              Provide details about your feedstock requirements. The supplier
+              will receive your inquiry and respond directly.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="volumeRequired">Volume Required (tonnes) *</Label>
+                <Label htmlFor="volumeRequired">
+                  Volume Required (tonnes) *
+                </Label>
                 <Input
                   id="volumeRequired"
                   type="number"
                   placeholder="e.g., 500"
                   value={volumeRequired}
-                  onChange={(e) => setVolumeRequired(e.target.value)}
+                  onChange={e => setVolumeRequired(e.target.value)}
                 />
                 <p className="text-sm text-gray-500 mt-1">
-                  Available: {feedstock.availableVolumeCurrent.toLocaleString()} tonnes
+                  Available: {feedstock.availableVolumeCurrent.toLocaleString()}{" "}
+                  tonnes
                 </p>
               </div>
 
@@ -209,7 +228,7 @@ export default function SendInquiry() {
                   id="subject"
                   placeholder="e.g., Request for Quote - Bamboo Feedstock"
                   value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
+                  onChange={e => setSubject(e.target.value)}
                 />
               </div>
             </div>
@@ -220,7 +239,7 @@ export default function SendInquiry() {
                 id="deliveryLocation"
                 placeholder="e.g., Sydney Port, Brisbane Refinery"
                 value={deliveryLocation}
-                onChange={(e) => setDeliveryLocation(e.target.value)}
+                onChange={e => setDeliveryLocation(e.target.value)}
               />
             </div>
 
@@ -230,13 +249,15 @@ export default function SendInquiry() {
                 id="message"
                 placeholder="Describe your requirements, quality parameters, delivery timeframe, and any questions for the supplier..."
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={e => setMessage(e.target.value)}
                 rows={6}
               />
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-900 mb-2">What Happens Next?</h4>
+              <h4 className="font-semibold text-blue-900 mb-2">
+                What Happens Next?
+              </h4>
               <ul className="text-sm text-blue-800 space-y-1">
                 <li>• Your inquiry will be sent directly to the supplier</li>
                 <li>• The supplier will review your requirements</li>

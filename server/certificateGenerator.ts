@@ -5,8 +5,8 @@
  */
 
 import { jsPDF } from "jspdf";
-import QRCode from 'qrcode';
-import { createHash } from 'crypto';
+import QRCode from "qrcode";
+import { createHash } from "crypto";
 
 export interface CertificateData {
   // Feedstock details
@@ -44,7 +44,9 @@ export interface CertificateData {
 /**
  * Generate ABFI Rating Certificate PDF
  */
-export async function generateABFICertificate(data: CertificateData): Promise<Buffer> {
+export async function generateABFICertificate(
+  data: CertificateData
+): Promise<Buffer> {
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
@@ -79,13 +81,17 @@ export async function generateABFICertificate(data: CertificateData): Promise<Bu
   doc.setTextColor(55, 65, 81); // gray-700
   doc.setFontSize(24);
   doc.setFont("helvetica", "bold");
-  doc.text("FEEDSTOCK RATING CERTIFICATE", pageWidth / 2, 50, { align: "center" });
+  doc.text("FEEDSTOCK RATING CERTIFICATE", pageWidth / 2, 50, {
+    align: "center",
+  });
 
   // Certificate number
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(107, 114, 128); // gray-500
-  doc.text(`Certificate No: ${data.certificateNumber}`, pageWidth / 2, 58, { align: "center" });
+  doc.text(`Certificate No: ${data.certificateNumber}`, pageWidth / 2, 58, {
+    align: "center",
+  });
 
   // === RATING BADGE ===
   const badgeX = pageWidth / 2;
@@ -105,7 +111,12 @@ export async function generateABFICertificate(data: CertificateData): Promise<Bu
   // ABFI Score below badge
   doc.setTextColor(55, 65, 81);
   doc.setFontSize(14);
-  doc.text(`ABFI Score: ${data.abfiScore}/100`, badgeX, badgeY + badgeRadius + 10, { align: "center" });
+  doc.text(
+    `ABFI Score: ${data.abfiScore}/100`,
+    badgeX,
+    badgeY + badgeRadius + 10,
+    { align: "center" }
+  );
 
   // === FEEDSTOCK DETAILS SECTION ===
   let yPos = 120;
@@ -161,8 +172,16 @@ export async function generateABFICertificate(data: CertificateData): Promise<Bu
   yPos += 8;
 
   const pillars = [
-    { name: "Sustainability", score: data.sustainabilityScore, color: [34, 197, 94] }, // green-500
-    { name: "Carbon Intensity", score: data.carbonIntensityScore, color: [59, 130, 246] }, // blue-500
+    {
+      name: "Sustainability",
+      score: data.sustainabilityScore,
+      color: [34, 197, 94],
+    }, // green-500
+    {
+      name: "Carbon Intensity",
+      score: data.carbonIntensityScore,
+      color: [59, 130, 246],
+    }, // blue-500
     { name: "Quality", score: data.qualityScore, color: [168, 85, 247] }, // purple-500
     { name: "Reliability", score: data.reliabilityScore, color: [234, 179, 8] }, // yellow-500
   ];
@@ -257,23 +276,25 @@ export async function generateABFICertificate(data: CertificateData): Promise<Bu
 
   // Generate certificate hash if not provided
   const certHash = data.certificateHash || generateCertificateHash(data);
-  
+
   // Generate QR code
-  const verificationUrl = `${process.env.VITE_FRONTEND_FORGE_API_URL || 'https://app.biofeedau.com.au'}/certificate-verification?hash=${certHash}`;
+  const verificationUrl = `${process.env.VITE_FRONTEND_FORGE_API_URL || "https://app.biofeedau.com.au"}/certificate-verification?hash=${certHash}`;
   const qrCodeDataUrl = await QRCode.toDataURL(verificationUrl, {
     width: 80,
     margin: 0,
-    color: { dark: '#0a0f14', light: '#ffffff' },
+    color: { dark: "#0a0f14", light: "#ffffff" },
   });
 
   // Add QR code to PDF
-  doc.addImage(qrCodeDataUrl, 'PNG', qrX, qrY, 20, 20);
+  doc.addImage(qrCodeDataUrl, "PNG", qrX, qrY, 20, 20);
 
   // Add hash text (small)
   doc.setFontSize(6);
   doc.setFont("courier", "normal");
   doc.setTextColor(107, 114, 128);
-  doc.text(`Hash: ${certHash.substring(0, 16)}...`, pageWidth - 45, yPos + 24, { maxWidth: 25 });
+  doc.text(`Hash: ${certHash.substring(0, 16)}...`, pageWidth - 45, yPos + 24, {
+    maxWidth: 25,
+  });
 
   // === FOOTER ===
   doc.setFontSize(7);
@@ -314,8 +335,8 @@ export function generateCertificateHash(data: CertificateData): string {
     },
     date: data.assessmentDate,
   });
-  
-  return createHash('sha256').update(hashInput).digest('hex');
+
+  return createHash("sha256").update(hashInput).digest("hex");
 }
 
 /**

@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { MapPin, Search } from "lucide-react";
 
 interface LocationPickerProps {
@@ -64,11 +70,11 @@ export function LocationPicker({
   const handleUseCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        position => {
           setLatitude(position.coords.latitude.toString());
           setLongitude(position.coords.longitude.toString());
         },
-        (error) => {
+        error => {
           console.error("Error getting location:", error);
         }
       );
@@ -85,7 +91,7 @@ export function LocationPicker({
           id="address"
           placeholder="123 Farm Road"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={e => setAddress(e.target.value)}
           required={required}
         />
       </div>
@@ -99,7 +105,7 @@ export function LocationPicker({
             id="city"
             placeholder="Wagga Wagga"
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={e => setCity(e.target.value)}
             required={required}
           />
         </div>
@@ -112,7 +118,7 @@ export function LocationPicker({
             id="postcode"
             placeholder="2650"
             value={postcode}
-            onChange={(e) => setPostcode(e.target.value)}
+            onChange={e => setPostcode(e.target.value)}
             maxLength={4}
             required={required}
           />
@@ -128,7 +134,7 @@ export function LocationPicker({
             <SelectValue placeholder="Select state" />
           </SelectTrigger>
           <SelectContent>
-            {AUSTRALIAN_STATES.map((s) => (
+            {AUSTRALIAN_STATES.map(s => (
               <SelectItem key={s.value} value={s.value}>
                 {s.label}
               </SelectItem>
@@ -139,7 +145,9 @@ export function LocationPicker({
 
       <div className="border-t pt-4">
         <div className="flex items-center justify-between mb-3">
-          <Label className="text-sm font-medium">GPS Coordinates (Optional)</Label>
+          <Label className="text-sm font-medium">
+            GPS Coordinates (Optional)
+          </Label>
           <Button
             type="button"
             variant="outline"
@@ -150,32 +158,36 @@ export function LocationPicker({
             Use Current Location
           </Button>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="latitude" className="text-xs">Latitude</Label>
+            <Label htmlFor="latitude" className="text-xs">
+              Latitude
+            </Label>
             <Input
               id="latitude"
               placeholder="-35.1082"
               value={latitude}
-              onChange={(e) => setLatitude(e.target.value)}
+              onChange={e => setLatitude(e.target.value)}
               type="number"
               step="any"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="longitude" className="text-xs">Longitude</Label>
+            <Label htmlFor="longitude" className="text-xs">
+              Longitude
+            </Label>
             <Input
               id="longitude"
               placeholder="147.3598"
               value={longitude}
-              onChange={(e) => setLongitude(e.target.value)}
+              onChange={e => setLongitude(e.target.value)}
               type="number"
               step="any"
             />
           </div>
         </div>
-        
+
         <p className="text-xs text-muted-foreground mt-2">
           GPS coordinates help buyers find your location on the map
         </p>

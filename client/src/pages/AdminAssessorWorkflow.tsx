@@ -1,28 +1,58 @@
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
-import { CheckCircle, XCircle, Clock, AlertTriangle, Edit, Eye, TrendingUp, Shield, Download } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  Clock,
+  AlertTriangle,
+  Edit,
+  Eye,
+  TrendingUp,
+  Shield,
+  Download,
+} from "lucide-react";
 import { RatingBadge, ScoreBreakdown } from "@/components/ScoreCard";
 
 export default function AdminAssessorWorkflow() {
   const { user, loading: authLoading } = useAuth();
-  const [selectedAssessment, setSelectedAssessment] = useState<number | null>(null);
-  const [adjustedScores, setAdjustedScores] = useState<Record<string, number>>({});
+  const [selectedAssessment, setSelectedAssessment] = useState<number | null>(
+    null
+  );
+  const [adjustedScores, setAdjustedScores] = useState<Record<string, number>>(
+    {}
+  );
   const [overrideReason, setOverrideReason] = useState("");
   const [decision, setDecision] = useState<"approve" | "reject" | null>(null);
 
   // Fetch pending assessments
-  const { data: assessments, isLoading, refetch } = trpc.bankability.listAssessments.useQuery();
-  
+  const {
+    data: assessments,
+    isLoading,
+    refetch,
+  } = trpc.bankability.listAssessments.useQuery();
+
   // Mutations
   const approveAssessment = trpc.bankability.approveAssessment.useMutation({
     onSuccess: () => {
@@ -50,7 +80,7 @@ export default function AdminAssessorWorkflow() {
   });
 
   const downloadCertificate = trpc.bankability.downloadCertificate.useMutation({
-    onSuccess: (data) => {
+    onSuccess: data => {
       // Convert base64 to blob and trigger download
       const byteCharacters = atob(data.data);
       const byteNumbers = new Array(byteCharacters.length);
@@ -60,7 +90,7 @@ export default function AdminAssessorWorkflow() {
       const byteArray = new Uint8Array(byteNumbers);
       const blob = new Blob([byteArray], { type: data.mimeType });
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = data.filename;
       document.body.appendChild(link);
@@ -109,11 +139,16 @@ export default function AdminAssessorWorkflow() {
     );
   }
 
-  const pendingAssessments = assessments?.filter((a: any) => a.status === "under_review") || [];
-  const approvedAssessments = assessments?.filter((a: any) => a.status === "approved") || [];
-  const rejectedAssessments = assessments?.filter((a: any) => a.status === "rejected") || [];
+  const pendingAssessments =
+    assessments?.filter((a: any) => a.status === "under_review") || [];
+  const approvedAssessments =
+    assessments?.filter((a: any) => a.status === "approved") || [];
+  const rejectedAssessments =
+    assessments?.filter((a: any) => a.status === "rejected") || [];
 
-  const selectedAssessmentData = assessments?.find((a: any) => a.id === selectedAssessment);
+  const selectedAssessmentData = assessments?.find(
+    (a: any) => a.id === selectedAssessment
+  );
 
   const handleScoreAdjustment = (category: string, newScore: number) => {
     setAdjustedScores(prev => ({
@@ -137,7 +172,8 @@ export default function AdminAssessorWorkflow() {
     // Approve the assessment
     await approveAssessment.mutateAsync({
       assessmentId: selectedAssessment,
-      approverNotes: overrideReason || "Assessment approved without modifications",
+      approverNotes:
+        overrideReason || "Assessment approved without modifications",
     });
   };
 
@@ -225,7 +261,10 @@ export default function AdminAssessorWorkflow() {
             ) : (
               <div className="grid gap-6">
                 {pendingAssessments.map((assessment: any) => (
-                  <Card key={assessment.id} className="hover:shadow-lg transition-shadow">
+                  <Card
+                    key={assessment.id}
+                    className="hover:shadow-lg transition-shadow"
+                  >
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div>
@@ -233,7 +272,8 @@ export default function AdminAssessorWorkflow() {
                             Assessment #{assessment.assessmentNumber}
                           </CardTitle>
                           <CardDescription>
-                            Project ID: {assessment.projectId} • Assessed on {formatDate(assessment.assessmentDate)}
+                            Project ID: {assessment.projectId} • Assessed on{" "}
+                            {formatDate(assessment.assessmentDate)}
                           </CardDescription>
                         </div>
                         <div className="flex items-center gap-2">
@@ -249,40 +289,80 @@ export default function AdminAssessorWorkflow() {
                         {/* Current Rating */}
                         <div className="flex items-center gap-4">
                           <div>
-                            <p className="text-sm text-muted-foreground mb-1">Current Rating</p>
-                           <RatingBadge rating={assessment.rating} size="lg" />                       </div>
+                            <p className="text-sm text-muted-foreground mb-1">
+                              Current Rating
+                            </p>
+                            <RatingBadge
+                              rating={assessment.rating}
+                              size="lg"
+                            />{" "}
+                          </div>
                           <div>
-                            <p className="text-sm text-muted-foreground mb-1">Composite Score</p>
-                            <p className="text-2xl font-bold">{assessment.compositeScore}/100</p>
+                            <p className="text-sm text-muted-foreground mb-1">
+                              Composite Score
+                            </p>
+                            <p className="text-2xl font-bold">
+                              {assessment.compositeScore}/100
+                            </p>
                           </div>
                         </div>
 
                         {/* Score Breakdown */}
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                           <div>
-                            <p className="text-xs text-muted-foreground mb-1">Volume Security</p>
-                            <p className="text-lg font-semibold">{assessment.volumeSecurityScore}</p>
-                            <p className="text-xs text-muted-foreground">30% weight</p>
+                            <p className="text-xs text-muted-foreground mb-1">
+                              Volume Security
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {assessment.volumeSecurityScore}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              30% weight
+                            </p>
                           </div>
                           <div>
-                            <p className="text-xs text-muted-foreground mb-1">Counterparty Quality</p>
-                            <p className="text-lg font-semibold">{assessment.counterpartyQualityScore}</p>
-                            <p className="text-xs text-muted-foreground">25% weight</p>
+                            <p className="text-xs text-muted-foreground mb-1">
+                              Counterparty Quality
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {assessment.counterpartyQualityScore}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              25% weight
+                            </p>
                           </div>
                           <div>
-                            <p className="text-xs text-muted-foreground mb-1">Contract Structure</p>
-                            <p className="text-lg font-semibold">{assessment.contractStructureScore}</p>
-                            <p className="text-xs text-muted-foreground">20% weight</p>
+                            <p className="text-xs text-muted-foreground mb-1">
+                              Contract Structure
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {assessment.contractStructureScore}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              20% weight
+                            </p>
                           </div>
                           <div>
-                            <p className="text-xs text-muted-foreground mb-1">Concentration Risk</p>
-                            <p className="text-lg font-semibold">{assessment.concentrationRiskScore}</p>
-                            <p className="text-xs text-muted-foreground">15% weight</p>
+                            <p className="text-xs text-muted-foreground mb-1">
+                              Concentration Risk
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {assessment.concentrationRiskScore}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              15% weight
+                            </p>
                           </div>
                           <div>
-                            <p className="text-xs text-muted-foreground mb-1">Operational Readiness</p>
-                            <p className="text-lg font-semibold">{assessment.operationalReadinessScore}</p>
-                            <p className="text-xs text-muted-foreground">10% weight</p>
+                            <p className="text-xs text-muted-foreground mb-1">
+                              Operational Readiness
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {assessment.operationalReadinessScore}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              10% weight
+                            </p>
                           </div>
                         </div>
 
@@ -305,28 +385,59 @@ export default function AdminAssessorWorkflow() {
                         {/* Review Panel */}
                         {selectedAssessment === assessment.id && (
                           <div className="mt-6 p-6 border rounded-lg bg-muted/50 space-y-6">
-                            <h4 className="font-semibold text-lg">Assessment Review</h4>
+                            <h4 className="font-semibold text-lg">
+                              Assessment Review
+                            </h4>
 
                             {/* Score Adjustments */}
                             <div className="space-y-4">
                               <Label>Adjust Scores (Optional)</Label>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {[
-                                  { key: "volumeSecurity", label: "Volume Security", current: assessment.volumeSecurityScore },
-                                  { key: "counterpartyQuality", label: "Counterparty Quality", current: assessment.counterpartyQualityScore },
-                                  { key: "contractStructure", label: "Contract Structure", current: assessment.contractStructureScore },
-                                  { key: "concentrationRisk", label: "Concentration Risk", current: assessment.concentrationRiskScore },
-                                  { key: "operationalReadiness", label: "Operational Readiness", current: assessment.operationalReadinessScore },
-                                ].map((score) => (
+                                  {
+                                    key: "volumeSecurity",
+                                    label: "Volume Security",
+                                    current: assessment.volumeSecurityScore,
+                                  },
+                                  {
+                                    key: "counterpartyQuality",
+                                    label: "Counterparty Quality",
+                                    current:
+                                      assessment.counterpartyQualityScore,
+                                  },
+                                  {
+                                    key: "contractStructure",
+                                    label: "Contract Structure",
+                                    current: assessment.contractStructureScore,
+                                  },
+                                  {
+                                    key: "concentrationRisk",
+                                    label: "Concentration Risk",
+                                    current: assessment.concentrationRiskScore,
+                                  },
+                                  {
+                                    key: "operationalReadiness",
+                                    label: "Operational Readiness",
+                                    current:
+                                      assessment.operationalReadinessScore,
+                                  },
+                                ].map(score => (
                                   <div key={score.key}>
-                                    <Label className="text-sm">{score.label}</Label>
+                                    <Label className="text-sm">
+                                      {score.label}
+                                    </Label>
                                     <div className="flex items-center gap-2 mt-1">
                                       <Input
                                         type="number"
                                         min="0"
                                         max="100"
                                         defaultValue={score.current}
-                                        onChange={(e) => handleScoreAdjustment(score.key, parseInt(e.target.value))}
+                                        onChange={e =>
+                                          handleScoreAdjustment(
+                                            score.key,
+                                            parseInt(e.target.value)
+                                          )
+                                        }
                                         className="w-24"
                                       />
                                       <span className="text-sm text-muted-foreground">
@@ -340,10 +451,17 @@ export default function AdminAssessorWorkflow() {
 
                             {/* Override Reason */}
                             <div className="space-y-2">
-                              <Label>Notes / Override Reason {decision === "reject" && <span className="text-red-600">*</span>}</Label>
+                              <Label>
+                                Notes / Override Reason{" "}
+                                {decision === "reject" && (
+                                  <span className="text-red-600">*</span>
+                                )}
+                              </Label>
                               <Textarea
                                 value={overrideReason}
-                                onChange={(e) => setOverrideReason(e.target.value)}
+                                onChange={e =>
+                                  setOverrideReason(e.target.value)
+                                }
                                 placeholder="Provide justification for any score adjustments or rejection..."
                                 rows={4}
                               />
@@ -384,16 +502,21 @@ export default function AdminAssessorWorkflow() {
                             {decision === "reject" && (
                               <div className="p-4 border border-red-200 rounded-lg bg-red-50">
                                 <p className="text-sm font-semibold text-red-900 mb-2">
-                                  Are you sure you want to reject this assessment?
+                                  Are you sure you want to reject this
+                                  assessment?
                                 </p>
                                 <p className="text-sm text-red-700 mb-4">
-                                  This action will require the project developer to resubmit.
+                                  This action will require the project developer
+                                  to resubmit.
                                 </p>
                                 <div className="flex gap-2">
                                   <Button
                                     variant="destructive"
                                     onClick={handleReject}
-                                    disabled={rejectAssessment.isPending || !overrideReason}
+                                    disabled={
+                                      rejectAssessment.isPending ||
+                                      !overrideReason
+                                    }
                                   >
                                     Confirm Rejection
                                   </Button>
@@ -433,7 +556,9 @@ export default function AdminAssessorWorkflow() {
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <div>
-                          <CardTitle>Assessment #{assessment.assessmentNumber}</CardTitle>
+                          <CardTitle>
+                            Assessment #{assessment.assessmentNumber}
+                          </CardTitle>
                           <CardDescription>
                             Approved on {formatDate(assessment.updatedAt)}
                           </CardDescription>
@@ -443,11 +568,17 @@ export default function AdminAssessorWorkflow() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => downloadCertificate.mutate({ assessmentId: assessment.id })}
+                            onClick={() =>
+                              downloadCertificate.mutate({
+                                assessmentId: assessment.id,
+                              })
+                            }
                             disabled={downloadCertificate.isPending}
                           >
                             <Download className="h-4 w-4 mr-2" />
-                            {downloadCertificate.isPending ? 'Generating...' : 'Download Certificate'}
+                            {downloadCertificate.isPending
+                              ? "Generating..."
+                              : "Download Certificate"}
                           </Button>
                         </div>
                       </div>
@@ -475,7 +606,9 @@ export default function AdminAssessorWorkflow() {
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <div>
-                          <CardTitle>Assessment #{assessment.assessmentNumber}</CardTitle>
+                          <CardTitle>
+                            Assessment #{assessment.assessmentNumber}
+                          </CardTitle>
                           <CardDescription>
                             Rejected on {formatDate(assessment.updatedAt)}
                           </CardDescription>
@@ -486,7 +619,8 @@ export default function AdminAssessorWorkflow() {
                     {assessment.reassessmentReason && (
                       <CardContent>
                         <p className="text-sm text-muted-foreground">
-                          <strong>Reason:</strong> {assessment.reassessmentReason}
+                          <strong>Reason:</strong>{" "}
+                          {assessment.reassessmentReason}
                         </p>
                       </CardContent>
                     )}

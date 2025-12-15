@@ -1,12 +1,24 @@
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { trpc } from "@/lib/trpc";
-import { Shield, PlayCircle, Clock, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
-
+import {
+  Shield,
+  PlayCircle,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  RefreshCw,
+} from "lucide-react";
 
 export default function MonitoringJobsScheduler() {
   const { user, loading: authLoading } = useAuth();
@@ -14,60 +26,75 @@ export default function MonitoringJobsScheduler() {
   const [runningJob, setRunningJob] = useState<string | null>(null);
 
   // Fetch job status
-  const { data: jobStatus, isLoading, refetch } = trpc.monitoringJobs.getJobStatus.useQuery();
+  const {
+    data: jobStatus,
+    isLoading,
+    refetch,
+  } = trpc.monitoringJobs.getJobStatus.useQuery();
 
   // Mutations for triggering jobs
-  const triggerCovenantCheck = trpc.monitoringJobs.triggerCovenantCheck.useMutation({
-    onSuccess: (result) => {
-      console.log('Covenant Check Complete:', result);
-      alert(`Covenant Check Complete: Checked ${result.projectsChecked} projects, detected ${result.breachesDetected} breaches`);
-      setRunningJob(null);
-      refetch();
-    },
-    onError: (error) => {
-      console.error('Job Failed:', error);
-      alert(`Job Failed: ${error.message}`);
-      setRunningJob(null);
-    },
-  });
+  const triggerCovenantCheck =
+    trpc.monitoringJobs.triggerCovenantCheck.useMutation({
+      onSuccess: result => {
+        console.log("Covenant Check Complete:", result);
+        alert(
+          `Covenant Check Complete: Checked ${result.projectsChecked} projects, detected ${result.breachesDetected} breaches`
+        );
+        setRunningJob(null);
+        refetch();
+      },
+      onError: error => {
+        console.error("Job Failed:", error);
+        alert(`Job Failed: ${error.message}`);
+        setRunningJob(null);
+      },
+    });
 
-  const triggerSupplyRecalc = trpc.monitoringJobs.triggerSupplyRecalc.useMutation({
-    onSuccess: (result) => {
-      console.log('Supply Recalculation Complete:', result);
-      alert(`Supply Recalculation Complete: Processed ${result.projectsProcessed} projects, updated ${result.agreementsUpdated} agreements`);
-      setRunningJob(null);
-      refetch();
-    },
-    onError: (error) => {
-      console.error('Job Failed:', error);
-      alert(`Job Failed: ${error.message}`);
-      setRunningJob(null);
-    },
-  });
+  const triggerSupplyRecalc =
+    trpc.monitoringJobs.triggerSupplyRecalc.useMutation({
+      onSuccess: result => {
+        console.log("Supply Recalculation Complete:", result);
+        alert(
+          `Supply Recalculation Complete: Processed ${result.projectsProcessed} projects, updated ${result.agreementsUpdated} agreements`
+        );
+        setRunningJob(null);
+        refetch();
+      },
+      onError: error => {
+        console.error("Job Failed:", error);
+        alert(`Job Failed: ${error.message}`);
+        setRunningJob(null);
+      },
+    });
 
-  const triggerRenewalAlerts = trpc.monitoringJobs.triggerRenewalAlerts.useMutation({
-    onSuccess: (result) => {
-      console.log('Renewal Alerts Complete:', result);
-      alert(`Renewal Alerts Complete: Checked ${result.contractsChecked} contracts, generated ${result.alertsGenerated} alerts`);
-      setRunningJob(null);
-      refetch();
-    },
-    onError: (error) => {
-      console.error('Job Failed:', error);
-      alert(`Job Failed: ${error.message}`);
-      setRunningJob(null);
-    },
-  });
+  const triggerRenewalAlerts =
+    trpc.monitoringJobs.triggerRenewalAlerts.useMutation({
+      onSuccess: result => {
+        console.log("Renewal Alerts Complete:", result);
+        alert(
+          `Renewal Alerts Complete: Checked ${result.contractsChecked} contracts, generated ${result.alertsGenerated} alerts`
+        );
+        setRunningJob(null);
+        refetch();
+      },
+      onError: error => {
+        console.error("Job Failed:", error);
+        alert(`Job Failed: ${error.message}`);
+        setRunningJob(null);
+      },
+    });
 
   const triggerAllJobs = trpc.monitoringJobs.triggerAllJobs.useMutation({
-    onSuccess: (results) => {
-      console.log('All Jobs Complete:', results);
-      alert(`All Jobs Complete: Covenant: ${results.covenantCheck.breachesDetected} breaches | Supply: ${results.supplyRecalc.projectsProcessed} projects | Renewals: ${results.renewalAlerts.alertsGenerated} alerts`);
+    onSuccess: results => {
+      console.log("All Jobs Complete:", results);
+      alert(
+        `All Jobs Complete: Covenant: ${results.covenantCheck.breachesDetected} breaches | Supply: ${results.supplyRecalc.projectsProcessed} projects | Renewals: ${results.renewalAlerts.alertsGenerated} alerts`
+      );
       setRunningJob(null);
       refetch();
     },
-    onError: (error) => {
-      console.error('Jobs Failed:', error);
+    onError: error => {
+      console.error("Jobs Failed:", error);
       alert(`Jobs Failed: ${error.message}`);
       setRunningJob(null);
     },
@@ -154,7 +181,8 @@ export default function MonitoringJobsScheduler() {
             <h1 className="text-3xl font-bold">Monitoring Jobs Scheduler</h1>
           </div>
           <p className="text-muted-foreground">
-            Manage and trigger automated monitoring jobs for covenant compliance and supply tracking
+            Manage and trigger automated monitoring jobs for covenant compliance
+            and supply tracking
           </p>
         </div>
 
@@ -167,7 +195,9 @@ export default function MonitoringJobsScheduler() {
           <CardContent>
             <div className="flex flex-wrap gap-3">
               <Button
-                onClick={() => handleTriggerJob("covenant", triggerCovenantCheck)}
+                onClick={() =>
+                  handleTriggerJob("covenant", triggerCovenantCheck)
+                }
                 disabled={runningJob !== null}
                 variant="outline"
               >
@@ -191,7 +221,9 @@ export default function MonitoringJobsScheduler() {
                 Run Supply Recalc
               </Button>
               <Button
-                onClick={() => handleTriggerJob("renewal", triggerRenewalAlerts)}
+                onClick={() =>
+                  handleTriggerJob("renewal", triggerRenewalAlerts)
+                }
                 disabled={runningJob !== null}
                 variant="outline"
               >
@@ -221,7 +253,7 @@ export default function MonitoringJobsScheduler() {
         {/* Scheduled Jobs Status */}
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold mb-4">Scheduled Jobs</h2>
-          
+
           {jobStatus?.scheduledJobs.map((job: any, index: number) => (
             <Card key={index}>
               <CardHeader>
@@ -246,15 +278,23 @@ export default function MonitoringJobsScheduler() {
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-muted-foreground mb-1">Last Run</p>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      Last Run
+                    </p>
                     <p className="text-sm font-medium">
-                      {job.lastRun ? new Date(job.lastRun).toLocaleString("en-AU") : "Never"}
+                      {job.lastRun
+                        ? new Date(job.lastRun).toLocaleString("en-AU")
+                        : "Never"}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground mb-1">Next Run</p>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      Next Run
+                    </p>
                     <p className="text-sm font-medium">
-                      {job.nextRun ? new Date(job.nextRun).toLocaleString("en-AU") : "Not scheduled"}
+                      {job.nextRun
+                        ? new Date(job.nextRun).toLocaleString("en-AU")
+                        : "Not scheduled"}
                     </p>
                   </div>
                 </div>
@@ -272,25 +312,30 @@ export default function MonitoringJobsScheduler() {
             <div>
               <h4 className="font-semibold mb-2">Daily Covenant Check</h4>
               <p className="text-sm text-muted-foreground">
-                Checks all active projects for covenant breaches. Monitors Tier 1 supply coverage against thresholds 
-                and records breaches with severity levels (info/warning/breach/critical). Generates lender notifications 
-                for significant breaches.
+                Checks all active projects for covenant breaches. Monitors Tier
+                1 supply coverage against thresholds and records breaches with
+                severity levels (info/warning/breach/critical). Generates lender
+                notifications for significant breaches.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">Weekly Supply Recalculation</h4>
+              <h4 className="font-semibold mb-2">
+                Weekly Supply Recalculation
+              </h4>
               <p className="text-sm text-muted-foreground">
-                Recalculates supply positions for all projects. Updates Tier 1/2/Options/ROFR totals, calculates coverage 
-                percentages, and triggers bankability reassessment if significant changes are detected (more than 5% change 
-                in Tier 1 coverage).
+                Recalculates supply positions for all projects. Updates Tier
+                1/2/Options/ROFR totals, calculates coverage percentages, and
+                triggers bankability reassessment if significant changes are
+                detected (more than 5% change in Tier 1 coverage).
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-2">Contract Renewal Alerts</h4>
               <p className="text-sm text-muted-foreground">
-                Checks for contracts expiring within 90 days. Generates alerts with impact assessment, prioritizes Tier 1 
-                agreements as high impact, and prevents duplicate alerts. Severity increases as expiry date approaches 
-                (warning at 30 days).
+                Checks for contracts expiring within 90 days. Generates alerts
+                with impact assessment, prioritizes Tier 1 agreements as high
+                impact, and prevents duplicate alerts. Severity increases as
+                expiry date approaches (warning at 30 days).
               </p>
             </div>
           </CardContent>

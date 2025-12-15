@@ -3,7 +3,7 @@
   "features": [
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [145.30, -17.15] },
+      "geometry": { "type": "Point", "coordinates": [145.3, -17.15] },
       "properties": {
         "name": "Tableland Mill",
         "town": "Arriga",
@@ -18,7 +18,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [145.78, -17.10] },
+      "geometry": { "type": "Point", "coordinates": [145.78, -17.1] },
       "properties": {
         "name": "Mulgrave Mill",
         "town": "Gordonvale",
@@ -93,7 +93,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [147.10, -19.52] },
+      "geometry": { "type": "Point", "coordinates": [147.1, -19.52] },
       "properties": {
         "name": "Invicta Mill",
         "town": "Giru",
@@ -154,7 +154,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [148.58, -20.40] },
+      "geometry": { "type": "Point", "coordinates": [148.58, -20.4] },
       "properties": {
         "name": "Proserpine Mill",
         "town": "Proserpine",
@@ -214,7 +214,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [149.00, -21.10] },
+      "geometry": { "type": "Point", "coordinates": [149.0, -21.1] },
       "properties": {
         "name": "Farleigh Mill",
         "town": "Farleigh",
@@ -244,7 +244,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [152.20, -25.20] },
+      "geometry": { "type": "Point", "coordinates": [152.2, -25.2] },
       "properties": {
         "name": "Isis Central Mill",
         "town": "Childers",
@@ -259,7 +259,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [152.70, -25.53] },
+      "geometry": { "type": "Point", "coordinates": [152.7, -25.53] },
       "properties": {
         "name": "Maryborough Mill",
         "town": "Maryborough",
@@ -305,7 +305,7 @@
     },
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [153.43, -29.00] },
+      "geometry": { "type": "Point", "coordinates": [153.43, -29.0] },
       "properties": {
         "name": "Broadwater Mill",
         "town": "Broadwater",

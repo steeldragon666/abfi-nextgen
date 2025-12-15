@@ -5,13 +5,24 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
-import { Bell, CheckCheck, Mail, AlertCircle, FileText, TrendingUp } from "lucide-react";
+import {
+  Bell,
+  CheckCheck,
+  Mail,
+  AlertCircle,
+  FileText,
+  TrendingUp,
+} from "lucide-react";
 import { toast } from "sonner";
 
 export default function Notifications() {
   const { user, loading: authLoading } = useAuth();
-  
-  const { data: notifications, isLoading, refetch } = trpc.notifications.list.useQuery(
+
+  const {
+    data: notifications,
+    isLoading,
+    refetch,
+  } = trpc.notifications.list.useQuery(
     { unreadOnly: false },
     { enabled: !!user }
   );
@@ -111,12 +122,8 @@ export default function Notifications() {
 
         <Tabs defaultValue="all" className="w-full">
           <TabsList className="mb-6">
-            <TabsTrigger value="all">
-              All Notifications
-            </TabsTrigger>
-            <TabsTrigger value="unread">
-              Unread ({unreadCount})
-            </TabsTrigger>
+            <TabsTrigger value="all">All Notifications</TabsTrigger>
+            <TabsTrigger value="unread">Unread ({unreadCount})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="all">
@@ -140,7 +147,9 @@ export default function Notifications() {
                     } hover:shadow-md transition-shadow cursor-pointer`}
                     onClick={() => {
                       if (!notification.readAt) {
-                        markReadMutation.mutate({ notificationId: notification.id });
+                        markReadMutation.mutate({
+                          notificationId: notification.id,
+                        });
                       }
                     }}
                   >
@@ -155,14 +164,25 @@ export default function Notifications() {
                               {notification.title}
                             </h3>
                             <span className="text-xs text-muted-foreground whitespace-nowrap ml-4">
-                              {new Date(notification.createdAt).toLocaleDateString()} {new Date(notification.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              {new Date(
+                                notification.createdAt
+                              ).toLocaleDateString()}{" "}
+                              {new Date(
+                                notification.createdAt
+                              ).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
                             </span>
                           </div>
                           <p className="text-sm text-muted-foreground">
                             {notification.message}
                           </p>
                           {!notification.readAt && (
-                            <Badge className="mt-2 bg-primary text-primary-foreground" variant="default">
+                            <Badge
+                              className="mt-2 bg-primary text-primary-foreground"
+                              variant="default"
+                            >
                               New
                             </Badge>
                           )}
@@ -176,9 +196,12 @@ export default function Notifications() {
               <Card>
                 <CardContent className="py-12 text-center">
                   <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No notifications yet</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    No notifications yet
+                  </h3>
                   <p className="text-muted-foreground">
-                    You'll see updates about inquiries, verifications, and ratings here
+                    You'll see updates about inquiries, verifications, and
+                    ratings here
                   </p>
                 </CardContent>
               </Card>
@@ -202,7 +225,11 @@ export default function Notifications() {
                   <Card
                     key={notification.id}
                     className={`${getNotificationColor(notification.type)} border-l-4 border-l-primary hover:shadow-md transition-shadow cursor-pointer`}
-                    onClick={() => markReadMutation.mutate({ notificationId: notification.id })}
+                    onClick={() =>
+                      markReadMutation.mutate({
+                        notificationId: notification.id,
+                      })
+                    }
                   >
                     <CardContent className="p-4">
                       <div className="flex gap-4">
@@ -215,13 +242,24 @@ export default function Notifications() {
                               {notification.title}
                             </h3>
                             <span className="text-xs text-muted-foreground whitespace-nowrap ml-4">
-                              {new Date(notification.createdAt).toLocaleDateString()} {new Date(notification.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              {new Date(
+                                notification.createdAt
+                              ).toLocaleDateString()}{" "}
+                              {new Date(
+                                notification.createdAt
+                              ).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
                             </span>
                           </div>
                           <p className="text-sm text-muted-foreground">
                             {notification.message}
                           </p>
-                          <Badge className="mt-2 bg-primary text-primary-foreground" variant="default">
+                          <Badge
+                            className="mt-2 bg-primary text-primary-foreground"
+                            variant="default"
+                          >
                             New
                           </Badge>
                         </div>

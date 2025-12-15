@@ -46,6 +46,7 @@ ABFI.io addresses these coordination failures by providing transparent market in
 **Who They Are**
 
 Agricultural producers cultivating or managing biomass resources including:
+
 - Perennial energy crop farmers (bamboo, eucalyptus, miscanthus)
 - Rotation forestry operators
 - Agricultural residue aggregators
@@ -53,16 +54,16 @@ Agricultural producers cultivating or managing biomass resources including:
 
 **Value Delivered**
 
-| Feature | Benefit |
-|---------|---------|
-| **Marketplace Listings** | Direct access to verified buyers without intermediary costs |
-| **Futures Projections** | Ability to secure forward commitments before planting, de-risking investment |
-| **EOI Management** | Transparent view of buyer interest levels and preferences |
-| **Contract Templates** | Standardised agreements that protect both parties |
-| **Price Discovery** | Market transparency enabling informed pricing decisions |
-| **Verification Status** | Build trust and credibility with verified supplier credentials |
-| **Logistics Coordination** | Connect with transport and aggregation services |
-| **Payment Security** | Structured payment terms and dispute resolution |
+| Feature                    | Benefit                                                                      |
+| -------------------------- | ---------------------------------------------------------------------------- |
+| **Marketplace Listings**   | Direct access to verified buyers without intermediary costs                  |
+| **Futures Projections**    | Ability to secure forward commitments before planting, de-risking investment |
+| **EOI Management**         | Transparent view of buyer interest levels and preferences                    |
+| **Contract Templates**     | Standardised agreements that protect both parties                            |
+| **Price Discovery**        | Market transparency enabling informed pricing decisions                      |
+| **Verification Status**    | Build trust and credibility with verified supplier credentials               |
+| **Logistics Coordination** | Connect with transport and aggregation services                              |
+| **Payment Security**       | Structured payment terms and dispute resolution                              |
 
 **Economic Impact**
 
@@ -75,6 +76,7 @@ Growers gain the demand visibility and contractual certainty necessary to justif
 **Who They Are**
 
 Entities requiring consistent feedstock supply including:
+
 - Biofuel refineries and processors
 - Biogas and biomethane producers
 - Industrial heat and power generators
@@ -83,16 +85,16 @@ Entities requiring consistent feedstock supply including:
 
 **Value Delivered**
 
-| Feature | Benefit |
-|---------|---------|
-| **Supply Discovery** | Find available feedstock across all Australian regions |
-| **Futures Marketplace** | Secure long-term supply commitments to underwrite facility investment |
-| **Supplier Verification** | Due diligence on counterparty quality and reliability |
-| **Volume Aggregation** | Combine multiple smaller suppliers into scale supply |
-| **Quality Specifications** | Standardised feedstock quality parameters |
-| **Logistics Integration** | Coordinate delivery schedules and transport |
-| **Carbon Accounting** | Track and verify feedstock sustainability credentials |
-| **Price Benchmarking** | Market data to inform procurement strategy |
+| Feature                    | Benefit                                                               |
+| -------------------------- | --------------------------------------------------------------------- |
+| **Supply Discovery**       | Find available feedstock across all Australian regions                |
+| **Futures Marketplace**    | Secure long-term supply commitments to underwrite facility investment |
+| **Supplier Verification**  | Due diligence on counterparty quality and reliability                 |
+| **Volume Aggregation**     | Combine multiple smaller suppliers into scale supply                  |
+| **Quality Specifications** | Standardised feedstock quality parameters                             |
+| **Logistics Integration**  | Coordinate delivery schedules and transport                           |
+| **Carbon Accounting**      | Track and verify feedstock sustainability credentials                 |
+| **Price Benchmarking**     | Market data to inform procurement strategy                            |
 
 **Economic Impact**
 
@@ -105,6 +107,7 @@ Buyers can secure the 15-25 year feedstock commitments necessary to obtain proje
 **Who They Are**
 
 Supporting businesses that enable feedstock movement and processing:
+
 - Transport and haulage operators
 - Feedstock aggregation and storage facilities
 - Pre-processing and densification services
@@ -112,13 +115,13 @@ Supporting businesses that enable feedstock movement and processing:
 
 **Value Delivered**
 
-| Feature | Benefit |
-|---------|---------|
-| **Demand Visibility** | Understand where logistics services are needed |
+| Feature                | Benefit                                                    |
+| ---------------------- | ---------------------------------------------------------- |
+| **Demand Visibility**  | Understand where logistics services are needed             |
 | **Route Optimisation** | Plan efficient collection routes across multiple suppliers |
-| **Capacity Planning** | Anticipate infrastructure requirements from futures data |
-| **Service Listings** | Market services to platform participants |
-| **Integration APIs** | Connect logistics systems with platform transactions |
+| **Capacity Planning**  | Anticipate infrastructure requirements from futures data   |
+| **Service Listings**   | Market services to platform participants                   |
+| **Integration APIs**   | Connect logistics systems with platform transactions       |
 
 ---
 
@@ -127,6 +130,7 @@ Supporting businesses that enable feedstock movement and processing:
 **Who They Are**
 
 Capital providers seeking exposure to the bioeconomy:
+
 - Project finance institutions
 - Agricultural lenders
 - Impact investors
@@ -134,13 +138,13 @@ Capital providers seeking exposure to the bioeconomy:
 
 **Value Delivered**
 
-| Feature | Benefit |
-|---------|---------|
-| **Market Intelligence** | Aggregate data on supply, demand, and pricing |
+| Feature                 | Benefit                                              |
+| ----------------------- | ---------------------------------------------------- |
+| **Market Intelligence** | Aggregate data on supply, demand, and pricing        |
 | **Contract Visibility** | Evidence of committed offtake for project assessment |
-| **Risk Assessment** | Counterparty verification and track record |
-| **Pipeline Data** | Forward view of industry development |
-| **ESG Alignment** | Verified sustainability and emissions impact |
+| **Risk Assessment**     | Counterparty verification and track record           |
+| **Pipeline Data**       | Forward view of industry development                 |
+| **ESG Alignment**       | Verified sustainability and emissions impact         |
 
 ---
 
@@ -149,6 +153,7 @@ Capital providers seeking exposure to the bioeconomy:
 **Who They Are**
 
 Policy makers and agencies supporting industry development:
+
 - State and federal energy departments
 - Agricultural development agencies
 - Regional development authorities
@@ -156,13 +161,13 @@ Policy makers and agencies supporting industry development:
 
 **Value Delivered**
 
-| Feature | Benefit |
-|---------|---------|
-| **Industry Analytics** | Real-time visibility of sector development |
-| **Policy Impact** | Measure effectiveness of support programs |
-| **Regional Insights** | Understand geographic distribution of activity |
-| **Investment Tracking** | Monitor capital deployment and job creation |
-| **Compliance Data** | Streamlined regulatory reporting |
+| Feature                 | Benefit                                        |
+| ----------------------- | ---------------------------------------------- |
+| **Industry Analytics**  | Real-time visibility of sector development     |
+| **Policy Impact**       | Measure effectiveness of support programs      |
+| **Regional Insights**   | Understand geographic distribution of activity |
+| **Investment Tracking** | Monitor capital deployment and job creation    |
+| **Compliance Data**     | Streamlined regulatory reporting               |
 
 ---
 
@@ -173,6 +178,7 @@ Policy makers and agencies supporting industry development:
 The immediate trading platform where suppliers list available feedstock for near-term delivery.
 
 **Capabilities:**
+
 - Multi-feedstock listings (agricultural residues, forestry products, energy crops)
 - Location-based search with radius filtering
 - Quality specification matching
@@ -192,6 +198,7 @@ The transformative feature enabling long-term supply commitment for perennial cr
 **The Challenge Addressed**
 
 Perennial energy crops (bamboo, eucalyptus, miscanthus, short-rotation forestry) represent the highest-yield, most sustainable feedstock options but require:
+
 - 5-25 year establishment and growth periods
 - Significant upfront capital investment
 - Long-term certainty of offtake
@@ -220,6 +227,7 @@ Without demand visibility, growers cannot justify planting. Without supply certa
    - Ongoing delivery management
 
 **Supported Crop Types:**
+
 - Bamboo (giant bamboo varieties)
 - Rotation Forestry (eucalyptus, pine plantations)
 - Eucalyptus (oil mallee, plantation species)
@@ -231,6 +239,7 @@ Without demand visibility, growers cannot justify planting. Without supply certa
 - Other perennial biomass crops
 
 **Economic Enablement:**
+
 - A 1,000 hectare bamboo plantation yielding 25,000 tonnes/year from year 7 can secure committed offtake covering 80% of projected volume before first harvest
 - A biofuel processor can demonstrate 20-year feedstock security to project lenders, enabling facility construction
 
@@ -242,13 +251,14 @@ Trust infrastructure that enables confident counterparty engagement.
 
 **Verification Levels:**
 
-| Level | Requirements | Badge |
-|-------|-------------|-------|
-| **Registered** | Basic account creation | — |
-| **Verified** | ABN validation, identity confirmation | Verified |
-| **Certified** | Site inspection, quality certification, track record | Certified Supplier |
+| Level          | Requirements                                         | Badge              |
+| -------------- | ---------------------------------------------------- | ------------------ |
+| **Registered** | Basic account creation                               | —                  |
+| **Verified**   | ABN validation, identity confirmation                | Verified           |
+| **Certified**  | Site inspection, quality certification, track record | Certified Supplier |
 
 **Verification Elements:**
+
 - Australian Business Number (ABN) validation
 - Land title or lease confirmation
 - Production capacity assessment
@@ -263,18 +273,21 @@ Trust infrastructure that enables confident counterparty engagement.
 Data-driven insights powering better decisions across the ecosystem.
 
 **For Suppliers:**
+
 - Price trends by feedstock type and region
 - Demand heat maps showing buyer concentration
 - Seasonal patterns and optimal listing timing
 - Competitor benchmarking (anonymised)
 
 **For Buyers:**
+
 - Supply availability forecasting
 - Regional production capacity
 - Price benchmarking tools
 - Supplier performance ratings
 
 **For Industry:**
+
 - Aggregate market volumes and values
 - Regional development metrics
 - Investment flow tracking
@@ -289,12 +302,14 @@ Data-driven insights powering better decisions across the ecosystem.
 ABFI.io functions as the coordination layer that enables fragmented participants to find each other, establish terms, and transact efficiently. This coordination function is essential infrastructure for market formation.
 
 **Pre-ABFI State:**
+
 - Buyers and sellers connected through personal networks
 - Limited price discovery and high search costs
 - Information asymmetry favouring established players
 - High transaction costs for small participants
 
 **With ABFI:**
+
 - Transparent marketplace with standardised information
 - Price signals enabling efficient resource allocation
 - Equal access for participants of all sizes
@@ -305,14 +320,17 @@ ABFI.io functions as the coordination layer that enables fragmented participants
 By providing evidence of contracted supply and demand, the platform de-risks investment across the value chain:
 
 **Agricultural Investment:**
+
 - Growers can demonstrate demand before committing capital to perennial crops
 - Banks can assess offtake contracts when evaluating agricultural loans
 
 **Processing Investment:**
+
 - Refineries can evidence feedstock security for project finance
 - Infrastructure funds can evaluate supply chain maturity
 
 **Logistics Investment:**
+
 - Transport operators can anticipate demand concentrations
 - Storage facilities can plan capacity based on futures volumes
 
@@ -354,6 +372,7 @@ ABFI.io is not a static platform but a living infrastructure that evolves with t
 ### Development Roadmap
 
 **Current Capabilities (2024-2025)**
+
 - Spot marketplace for immediate feedstock trading
 - Futures marketplace for long-term perennial crop commitments
 - Supplier verification and profiles
@@ -361,6 +380,7 @@ ABFI.io is not a static platform but a living infrastructure that evolves with t
 - Basic analytics and reporting
 
 **Near-Term Development (2025-2026)**
+
 - Advanced logistics integration with route optimisation
 - Carbon intensity scoring and sustainability certification integration
 - Mobile applications for field operations
@@ -369,6 +389,7 @@ ABFI.io is not a static platform but a living infrastructure that evolves with t
 - Financial services integration (escrow, letters of credit)
 
 **Medium-Term Vision (2026-2028)**
+
 - Automated quality verification via IoT integration
 - Blockchain-based contract execution and provenance tracking
 - Carbon credit generation and trading integration
@@ -377,6 +398,7 @@ ABFI.io is not a static platform but a living infrastructure that evolves with t
 - Insurance product integration for crop and delivery risks
 
 **Long-Term Horizon (2028+)**
+
 - Fully integrated bioeconomy marketplace
 - Real-time satellite crop monitoring integration
 - Tokenised feedstock futures for liquidity
@@ -450,6 +472,6 @@ As Australia advances its energy future, ABFI.io is committed to evolving alongs
 
 ---
 
-*ABFI.io — Connecting Australia's Bioeconomy*
+_ABFI.io — Connecting Australia's Bioeconomy_
 
-*Last Updated: December 2024*
+_Last Updated: December 2024_

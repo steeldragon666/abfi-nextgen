@@ -1,6 +1,12 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge, RatingBadge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
@@ -32,7 +38,8 @@ const MOCK_PROJECTS = [
   {
     id: 1,
     name: "Pilbara Biomass Energy Facility",
-    description: "150MW biomass power plant utilizing agricultural residues and plantation forestry",
+    description:
+      "150MW biomass power plant utilizing agricultural residues and plantation forestry",
     status: "development",
     bankabilityRating: "AA",
     bankabilityScore: 82,
@@ -54,7 +61,8 @@ const MOCK_PROJECTS = [
   {
     id: 2,
     name: "Murray-Darling Green Energy Hub",
-    description: "75MW combined heat and power facility processing agricultural waste from the region",
+    description:
+      "75MW combined heat and power facility processing agricultural waste from the region",
     status: "financing",
     bankabilityRating: "A",
     bankabilityScore: 74,
@@ -76,7 +84,8 @@ const MOCK_PROJECTS = [
   {
     id: 3,
     name: "Gippsland Renewable Baseload",
-    description: "200MW baseload renewable facility with integrated pellet production",
+    description:
+      "200MW baseload renewable facility with integrated pellet production",
     status: "planning",
     bankabilityRating: "BBB",
     bankabilityScore: 62,
@@ -107,32 +116,71 @@ const RATING_COLORS: Record<string, string> = {
   CCC: "bg-red-500 text-white",
 };
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; icon: typeof CheckCircle2 }> = {
-  operational: { label: "Operational", color: "bg-emerald-100 text-emerald-700", icon: CheckCircle2 },
-  construction: { label: "Construction", color: "bg-blue-100 text-blue-700", icon: Activity },
-  financing: { label: "Financing", color: "bg-purple-100 text-purple-700", icon: TrendingUp },
-  development: { label: "Development", color: "bg-amber-100 text-amber-700", icon: Building2 },
-  planning: { label: "Planning", color: "bg-slate-100 text-slate-700", icon: Clock },
-  suspended: { label: "Suspended", color: "bg-red-100 text-red-700", icon: AlertCircle },
+const STATUS_CONFIG: Record<
+  string,
+  { label: string; color: string; icon: typeof CheckCircle2 }
+> = {
+  operational: {
+    label: "Operational",
+    color: "bg-emerald-100 text-emerald-700",
+    icon: CheckCircle2,
+  },
+  construction: {
+    label: "Construction",
+    color: "bg-blue-100 text-blue-700",
+    icon: Activity,
+  },
+  financing: {
+    label: "Financing",
+    color: "bg-purple-100 text-purple-700",
+    icon: TrendingUp,
+  },
+  development: {
+    label: "Development",
+    color: "bg-amber-100 text-amber-700",
+    icon: Building2,
+  },
+  planning: {
+    label: "Planning",
+    color: "bg-slate-100 text-slate-700",
+    icon: Clock,
+  },
+  suspended: {
+    label: "Suspended",
+    color: "bg-red-100 text-red-700",
+    icon: AlertCircle,
+  },
 };
 
 export default function BankabilityDashboard() {
   const { user, loading: authLoading } = useAuth();
 
-  const { data: apiProjects, isLoading: projectsLoading } = trpc.bankability.getMyProjects.useQuery(
-    undefined,
-    { enabled: !!user }
-  );
+  const { data: apiProjects, isLoading: projectsLoading } =
+    trpc.bankability.getMyProjects.useQuery(undefined, { enabled: !!user });
 
   // Use mock data if no real data
-  const projects = apiProjects && apiProjects.length > 0 ? apiProjects : MOCK_PROJECTS;
+  const projects =
+    apiProjects && apiProjects.length > 0 ? apiProjects : MOCK_PROJECTS;
   const isUsingMockData = !apiProjects || apiProjects.length === 0;
 
   // Calculate aggregate stats
-  const totalCapacity = projects.reduce((sum, p: any) => sum + (p.nameplateCapacity || 0), 0);
-  const avgRating = projects.filter((p: any) => p.bankabilityScore).reduce((sum, p: any) => sum + p.bankabilityScore, 0) / projects.filter((p: any) => p.bankabilityScore).length || 0;
-  const totalSuppliers = projects.reduce((sum, p: any) => sum + (p.supplierCount || 0), 0);
-  const totalVolume = projects.reduce((sum, p: any) => sum + (p.totalContracted || 0), 0);
+  const totalCapacity = projects.reduce(
+    (sum, p: any) => sum + (p.nameplateCapacity || 0),
+    0
+  );
+  const avgRating =
+    projects
+      .filter((p: any) => p.bankabilityScore)
+      .reduce((sum, p: any) => sum + p.bankabilityScore, 0) /
+      projects.filter((p: any) => p.bankabilityScore).length || 0;
+  const totalSuppliers = projects.reduce(
+    (sum, p: any) => sum + (p.supplierCount || 0),
+    0
+  );
+  const totalVolume = projects.reduce(
+    (sum, p: any) => sum + (p.totalContracted || 0),
+    0
+  );
 
   if (authLoading) {
     return (
@@ -142,7 +190,7 @@ export default function BankabilityDashboard() {
             <Skeleton className="h-10 w-64 mb-2" />
             <Skeleton className="h-5 w-48 mb-8" />
             <div className="grid md:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3].map(i => (
                 <Skeleton key={i} className="h-48 rounded-xl" />
               ))}
             </div>
@@ -165,12 +213,18 @@ export default function BankabilityDashboard() {
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
             <div className="max-w-2xl">
               <div className="flex flex-wrap gap-2 mb-6">
-                <Badge variant="outline" className="border-blue-400/50 text-blue-300 bg-blue-500/10">
+                <Badge
+                  variant="outline"
+                  className="border-blue-400/50 text-blue-300 bg-blue-500/10"
+                >
                   <Shield className="h-3 w-3 mr-1" />
                   Bank-Grade Assessment
                 </Badge>
                 {isUsingMockData && (
-                  <Badge variant="outline" className="border-amber-400/50 text-amber-300 bg-amber-500/10">
+                  <Badge
+                    variant="outline"
+                    className="border-amber-400/50 text-amber-300 bg-amber-500/10"
+                  >
                     Demo Data
                   </Badge>
                 )}
@@ -180,14 +234,17 @@ export default function BankabilityDashboard() {
                 Bankability Dashboard
               </h1>
               <p className="text-xl text-slate-300 leading-relaxed">
-                Manage bioenergy projects, track supply chain integrity, and generate
-                investment-grade bankability assessments.
+                Manage bioenergy projects, track supply chain integrity, and
+                generate investment-grade bankability assessments.
               </p>
             </div>
 
             <div className="shrink-0">
               <Link href="/project-registration/flow">
-                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100">
+                <Button
+                  size="lg"
+                  className="bg-white text-slate-900 hover:bg-slate-100"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   New Project
                 </Button>
@@ -198,19 +255,27 @@ export default function BankabilityDashboard() {
           {/* Stats Row */}
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-white">{projects.length}</div>
+              <div className="text-3xl font-bold font-mono text-white">
+                {projects.length}
+              </div>
               <div className="text-sm text-slate-400 mt-1">Active Projects</div>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-blue-400">{totalCapacity}</div>
+              <div className="text-3xl font-bold font-mono text-blue-400">
+                {totalCapacity}
+              </div>
               <div className="text-sm text-slate-400 mt-1">Total MW</div>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-white">{avgRating.toFixed(0)}</div>
+              <div className="text-3xl font-bold font-mono text-white">
+                {avgRating.toFixed(0)}
+              </div>
               <div className="text-sm text-slate-400 mt-1">Avg Score</div>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-white">{totalSuppliers}</div>
+              <div className="text-3xl font-bold font-mono text-white">
+                {totalSuppliers}
+              </div>
               <div className="text-sm text-slate-400 mt-1">Suppliers</div>
             </div>
           </div>
@@ -221,8 +286,11 @@ export default function BankabilityDashboard() {
         {/* Results Header */}
         <div className="flex items-center justify-between mb-6 -mt-4">
           <p className="text-muted-foreground">
-            <strong className="text-foreground">{projects.length}</strong> project{projects.length !== 1 ? "s" : ""} tracked
-            {isUsingMockData && <span className="ml-2 text-amber-600">(Demo data)</span>}
+            <strong className="text-foreground">{projects.length}</strong>{" "}
+            project{projects.length !== 1 ? "s" : ""} tracked
+            {isUsingMockData && (
+              <span className="ml-2 text-amber-600">(Demo data)</span>
+            )}
           </p>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" asChild>
@@ -236,7 +304,7 @@ export default function BankabilityDashboard() {
 
         {projectsLoading ? (
           <div className="space-y-4">
-            {[1, 2].map((i) => (
+            {[1, 2].map(i => (
               <Card key={i}>
                 <CardHeader>
                   <Skeleton className="h-6 w-3/4 mb-2" />
@@ -251,11 +319,15 @@ export default function BankabilityDashboard() {
         ) : (
           <div className="space-y-6">
             {projects.map((project: any) => {
-              const statusConfig = STATUS_CONFIG[project.status] || STATUS_CONFIG.planning;
+              const statusConfig =
+                STATUS_CONFIG[project.status] || STATUS_CONFIG.planning;
               const StatusIcon = statusConfig.icon;
 
               return (
-                <Card key={project.id} className="hover:shadow-lg transition-all group border-2 border-transparent hover:border-primary/20">
+                <Card
+                  key={project.id}
+                  className="hover:shadow-lg transition-all group border-2 border-transparent hover:border-primary/20"
+                >
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div className="flex items-start gap-4 flex-1">
@@ -280,7 +352,10 @@ export default function BankabilityDashboard() {
                             </span>
                             <span className="flex items-center gap-1">
                               <Calendar className="h-3.5 w-3.5" />
-                              COD {project.targetCOD ? new Date(project.targetCOD).getFullYear() : "TBD"}
+                              COD{" "}
+                              {project.targetCOD
+                                ? new Date(project.targetCOD).getFullYear()
+                                : "TBD"}
                             </span>
                           </div>
                         </div>
@@ -291,7 +366,12 @@ export default function BankabilityDashboard() {
                           {statusConfig.label}
                         </Badge>
                         {project.bankabilityRating && (
-                          <Badge className={cn("font-mono", RATING_COLORS[project.bankabilityRating])}>
+                          <Badge
+                            className={cn(
+                              "font-mono",
+                              RATING_COLORS[project.bankabilityRating]
+                            )}
+                          >
                             {project.bankabilityRating}
                           </Badge>
                         )}
@@ -303,25 +383,43 @@ export default function BankabilityDashboard() {
                     {/* Key Metrics */}
                     <div className="grid md:grid-cols-4 gap-4">
                       <div className="p-3 rounded-lg bg-muted/50">
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Capacity</p>
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                          Capacity
+                        </p>
                         <p className="font-semibold font-mono text-lg mt-1">
-                          {project.nameplateCapacity?.toLocaleString()} <span className="text-muted-foreground text-sm">MW</span>
+                          {project.nameplateCapacity?.toLocaleString()}{" "}
+                          <span className="text-muted-foreground text-sm">
+                            MW
+                          </span>
                         </p>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50">
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Target COD</p>
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                          Target COD
+                        </p>
                         <p className="font-semibold text-lg mt-1">
-                          {project.targetCOD ? new Date(project.targetCOD).toLocaleDateString("en-AU", { month: "short", year: "numeric" }) : "TBD"}
+                          {project.targetCOD
+                            ? new Date(project.targetCOD).toLocaleDateString(
+                                "en-AU",
+                                { month: "short", year: "numeric" }
+                              )
+                            : "TBD"}
                         </p>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50">
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Debt Tenor</p>
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                          Debt Tenor
+                        </p>
                         <p className="font-semibold font-mono text-lg mt-1">
-                          {project.debtTenor ? `${project.debtTenor} years` : "TBD"}
+                          {project.debtTenor
+                            ? `${project.debtTenor} years`
+                            : "TBD"}
                         </p>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50">
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Suppliers</p>
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                          Suppliers
+                        </p>
                         <p className="font-semibold font-mono text-lg mt-1">
                           {project.supplierCount || 0}
                         </p>
@@ -335,33 +433,56 @@ export default function BankabilityDashboard() {
                           <Activity className="h-4 w-4 text-primary" />
                           Supply Position
                         </h4>
-                        <Badge variant="outline" className="text-xs">Target: 150% coverage</Badge>
+                        <Badge variant="outline" className="text-xs">
+                          Target: 150% coverage
+                        </Badge>
                       </div>
 
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Primary Coverage (Tier 1)</span>
-                            <span className="font-medium font-mono">{project.primaryCoverage || 0}% / 120%</span>
+                            <span className="text-muted-foreground">
+                              Primary Coverage (Tier 1)
+                            </span>
+                            <span className="font-medium font-mono">
+                              {project.primaryCoverage || 0}% / 120%
+                            </span>
                           </div>
-                          <Progress value={(project.primaryCoverage || 0) / 1.2} className="h-2" />
-                          <p className="text-xs text-muted-foreground">Long-term take-or-pay contracts</p>
+                          <Progress
+                            value={(project.primaryCoverage || 0) / 1.2}
+                            className="h-2"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Long-term take-or-pay contracts
+                          </p>
                         </div>
 
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Secondary Coverage (Tier 2)</span>
-                            <span className="font-medium font-mono">{project.secondaryCoverage || 0}% / 30%</span>
+                            <span className="text-muted-foreground">
+                              Secondary Coverage (Tier 2)
+                            </span>
+                            <span className="font-medium font-mono">
+                              {project.secondaryCoverage || 0}% / 30%
+                            </span>
                           </div>
-                          <Progress value={(project.secondaryCoverage || 0) / 0.3} className="h-2" />
-                          <p className="text-xs text-muted-foreground">Contingent supply options</p>
+                          <Progress
+                            value={(project.secondaryCoverage || 0) / 0.3}
+                            className="h-2"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Contingent supply options
+                          </p>
                         </div>
                       </div>
 
                       <div className="pt-3 border-t flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Total Contracted Volume</span>
+                        <span className="text-sm text-muted-foreground">
+                          Total Contracted Volume
+                        </span>
                         <span className="font-semibold font-mono text-emerald-600">
-                          {(project.totalContracted || 0).toLocaleString()} tonnes/year
+                          {(project.totalContracted || 0).toLocaleString()}{" "}
+                          tonnes/year
                         </span>
                       </div>
                     </div>
@@ -375,17 +496,45 @@ export default function BankabilityDashboard() {
                         </h4>
                         <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                           <div className="text-center col-span-2 md:col-span-1">
-                            <ScoreGauge score={Math.round(project.bankabilityScore)} size="md" />
-                            <div className="text-xs text-muted-foreground mt-1 font-medium">Composite</div>
+                            <ScoreGauge
+                              score={Math.round(project.bankabilityScore)}
+                              size="md"
+                            />
+                            <div className="text-xs text-muted-foreground mt-1 font-medium">
+                              Composite
+                            </div>
                           </div>
                           {[
-                            { label: "Volume", score: project.volumeScore, weight: "30%" },
-                            { label: "Quality", score: project.qualityScore, weight: "25%" },
-                            { label: "Structure", score: project.structureScore, weight: "20%" },
-                            { label: "Risk", score: project.riskScore, weight: "15%" },
-                            { label: "Operations", score: project.operationalScore, weight: "10%" },
-                          ].map((pillar) => (
-                            <div key={pillar.label} className="text-center p-3 rounded-lg bg-muted/30">
+                            {
+                              label: "Volume",
+                              score: project.volumeScore,
+                              weight: "30%",
+                            },
+                            {
+                              label: "Quality",
+                              score: project.qualityScore,
+                              weight: "25%",
+                            },
+                            {
+                              label: "Structure",
+                              score: project.structureScore,
+                              weight: "20%",
+                            },
+                            {
+                              label: "Risk",
+                              score: project.riskScore,
+                              weight: "15%",
+                            },
+                            {
+                              label: "Operations",
+                              score: project.operationalScore,
+                              weight: "10%",
+                            },
+                          ].map(pillar => (
+                            <div
+                              key={pillar.label}
+                              className="text-center p-3 rounded-lg bg-muted/30"
+                            >
                               <div className="text-2xl font-bold font-mono">
                                 {pillar.score || "--"}
                               </div>
@@ -399,13 +548,18 @@ export default function BankabilityDashboard() {
                     )}
 
                     {/* Alerts */}
-                    {(!project.bankabilityRating || project.bankabilityRating === "CCC" || project.bankabilityRating === "BB" || project.bankabilityRating === "B") && (
+                    {(!project.bankabilityRating ||
+                      project.bankabilityRating === "CCC" ||
+                      project.bankabilityRating === "BB" ||
+                      project.bankabilityRating === "B") && (
                       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
                         <div className="p-1.5 rounded-lg bg-amber-100">
                           <AlertCircle className="h-4 w-4 text-amber-600" />
                         </div>
                         <div className="text-sm">
-                          <div className="font-medium text-amber-800">Action Required</div>
+                          <div className="font-medium text-amber-800">
+                            Action Required
+                          </div>
                           <div className="text-amber-700">
                             {project.primaryCoverage < 100
                               ? "Increase primary supply coverage to meet lender requirements"
@@ -417,7 +571,9 @@ export default function BankabilityDashboard() {
 
                     {/* Actions */}
                     <div className="flex flex-wrap gap-2 pt-2 border-t">
-                      <Link href={`/dashboard/projects/${project.id}/agreements`}>
+                      <Link
+                        href={`/dashboard/projects/${project.id}/agreements`}
+                      >
                         <Button variant="outline" size="sm">
                           <FileText className="h-4 w-4 mr-1" />
                           View Agreements
@@ -453,9 +609,12 @@ export default function BankabilityDashboard() {
             <CardContent className="py-8">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">Need to secure feedstock supply?</h3>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Need to secure feedstock supply?
+                  </h3>
                   <p className="text-muted-foreground">
-                    Browse our marketplace of verified futures listings from qualified growers across Australia.
+                    Browse our marketplace of verified futures listings from
+                    qualified growers across Australia.
                   </p>
                 </div>
                 <div className="flex gap-3">

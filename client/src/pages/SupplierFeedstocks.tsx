@@ -1,11 +1,33 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { trpc } from "@/lib/trpc";
-import { Package, Plus, Edit, Eye, AlertCircle, Award, FileText, Download } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Package,
+  Plus,
+  Edit,
+  Eye,
+  AlertCircle,
+  Award,
+  FileText,
+  Download,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
@@ -18,64 +40,67 @@ export default function SupplierFeedstocks() {
   const [showCertDialog, setShowCertDialog] = useState(false);
   const [showBadpDialog, setShowBadpDialog] = useState(false);
   const [selectedFeedstock, setSelectedFeedstock] = useState<any>(null);
-  const [badpClientName, setBadpClientName] = useState('');
-  
+  const [badpClientName, setBadpClientName] = useState("");
+
   const { data: feedstocks, isLoading } = trpc.feedstocks.list.useQuery(
     undefined,
     { enabled: !!user }
   );
-  
-  const generateCertificate = trpc.certificates.generateABFICertificate.useMutation({
-    onSuccess: (data) => {
-      toast.success('Certificate generated successfully!');
-      setShowCertDialog(false);
-      window.open(data.pdfUrl, '_blank');
-    },
-    onError: (error) => {
-      toast.error(error.message || 'Failed to generate certificate');
-    },
-  });
-  
+
+  const generateCertificate =
+    trpc.certificates.generateABFICertificate.useMutation({
+      onSuccess: data => {
+        toast.success("Certificate generated successfully!");
+        setShowCertDialog(false);
+        window.open(data.pdfUrl, "_blank");
+      },
+      onError: error => {
+        toast.error(error.message || "Failed to generate certificate");
+      },
+    });
+
   const generateBADP = trpc.certificates.generateBADP.useMutation({
-    onSuccess: (data) => {
-      toast.success('BADP generated successfully!');
+    onSuccess: data => {
+      toast.success("BADP generated successfully!");
       setShowBadpDialog(false);
-      setBadpClientName('');
-      window.open(data.pdfUrl, '_blank');
+      setBadpClientName("");
+      window.open(data.pdfUrl, "_blank");
     },
-    onError: (error) => {
-      toast.error(error.message || 'Failed to generate BADP');
+    onError: error => {
+      toast.error(error.message || "Failed to generate BADP");
     },
   });
-  
+
   const handleGenerateCertificate = (feedstock: any) => {
     if (!feedstock.abfiScore) {
-      toast.error('Feedstock must have ABFI rating before generating certificate');
+      toast.error(
+        "Feedstock must have ABFI rating before generating certificate"
+      );
       return;
     }
     setSelectedFeedstock(feedstock);
     setShowCertDialog(true);
   };
-  
+
   const handleGenerateBADP = (feedstock: any) => {
     setSelectedFeedstock(feedstock);
     setShowBadpDialog(true);
   };
-  
+
   const confirmGenerateCertificate = () => {
     if (selectedFeedstock) {
       generateCertificate.mutate({ feedstockId: selectedFeedstock.id });
     }
   };
-  
+
   const confirmGenerateBADP = () => {
     if (selectedFeedstock && badpClientName.trim()) {
-      generateBADP.mutate({ 
+      generateBADP.mutate({
         feedstockId: selectedFeedstock.id,
         preparedFor: badpClientName.trim(),
       });
     } else {
-      toast.error('Please enter client/investor name');
+      toast.error("Please enter client/investor name");
     }
   };
 
@@ -92,20 +117,29 @@ export default function SupplierFeedstocks() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-green-100 text-green-800";
-      case "pending": return "bg-yellow-100 text-yellow-800";
-      case "draft": return "bg-gray-100 text-gray-800";
-      case "suspended": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "active":
+        return "bg-green-100 text-green-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "draft":
+        return "bg-gray-100 text-gray-800";
+      case "suspended":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getVerificationColor = (level: string) => {
     switch (level) {
-      case "verified": return "bg-blue-100 text-blue-800";
-      case "self_reported": return "bg-gray-100 text-gray-800";
-      case "third_party": return "bg-purple-100 text-purple-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "verified":
+        return "bg-blue-100 text-blue-800";
+      case "self_reported":
+        return "bg-gray-100 text-gray-800";
+      case "third_party":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -144,7 +178,10 @@ export default function SupplierFeedstocks() {
         ) : feedstocks && feedstocks.length > 0 ? (
           <div className="space-y-4">
             {feedstocks.map((feedstock: any) => (
-              <Card key={feedstock.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={feedstock.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
@@ -153,15 +190,22 @@ export default function SupplierFeedstocks() {
                         {feedstock.abfiId || `ABFI-${feedstock.id}`}
                       </CardTitle>
                       <CardDescription className="mt-2">
-                        {feedstock.category} • {feedstock.type} • {feedstock.state}
+                        {feedstock.category} • {feedstock.type} •{" "}
+                        {feedstock.state}
                       </CardDescription>
                     </div>
                     <div className="flex gap-2">
                       <Badge className={getStatusColor(feedstock.status)}>
                         {feedstock.status.toUpperCase()}
                       </Badge>
-                      <Badge className={getVerificationColor(feedstock.verificationLevel)}>
-                        {feedstock.verificationLevel?.replace('_', ' ').toUpperCase()}
+                      <Badge
+                        className={getVerificationColor(
+                          feedstock.verificationLevel
+                        )}
+                      >
+                        {feedstock.verificationLevel
+                          ?.replace("_", " ")
+                          .toUpperCase()}
                       </Badge>
                     </div>
                   </div>
@@ -171,37 +215,45 @@ export default function SupplierFeedstocks() {
                     <div>
                       <div className="text-muted-foreground">ABFI Score</div>
                       <div className="text-2xl font-bold text-primary">
-                        {feedstock.abfiScore?.toFixed(1) || 'N/A'}
+                        {feedstock.abfiScore?.toFixed(1) || "N/A"}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        Grade: {feedstock.abfiGrade || 'Pending'}
+                        Grade: {feedstock.abfiGrade || "Pending"}
                       </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground">Annual Capacity</div>
+                      <div className="text-muted-foreground">
+                        Annual Capacity
+                      </div>
                       <div className="font-medium">
-                        {feedstock.annualCapacity?.toLocaleString() || 'N/A'} tonnes
+                        {feedstock.annualCapacity?.toLocaleString() || "N/A"}{" "}
+                        tonnes
                       </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground">Available Volume</div>
+                      <div className="text-muted-foreground">
+                        Available Volume
+                      </div>
                       <div className="font-medium">
-                        {feedstock.availableVolume?.toLocaleString() || 'N/A'} tonnes
+                        {feedstock.availableVolume?.toLocaleString() || "N/A"}{" "}
+                        tonnes
                       </div>
                     </div>
                     <div>
                       <div className="text-muted-foreground">Price</div>
                       <div className="font-medium">
-                        ${feedstock.pricePerTonne?.toFixed(2) || 'N/A'}/tonne
+                        ${feedstock.pricePerTonne?.toFixed(2) || "N/A"}/tonne
                       </div>
                     </div>
                   </div>
 
-                  {feedstock.status === 'pending' && (
+                  {feedstock.status === "pending" && (
                     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-start gap-2">
                       <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
                       <div className="text-sm">
-                        <div className="font-medium text-yellow-900">Pending Verification</div>
+                        <div className="font-medium text-yellow-900">
+                          Pending Verification
+                        </div>
                         <div className="text-yellow-700">
                           Your feedstock is under review by ABFI administrators
                         </div>
@@ -222,10 +274,10 @@ export default function SupplierFeedstocks() {
                         Edit
                       </Button>
                     </Link>
-                    {feedstock.abfiScore && feedstock.status === 'active' && (
+                    {feedstock.abfiScore && feedstock.status === "active" && (
                       <>
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
                           onClick={() => handleGenerateCertificate(feedstock)}
                           className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
@@ -233,8 +285,8 @@ export default function SupplierFeedstocks() {
                           <Award className="h-4 w-4 mr-2" />
                           Generate Certificate
                         </Button>
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
                           onClick={() => handleGenerateBADP(feedstock)}
                           className="border-blue-200 text-blue-700 hover:bg-blue-50"
@@ -244,12 +296,12 @@ export default function SupplierFeedstocks() {
                         </Button>
                       </>
                     )}
-                    {feedstock.status === 'active' && (
+                    {feedstock.status === "active" && (
                       <Button variant="outline" size="sm">
                         Suspend
                       </Button>
                     )}
-                    {feedstock.status === 'suspended' && (
+                    {feedstock.status === "suspended" && (
                       <Button variant="outline" size="sm">
                         Reactivate
                       </Button>
@@ -257,7 +309,8 @@ export default function SupplierFeedstocks() {
                   </div>
 
                   <div className="text-xs text-muted-foreground">
-                    Created {formatDate(feedstock.createdAt)} • Last updated {formatDate(feedstock.updatedAt)}
+                    Created {formatDate(feedstock.createdAt)} • Last updated{" "}
+                    {formatDate(feedstock.updatedAt)}
                   </div>
                 </CardContent>
               </Card>
@@ -267,7 +320,9 @@ export default function SupplierFeedstocks() {
           <Card>
             <CardContent className="py-12 text-center">
               <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No feedstocks listed yet</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                No feedstocks listed yet
+              </h3>
               <p className="text-muted-foreground mb-4">
                 Start by adding your first feedstock listing
               </p>
@@ -280,14 +335,15 @@ export default function SupplierFeedstocks() {
             </CardContent>
           </Card>
         )}
-        
+
         {/* Certificate Generation Dialog */}
         <Dialog open={showCertDialog} onOpenChange={setShowCertDialog}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Generate ABFI Rating Certificate</DialogTitle>
               <DialogDescription>
-                Generate a professional PDF certificate for feedstock {selectedFeedstock?.abfiId}
+                Generate a professional PDF certificate for feedstock{" "}
+                {selectedFeedstock?.abfiId}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
@@ -295,12 +351,18 @@ export default function SupplierFeedstocks() {
                 <div className="flex items-center gap-3 mb-3">
                   <Award className="h-8 w-8 text-emerald-600" />
                   <div>
-                    <div className="font-semibold text-emerald-900">ABFI Rating Certificate</div>
-                    <div className="text-sm text-emerald-700">Professional certification document</div>
+                    <div className="font-semibold text-emerald-900">
+                      ABFI Rating Certificate
+                    </div>
+                    <div className="text-sm text-emerald-700">
+                      Professional certification document
+                    </div>
                   </div>
                 </div>
                 <div className="text-sm text-emerald-800 space-y-1">
-                  <div>• ABFI Score: {selectedFeedstock?.abfiScore?.toFixed(1)}/100</div>
+                  <div>
+                    • ABFI Score: {selectedFeedstock?.abfiScore?.toFixed(1)}/100
+                  </div>
                   <div>• 4-Pillar Assessment Breakdown</div>
                   <div>• Supplier & Feedstock Details</div>
                   <div>• Valid for 12 months</div>
@@ -311,10 +373,13 @@ export default function SupplierFeedstocks() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setShowCertDialog(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowCertDialog(false)}
+              >
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={confirmGenerateCertificate}
                 disabled={generateCertificate.isPending}
                 className="bg-emerald-600 hover:bg-emerald-700"
@@ -334,7 +399,7 @@ export default function SupplierFeedstocks() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        
+
         {/* BADP Generation Dialog */}
         <Dialog open={showBadpDialog} onOpenChange={setShowBadpDialog}>
           <DialogContent>
@@ -349,8 +414,12 @@ export default function SupplierFeedstocks() {
                 <div className="flex items-center gap-3 mb-3">
                   <FileText className="h-8 w-8 text-blue-600" />
                   <div>
-                    <div className="font-semibold text-blue-900">BADP Documentation</div>
-                    <div className="text-sm text-blue-700">Capital markets ready</div>
+                    <div className="font-semibold text-blue-900">
+                      BADP Documentation
+                    </div>
+                    <div className="text-sm text-blue-700">
+                      Capital markets ready
+                    </div>
                   </div>
                 </div>
                 <div className="text-sm text-blue-800 space-y-1">
@@ -360,27 +429,32 @@ export default function SupplierFeedstocks() {
                   <div>• ABFI & Bankability Ratings</div>
                 </div>
               </div>
-              
+
               <div>
-                <Label htmlFor="clientName">Prepared For (Client/Investor Name)</Label>
+                <Label htmlFor="clientName">
+                  Prepared For (Client/Investor Name)
+                </Label>
                 <Input
                   id="clientName"
                   placeholder="e.g., Green Capital Partners"
                   value={badpClientName}
-                  onChange={(e) => setBadpClientName(e.target.value)}
+                  onChange={e => setBadpClientName(e.target.value)}
                   className="mt-2"
                 />
               </div>
-              
+
               <div className="text-sm text-muted-foreground">
                 <strong>Revenue:</strong> $75,000 - $300,000 per asset pack
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setShowBadpDialog(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowBadpDialog(false)}
+              >
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={confirmGenerateBADP}
                 disabled={generateBADP.isPending || !badpClientName.trim()}
                 className="bg-blue-600 hover:bg-blue-700"

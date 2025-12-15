@@ -3,7 +3,13 @@
  */
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +37,8 @@ const MOCK_DEMAND_SIGNALS = [
     id: 1,
     signalNumber: "DS-2025-0001",
     title: "Wheat Straw for Bioenergy Plant - Hunter Valley",
-    description: "Large-scale bioenergy facility seeking consistent supply of wheat straw for year-round operations. Long-term offtake agreements preferred.",
+    description:
+      "Large-scale bioenergy facility seeking consistent supply of wheat straw for year-round operations. Long-term offtake agreements preferred.",
     feedstockType: "Wheat Straw",
     feedstockCategory: "agricultural_residue",
     annualVolume: 75000,
@@ -50,7 +57,8 @@ const MOCK_DEMAND_SIGNALS = [
     id: 2,
     signalNumber: "DS-2025-0002",
     title: "Bagasse Supply for Co-generation Facility",
-    description: "Sugar mill expanding co-generation capacity requires additional bagasse supply from nearby operations.",
+    description:
+      "Sugar mill expanding co-generation capacity requires additional bagasse supply from nearby operations.",
     feedstockType: "Bagasse",
     feedstockCategory: "agricultural_residue",
     annualVolume: 120000,
@@ -69,7 +77,8 @@ const MOCK_DEMAND_SIGNALS = [
     id: 3,
     signalNumber: "DS-2025-0003",
     title: "Forestry Residue for Biochar Production",
-    description: "Premium biochar producer seeking high-quality forestry residue for carbon sequestration products. Certification assistance available.",
+    description:
+      "Premium biochar producer seeking high-quality forestry residue for carbon sequestration products. Certification assistance available.",
     feedstockType: "Forestry Residue",
     feedstockCategory: "forestry_residue",
     annualVolume: 25000,
@@ -88,7 +97,8 @@ const MOCK_DEMAND_SIGNALS = [
     id: 4,
     signalNumber: "DS-2025-0004",
     title: "Miscanthus for Advanced Biofuel Refinery",
-    description: "Next-generation biofuel refinery under construction, seeking long-term contracts for miscanthus and similar energy crops.",
+    description:
+      "Next-generation biofuel refinery under construction, seeking long-term contracts for miscanthus and similar energy crops.",
     feedstockType: "Miscanthus",
     feedstockCategory: "energy_crop",
     annualVolume: 50000,
@@ -107,7 +117,8 @@ const MOCK_DEMAND_SIGNALS = [
     id: 5,
     signalNumber: "DS-2025-0005",
     title: "Cotton Trash for Biomass Power Station",
-    description: "Existing biomass power station diversifying feedstock base. Cotton trash from irrigation areas welcomed.",
+    description:
+      "Existing biomass power station diversifying feedstock base. Cotton trash from irrigation areas welcomed.",
     feedstockType: "Cotton Trash",
     feedstockCategory: "agricultural_residue",
     annualVolume: 40000,
@@ -126,7 +137,8 @@ const MOCK_DEMAND_SIGNALS = [
     id: 6,
     signalNumber: "DS-2025-0006",
     title: "Mixed Agricultural Waste for Anaerobic Digestion",
-    description: "Farm-scale anaerobic digestion facility expanding operations. Flexible on feedstock types - straw, stubble, crop residues accepted.",
+    description:
+      "Farm-scale anaerobic digestion facility expanding operations. Flexible on feedstock types - straw, stubble, crop residues accepted.",
     feedstockType: "Mixed Residues",
     feedstockCategory: "mixed",
     annualVolume: 15000,
@@ -143,12 +155,35 @@ const MOCK_DEMAND_SIGNALS = [
   },
 ];
 
-const CATEGORY_COLORS: Record<string, { bg: string; text: string; label: string }> = {
-  agricultural_residue: { bg: "bg-green-100", text: "text-green-800", label: "Agricultural Residue" },
-  forestry_residue: { bg: "bg-amber-100", text: "text-amber-800", label: "Forestry Residue" },
-  energy_crop: { bg: "bg-blue-100", text: "text-blue-800", label: "Energy Crop" },
-  organic_waste: { bg: "bg-purple-100", text: "text-purple-800", label: "Organic Waste" },
-  algae_aquatic: { bg: "bg-cyan-100", text: "text-cyan-800", label: "Algae/Aquatic" },
+const CATEGORY_COLORS: Record<
+  string,
+  { bg: string; text: string; label: string }
+> = {
+  agricultural_residue: {
+    bg: "bg-green-100",
+    text: "text-green-800",
+    label: "Agricultural Residue",
+  },
+  forestry_residue: {
+    bg: "bg-amber-100",
+    text: "text-amber-800",
+    label: "Forestry Residue",
+  },
+  energy_crop: {
+    bg: "bg-blue-100",
+    text: "text-blue-800",
+    label: "Energy Crop",
+  },
+  organic_waste: {
+    bg: "bg-purple-100",
+    text: "text-purple-800",
+    label: "Organic Waste",
+  },
+  algae_aquatic: {
+    bg: "bg-cyan-100",
+    text: "text-cyan-800",
+    label: "Algae/Aquatic",
+  },
   mixed: { bg: "bg-gray-100", text: "text-gray-800", label: "Mixed" },
 };
 
@@ -169,7 +204,8 @@ export default function BrowseDemandSignals() {
   });
 
   // Use mock data if API returns empty or is loading
-  const signals = apiSignals && apiSignals.length > 0 ? apiSignals : MOCK_DEMAND_SIGNALS;
+  const signals =
+    apiSignals && apiSignals.length > 0 ? apiSignals : MOCK_DEMAND_SIGNALS;
   const showingMockData = !apiSignals || apiSignals.length === 0;
 
   const filteredSignals = signals.filter((signal: any) => {
@@ -185,12 +221,18 @@ export default function BrowseDemandSignals() {
     }
 
     // Category filter
-    if (selectedCategories.length > 0 && !selectedCategories.includes(signal.feedstockCategory)) {
+    if (
+      selectedCategories.length > 0 &&
+      !selectedCategories.includes(signal.feedstockCategory)
+    ) {
       return false;
     }
 
     // State filter
-    if (selectedStates.length > 0 && !selectedStates.includes(signal.deliveryState)) {
+    if (
+      selectedStates.length > 0 &&
+      !selectedStates.includes(signal.deliveryState)
+    ) {
       return false;
     }
 
@@ -216,20 +258,28 @@ export default function BrowseDemandSignals() {
 
   const toggleState = (state: string) => {
     setSelectedStates(prev =>
-      prev.includes(state)
-        ? prev.filter(s => s !== state)
-        : [...prev, state]
+      prev.includes(state) ? prev.filter(s => s !== state) : [...prev, state]
     );
   };
 
   // Calculate stats
-  const totalVolume = filteredSignals.reduce((sum: number, s: any) => sum + (s.annualVolume || 0), 0);
-  const uniqueStates = new Set(filteredSignals.map((s: any) => s.deliveryState)).size;
-  const avgPrice = filteredSignals.length > 0
-    ? Math.round(filteredSignals.reduce((sum: number, s: any) =>
-        sum + ((s.indicativePriceMin || 0) + (s.indicativePriceMax || 0)) / 2, 0
-      ) / filteredSignals.length)
-    : 0;
+  const totalVolume = filteredSignals.reduce(
+    (sum: number, s: any) => sum + (s.annualVolume || 0),
+    0
+  );
+  const uniqueStates = new Set(filteredSignals.map((s: any) => s.deliveryState))
+    .size;
+  const avgPrice =
+    filteredSignals.length > 0
+      ? Math.round(
+          filteredSignals.reduce(
+            (sum: number, s: any) =>
+              sum +
+              ((s.indicativePriceMin || 0) + (s.indicativePriceMax || 0)) / 2,
+            0
+          ) / filteredSignals.length
+        )
+      : 0;
 
   return (
     <PageLayout>
@@ -247,26 +297,34 @@ export default function BrowseDemandSignals() {
               Demand Signals
             </h1>
             <p className="text-lg md:text-xl text-white/80 mb-8">
-              Connect with verified buyers seeking feedstock supply. Browse active requirements
-              and submit your proposals.
+              Connect with verified buyers seeking feedstock supply. Browse
+              active requirements and submit your proposals.
             </p>
 
             {/* Stats Row */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div className="text-2xl md:text-3xl font-bold font-mono">{filteredSignals.length}</div>
+                <div className="text-2xl md:text-3xl font-bold font-mono">
+                  {filteredSignals.length}
+                </div>
                 <div className="text-sm text-white/70">Active Signals</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div className="text-2xl md:text-3xl font-bold font-mono">{(totalVolume / 1000).toFixed(0)}k</div>
+                <div className="text-2xl md:text-3xl font-bold font-mono">
+                  {(totalVolume / 1000).toFixed(0)}k
+                </div>
                 <div className="text-sm text-white/70">Tonnes Demanded</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div className="text-2xl md:text-3xl font-bold font-mono">${avgPrice}</div>
+                <div className="text-2xl md:text-3xl font-bold font-mono">
+                  ${avgPrice}
+                </div>
                 <div className="text-sm text-white/70">Avg Price/t</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div className="text-2xl md:text-3xl font-bold font-mono">{uniqueStates}</div>
+                <div className="text-2xl md:text-3xl font-bold font-mono">
+                  {uniqueStates}
+                </div>
                 <div className="text-sm text-white/70">States</div>
               </div>
             </div>
@@ -294,7 +352,7 @@ export default function BrowseDemandSignals() {
                     <Input
                       placeholder="Search signals..."
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={e => setSearchQuery(e.target.value)}
                       className="pl-9"
                     />
                   </div>
@@ -302,10 +360,15 @@ export default function BrowseDemandSignals() {
 
                 {/* Category Filter */}
                 <div>
-                  <h4 className="font-medium text-sm mb-3">Feedstock Category</h4>
+                  <h4 className="font-medium text-sm mb-3">
+                    Feedstock Category
+                  </h4>
                   <div className="space-y-2">
                     {Object.entries(CATEGORY_COLORS).map(([key, config]) => (
-                      <label key={key} className="flex items-center gap-2 cursor-pointer">
+                      <label
+                        key={key}
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
                         <Checkbox
                           checked={selectedCategories.includes(key)}
                           onCheckedChange={() => toggleCategory(key)}
@@ -320,20 +383,27 @@ export default function BrowseDemandSignals() {
                 <div>
                   <h4 className="font-medium text-sm mb-3">Delivery State</h4>
                   <div className="grid grid-cols-2 gap-2">
-                    {["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"].map((state) => (
-                      <label key={state} className="flex items-center gap-2 cursor-pointer">
-                        <Checkbox
-                          checked={selectedStates.includes(state)}
-                          onCheckedChange={() => toggleState(state)}
-                        />
-                        <span className="text-sm">{state}</span>
-                      </label>
-                    ))}
+                    {["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"].map(
+                      state => (
+                        <label
+                          key={state}
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+                          <Checkbox
+                            checked={selectedStates.includes(state)}
+                            onCheckedChange={() => toggleState(state)}
+                          />
+                          <span className="text-sm">{state}</span>
+                        </label>
+                      )
+                    )}
                   </div>
                 </div>
 
                 {/* Clear Filters */}
-                {(selectedCategories.length > 0 || selectedStates.length > 0 || searchQuery) && (
+                {(selectedCategories.length > 0 ||
+                  selectedStates.length > 0 ||
+                  searchQuery) && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -356,7 +426,11 @@ export default function BrowseDemandSignals() {
             {/* Results Header */}
             <div className="flex items-center justify-between mb-6">
               <p className="text-muted-foreground">
-                Showing <span className="font-medium text-foreground">{filteredSignals.length}</span> demand signals
+                Showing{" "}
+                <span className="font-medium text-foreground">
+                  {filteredSignals.length}
+                </span>{" "}
+                demand signals
               </p>
             </div>
 
@@ -379,24 +453,35 @@ export default function BrowseDemandSignals() {
             ) : (
               <div className="space-y-4">
                 {filteredSignals.map((signal: any) => {
-                  const category = CATEGORY_COLORS[signal.feedstockCategory] || CATEGORY_COLORS.mixed;
-                  const urgency = URGENCY_CONFIG[signal.urgency] || URGENCY_CONFIG.medium;
+                  const category =
+                    CATEGORY_COLORS[signal.feedstockCategory] ||
+                    CATEGORY_COLORS.mixed;
+                  const urgency =
+                    URGENCY_CONFIG[signal.urgency] || URGENCY_CONFIG.medium;
 
                   return (
                     <Card
                       key={signal.id}
                       className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:border-primary/30"
-                      onClick={() => setLocation(`/demand-signals/${signal.id}`)}
+                      onClick={() =>
+                        setLocation(`/demand-signals/${signal.id}`)
+                      }
                     >
                       <CardHeader className="pb-3">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-2">
-                              <div className={`w-2 h-2 rounded-full ${urgency.color}`} />
-                              <span className="text-xs text-muted-foreground">{signal.signalNumber}</span>
+                              <div
+                                className={`w-2 h-2 rounded-full ${urgency.color}`}
+                              />
+                              <span className="text-xs text-muted-foreground">
+                                {signal.signalNumber}
+                              </span>
                               {signal.buyerName && (
                                 <>
-                                  <span className="text-muted-foreground">•</span>
+                                  <span className="text-muted-foreground">
+                                    •
+                                  </span>
                                   <span className="text-xs text-muted-foreground flex items-center gap-1">
                                     <Building2 className="h-3 w-3" />
                                     {signal.buyerName}
@@ -408,17 +493,23 @@ export default function BrowseDemandSignals() {
                               {signal.title}
                             </CardTitle>
                             <div className="flex flex-wrap gap-2 mt-2">
-                              <Badge className={`${category.bg} ${category.text} border-0`}>
+                              <Badge
+                                className={`${category.bg} ${category.text} border-0`}
+                              >
                                 {category.label}
                               </Badge>
-                              <Badge variant="outline">{signal.feedstockType}</Badge>
+                              <Badge variant="outline">
+                                {signal.feedstockType}
+                              </Badge>
                             </div>
                           </div>
                           <div className="text-right shrink-0">
                             <div className="text-2xl font-bold text-primary font-mono">
                               {signal.annualVolume?.toLocaleString()}
                             </div>
-                            <div className="text-xs text-muted-foreground">tonnes/year</div>
+                            <div className="text-xs text-muted-foreground">
+                              tonnes/year
+                            </div>
                           </div>
                         </div>
                         {signal.description && (
@@ -433,21 +524,25 @@ export default function BrowseDemandSignals() {
                             <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
                             <span className="truncate">
                               {signal.deliveryLocation}
-                              {signal.deliveryState && `, ${signal.deliveryState}`}
+                              {signal.deliveryState &&
+                                `, ${signal.deliveryState}`}
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-sm">
                             <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
-                            <span>Start: {formatDate(signal.supplyStartDate)}</span>
+                            <span>
+                              Start: {formatDate(signal.supplyStartDate)}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2 text-sm">
                             <TrendingUp className="h-4 w-4 text-muted-foreground shrink-0" />
                             <span>
-                              {signal.indicativePriceMin && signal.indicativePriceMax
+                              {signal.indicativePriceMin &&
+                              signal.indicativePriceMax
                                 ? `$${signal.indicativePriceMin}-${signal.indicativePriceMax}/t`
                                 : signal.pricingMechanism === "negotiable"
-                                ? "Price Negotiable"
-                                : "Price on Request"}
+                                  ? "Price Negotiable"
+                                  : "Price on Request"}
                             </span>
                           </div>
                         </div>
@@ -456,14 +551,20 @@ export default function BrowseDemandSignals() {
                           <div className="flex items-center gap-4 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1">
                               <Clock className="h-4 w-4" />
-                              <span>Deadline: {formatDate(signal.responseDeadline)}</span>
+                              <span>
+                                Deadline: {formatDate(signal.responseDeadline)}
+                              </span>
                             </div>
                             <div className="flex items-center gap-1">
                               <Zap className="h-4 w-4" />
                               <span>{signal.responseCount || 0} responses</span>
                             </div>
                           </div>
-                          <Button variant="ghost" size="sm" className="group-hover:bg-primary group-hover:text-white">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="group-hover:bg-primary group-hover:text-white"
+                          >
                             View Details
                             <ArrowRight className="h-4 w-4 ml-1" />
                           </Button>
@@ -489,8 +590,8 @@ export default function BrowseDemandSignals() {
               Post Your Feedstock Requirements
             </h2>
             <p className="text-muted-foreground mb-8">
-              Are you a buyer looking for sustainable feedstock? Post a demand signal
-              and connect with verified suppliers across Australia.
+              Are you a buyer looking for sustainable feedstock? Post a demand
+              signal and connect with verified suppliers across Australia.
             </p>
             <Button
               size="lg"

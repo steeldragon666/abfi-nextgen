@@ -102,7 +102,13 @@ export async function queryAuditLogs(params: {
  * Record admin override
  */
 export async function recordAdminOverride(params: {
-  overrideType: "score" | "rating" | "status" | "expiry" | "certification" | "evidence_validity";
+  overrideType:
+    | "score"
+    | "rating"
+    | "status"
+    | "expiry"
+    | "certification"
+    | "evidence_validity";
   entityType: string;
   entityId: number;
   originalValue: any;
@@ -205,7 +211,13 @@ export async function revokeOverride(params: {
  */
 export async function recordUserConsent(params: {
   userId: number;
-  consentType: "terms_of_service" | "privacy_policy" | "data_processing" | "marketing" | "third_party_sharing" | "certification_reliance";
+  consentType:
+    | "terms_of_service"
+    | "privacy_policy"
+    | "data_processing"
+    | "marketing"
+    | "third_party_sharing"
+    | "certification_reliance";
   consentVersion: string;
   consentText: string;
   granted: boolean;
@@ -296,7 +308,13 @@ export async function createCertificateLegalMetadata(params: {
  * Submit dispute
  */
 export async function submitDispute(params: {
-  disputeType: "score_accuracy" | "certificate_validity" | "evidence_authenticity" | "contract_interpretation" | "service_quality" | "billing";
+  disputeType:
+    | "score_accuracy"
+    | "certificate_validity"
+    | "evidence_authenticity"
+    | "contract_interpretation"
+    | "service_quality"
+    | "billing";
   raisedBy: number;
   respondent?: number;
   relatedEntityType?: string;
@@ -304,7 +322,11 @@ export async function submitDispute(params: {
   title: string;
   description: string;
   desiredOutcome?: string;
-  supportingEvidence?: Array<{ type: string; url: string; description: string }>;
+  supportingEvidence?: Array<{
+    type: string;
+    url: string;
+    description: string;
+  }>;
   priority?: "low" | "medium" | "high" | "urgent";
 }): Promise<number> {
   const db = await getDb();
@@ -342,11 +364,28 @@ export async function submitDispute(params: {
  */
 export async function updateDisputeStatus(params: {
   disputeId: number;
-  status: "submitted" | "under_review" | "investigation" | "mediation" | "arbitration" | "resolved" | "closed";
+  status:
+    | "submitted"
+    | "under_review"
+    | "investigation"
+    | "mediation"
+    | "arbitration"
+    | "resolved"
+    | "closed";
   assignedTo?: number;
   resolutionSummary?: string;
-  resolutionOutcome?: "upheld" | "partially_upheld" | "rejected" | "withdrawn" | "settled";
-  remediationActions?: Array<{ action: string; responsible: string; deadline: string; completed: boolean }>;
+  resolutionOutcome?:
+    | "upheld"
+    | "partially_upheld"
+    | "rejected"
+    | "withdrawn"
+    | "settled";
+  remediationActions?: Array<{
+    action: string;
+    responsible: string;
+    deadline: string;
+    completed: boolean;
+  }>;
 }): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -367,7 +406,10 @@ export async function updateDisputeStatus(params: {
     updates.reviewStartDate = new Date();
   }
 
-  await db.update(disputeResolutions).set(updates).where(eq(disputeResolutions.id, params.disputeId));
+  await db
+    .update(disputeResolutions)
+    .set(updates)
+    .where(eq(disputeResolutions.id, params.disputeId));
 }
 
 /**
@@ -457,7 +499,8 @@ export async function initializeRetentionPolicies() {
     {
       entityType: "evidence",
       retentionPeriodDays: 1825, // 5 years
-      legalBasis: "Evidence supporting certificates must be retained for certificate validity plus 3 years",
+      legalBasis:
+        "Evidence supporting certificates must be retained for certificate validity plus 3 years",
       policyVersion: "1.0",
       effectiveDate: new Date(),
     },

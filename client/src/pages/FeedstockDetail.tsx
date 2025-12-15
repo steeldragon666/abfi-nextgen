@@ -1,13 +1,30 @@
 import { useRoute, Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, MapPin, TrendingUp, Award, FileText, Send, ArrowLeft } from "lucide-react";
+import {
+  Loader2,
+  MapPin,
+  TrendingUp,
+  Award,
+  FileText,
+  Send,
+  ArrowLeft,
+} from "lucide-react";
 import { FEEDSTOCK_CATEGORIES } from "@/const";
 
-const FEEDSTOCK_TYPES: Record<string, Array<{ value: string; label: string }>> = {
+const FEEDSTOCK_TYPES: Record<
+  string,
+  Array<{ value: string; label: string }>
+> = {
   oilseed: [
     { value: "canola", label: "Canola" },
     { value: "soybean", label: "Soybean" },
@@ -44,7 +61,11 @@ export default function FeedstockDetail() {
   const [, params] = useRoute("/feedstock/:id");
   const feedstockId = params?.id ? parseInt(params.id) : 0;
 
-  const { data: feedstock, isLoading, error } = trpc.feedstocks.getById.useQuery({ id: feedstockId });
+  const {
+    data: feedstock,
+    isLoading,
+    error,
+  } = trpc.feedstocks.getById.useQuery({ id: feedstockId });
 
   if (isLoading) {
     return (
@@ -90,27 +111,42 @@ export default function FeedstockDetail() {
       <div className="bg-primary text-primary-foreground py-8">
         <div className="container">
           <Link href="/browse">
-            <Button variant="ghost" className="mb-4 text-primary-foreground hover:bg-primary-foreground/10">
+            <Button
+              variant="ghost"
+              className="mb-4 text-primary-foreground hover:bg-primary-foreground/10"
+            >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Browse
             </Button>
           </Link>
-          
+
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">{feedstock.abfiId}</h1>
               <p className="text-lg opacity-90">
-                {FEEDSTOCK_CATEGORIES.find(c => c.value === feedstock.category)?.label} - {" "}
-                {FEEDSTOCK_TYPES[feedstock.category as keyof typeof FEEDSTOCK_TYPES]?.find((t: any) => t.value === feedstock.type)?.label}
+                {
+                  FEEDSTOCK_CATEGORIES.find(c => c.value === feedstock.category)
+                    ?.label
+                }{" "}
+                -{" "}
+                {
+                  FEEDSTOCK_TYPES[
+                    feedstock.category as keyof typeof FEEDSTOCK_TYPES
+                  ]?.find((t: any) => t.value === feedstock.type)?.label
+                }
               </p>
             </div>
-            
+
             <div className="text-right">
               <div className="text-sm opacity-90 mb-1">ABFI Score</div>
-              <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${getScoreColor(feedstock.abfiScore)} text-white font-bold text-2xl`}>
+              <div
+                className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${getScoreColor(feedstock.abfiScore)} text-white font-bold text-2xl`}
+              >
                 {feedstock.abfiScore || "N/A"}
               </div>
-              <div className="text-sm mt-1 opacity-90">{getScoreGrade(feedstock.abfiScore)}</div>
+              <div className="text-sm mt-1 opacity-90">
+                {getScoreGrade(feedstock.abfiScore)}
+              </div>
             </div>
           </div>
         </div>
@@ -131,28 +167,56 @@ export default function FeedstockDetail() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">State</div>
-                    <div className="font-medium">{STATES.find((s: any) => s.value === feedstock.state)?.label}</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      State
+                    </div>
+                    <div className="font-medium">
+                      {
+                        STATES.find((s: any) => s.value === feedstock.state)
+                          ?.label
+                      }
+                    </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Location</div>
-                    <div className="font-medium">{feedstock.sourceAddress || "Not specified"}</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Location
+                    </div>
+                    <div className="font-medium">
+                      {feedstock.sourceAddress || "Not specified"}
+                    </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Annual Capacity</div>
-                    <div className="font-medium">{feedstock.annualCapacityTonnes?.toLocaleString() || "N/A"} tonnes</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Annual Capacity
+                    </div>
+                    <div className="font-medium">
+                      {feedstock.annualCapacityTonnes?.toLocaleString() ||
+                        "N/A"}{" "}
+                      tonnes
+                    </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Available Volume</div>
-                    <div className="font-medium">{feedstock.availableVolumeCurrent?.toLocaleString() || "N/A"} tonnes</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Available Volume
+                    </div>
+                    <div className="font-medium">
+                      {feedstock.availableVolumeCurrent?.toLocaleString() ||
+                        "N/A"}{" "}
+                      tonnes
+                    </div>
                   </div>
                 </div>
-                
+
                 {feedstock.pricePerTonne && (
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Price</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Price
+                    </div>
                     <div className="text-2xl font-bold text-primary">
-                      ${feedstock.pricePerTonne} <span className="text-sm font-normal text-muted-foreground">per tonne</span>
+                      ${feedstock.pricePerTonne}{" "}
+                      <span className="text-sm font-normal text-muted-foreground">
+                        per tonne
+                      </span>
                     </div>
                   </div>
                 )}
@@ -170,13 +234,21 @@ export default function FeedstockDetail() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Carbon Intensity</div>
-                    <div className="font-medium">{feedstock.carbonIntensityValue || "N/A"} gCO2e/MJ</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      Carbon Intensity
+                    </div>
+                    <div className="font-medium">
+                      {feedstock.carbonIntensityValue || "N/A"} gCO2e/MJ
+                    </div>
                   </div>
                   {feedstock.productionMethod && (
                     <div className="col-span-2">
-                      <div className="text-sm text-muted-foreground mb-1">Production Method</div>
-                      <div className="font-medium capitalize">{feedstock.productionMethod.replace("_", " ")}</div>
+                      <div className="text-sm text-muted-foreground mb-1">
+                        Production Method
+                      </div>
+                      <div className="font-medium capitalize">
+                        {feedstock.productionMethod.replace("_", " ")}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -185,18 +257,24 @@ export default function FeedstockDetail() {
                   <>
                     <Separator />
                     <div>
-                      <div className="text-sm font-medium mb-3">ABFI Score Breakdown</div>
+                      <div className="text-sm font-medium mb-3">
+                        ABFI Score Breakdown
+                      </div>
                       <div className="space-y-2">
                         {feedstock.sustainabilityScore && (
                           <div>
                             <div className="flex justify-between text-sm mb-1">
                               <span>Sustainability</span>
-                              <span className="font-medium">{feedstock.sustainabilityScore}/100</span>
+                              <span className="font-medium">
+                                {feedstock.sustainabilityScore}/100
+                              </span>
                             </div>
                             <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-green-600" 
-                                style={{ width: `${feedstock.sustainabilityScore}%` }}
+                              <div
+                                className="h-full bg-green-600"
+                                style={{
+                                  width: `${feedstock.sustainabilityScore}%`,
+                                }}
                               />
                             </div>
                           </div>
@@ -205,12 +283,16 @@ export default function FeedstockDetail() {
                           <div>
                             <div className="flex justify-between text-sm mb-1">
                               <span>Carbon Intensity</span>
-                              <span className="font-medium">{feedstock.carbonIntensityScore}/100</span>
+                              <span className="font-medium">
+                                {feedstock.carbonIntensityScore}/100
+                              </span>
                             </div>
                             <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-green-600" 
-                                style={{ width: `${feedstock.carbonIntensityScore}%` }}
+                              <div
+                                className="h-full bg-green-600"
+                                style={{
+                                  width: `${feedstock.carbonIntensityScore}%`,
+                                }}
                               />
                             </div>
                           </div>
@@ -219,11 +301,13 @@ export default function FeedstockDetail() {
                           <div>
                             <div className="flex justify-between text-sm mb-1">
                               <span>Quality</span>
-                              <span className="font-medium">{feedstock.qualityScore}/100</span>
+                              <span className="font-medium">
+                                {feedstock.qualityScore}/100
+                              </span>
                             </div>
                             <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-green-600" 
+                              <div
+                                className="h-full bg-green-600"
                                 style={{ width: `${feedstock.qualityScore}%` }}
                               />
                             </div>
@@ -233,12 +317,16 @@ export default function FeedstockDetail() {
                           <div>
                             <div className="flex justify-between text-sm mb-1">
                               <span>Reliability</span>
-                              <span className="font-medium">{feedstock.reliabilityScore}/100</span>
+                              <span className="font-medium">
+                                {feedstock.reliabilityScore}/100
+                              </span>
                             </div>
                             <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-green-600" 
-                                style={{ width: `${feedstock.reliabilityScore}%` }}
+                              <div
+                                className="h-full bg-green-600"
+                                style={{
+                                  width: `${feedstock.reliabilityScore}%`,
+                                }}
                               />
                             </div>
                           </div>
@@ -262,7 +350,10 @@ export default function FeedstockDetail() {
                 <Badge variant="secondary" className="text-sm">
                   {feedstock.verificationLevel?.replace("_", " ").toUpperCase()}
                 </Badge>
-                <p className="text-xs text-muted-foreground mt-2">Verification level indicates the degree of third-party validation</p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Verification level indicates the degree of third-party
+                  validation
+                </p>
               </CardContent>
             </Card>
 
@@ -276,7 +367,9 @@ export default function FeedstockDetail() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm leading-relaxed">{feedstock.description}</p>
+                  <p className="text-sm leading-relaxed">
+                    {feedstock.description}
+                  </p>
                 </CardContent>
               </Card>
             )}
@@ -290,14 +383,14 @@ export default function FeedstockDetail() {
                 <CardTitle>Status</CardTitle>
               </CardHeader>
               <CardContent>
-                <Badge 
-                  variant={feedstock.status === "active" ? "default" : "secondary"}
+                <Badge
+                  variant={
+                    feedstock.status === "active" ? "default" : "secondary"
+                  }
                   className="text-sm"
                 >
                   {feedstock.status?.toUpperCase()}
                 </Badge>
-                
-
               </CardContent>
             </Card>
 
@@ -305,7 +398,9 @@ export default function FeedstockDetail() {
             <Card>
               <CardHeader>
                 <CardTitle>Interested?</CardTitle>
-                <CardDescription>Send an inquiry to the supplier</CardDescription>
+                <CardDescription>
+                  Send an inquiry to the supplier
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Link href={`/inquiry/send?feedstockId=${feedstock.id}`}>
@@ -325,11 +420,15 @@ export default function FeedstockDetail() {
               <CardContent className="space-y-3 text-sm">
                 <div>
                   <div className="text-muted-foreground mb-1">Listed</div>
-                  <div>{new Date(feedstock.createdAt).toLocaleDateString()}</div>
+                  <div>
+                    {new Date(feedstock.createdAt).toLocaleDateString()}
+                  </div>
                 </div>
                 <div>
                   <div className="text-muted-foreground mb-1">Last Updated</div>
-                  <div>{new Date(feedstock.updatedAt).toLocaleDateString()}</div>
+                  <div>
+                    {new Date(feedstock.updatedAt).toLocaleDateString()}
+                  </div>
                 </div>
               </CardContent>
             </Card>

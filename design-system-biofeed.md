@@ -5,11 +5,13 @@ Extracted from Google Slides presentation for ABFI platform implementation.
 ## Color Palette
 
 ### Primary Colors
+
 - **Navy Blue (Primary)**: `#0F3A5C` - Main background color, headers, dark sections
 - **Golden Yellow (Accent)**: `#F4C430` - Icons, highlights, CTAs, borders
 - **White**: `#FFFFFF` - Text on dark backgrounds, light sections
 
 ### Secondary Colors
+
 - **Light Gray**: `#F5F5F5` - Background for light sections
 - **Medium Gray**: `#9CA3AF` - Secondary text, disabled states
 - **Dark Gray**: `#374151` - Body text on light backgrounds
@@ -17,10 +19,12 @@ Extracted from Google Slides presentation for ABFI platform implementation.
 ## Typography
 
 ### Font Families
+
 - **Headings**: Sans-serif (Montserrat or Poppins style) - Bold, clean
 - **Body Text**: Sans-serif (Inter or similar) - Regular weight
 
 ### Hierarchy
+
 - **H1**: Large, bold, white on navy or navy on white
 - **H2**: Medium-large, golden yellow for emphasis
 - **Body**: Regular weight, appropriate contrast
@@ -28,6 +32,7 @@ Extracted from Google Slides presentation for ABFI platform implementation.
 ## Components
 
 ### Cards
+
 - **Style**: Rounded corners (8-12px border-radius)
 - **Border**: 2-3px golden yellow border
 - **Background**: Semi-transparent navy or white
@@ -35,17 +40,20 @@ Extracted from Google Slides presentation for ABFI platform implementation.
 - **Icons**: Line-style icons in golden yellow
 
 ### Icons
+
 - **Style**: Line/outline style (not filled)
 - **Color**: Golden yellow (#F4C430)
 - **Size**: 48-64px for feature cards
 - **Examples**: Checkmarks, X marks, dollar signs, network diagrams, calendars
 
 ### Buttons
+
 - **Primary**: Golden yellow background, navy text
 - **Secondary**: Navy background, white text
 - **Border**: 2px solid, rounded corners
 
 ### Layout Patterns
+
 - **Hero Section**: Full-width navy background with illustrated landscape
 - **Two-Column**: Split sections with contrasting backgrounds
 - **Card Grid**: 5 cards in a row with equal spacing
@@ -54,12 +62,14 @@ Extracted from Google Slides presentation for ABFI platform implementation.
 ## Visual Elements
 
 ### Backgrounds
+
 - **Dark Navy**: Used for hero sections and feature showcases
 - **Illustrated Landscape**: Renewable energy elements (wind turbines, solar panels, wheat fields)
 - **Map Overlay**: Australia outline with golden location pins
 - **Light Sections**: White or light gray for content areas
 
 ### Decorative Elements
+
 - **Leaf Icons**: Circular badges with golden borders
 - **Connection Lines**: Golden lines connecting modular components
 - **Circuit Board Pattern**: Subtle tech-inspired background elements

@@ -1,10 +1,22 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { FileUp, Upload } from "lucide-react";
 import { useState } from "react";
@@ -22,7 +34,7 @@ export default function QualityTestUpload() {
   const [heatingValue, setHeatingValue] = useState<string>("");
   const [sulfurContent, setSulfurContent] = useState<string>("");
   const [documentUrl, setDocumentUrl] = useState<string>("");
-  
+
   const { data: feedstocks } = trpc.feedstocks.search.useQuery(
     {},
     { enabled: !!user }
@@ -33,21 +45,22 @@ export default function QualityTestUpload() {
       toast.success("Quality test uploaded successfully");
       setLocation("/supplier/feedstocks");
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to upload quality test");
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!feedstockId || !testType || !testDate) {
       toast.error("Please fill in all required fields");
       return;
     }
 
     const parameters: Record<string, any> = {};
-    if (moistureContent) parameters.moistureContent = parseFloat(moistureContent);
+    if (moistureContent)
+      parameters.moistureContent = parseFloat(moistureContent);
     if (ashContent) parameters.ashContent = parseFloat(ashContent);
     if (heatingValue) parameters.heatingValue = parseFloat(heatingValue);
     if (sulfurContent) parameters.sulfurContent = parseFloat(sulfurContent);
@@ -120,13 +133,21 @@ export default function QualityTestUpload() {
                     <SelectValue placeholder="Select test type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="proximate">Proximate Analysis</SelectItem>
+                    <SelectItem value="proximate">
+                      Proximate Analysis
+                    </SelectItem>
                     <SelectItem value="ultimate">Ultimate Analysis</SelectItem>
-                    <SelectItem value="heating_value">Heating Value Test</SelectItem>
-                    <SelectItem value="moisture">Moisture Content Test</SelectItem>
+                    <SelectItem value="heating_value">
+                      Heating Value Test
+                    </SelectItem>
+                    <SelectItem value="moisture">
+                      Moisture Content Test
+                    </SelectItem>
                     <SelectItem value="ash">Ash Content Test</SelectItem>
                     <SelectItem value="sulfur">Sulfur Content Test</SelectItem>
-                    <SelectItem value="comprehensive">Comprehensive Analysis</SelectItem>
+                    <SelectItem value="comprehensive">
+                      Comprehensive Analysis
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -138,15 +159,15 @@ export default function QualityTestUpload() {
                   id="testDate"
                   type="date"
                   value={testDate}
-                  onChange={(e) => setTestDate(e.target.value)}
-                  max={new Date().toISOString().split('T')[0]}
+                  onChange={e => setTestDate(e.target.value)}
+                  max={new Date().toISOString().split("T")[0]}
                 />
               </div>
 
               {/* Test Parameters */}
               <div className="space-y-4">
                 <h3 className="font-semibold">Test Parameters</h3>
-                
+
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="moisture">Moisture Content (%)</Label>
@@ -156,7 +177,7 @@ export default function QualityTestUpload() {
                       step="0.01"
                       placeholder="e.g., 12.5"
                       value={moistureContent}
-                      onChange={(e) => setMoistureContent(e.target.value)}
+                      onChange={e => setMoistureContent(e.target.value)}
                     />
                   </div>
 
@@ -168,7 +189,7 @@ export default function QualityTestUpload() {
                       step="0.01"
                       placeholder="e.g., 3.2"
                       value={ashContent}
-                      onChange={(e) => setAshContent(e.target.value)}
+                      onChange={e => setAshContent(e.target.value)}
                     />
                   </div>
 
@@ -180,7 +201,7 @@ export default function QualityTestUpload() {
                       step="0.01"
                       placeholder="e.g., 18.5"
                       value={heatingValue}
-                      onChange={(e) => setHeatingValue(e.target.value)}
+                      onChange={e => setHeatingValue(e.target.value)}
                     />
                   </div>
 
@@ -192,7 +213,7 @@ export default function QualityTestUpload() {
                       step="0.001"
                       placeholder="e.g., 0.05"
                       value={sulfurContent}
-                      onChange={(e) => setSulfurContent(e.target.value)}
+                      onChange={e => setSulfurContent(e.target.value)}
                     />
                   </div>
                 </div>
@@ -206,7 +227,7 @@ export default function QualityTestUpload() {
                   type="url"
                   placeholder="https://example.com/test-report.pdf"
                   value={documentUrl}
-                  onChange={(e) => setDocumentUrl(e.target.value)}
+                  onChange={e => setDocumentUrl(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground mt-1">
                   Upload your PDF report to S3 and paste the URL here

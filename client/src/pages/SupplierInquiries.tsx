@@ -1,6 +1,12 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { trpc } from "@/lib/trpc";
@@ -10,12 +16,10 @@ import { formatDate } from "@/const";
 
 export default function SupplierInquiries() {
   const { user, loading: authLoading } = useAuth();
-  
+
   // Get supplier profile from context (supplier procedure will provide it)
-  const { data: inquiries, isLoading } = trpc.inquiries.listForSupplier.useQuery(
-    undefined,
-    { enabled: !!user }
-  );
+  const { data: inquiries, isLoading } =
+    trpc.inquiries.listForSupplier.useQuery(undefined, { enabled: !!user });
 
   if (authLoading || !user) {
     return (
@@ -30,11 +34,16 @@ export default function SupplierInquiries() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "open": return "bg-yellow-100 text-yellow-800";
-      case "responded": return "bg-blue-100 text-blue-800";
-      case "closed": return "bg-gray-100 text-gray-800";
-      case "cancelled": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "open":
+        return "bg-yellow-100 text-yellow-800";
+      case "responded":
+        return "bg-blue-100 text-blue-800";
+      case "closed":
+        return "bg-gray-100 text-gray-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -65,7 +74,10 @@ export default function SupplierInquiries() {
         ) : inquiries && inquiries.length > 0 ? (
           <div className="space-y-4">
             {inquiries.map((inquiry: any) => (
-              <Card key={inquiry.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={inquiry.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
@@ -74,7 +86,8 @@ export default function SupplierInquiries() {
                         {inquiry.subject}
                       </CardTitle>
                       <CardDescription className="mt-2">
-                        From: {inquiry.buyerName || "Anonymous Buyer"} • {formatDate(inquiry.createdAt)}
+                        From: {inquiry.buyerName || "Anonymous Buyer"} •{" "}
+                        {formatDate(inquiry.createdAt)}
                       </CardDescription>
                     </div>
                     <Badge className={getStatusColor(inquiry.status)}>
@@ -88,15 +101,23 @@ export default function SupplierInquiries() {
                       <Package className="h-4 w-4 text-muted-foreground" />
                       <div>
                         <div className="text-muted-foreground">Feedstock</div>
-                        <div className="font-medium">{inquiry.feedstockId ? `ABFI-${inquiry.feedstockId}` : "General"}</div>
+                        <div className="font-medium">
+                          {inquiry.feedstockId
+                            ? `ABFI-${inquiry.feedstockId}`
+                            : "General"}
+                        </div>
                       </div>
                     </div>
-                      {inquiry.volumeRequired && (
+                    {inquiry.volumeRequired && (
                       <div className="flex items-center gap-2">
                         <Package className="h-4 w-4 text-muted-foreground" />
                         <div>
-                          <div className="text-muted-foreground">Volume Needed</div>
-                          <div className="font-medium">{inquiry.volumeRequired.toLocaleString()} tonnes</div>
+                          <div className="text-muted-foreground">
+                            Volume Needed
+                          </div>
+                          <div className="font-medium">
+                            {inquiry.volumeRequired.toLocaleString()} tonnes
+                          </div>
                         </div>
                       </div>
                     )}
@@ -104,8 +125,12 @@ export default function SupplierInquiries() {
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-muted-foreground" />
                         <div>
-                          <div className="text-muted-foreground">Delivery To</div>
-                          <div className="font-medium">{inquiry.deliveryLocation}</div>
+                          <div className="text-muted-foreground">
+                            Delivery To
+                          </div>
+                          <div className="font-medium">
+                            {inquiry.deliveryLocation}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -114,14 +139,20 @@ export default function SupplierInquiries() {
                   {inquiry.message && (
                     <div className="bg-muted p-4 rounded-lg">
                       <div className="text-sm font-medium mb-1">Message:</div>
-                      <p className="text-sm text-muted-foreground">{inquiry.message}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {inquiry.message}
+                      </p>
                     </div>
                   )}
 
                   {inquiry.responseMessage && (
                     <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
-                      <div className="text-sm font-medium mb-1 text-green-900">Your Response:</div>
-                      <p className="text-sm text-green-800">{inquiry.responseMessage}</p>
+                      <div className="text-sm font-medium mb-1 text-green-900">
+                        Your Response:
+                      </div>
+                      <p className="text-sm text-green-800">
+                        {inquiry.responseMessage}
+                      </p>
                       {inquiry.respondedAt && (
                         <div className="text-xs text-green-600 mt-2">
                           Responded on {formatDate(inquiry.respondedAt)}
@@ -133,9 +164,7 @@ export default function SupplierInquiries() {
                   <div className="flex gap-2">
                     {inquiry.status === "open" && (
                       <Link href={`/inquiries/respond/${inquiry.id}`}>
-                        <Button size="sm">
-                          Respond to Inquiry
-                        </Button>
+                        <Button size="sm">Respond to Inquiry</Button>
                       </Link>
                     )}
                     <Button variant="outline" size="sm">
@@ -159,12 +188,11 @@ export default function SupplierInquiries() {
               <Inbox className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">No inquiries yet</h3>
               <p className="text-muted-foreground mb-4">
-                When buyers send inquiries about your feedstocks, they'll appear here
+                When buyers send inquiries about your feedstocks, they'll appear
+                here
               </p>
               <Link href="/feedstock/create">
-                <Button>
-                  List Your First Feedstock
-                </Button>
+                <Button>List Your First Feedstock</Button>
               </Link>
             </CardContent>
           </Card>

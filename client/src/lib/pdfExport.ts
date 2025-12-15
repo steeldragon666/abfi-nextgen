@@ -168,11 +168,14 @@ export async function exportAnalysisAsPDF(options: PDFExportOptions) {
       <div class="pdf-header">
         <h1 class="pdf-title">ABFI Feedstock Supply Chain Analysis</h1>
         <p class="pdf-subtitle">${projectName} - ${radiusKm}km Radius Assessment</p>
-        <p class="pdf-subtitle">Generated: ${new Date().toLocaleDateString("en-AU", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}</p>
+        <p class="pdf-subtitle">Generated: ${new Date().toLocaleDateString(
+          "en-AU",
+          {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }
+        )}</p>
       </div>
 
       <!-- Location Details -->
@@ -340,7 +343,7 @@ export async function exportAnalysisAsPDF(options: PDFExportOptions) {
         <h2 class="pdf-section-title">7. Recommendations</h2>
         <div class="recommendations">
           <ul>
-            ${analysisResults.recommendations.map((rec) => `<li>${rec}</li>`).join("")}
+            ${analysisResults.recommendations.map(rec => `<li>${rec}</li>`).join("")}
           </ul>
         </div>
       </div>
@@ -357,7 +360,7 @@ export async function exportAnalysisAsPDF(options: PDFExportOptions) {
   document.body.appendChild(container);
 
   // Wait for images to load
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await new Promise(resolve => setTimeout(resolve, 500));
 
   // Trigger print dialog
   window.print();
@@ -373,7 +376,7 @@ export async function exportAnalysisAsPDF(options: PDFExportOptions) {
  * This should be called from the component with access to the Mapbox map instance
  */
 export function captureMapScreenshot(map: any): Promise<string> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const canvas = map.getCanvas();
     const dataUrl = canvas.toDataURL("image/png");
     resolve(dataUrl);

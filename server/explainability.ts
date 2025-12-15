@@ -62,7 +62,10 @@ export async function recordScoreCalculation(data: {
 /**
  * Get score decomposition (breakdown of how score was calculated)
  */
-export async function getScoreDecomposition(scoreId: number, scoreType: string) {
+export async function getScoreDecomposition(
+  scoreId: number,
+  scoreType: string
+) {
   const db = await getDb();
   if (!db) return null;
 
@@ -79,7 +82,10 @@ export async function getScoreDecomposition(scoreId: number, scoreType: string) 
 /**
  * Get calculation history for a score
  */
-export async function getCalculationHistory(scoreId: number, scoreType: string) {
+export async function getCalculationHistory(
+  scoreId: number,
+  scoreType: string
+) {
   const db = await getDb();
   if (!db) return [];
 
@@ -120,14 +126,16 @@ export async function performSensitivityAnalysis(
   calculationId: number,
   inputs: Record<string, number>,
   recalculateFunction: (modifiedInputs: Record<string, number>) => number
-): Promise<Array<{
-  inputField: string;
-  currentValue: number;
-  deltaPlus10: number;
-  deltaMinus10: number;
-  sensitivityCoefficient: number;
-  impactLevel: "low" | "medium" | "high" | "critical";
-}>> {
+): Promise<
+  Array<{
+    inputField: string;
+    currentValue: number;
+    deltaPlus10: number;
+    deltaMinus10: number;
+    sensitivityCoefficient: number;
+    impactLevel: "low" | "medium" | "high" | "critical";
+  }>
+> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
@@ -156,7 +164,8 @@ export async function performSensitivityAnalysis(
     const deltaMinus10 = scoreMinus10 - baseScore;
 
     // Calculate sensitivity coefficient (average absolute change per 10% input change)
-    const sensitivityCoefficient = (Math.abs(deltaPlus10) + Math.abs(deltaMinus10)) / 2;
+    const sensitivityCoefficient =
+      (Math.abs(deltaPlus10) + Math.abs(deltaMinus10)) / 2;
 
     // Determine impact level
     let impactLevel: "low" | "medium" | "high" | "critical";
@@ -187,7 +196,9 @@ export async function performSensitivityAnalysis(
   }
 
   // Sort by sensitivity (most impactful first)
-  return results.sort((a, b) => b.sensitivityCoefficient - a.sensitivityCoefficient);
+  return results.sort(
+    (a, b) => b.sensitivityCoefficient - a.sensitivityCoefficient
+  );
 }
 
 /**
@@ -280,7 +291,12 @@ export async function simulateScoreImprovement(data: {
   // Calculate feasibility score
   const avgDifficulty =
     requiredChanges.reduce((sum, c) => {
-      const difficultyScore = { easy: 100, moderate: 70, hard: 40, very_hard: 20 }[c.difficulty];
+      const difficultyScore = {
+        easy: 100,
+        moderate: 70,
+        hard: 40,
+        very_hard: 20,
+      }[c.difficulty];
       return sum + difficultyScore;
     }, 0) / requiredChanges.length;
 
@@ -289,7 +305,9 @@ export async function simulateScoreImprovement(data: {
   // Estimate timeline based on difficulty
   const estimatedTimelineDays = Math.round(
     requiredChanges.reduce((sum, c) => {
-      const days = { easy: 30, moderate: 90, hard: 180, very_hard: 365 }[c.difficulty];
+      const days = { easy: 30, moderate: 90, hard: 180, very_hard: 365 }[
+        c.difficulty
+      ];
       return sum + days;
     }, 0) / requiredChanges.length
   );
@@ -297,7 +315,7 @@ export async function simulateScoreImprovement(data: {
   // Generate recommendations
   const recommendations: string[] = [];
   const easiestChanges = requiredChanges
-    .filter((c) => c.difficulty === "easy" || c.difficulty === "moderate")
+    .filter(c => c.difficulty === "easy" || c.difficulty === "moderate")
     .slice(0, 3);
 
   for (const change of easiestChanges) {
@@ -307,7 +325,9 @@ export async function simulateScoreImprovement(data: {
   }
 
   if (feasibilityScore < 50) {
-    recommendations.push("Consider a longer-term improvement plan with incremental milestones");
+    recommendations.push(
+      "Consider a longer-term improvement plan with incremental milestones"
+    );
   }
 
   // Store simulation
@@ -352,7 +372,11 @@ export async function getImprovementSimulations(scoreId: number) {
  */
 export function checkScoreConsistency(
   inputs: Record<string, any>,
-  contributions: Array<{ component: string; inputValue: any; contribution: number }>
+  contributions: Array<{
+    component: string;
+    inputValue: any;
+    contribution: number;
+  }>
 ): Array<{
   type: "warning" | "error";
   message: string;
@@ -365,7 +389,11 @@ export function checkScoreConsistency(
   }> = [];
 
   // Check for missing critical inputs
-  const criticalFields = ["annualCapacityTonnes", "abfiScore", "carbonIntensityValue"];
+  const criticalFields = [
+    "annualCapacityTonnes",
+    "abfiScore",
+    "carbonIntensityValue",
+  ];
   for (const field of criticalFields) {
     if (inputs[field] === null || inputs[field] === undefined) {
       issues.push({
@@ -377,12 +405,12 @@ export function checkScoreConsistency(
   }
 
   // Check for zero contributions (inputs that don't affect score)
-  const zeroContributions = contributions.filter((c) => c.contribution === 0);
+  const zeroContributions = contributions.filter(c => c.contribution === 0);
   if (zeroContributions.length > 0) {
     issues.push({
       type: "warning",
       message: `${zeroContributions.length} inputs have zero contribution to the score`,
-      affectedFields: zeroContributions.map((c) => c.component),
+      affectedFields: zeroContributions.map(c => c.component),
     });
   }
 
@@ -391,7 +419,9 @@ export function checkScoreConsistency(
     ([key, value]) =>
       typeof value === "number" &&
       value < 0 &&
-      (key.includes("Score") || key.includes("Volume") || key.includes("Capacity"))
+      (key.includes("Score") ||
+        key.includes("Volume") ||
+        key.includes("Capacity"))
   );
 
   if (negativeFields.length > 0) {

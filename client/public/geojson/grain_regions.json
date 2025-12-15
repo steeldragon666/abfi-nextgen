@@ -5,7 +5,15 @@
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[150.5, -27.0], [152.5, -27.0], [152.5, -29.0], [150.5, -29.0], [150.5, -27.0]]]
+        "coordinates": [
+          [
+            [150.5, -27.0],
+            [152.5, -27.0],
+            [152.5, -29.0],
+            [150.5, -29.0],
+            [150.5, -27.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Darling Downs",
@@ -23,7 +31,15 @@
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[149.0, -30.0], [151.5, -30.0], [151.5, -32.0], [149.0, -32.0], [149.0, -30.0]]]
+        "coordinates": [
+          [
+            [149.0, -30.0],
+            [151.5, -30.0],
+            [151.5, -32.0],
+            [149.0, -32.0],
+            [149.0, -30.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Liverpool Plains",
@@ -41,7 +57,15 @@
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[147.0, -32.0], [149.5, -32.0], [149.5, -34.0], [147.0, -34.0], [147.0, -32.0]]]
+        "coordinates": [
+          [
+            [147.0, -32.0],
+            [149.5, -32.0],
+            [149.5, -34.0],
+            [147.0, -34.0],
+            [147.0, -32.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Central West NSW",
@@ -59,7 +83,15 @@
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[145.0, -34.0], [148.5, -34.0], [148.5, -36.0], [145.0, -36.0], [145.0, -34.0]]]
+        "coordinates": [
+          [
+            [145.0, -34.0],
+            [148.5, -34.0],
+            [148.5, -36.0],
+            [145.0, -36.0],
+            [145.0, -34.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Riverina",
@@ -77,7 +109,15 @@
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[141.0, -36.0], [143.5, -36.0], [143.5, -37.5], [141.0, -37.5], [141.0, -36.0]]]
+        "coordinates": [
+          [
+            [141.0, -36.0],
+            [143.5, -36.0],
+            [143.5, -37.5],
+            [141.0, -37.5],
+            [141.0, -36.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Wimmera",
@@ -95,7 +135,15 @@
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[141.5, -33.5], [144.0, -33.5], [144.0, -35.5], [141.5, -35.5], [141.5, -33.5]]]
+        "coordinates": [
+          [
+            [141.5, -33.5],
+            [144.0, -33.5],
+            [144.0, -35.5],
+            [141.5, -35.5],
+            [141.5, -33.5]
+          ]
+        ]
       },
       "properties": {
         "name": "Mallee VIC",
@@ -113,7 +161,15 @@
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[137.5, -32.5], [140.0, -32.5], [140.0, -34.5], [137.5, -34.5], [137.5, -32.5]]]
+        "coordinates": [
+          [
+            [137.5, -32.5],
+            [140.0, -32.5],
+            [140.0, -34.5],
+            [137.5, -34.5],
+            [137.5, -32.5]
+          ]
+        ]
       },
       "properties": {
         "name": "Mid-North SA",
@@ -131,7 +187,15 @@
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[133.0, -32.0], [136.5, -32.0], [136.5, -35.0], [133.0, -35.0], [133.0, -32.0]]]
+        "coordinates": [
+          [
+            [133.0, -32.0],
+            [136.5, -32.0],
+            [136.5, -35.0],
+            [133.0, -35.0],
+            [133.0, -32.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Eyre Peninsula",
@@ -149,7 +213,15 @@
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[[114.0, -28.0], [122.0, -28.0], [122.0, -34.0], [114.0, -34.0], [114.0, -28.0]]]
+        "coordinates": [
+          [
+            [114.0, -28.0],
+            [122.0, -28.0],
+            [122.0, -34.0],
+            [114.0, -34.0],
+            [114.0, -28.0]
+          ]
+        ]
       },
       "properties": {
         "name": "Western Australia Wheatbelt",
@@ -159,7 +231,13 @@
         "area_hectares": 8500000,
         "stubble_production_tonnes": 10000000,
         "sustainable_removal_tonnes": 6000000,
-        "key_towns": ["Geraldton", "Merredin", "Northam", "Katanning", "Esperance"],
+        "key_towns": [
+          "Geraldton",
+          "Merredin",
+          "Northam",
+          "Katanning",
+          "Esperance"
+        ],
         "harvest_months": ["November", "December"]
       }
     }

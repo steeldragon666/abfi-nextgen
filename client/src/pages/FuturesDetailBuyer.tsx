@@ -3,13 +3,25 @@
  */
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
@@ -103,23 +115,34 @@ const EOI_STATUS_LABELS: Record<string, string> = {
 
 const getEOIStatusColor = (status: string) => {
   switch (status) {
-    case "pending": return "bg-yellow-100 text-yellow-800";
-    case "under_review": return "bg-blue-100 text-blue-800";
-    case "accepted": return "bg-green-100 text-green-800";
-    case "declined": return "bg-red-100 text-red-800";
+    case "pending":
+      return "bg-yellow-100 text-yellow-800";
+    case "under_review":
+      return "bg-blue-100 text-blue-800";
+    case "accepted":
+      return "bg-green-100 text-green-800";
+    case "declined":
+      return "bg-red-100 text-red-800";
     case "expired":
-    case "withdrawn": return "bg-gray-100 text-gray-800";
-    default: return "bg-gray-100 text-gray-800";
+    case "withdrawn":
+      return "bg-gray-100 text-gray-800";
+    default:
+      return "bg-gray-100 text-gray-800";
   }
 };
 
 const getEOIStatusIcon = (status: string) => {
   switch (status) {
-    case "pending": return <Clock className="h-5 w-5 text-yellow-600" />;
-    case "under_review": return <AlertCircle className="h-5 w-5 text-blue-600" />;
-    case "accepted": return <CheckCircle2 className="h-5 w-5 text-green-600" />;
-    case "declined": return <XCircle className="h-5 w-5 text-red-600" />;
-    default: return <Clock className="h-5 w-5 text-gray-600" />;
+    case "pending":
+      return <Clock className="h-5 w-5 text-yellow-600" />;
+    case "under_review":
+      return <AlertCircle className="h-5 w-5 text-blue-600" />;
+    case "accepted":
+      return <CheckCircle2 className="h-5 w-5 text-green-600" />;
+    case "declined":
+      return <XCircle className="h-5 w-5 text-red-600" />;
+    default:
+      return <Clock className="h-5 w-5 text-gray-600" />;
   }
 };
 
@@ -130,7 +153,8 @@ const MOCK_FUTURES = {
   title: "Hunter Valley Eucalyptus Plantation",
   cropType: "eucalyptus",
   cropVariety: "E. grandis",
-  description: "Large-scale eucalyptus plantation managed for sustainable biomass production. Established plantation with proven yield history. First rotation harvest completed successfully. Modern harvesting and processing infrastructure on-site.",
+  description:
+    "Large-scale eucalyptus plantation managed for sustainable biomass production. Established plantation with proven yield history. First rotation harvest completed successfully. Modern harvesting and processing infrastructure on-site.",
   state: "NSW",
   region: "Hunter Valley",
   landAreaHectares: "2500",
@@ -142,7 +166,8 @@ const MOCK_FUTURES = {
   totalAvailableTonnes: "175000",
   indicativePricePerTonne: "120.00",
   priceEscalationPercent: "2.5",
-  pricingNotes: "Base price indexed to CPI. Volume discounts available for commitments over 10,000 tonnes/year.",
+  pricingNotes:
+    "Base price indexed to CPI. Volume discounts available for commitments over 10,000 tonnes/year.",
   expectedCarbonIntensity: "15.5",
   expectedMoistureContent: "35",
   expectedEnergyContent: "18.5",
@@ -151,19 +176,50 @@ const MOCK_FUTURES = {
 };
 
 const MOCK_PROJECTIONS = [
-  { projectionYear: 2025, projectedTonnes: "15000", confidencePercent: 95, harvestSeason: "autumn" },
-  { projectionYear: 2026, projectedTonnes: "22000", confidencePercent: 90, harvestSeason: "autumn" },
-  { projectionYear: 2027, projectedTonnes: "25000", confidencePercent: 85, harvestSeason: "autumn" },
-  { projectionYear: 2028, projectedTonnes: "28000", confidencePercent: 80, harvestSeason: "autumn" },
-  { projectionYear: 2029, projectedTonnes: "28000", confidencePercent: 75, harvestSeason: "autumn" },
-  { projectionYear: 2030, projectedTonnes: "28000", confidencePercent: 75, harvestSeason: "autumn" },
+  {
+    projectionYear: 2025,
+    projectedTonnes: "15000",
+    confidencePercent: 95,
+    harvestSeason: "autumn",
+  },
+  {
+    projectionYear: 2026,
+    projectedTonnes: "22000",
+    confidencePercent: 90,
+    harvestSeason: "autumn",
+  },
+  {
+    projectionYear: 2027,
+    projectedTonnes: "25000",
+    confidencePercent: 85,
+    harvestSeason: "autumn",
+  },
+  {
+    projectionYear: 2028,
+    projectedTonnes: "28000",
+    confidencePercent: 80,
+    harvestSeason: "autumn",
+  },
+  {
+    projectionYear: 2029,
+    projectedTonnes: "28000",
+    confidencePercent: 75,
+    harvestSeason: "autumn",
+  },
+  {
+    projectionYear: 2030,
+    projectedTonnes: "28000",
+    confidencePercent: 75,
+    harvestSeason: "autumn",
+  },
 ];
 
 const MOCK_SUPPLIER = {
   companyName: "Hunter Forestry Partners",
   city: "Singleton",
   state: "NSW",
-  description: "Leading sustainable forestry operation in the Hunter Valley with over 20 years of experience in biomass production.",
+  description:
+    "Leading sustainable forestry operation in the Hunter Valley with over 20 years of experience in biomass production.",
   contactEmail: "contact@hunterforestry.com.au",
   contactPhone: "+61 2 6555 1234",
   website: "https://hunterforestry.com.au",
@@ -184,7 +240,8 @@ export default function FuturesDetailBuyer() {
   const [offeredPricePerTonne, setOfferedPricePerTonne] = useState<string>("");
   const [priceTerms, setPriceTerms] = useState<string>("");
   const [deliveryLocation, setDeliveryLocation] = useState<string>("");
-  const [deliveryFrequency, setDeliveryFrequency] = useState<string>("quarterly");
+  const [deliveryFrequency, setDeliveryFrequency] =
+    useState<string>("quarterly");
   const [logisticsNotes, setLogisticsNotes] = useState<string>("");
   const [paymentTerms, setPaymentTerms] = useState<string>("negotiable");
   const [additionalTerms, setAdditionalTerms] = useState<string>("");
@@ -204,12 +261,14 @@ export default function FuturesDetailBuyer() {
   const showingMockData = !data?.futures;
 
   const submitEOIMutation = trpc.futures.submitEOI.useMutation({
-    onSuccess: (result) => {
-      toast.success(`EOI submitted successfully! Reference: ${result.eoiReference}`);
+    onSuccess: result => {
+      toast.success(
+        `EOI submitted successfully! Reference: ${result.eoiReference}`
+      );
       setEoiDialogOpen(false);
       utils.futures.getPublic.invalidate({ id: futuresId });
     },
-    onError: (error) => toast.error(error.message),
+    onError: error => toast.error(error.message),
   });
 
   const withdrawEOIMutation = trpc.futures.withdrawEOI.useMutation({
@@ -217,7 +276,7 @@ export default function FuturesDetailBuyer() {
       toast.success("EOI withdrawn");
       utils.futures.getPublic.invalidate({ id: futuresId });
     },
-    onError: (error) => toast.error(error.message),
+    onError: error => toast.error(error.message),
   });
 
   // Calculate total volume for EOI
@@ -235,7 +294,9 @@ export default function FuturesDetailBuyer() {
       interestStartYear: parseInt(interestStartYear),
       interestEndYear: parseInt(interestEndYear),
       annualVolumeTonnes: parseFloat(annualVolumeTonnes),
-      offeredPricePerTonne: offeredPricePerTonne ? parseFloat(offeredPricePerTonne) : undefined,
+      offeredPricePerTonne: offeredPricePerTonne
+        ? parseFloat(offeredPricePerTonne)
+        : undefined,
       priceTerms: priceTerms || undefined,
       deliveryLocation: deliveryLocation || undefined,
       deliveryFrequency: deliveryFrequency as any,
@@ -260,11 +321,16 @@ export default function FuturesDetailBuyer() {
   const totalProjected = parseFloat(futures.totalProjectedTonnes || "0");
   const totalAvailable = parseFloat(futures.totalAvailableTonnes || "0");
   const totalContracted = parseFloat(futures.totalContractedTonnes || "0");
-  const availablePercent = totalProjected > 0 ? (totalAvailable / totalProjected) * 100 : 100;
+  const availablePercent =
+    totalProjected > 0 ? (totalAvailable / totalProjected) * 100 : 100;
 
   // Generate year options for EOI form
   const yearOptions = [];
-  for (let year = futures.projectionStartYear; year <= futures.projectionEndYear; year++) {
+  for (
+    let year = futures.projectionStartYear;
+    year <= futures.projectionEndYear;
+    year++
+  ) {
     yearOptions.push(year);
   }
 
@@ -285,7 +351,9 @@ export default function FuturesDetailBuyer() {
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div className="flex items-start gap-4">
               <div className="p-4 bg-white/10 backdrop-blur-sm rounded-xl">
-                {CROP_TYPE_ICONS[futures.cropType] || <Sprout className="h-8 w-8" />}
+                {CROP_TYPE_ICONS[futures.cropType] || (
+                  <Sprout className="h-8 w-8" />
+                )}
               </div>
               <div>
                 {showingMockData && (
@@ -294,7 +362,10 @@ export default function FuturesDetailBuyer() {
                   </Badge>
                 )}
                 <div className="flex items-center gap-3 mb-1">
-                  <Badge variant="outline" className="text-white border-white/30">
+                  <Badge
+                    variant="outline"
+                    className="text-white border-white/30"
+                  >
                     {futures.futuresId}
                   </Badge>
                   <Badge className="bg-emerald-500 text-white border-0">
@@ -306,7 +377,10 @@ export default function FuturesDetailBuyer() {
                 </h1>
                 <div className="flex items-center gap-2 mt-2 text-white/70">
                   <MapPin className="h-4 w-4" />
-                  <span>{futures.state}{futures.region && `, ${futures.region}`}</span>
+                  <span>
+                    {futures.state}
+                    {futures.region && `, ${futures.region}`}
+                  </span>
                 </div>
               </div>
             </div>
@@ -338,25 +412,37 @@ export default function FuturesDetailBuyer() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-sm text-muted-foreground mb-1">Total Projected</p>
-                    <p className="text-2xl font-bold font-mono">{totalProjected.toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      Total Projected
+                    </p>
+                    <p className="text-2xl font-bold font-mono">
+                      {totalProjected.toLocaleString()}
+                    </p>
                     <p className="text-xs text-muted-foreground">tonnes</p>
                   </div>
                   <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-muted-foreground mb-1">Contracted</p>
-                    <p className="text-2xl font-bold text-blue-600 font-mono">{totalContracted.toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      Contracted
+                    </p>
+                    <p className="text-2xl font-bold text-blue-600 font-mono">
+                      {totalContracted.toLocaleString()}
+                    </p>
                     <p className="text-xs text-muted-foreground">tonnes</p>
                   </div>
                   <div className="text-center p-4 bg-green-50 rounded-lg">
                     <p className="text-sm text-green-600 mb-1">Available</p>
-                    <p className="text-2xl font-bold text-green-700 font-mono">{totalAvailable.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-green-700 font-mono">
+                      {totalAvailable.toLocaleString()}
+                    </p>
                     <p className="text-xs text-muted-foreground">tonnes</p>
                   </div>
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-muted-foreground">Availability</span>
-                    <span className="font-medium">{Math.round(availablePercent)}%</span>
+                    <span className="font-medium">
+                      {Math.round(availablePercent)}%
+                    </span>
                   </div>
                   <Progress value={availablePercent} className="h-3" />
                 </div>
@@ -391,7 +477,10 @@ export default function FuturesDetailBuyer() {
                     )}
                     <div>
                       <p className="text-sm text-muted-foreground">Land Area</p>
-                      <p className="font-semibold">{parseFloat(futures.landAreaHectares).toLocaleString()} ha</p>
+                      <p className="font-semibold">
+                        {parseFloat(futures.landAreaHectares).toLocaleString()}{" "}
+                        ha
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -404,18 +493,29 @@ export default function FuturesDetailBuyer() {
                   </h4>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div>
-                      <p className="text-sm text-muted-foreground">Projection Period</p>
+                      <p className="text-sm text-muted-foreground">
+                        Projection Period
+                      </p>
                       <p className="font-semibold">
-                        {futures.projectionStartYear} - {futures.projectionEndYear}
+                        {futures.projectionStartYear} -{" "}
+                        {futures.projectionEndYear}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        ({futures.projectionEndYear - futures.projectionStartYear + 1} years)
+                        (
+                        {futures.projectionEndYear -
+                          futures.projectionStartYear +
+                          1}{" "}
+                        years)
                       </p>
                     </div>
                     {futures.firstHarvestYear && (
                       <div>
-                        <p className="text-sm text-muted-foreground">First Harvest</p>
-                        <p className="font-semibold">{futures.firstHarvestYear}</p>
+                        <p className="text-sm text-muted-foreground">
+                          First Harvest
+                        </p>
+                        <p className="font-semibold">
+                          {futures.firstHarvestYear}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -429,7 +529,9 @@ export default function FuturesDetailBuyer() {
                   </h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-muted-foreground">Indicative Price</p>
+                      <p className="text-sm text-muted-foreground">
+                        Indicative Price
+                      </p>
                       <p className="text-2xl font-bold text-primary font-mono">
                         {futures.indicativePricePerTonne
                           ? `$${parseFloat(futures.indicativePricePerTonne).toFixed(2)}`
@@ -438,17 +540,25 @@ export default function FuturesDetailBuyer() {
                       <p className="text-xs text-muted-foreground">per tonne</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Annual Escalation</p>
-                      <p className="font-semibold">{futures.priceEscalationPercent || "2.5"}%</p>
+                      <p className="text-sm text-muted-foreground">
+                        Annual Escalation
+                      </p>
+                      <p className="font-semibold">
+                        {futures.priceEscalationPercent || "2.5"}%
+                      </p>
                     </div>
                   </div>
                   {futures.pricingNotes && (
-                    <p className="text-sm text-muted-foreground mt-3 bg-muted/50 p-3 rounded-lg">{futures.pricingNotes}</p>
+                    <p className="text-sm text-muted-foreground mt-3 bg-muted/50 p-3 rounded-lg">
+                      {futures.pricingNotes}
+                    </p>
                   )}
                 </div>
 
                 {/* Quality */}
-                {(futures.expectedCarbonIntensity || futures.expectedMoistureContent || futures.expectedEnergyContent) && (
+                {(futures.expectedCarbonIntensity ||
+                  futures.expectedMoistureContent ||
+                  futures.expectedEnergyContent) && (
                   <div className="border-t pt-6">
                     <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm uppercase tracking-wide text-muted-foreground">
                       <BarChart3 className="h-4 w-4" />
@@ -457,21 +567,35 @@ export default function FuturesDetailBuyer() {
                     <div className="grid grid-cols-3 gap-4">
                       {futures.expectedCarbonIntensity && (
                         <div className="p-3 bg-muted/50 rounded-lg text-center">
-                          <p className="text-xs text-muted-foreground mb-1">Carbon Intensity</p>
-                          <p className="font-bold">{futures.expectedCarbonIntensity}</p>
-                          <p className="text-xs text-muted-foreground">kg CO2e/t</p>
+                          <p className="text-xs text-muted-foreground mb-1">
+                            Carbon Intensity
+                          </p>
+                          <p className="font-bold">
+                            {futures.expectedCarbonIntensity}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            kg CO2e/t
+                          </p>
                         </div>
                       )}
                       {futures.expectedMoistureContent && (
                         <div className="p-3 bg-muted/50 rounded-lg text-center">
-                          <p className="text-xs text-muted-foreground mb-1">Moisture</p>
-                          <p className="font-bold">{futures.expectedMoistureContent}%</p>
+                          <p className="text-xs text-muted-foreground mb-1">
+                            Moisture
+                          </p>
+                          <p className="font-bold">
+                            {futures.expectedMoistureContent}%
+                          </p>
                         </div>
                       )}
                       {futures.expectedEnergyContent && (
                         <div className="p-3 bg-muted/50 rounded-lg text-center">
-                          <p className="text-xs text-muted-foreground mb-1">Energy Content</p>
-                          <p className="font-bold">{futures.expectedEnergyContent}</p>
+                          <p className="text-xs text-muted-foreground mb-1">
+                            Energy Content
+                          </p>
+                          <p className="font-bold">
+                            {futures.expectedEnergyContent}
+                          </p>
                           <p className="text-xs text-muted-foreground">GJ/t</p>
                         </div>
                       )}
@@ -505,29 +629,49 @@ export default function FuturesDetailBuyer() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b bg-muted/50">
-                          <th className="text-left py-3 px-4 font-medium">Year</th>
-                          <th className="text-right py-3 px-4 font-medium">Projected Volume</th>
-                          <th className="text-center py-3 px-4 font-medium">Confidence</th>
-                          <th className="text-left py-3 px-4 font-medium">Season</th>
+                          <th className="text-left py-3 px-4 font-medium">
+                            Year
+                          </th>
+                          <th className="text-right py-3 px-4 font-medium">
+                            Projected Volume
+                          </th>
+                          <th className="text-center py-3 px-4 font-medium">
+                            Confidence
+                          </th>
+                          <th className="text-left py-3 px-4 font-medium">
+                            Season
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
                         {projections.map((p: any, index: number) => (
-                          <tr key={p.projectionYear} className={index % 2 === 0 ? "" : "bg-muted/30"}>
-                            <td className="py-3 px-4 font-semibold">{p.projectionYear}</td>
+                          <tr
+                            key={p.projectionYear}
+                            className={index % 2 === 0 ? "" : "bg-muted/30"}
+                          >
+                            <td className="py-3 px-4 font-semibold">
+                              {p.projectionYear}
+                            </td>
                             <td className="py-3 px-4 text-right font-mono">
                               {parseFloat(p.projectedTonnes).toLocaleString()} t
                             </td>
                             <td className="py-3 px-4 text-center">
-                              <Badge variant="outline" className={
-                                p.confidencePercent >= 90 ? "border-green-500 text-green-600" :
-                                p.confidencePercent >= 75 ? "border-amber-500 text-amber-600" :
-                                "border-gray-500 text-gray-600"
-                              }>
+                              <Badge
+                                variant="outline"
+                                className={
+                                  p.confidencePercent >= 90
+                                    ? "border-green-500 text-green-600"
+                                    : p.confidencePercent >= 75
+                                      ? "border-amber-500 text-amber-600"
+                                      : "border-gray-500 text-gray-600"
+                                }
+                              >
                                 {p.confidencePercent || 80}%
                               </Badge>
                             </td>
-                            <td className="py-3 px-4 capitalize">{p.harvestSeason || "-"}</td>
+                            <td className="py-3 px-4 capitalize">
+                              {p.harvestSeason || "-"}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -549,24 +693,36 @@ export default function FuturesDetailBuyer() {
                       {getEOIStatusIcon(existingEOI.status)}
                       <div>
                         <p className="font-medium">Your EOI</p>
-                        <p className="text-sm text-muted-foreground">{existingEOI.eoiReference}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {existingEOI.eoiReference}
+                        </p>
                       </div>
                     </div>
-                    <Badge className={`${getEOIStatusColor(existingEOI.status)} w-full justify-center py-2`}>
+                    <Badge
+                      className={`${getEOIStatusColor(existingEOI.status)} w-full justify-center py-2`}
+                    >
                       {EOI_STATUS_LABELS[existingEOI.status]}
                     </Badge>
                     {existingEOI.supplierResponse && (
                       <div className="pt-3 border-t">
-                        <p className="text-sm font-medium mb-1">Supplier Response:</p>
-                        <p className="text-sm text-muted-foreground">{existingEOI.supplierResponse}</p>
+                        <p className="text-sm font-medium mb-1">
+                          Supplier Response:
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {existingEOI.supplierResponse}
+                        </p>
                       </div>
                     )}
-                    {["pending", "under_review"].includes(existingEOI.status) && (
+                    {["pending", "under_review"].includes(
+                      existingEOI.status
+                    ) && (
                       <Button
                         variant="outline"
                         size="sm"
                         className="w-full"
-                        onClick={() => withdrawEOIMutation.mutate({ eoiId: existingEOI.id })}
+                        onClick={() =>
+                          withdrawEOIMutation.mutate({ eoiId: existingEOI.id })
+                        }
                         disabled={withdrawEOIMutation.isPending}
                       >
                         Withdraw EOI
@@ -585,7 +741,8 @@ export default function FuturesDetailBuyer() {
                       <DialogHeader>
                         <DialogTitle>Submit Expression of Interest</DialogTitle>
                         <DialogDescription>
-                          Express your interest in this futures listing. The supplier will review your request.
+                          Express your interest in this futures listing. The
+                          supplier will review your request.
                         </DialogDescription>
                       </DialogHeader>
 
@@ -596,13 +753,19 @@ export default function FuturesDetailBuyer() {
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                               <Label>Start Year *</Label>
-                              <Select value={interestStartYear} onValueChange={setInterestStartYear}>
+                              <Select
+                                value={interestStartYear}
+                                onValueChange={setInterestStartYear}
+                              >
                                 <SelectTrigger>
                                   <SelectValue placeholder="Select year" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {yearOptions.map((year) => (
-                                    <SelectItem key={year} value={year.toString()}>
+                                  {yearOptions.map(year => (
+                                    <SelectItem
+                                      key={year}
+                                      value={year.toString()}
+                                    >
                                       {year}
                                     </SelectItem>
                                   ))}
@@ -611,15 +774,24 @@ export default function FuturesDetailBuyer() {
                             </div>
                             <div className="space-y-2">
                               <Label>End Year *</Label>
-                              <Select value={interestEndYear} onValueChange={setInterestEndYear}>
+                              <Select
+                                value={interestEndYear}
+                                onValueChange={setInterestEndYear}
+                              >
                                 <SelectTrigger>
                                   <SelectValue placeholder="Select year" />
                                 </SelectTrigger>
                                 <SelectContent>
                                   {yearOptions
-                                    .filter((y) => y >= parseInt(interestStartYear || "0"))
-                                    .map((year) => (
-                                      <SelectItem key={year} value={year.toString()}>
+                                    .filter(
+                                      y =>
+                                        y >= parseInt(interestStartYear || "0")
+                                    )
+                                    .map(year => (
+                                      <SelectItem
+                                        key={year}
+                                        value={year.toString()}
+                                      >
                                         {year}
                                       </SelectItem>
                                     ))}
@@ -638,21 +810,26 @@ export default function FuturesDetailBuyer() {
                               type="number"
                               placeholder="e.g., 5000"
                               value={annualVolumeTonnes}
-                              onChange={(e) => setAnnualVolumeTonnes(e.target.value)}
+                              onChange={e =>
+                                setAnnualVolumeTonnes(e.target.value)
+                              }
                               className="font-mono"
                             />
                           </div>
                           {totalEOIVolume > 0 && (
                             <div className="bg-muted/50 rounded-lg p-3">
                               <p className="text-sm">
-                                <strong>Total volume requested:</strong> {totalEOIVolume.toLocaleString()} tonnes
+                                <strong>Total volume requested:</strong>{" "}
+                                {totalEOIVolume.toLocaleString()} tonnes
                               </p>
                               <p className="text-sm text-muted-foreground">
-                                Available: {totalAvailable.toLocaleString()} tonnes
+                                Available: {totalAvailable.toLocaleString()}{" "}
+                                tonnes
                               </p>
                               {totalEOIVolume > totalAvailable && (
                                 <p className="text-sm text-red-600 mt-1">
-                                  Warning: Requested volume exceeds available supply
+                                  Warning: Requested volume exceeds available
+                                  supply
                                 </p>
                               )}
                             </div>
@@ -669,19 +846,27 @@ export default function FuturesDetailBuyer() {
                                 type="number"
                                 placeholder="Leave blank for negotiable"
                                 value={offeredPricePerTonne}
-                                onChange={(e) => setOfferedPricePerTonne(e.target.value)}
+                                onChange={e =>
+                                  setOfferedPricePerTonne(e.target.value)
+                                }
                                 className="font-mono"
                               />
                             </div>
                             <div className="space-y-2">
                               <Label>Payment Terms</Label>
-                              <Select value={paymentTerms} onValueChange={setPaymentTerms}>
+                              <Select
+                                value={paymentTerms}
+                                onValueChange={setPaymentTerms}
+                              >
                                 <SelectTrigger>
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {PAYMENT_TERMS.map((term) => (
-                                    <SelectItem key={term.value} value={term.value}>
+                                  {PAYMENT_TERMS.map(term => (
+                                    <SelectItem
+                                      key={term.value}
+                                      value={term.value}
+                                    >
                                       {term.label}
                                     </SelectItem>
                                   ))}
@@ -694,7 +879,7 @@ export default function FuturesDetailBuyer() {
                             <Input
                               placeholder="Any specific pricing conditions..."
                               value={priceTerms}
-                              onChange={(e) => setPriceTerms(e.target.value)}
+                              onChange={e => setPriceTerms(e.target.value)}
                             />
                           </div>
                         </div>
@@ -708,18 +893,26 @@ export default function FuturesDetailBuyer() {
                               <Input
                                 placeholder="e.g., Brisbane Port"
                                 value={deliveryLocation}
-                                onChange={(e) => setDeliveryLocation(e.target.value)}
+                                onChange={e =>
+                                  setDeliveryLocation(e.target.value)
+                                }
                               />
                             </div>
                             <div className="space-y-2">
                               <Label>Delivery Frequency</Label>
-                              <Select value={deliveryFrequency} onValueChange={setDeliveryFrequency}>
+                              <Select
+                                value={deliveryFrequency}
+                                onValueChange={setDeliveryFrequency}
+                              >
                                 <SelectTrigger>
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {DELIVERY_FREQUENCIES.map((freq) => (
-                                    <SelectItem key={freq.value} value={freq.value}>
+                                  {DELIVERY_FREQUENCIES.map(freq => (
+                                    <SelectItem
+                                      key={freq.value}
+                                      value={freq.value}
+                                    >
                                       {freq.label}
                                     </SelectItem>
                                   ))}
@@ -732,7 +925,7 @@ export default function FuturesDetailBuyer() {
                             <Textarea
                               placeholder="Any specific logistics requirements..."
                               value={logisticsNotes}
-                              onChange={(e) => setLogisticsNotes(e.target.value)}
+                              onChange={e => setLogisticsNotes(e.target.value)}
                               rows={2}
                             />
                           </div>
@@ -744,14 +937,17 @@ export default function FuturesDetailBuyer() {
                           <Textarea
                             placeholder="Any other terms or information you'd like to include..."
                             value={additionalTerms}
-                            onChange={(e) => setAdditionalTerms(e.target.value)}
+                            onChange={e => setAdditionalTerms(e.target.value)}
                             rows={3}
                           />
                         </div>
                       </div>
 
                       <DialogFooter>
-                        <Button variant="outline" onClick={() => setEoiDialogOpen(false)}>
+                        <Button
+                          variant="outline"
+                          onClick={() => setEoiDialogOpen(false)}
+                        >
                           Cancel
                         </Button>
                         <Button
@@ -763,13 +959,19 @@ export default function FuturesDetailBuyer() {
                             submitEOIMutation.isPending
                           }
                         >
-                          {submitEOIMutation.isPending ? "Submitting..." : "Submit EOI"}
+                          {submitEOIMutation.isPending
+                            ? "Submitting..."
+                            : "Submit EOI"}
                         </Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
                 ) : (
-                  <Button size="lg" className="w-full" onClick={() => setLocation("/login")}>
+                  <Button
+                    size="lg"
+                    className="w-full"
+                    onClick={() => setLocation("/login")}
+                  >
                     Sign In to Submit EOI
                   </Button>
                 )}
@@ -787,7 +989,9 @@ export default function FuturesDetailBuyer() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <p className="font-semibold text-lg">{supplier.companyName}</p>
+                    <p className="font-semibold text-lg">
+                      {supplier.companyName}
+                    </p>
                     {supplier.state && (
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
                         <MapPin className="h-3 w-3" />
@@ -798,14 +1002,19 @@ export default function FuturesDetailBuyer() {
                   </div>
 
                   {supplier.description && (
-                    <p className="text-sm text-muted-foreground">{supplier.description}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {supplier.description}
+                    </p>
                   )}
 
                   <div className="space-y-2 pt-2 border-t">
                     {supplier.contactEmail && (
                       <div className="flex items-center gap-2 text-sm">
                         <Mail className="h-4 w-4 text-muted-foreground" />
-                        <a href={`mailto:${supplier.contactEmail}`} className="text-primary hover:underline">
+                        <a
+                          href={`mailto:${supplier.contactEmail}`}
+                          className="text-primary hover:underline"
+                        >
                           {supplier.contactEmail}
                         </a>
                       </div>
@@ -813,7 +1022,10 @@ export default function FuturesDetailBuyer() {
                     {supplier.contactPhone && (
                       <div className="flex items-center gap-2 text-sm">
                         <Phone className="h-4 w-4 text-muted-foreground" />
-                        <a href={`tel:${supplier.contactPhone}`} className="text-primary hover:underline">
+                        <a
+                          href={`tel:${supplier.contactPhone}`}
+                          className="text-primary hover:underline"
+                        >
                           {supplier.contactPhone}
                         </a>
                       </div>
@@ -843,31 +1055,54 @@ export default function FuturesDetailBuyer() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Crop Type</span>
-                  <span className="font-medium">{CROP_TYPE_LABELS[futures.cropType]}</span>
+                  <span className="text-sm text-muted-foreground">
+                    Crop Type
+                  </span>
+                  <span className="font-medium">
+                    {CROP_TYPE_LABELS[futures.cropType]}
+                  </span>
                 </div>
                 {futures.cropVariety && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Variety</span>
+                    <span className="text-sm text-muted-foreground">
+                      Variety
+                    </span>
                     <span className="font-medium">{futures.cropVariety}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Contract Length</span>
+                  <span className="text-sm text-muted-foreground">
+                    Contract Length
+                  </span>
                   <span className="font-medium">
-                    {futures.projectionEndYear - futures.projectionStartYear + 1} years
+                    {futures.projectionEndYear -
+                      futures.projectionStartYear +
+                      1}{" "}
+                    years
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Avg. Annual Volume</span>
+                  <span className="text-sm text-muted-foreground">
+                    Avg. Annual Volume
+                  </span>
                   <span className="font-medium font-mono">
-                    {Math.round(totalProjected / (futures.projectionEndYear - futures.projectionStartYear + 1)).toLocaleString()} t
+                    {Math.round(
+                      totalProjected /
+                        (futures.projectionEndYear -
+                          futures.projectionStartYear +
+                          1)
+                    ).toLocaleString()}{" "}
+                    t
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Published</span>
+                  <span className="text-sm text-muted-foreground">
+                    Published
+                  </span>
                   <span className="font-medium">
-                    {futures.publishedAt ? formatDate(futures.publishedAt) : "N/A"}
+                    {futures.publishedAt
+                      ? formatDate(futures.publishedAt)
+                      : "N/A"}
                   </span>
                 </div>
               </CardContent>
@@ -881,8 +1116,12 @@ export default function FuturesDetailBuyer() {
                     <Shield className="h-5 w-5 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-emerald-800">ABFI Verified</p>
-                    <p className="text-xs text-emerald-600">Supplier verified by ABFI</p>
+                    <p className="font-medium text-emerald-800">
+                      ABFI Verified
+                    </p>
+                    <p className="text-xs text-emerald-600">
+                      Supplier verified by ABFI
+                    </p>
                   </div>
                 </div>
               </CardContent>
