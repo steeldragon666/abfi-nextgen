@@ -39,6 +39,26 @@ const TASK_MAPPINGS = {
   'AeTtya5FzTy9RraUhCo4Hn': {
     name: 'Hybrid Landing Page',
     dir: 'client/public/images/landing-mockups/hybrid'
+  },
+  '2LDecpgzJ4PVXRMMU3R936': {
+    name: 'Dashboard Redesign',
+    dir: 'client/public/images/page-mockups/dashboard'
+  },
+  'HDS3Z9bAdbg9rq7TTPzeFq': {
+    name: 'Marketplace Browse Redesign',
+    dir: 'client/public/images/page-mockups/marketplace'
+  },
+  'F34P4wdxnMYQZwe5Ffr6Dn': {
+    name: 'Supplier Profile Redesign',
+    dir: 'client/public/images/page-mockups/supplier-profile'
+  },
+  'F7ipYSoPmRLQ2ToETMyrky': {
+    name: 'Registration Flow Redesign',
+    dir: 'client/public/images/page-mockups/registration'
+  },
+  'Rjnu9xb43YVXQzNMTm2Ktp': {
+    name: 'For Developers Redesign',
+    dir: 'client/public/images/page-mockups/for-developers'
   }
 };
 
