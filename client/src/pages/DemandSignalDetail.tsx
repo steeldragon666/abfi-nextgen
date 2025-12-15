@@ -199,7 +199,7 @@ export default function DemandSignalDetail() {
               <div className="flex items-center gap-4 text-white/70 text-sm">
                 <span className="flex items-center gap-1">
                   <Building2 className="h-4 w-4" />
-                  {signal.buyerName || "Verified Buyer"}
+                  {(signal as any).buyerName || "Verified Buyer"}
                 </span>
                 <span>•</span>
                 <span>{signal.signalNumber}</span>
@@ -613,7 +613,7 @@ export default function DemandSignalDetail() {
                     <Building2 className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <div className="font-semibold">{signal.buyerName || "Verified Buyer"}</div>
+                    <div className="font-semibold">{(signal as any).buyerName || "Verified Buyer"}</div>
                     <div className="text-sm text-muted-foreground">ABFI Verified</div>
                   </div>
                 </div>
