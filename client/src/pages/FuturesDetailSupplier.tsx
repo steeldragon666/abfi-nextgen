@@ -64,37 +64,186 @@ import { useState } from "react";
 import { Link, useRoute, useLocation, useSearch } from "wouter";
 import { toast } from "sonner";
 
-// Mock data for demonstration
-const MOCK_FUTURES = {
-  id: 1,
-  futuresId: "FUT-2025-0012",
-  title: "Premium Eucalyptus Plantation - Hunter Valley",
-  description:
-    "High-quality eucalyptus plantation established in 2020, using advanced silviculture practices. Located in prime growing region with excellent rainfall and soil conditions. Expected to produce consistent biomass yields over the projection period.",
-  cropType: "eucalyptus",
-  cropVariety: "Eucalyptus grandis x camaldulensis",
-  state: "NSW",
-  region: "Hunter Valley",
-  landAreaHectares: "850",
-  landStatus: "owned",
-  projectionStartYear: 2025,
-  projectionEndYear: 2040,
-  firstHarvestYear: 2027,
-  totalProjectedTonnes: "425000",
-  totalContractedTonnes: "85000",
-  totalAvailableTonnes: "340000",
-  indicativePricePerTonne: "135.00",
-  priceEscalationPercent: "2.5",
-  pricingNotes:
-    "Volume discounts available for contracts >50,000 tonnes. Price includes delivery to major ports within 200km.",
-  expectedCarbonIntensity: "12.5",
-  expectedMoistureContent: "35",
-  expectedEnergyContent: "18.5",
-  status: "active",
-  publishedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-  createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
-  updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+// Mock data for demonstration - keyed by ID to match marketplace listings
+const MOCK_FUTURES_MAP: Record<number, any> = {
+  1: {
+    id: 1,
+    futuresId: "FUT-2025-0001",
+    title: "Blue Mallee Eucalyptus - Certified Sustainable Plantation",
+    description:
+      "Large-scale eucalyptus plantation in Victoria's Mallee region, managed for sustainable biomass production. Established plantation with proven yield history. First rotation harvest completed successfully.",
+    cropType: "eucalyptus",
+    cropVariety: "E. grandis",
+    state: "VIC",
+    region: "Mallee Region",
+    landAreaHectares: "2500",
+    landStatus: "owned",
+    projectionStartYear: 2026,
+    projectionEndYear: 2040,
+    firstHarvestYear: 2026,
+    totalProjectedTonnes: "145000",
+    totalContractedTonnes: "20000",
+    totalAvailableTonnes: "125000",
+    indicativePricePerTonne: "85.00",
+    priceEscalationPercent: "2.5",
+    pricingNotes: "Base price indexed to CPI. Volume discounts available for commitments over 10,000 tonnes/year.",
+    expectedCarbonIntensity: "15.5",
+    expectedMoistureContent: "35",
+    expectedEnergyContent: "18.5",
+    status: "active",
+    publishedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  2: {
+    id: 2,
+    futuresId: "FUT-2025-0002",
+    title: "Giant Miscanthus Energy Crop - High Yield Variety",
+    description:
+      "High-yield miscanthus plantation in the fertile Riverina region. This perennial grass requires minimal inputs and provides consistent annual harvests.",
+    cropType: "miscanthus",
+    cropVariety: "Miscanthus x giganteus",
+    state: "NSW",
+    region: "Riverina",
+    landAreaHectares: "1200",
+    landStatus: "leased",
+    projectionStartYear: 2026,
+    projectionEndYear: 2035,
+    firstHarvestYear: 2027,
+    totalProjectedTonnes: "75000",
+    totalContractedTonnes: "0",
+    totalAvailableTonnes: "75000",
+    indicativePricePerTonne: "95.00",
+    priceEscalationPercent: "2.0",
+    pricingNotes: "Fixed pricing with annual CPI adjustment. Flexible delivery terms.",
+    expectedCarbonIntensity: "12.0",
+    expectedMoistureContent: "20",
+    expectedEnergyContent: "17.5",
+    status: "active",
+    publishedAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  3: {
+    id: 3,
+    futuresId: "FUT-2025-0003",
+    title: "Dendrocalamus Bamboo - Fast-Growing Biomass",
+    description:
+      "Premium bamboo plantation on Queensland's Sunshine Coast. Fast-growing tropical bamboo with exceptional biomass yields.",
+    cropType: "bamboo",
+    cropVariety: "Dendrocalamus asper",
+    state: "QLD",
+    region: "Sunshine Coast Hinterland",
+    landAreaHectares: "3500",
+    landStatus: "owned",
+    projectionStartYear: 2025,
+    projectionEndYear: 2045,
+    firstHarvestYear: 2025,
+    totalProjectedTonnes: "200000",
+    totalContractedTonnes: "20000",
+    totalAvailableTonnes: "180000",
+    indicativePricePerTonne: "75.00",
+    priceEscalationPercent: "2.5",
+    pricingNotes: "Long-term contracts preferred. Volume bonuses available.",
+    expectedCarbonIntensity: "10.0",
+    expectedMoistureContent: "45",
+    expectedEnergyContent: "16.0",
+    status: "active",
+    publishedAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  4: {
+    id: 4,
+    futuresId: "FUT-2025-0004",
+    title: "Short Rotation Forestry - Mixed Hardwood",
+    description:
+      "Diverse short-rotation forestry operation in Tasmania's North East. Mixed hardwood species provide resilience and consistent yields.",
+    cropType: "rotation_forestry",
+    cropVariety: "Mixed Eucalyptus species",
+    state: "TAS",
+    region: "North East",
+    landAreaHectares: "5000",
+    landStatus: "owned",
+    projectionStartYear: 2026,
+    projectionEndYear: 2041,
+    firstHarvestYear: 2028,
+    totalProjectedTonnes: "320000",
+    totalContractedTonnes: "40000",
+    totalAvailableTonnes: "280000",
+    indicativePricePerTonne: "65.00",
+    priceEscalationPercent: "2.0",
+    pricingNotes: "Competitive pricing for bulk contracts. Rail logistics available.",
+    expectedCarbonIntensity: "14.0",
+    expectedMoistureContent: "40",
+    expectedEnergyContent: "18.0",
+    status: "active",
+    publishedAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 50 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  5: {
+    id: 5,
+    futuresId: "FUT-2025-0005",
+    title: "Industrial Hemp - Multi-Purpose Biomass",
+    description:
+      "Industrial hemp cultivation on Adelaide Plains. Fast-growing annual crop with multiple harvest cycles.",
+    cropType: "hemp",
+    cropVariety: "Industrial Hemp (low THC)",
+    state: "SA",
+    region: "Adelaide Plains",
+    landAreaHectares: "800",
+    landStatus: "leased",
+    projectionStartYear: 2025,
+    projectionEndYear: 2030,
+    firstHarvestYear: 2025,
+    totalProjectedTonnes: "45000",
+    totalContractedTonnes: "0",
+    totalAvailableTonnes: "45000",
+    indicativePricePerTonne: "120.00",
+    priceEscalationPercent: "3.0",
+    pricingNotes: "Premium pricing reflects high-quality biomass. Flexible contract terms.",
+    expectedCarbonIntensity: "8.0",
+    expectedMoistureContent: "15",
+    expectedEnergyContent: "17.0",
+    status: "draft",
+    publishedAt: null,
+    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  6: {
+    id: 6,
+    futuresId: "FUT-2025-0006",
+    title: "Switchgrass - Low Input Energy Crop",
+    description:
+      "Native switchgrass plantation in Western Australia's South West. Low-input perennial grass with excellent drought tolerance.",
+    cropType: "switchgrass",
+    cropVariety: "Panicum virgatum",
+    state: "WA",
+    region: "South West",
+    landAreaHectares: "1800",
+    landStatus: "owned",
+    projectionStartYear: 2026,
+    projectionEndYear: 2036,
+    firstHarvestYear: 2027,
+    totalProjectedTonnes: "90000",
+    totalContractedTonnes: "0",
+    totalAvailableTonnes: "90000",
+    indicativePricePerTonne: "88.00",
+    priceEscalationPercent: "2.5",
+    pricingNotes: "Competitive pricing for long-term offtake agreements.",
+    expectedCarbonIntensity: "11.0",
+    expectedMoistureContent: "25",
+    expectedEnergyContent: "17.5",
+    status: "active",
+    publishedAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+  },
 };
+
+// Default mock futures for unknown IDs
+const DEFAULT_MOCK_FUTURES = MOCK_FUTURES_MAP[1];
 
 const MOCK_PROJECTIONS = [
   {
@@ -402,7 +551,7 @@ export default function FuturesDetailSupplier() {
     error,
   } = trpc.futures.getById.useQuery(
     { id: futuresId },
-    { enabled: !!user && futuresId > 0 }
+    { enabled: !!user && futuresId > 0, retry: false }
   );
 
   const { data: apiEois, isLoading: loadingEOIs } =
@@ -411,10 +560,11 @@ export default function FuturesDetailSupplier() {
       { enabled: !!user && futuresId > 0 && (apiData?.isOwner || !apiData) }
     );
 
-  // Use mock data if API returns empty
-  const isUsingMockData = !apiData;
+  // Use ID-specific mock data if API returns empty or error
+  const mockFutures = MOCK_FUTURES_MAP[futuresId] || DEFAULT_MOCK_FUTURES;
+  const isUsingMockData = !apiData || !!error;
   const data = apiData || {
-    futures: MOCK_FUTURES,
+    futures: mockFutures,
     projections: MOCK_PROJECTIONS,
     isOwner: true,
   };
@@ -474,28 +624,6 @@ export default function FuturesDetailSupplier() {
         <div className="container mx-auto px-4 py-8">
           <Skeleton className="h-8 w-64 mb-4" />
           <Skeleton className="h-64 w-full" />
-        </div>
-      </PageLayout>
-    );
-  }
-
-  if (error && !isUsingMockData) {
-    return (
-      <PageLayout>
-        <div className="min-h-[60vh] flex items-center justify-center">
-          <Card className="max-w-md">
-            <CardContent className="py-8 text-center">
-              <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Futures Not Found</h3>
-              <p className="text-muted-foreground mb-4">
-                {error?.message ||
-                  "The futures listing you're looking for doesn't exist."}
-              </p>
-              <Link href="/supplier/futures">
-                <Button variant="outline">Back to Futures</Button>
-              </Link>
-            </CardContent>
-          </Card>
         </div>
       </PageLayout>
     );
