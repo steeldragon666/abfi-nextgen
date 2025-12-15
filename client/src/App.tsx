@@ -65,6 +65,10 @@ import FuturesDetailSupplier from "./pages/FuturesDetailSupplier";
 import FuturesMarketplace from "./pages/FuturesMarketplace";
 import FuturesDetailBuyer from "./pages/FuturesDetailBuyer";
 import MyEOIs from "./pages/MyEOIs";
+import ForGrowers from "./pages/ForGrowers";
+import ForDevelopers from "./pages/ForDevelopers";
+import ForLenders from "./pages/ForLenders";
+import PlatformFeatures from "./pages/PlatformFeatures";
 
 function Router() {
   return (
@@ -116,6 +120,10 @@ function Router() {
       <Route path="/futures" component={FuturesMarketplace} />
       <Route path="/futures/:id" component={FuturesDetailBuyer} />
       <Route path="/buyer/eois" component={MyEOIs} />
+      <Route path="/for-growers" component={ForGrowers} />
+      <Route path="/for-developers" component={ForDevelopers} />
+      <Route path="/for-lenders" component={ForLenders} />
+      <Route path="/platform-features" component={PlatformFeatures} />
       <Route path="/map" component={MapView} />
       <Route path="/feedstock-map" component={FeedstockMap} />
       <Route path="/producer-registration" component={ProducerRegistration} />
