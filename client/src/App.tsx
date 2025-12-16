@@ -103,6 +103,7 @@ const ForGrowers = lazy(() => import("./pages/ForGrowers"));
 const ForDevelopers = lazy(() => import("./pages/ForDevelopers"));
 const ForLenders = lazy(() => import("./pages/ForLenders"));
 const PlatformFeatures = lazy(() => import("./pages/PlatformFeatures"));
+const Explainers = lazy(() => import("./pages/Explainers"));
 
 // Loading fallback component
 function PageLoader() {
@@ -132,6 +133,7 @@ function Router() {
           component={FinancialOnboardingSuccess}
         />
         <Route path="/bankability-explainer" component={BankabilityExplainer} />
+        <Route path="/explainers" component={Explainers} />
         <Route path="/grower-benefits" component={GrowerBenefits} />
         <Route path="/project-registration" component={ProjectRegistration} />
         <Route
