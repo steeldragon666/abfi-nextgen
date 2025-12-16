@@ -9,6 +9,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { initializeScheduler } from "../scheduler";
 import { handleManusWebhook } from "../manus";
+import { certificateVerificationRouter } from "../certificateVerificationApi";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -52,6 +53,9 @@ async function startServer() {
       res.status(500).json({ success: false, error: "Internal server error" });
     }
   });
+
+  // Public Certificate Verification API
+  app.use("/api/verify", certificateVerificationRouter);
 
   // tRPC API
   app.use(
