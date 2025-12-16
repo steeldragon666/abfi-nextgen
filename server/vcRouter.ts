@@ -8,6 +8,8 @@ import {
   didRegistry,
   verifiableCredentials,
 } from "../drizzle/schema";
+import { getSigningService } from "./services/signing";
+import { getIPFSService } from "./services/ipfs";
 
 // ============================================================================
 // VERIFIABLE CREDENTIALS ROUTER - ABFI v3.1 Phase 5
@@ -83,18 +85,13 @@ export const vcRouter = router({
       const random = crypto.randomBytes(8).toString("hex");
       const did = `did:web:abfi.io:${input.controllerType}:${input.controllerId}:${random}`;
 
-      // Create DID document
-      const didDocument = {
-        "@context": ["https://www.w3.org/ns/did/v1"],
-        id: did,
-        verificationMethod: [
-          {
-            id: `${did}#key-1`,
-            type: "Ed25519VerificationKey2020",
-            controller: did,
-          },
-        ],
-      };
+      // Generate key pair
+      const signingService = getSigningService();
+      const keyId = `key-1`;
+      const keyPair = await signingService.generateKeyPair(keyId);
+
+      // Create DID document with actual key
+      const didDocument = signingService.createDidDocument(did, keyPair);
 
       const didDocumentUri = `https://abfi.io/.well-known/did/${input.controllerType}/${input.controllerId}`;
       const didDocumentHash = crypto
@@ -102,18 +99,33 @@ export const vcRouter = router({
         .update(JSON.stringify(didDocument))
         .digest("hex");
 
+      // Store on IPFS if available
+      let storedUri = didDocumentUri;
+      const ipfsService = getIPFSService();
+      if (ipfsService) {
+        const ipfsResult = await ipfsService.uploadJSON(didDocument as Record<string, unknown>);
+        if (ipfsResult.success && ipfsResult.cid) {
+          storedUri = `ipfs://${ipfsResult.cid}`;
+        }
+      }
+
       const [result] = await db.insert(didRegistry).values({
         did,
         didMethod: input.method,
         controllerType: input.controllerType,
         controllerId: input.controllerId,
-        didDocumentUri,
+        didDocumentUri: storedUri,
         didDocumentHash,
-        keyAlgorithm: "ES256",
+        keyAlgorithm: "Ed25519",
         status: "active",
       });
 
-      return { id: result.insertId, did, didDocument };
+      return {
+        id: result.insertId,
+        did,
+        didDocument,
+        publicKeyMultibase: keyPair.publicKeyMultibase,
+      };
     }),
 
   resolveDid: publicProcedure
@@ -209,9 +221,12 @@ export const vcRouter = router({
       const credentialId = `urn:uuid:${crypto.randomUUID()}`;
       const issuanceDate = new Date();
 
-      // Build W3C credential
-      const credential = {
-        "@context": ["https://www.w3.org/2018/credentials/v1"],
+      // Build W3C credential (unsigned)
+      const unsignedCredential = {
+        "@context": [
+          "https://www.w3.org/2018/credentials/v1",
+          "https://w3id.org/security/suites/ed25519-2020/v1",
+        ],
         id: credentialId,
         type: ["VerifiableCredential", input.credentialType],
         issuer: input.issuerDid,
@@ -223,13 +238,37 @@ export const vcRouter = router({
         },
       };
 
+      // Sign the credential
+      const signingService = getSigningService();
+      const verificationMethod = `${input.issuerDid}#key-1`;
+
+      let signedCredential;
+      try {
+        signedCredential = await signingService.signCredential(
+          unsignedCredential,
+          "key-1",
+          verificationMethod
+        );
+      } catch (error) {
+        // If signing fails (key not found), store unsigned with warning
+        console.warn(`[VC] Could not sign credential: ${error}`);
+        signedCredential = unsignedCredential;
+      }
+
       const credentialHash = crypto
         .createHash("sha256")
-        .update(JSON.stringify(credential))
+        .update(JSON.stringify(signedCredential))
         .digest("hex");
 
-      // In production, this would be stored in IPFS/S3
-      const credentialUri = `ipfs://abfi-credentials/${credentialHash}`;
+      // Store credential on IPFS if available
+      let credentialUri = `ipfs://pending/${credentialHash}`;
+      const ipfsService = getIPFSService();
+      if (ipfsService) {
+        const ipfsResult = await ipfsService.uploadJSON(signedCredential);
+        if (ipfsResult.success && ipfsResult.cid) {
+          credentialUri = `ipfs://${ipfsResult.cid}`;
+        }
+      }
 
       const [result] = await db.insert(verifiableCredentials).values({
         credentialId,
@@ -244,7 +283,14 @@ export const vcRouter = router({
         status: "active",
       });
 
-      return { id: result.insertId, credentialId, credential, hash: credentialHash };
+      return {
+        id: result.insertId,
+        credentialId,
+        credential: signedCredential,
+        hash: credentialHash,
+        signed: "proof" in signedCredential,
+        credentialUri,
+      };
     }),
 
   getCredential: publicProcedure
@@ -281,7 +327,7 @@ export const vcRouter = router({
     .query(async ({ input }) => {
       const db = await getDb();
       if (!db) {
-        return { valid: false, errors: ["Database not available"] };
+        return { valid: false, errors: ["Database not available"], signatureVerified: false };
       }
 
       const [record] = await db
@@ -291,7 +337,7 @@ export const vcRouter = router({
         .limit(1);
 
       if (!record) {
-        return { valid: false, errors: ["Credential not found"] };
+        return { valid: false, errors: ["Credential not found"], signatureVerified: false };
       }
 
       const errors: string[] = [];
@@ -312,13 +358,35 @@ export const vcRouter = router({
         errors.push("Credential has expired");
       }
 
+      // Try to verify cryptographic signature
+      let signatureVerified = false;
+      const ipfsService = getIPFSService();
+      if (ipfsService && record.credentialUri.startsWith("ipfs://")) {
+        const cid = record.credentialUri.replace("ipfs://", "");
+        const retrieved = await ipfsService.retrieveJSON(cid);
+
+        if (retrieved.success && retrieved.data) {
+          const signingService = getSigningService();
+          const verificationResult = await signingService.verifyCredential(
+            retrieved.data as any
+          );
+
+          signatureVerified = verificationResult.verified;
+          if (!verificationResult.verified && verificationResult.errors.length > 0) {
+            errors.push(...verificationResult.errors.map(e => `Signature: ${e}`));
+          }
+        }
+      }
+
       return {
         valid: errors.length === 0,
         errors,
+        signatureVerified,
         credentialId: record.credentialId,
         credentialType: record.credentialType,
         issuerDid: record.issuerDid,
         subjectDid: record.subjectDid,
+        credentialUri: record.credentialUri,
       };
     }),
 
