@@ -469,3 +469,413 @@ export async function getContractEnforceabilityScore(agreementId: number) {
 
   return results[0] || null;
 }
+
+// ============================================================================
+// REGIONAL EVENT SCENARIO (Phase 6 - Scenario 2)
+// ============================================================================
+
+/**
+ * Run regional event scenario
+ * Simulates supply disruption in a geographic region
+ */
+export async function runRegionalEventScenario(
+  projectId: number,
+  region: string,
+  reductionPercent: number,
+  agreements: Array<{
+    id: number;
+    supplierId: number;
+    committedVolume: number;
+    supplierState?: string;
+  }>
+): Promise<{
+  baseHhi: number;
+  stressHhi: number;
+  supplyShortfallPercent: number;
+  remainingSuppliers: number;
+  affectedAgreements: number[];
+  affectedVolume: number;
+  unaffectedVolume: number;
+}> {
+  // Calculate base case
+  const baseVolumes = agreements.map(a => a.committedVolume);
+  const baseHhi = calculateHHI(baseVolumes);
+
+  // Apply regional reduction
+  const affectedAgreements = agreements.filter(
+    a => a.supplierState?.toUpperCase() === region.toUpperCase()
+  );
+  const unaffectedAgreements = agreements.filter(
+    a => a.supplierState?.toUpperCase() !== region.toUpperCase()
+  );
+
+  const affectedVolume = affectedAgreements.reduce(
+    (sum, a) => sum + a.committedVolume,
+    0
+  );
+  const lostVolume = affectedVolume * (reductionPercent / 100);
+  const totalVolume = baseVolumes.reduce((sum, v) => sum + v, 0);
+  const supplyShortfallPercent =
+    totalVolume > 0 ? (lostVolume / totalVolume) * 100 : 0;
+
+  // Calculate stress volumes (reduce affected suppliers proportionally)
+  const stressVolumes = agreements.map(a => {
+    if (a.supplierState?.toUpperCase() === region.toUpperCase()) {
+      return a.committedVolume * (1 - reductionPercent / 100);
+    }
+    return a.committedVolume;
+  });
+  const stressHhi = calculateHHI(stressVolumes);
+
+  const remainingSuppliers = new Set(
+    agreements
+      .filter(
+        a =>
+          a.supplierState?.toUpperCase() !== region.toUpperCase() ||
+          a.committedVolume * (1 - reductionPercent / 100) > 0
+      )
+      .map(a => a.supplierId)
+  ).size;
+
+  return {
+    baseHhi,
+    stressHhi,
+    supplyShortfallPercent: Math.round(supplyShortfallPercent * 10) / 10,
+    remainingSuppliers,
+    affectedAgreements: affectedAgreements.map(a => a.id),
+    affectedVolume,
+    unaffectedVolume: unaffectedAgreements.reduce(
+      (sum, a) => sum + a.committedVolume,
+      0
+    ),
+  };
+}
+
+// ============================================================================
+// PRICE SHOCK SCENARIO (Phase 6 - Scenario 3)
+// ============================================================================
+
+/**
+ * Run price shock scenario
+ * Simulates feedstock cost increases and impact on project economics
+ */
+export async function runPriceShockScenario(
+  projectId: number,
+  priceIncreasePercent: number,
+  agreements: Array<{
+    id: number;
+    supplierId: number;
+    committedVolume: number;
+    pricePerTonne?: number;
+  }>,
+  projectEconomics: {
+    baseRevenue: number;
+    baseCost: number;
+    targetMargin: number; // As percentage
+  }
+): Promise<{
+  baseCost: number;
+  stressCost: number;
+  costIncrease: number;
+  baseMargin: number;
+  stressMargin: number;
+  marginErosion: number;
+  breakEvenPriceIncrease: number;
+  viabilityStatus: "viable" | "marginal" | "unviable";
+  affectedContracts: Array<{
+    agreementId: number;
+    baseCost: number;
+    stressCost: number;
+    costIncrease: number;
+  }>;
+}> {
+  // Calculate base feedstock costs
+  const baseFeedstockCost = agreements.reduce((sum, a) => {
+    const price = a.pricePerTonne || 100; // Default price per tonne
+    return sum + a.committedVolume * price;
+  }, 0);
+
+  // Calculate stress feedstock costs
+  const stressFeedstockCost = baseFeedstockCost * (1 + priceIncreasePercent / 100);
+  const costIncrease = stressFeedstockCost - baseFeedstockCost;
+
+  // Calculate project margins
+  const baseMargin =
+    projectEconomics.baseRevenue > 0
+      ? ((projectEconomics.baseRevenue - projectEconomics.baseCost) /
+          projectEconomics.baseRevenue) *
+        100
+      : 0;
+
+  const stressTotalCost = projectEconomics.baseCost + costIncrease;
+  const stressMargin =
+    projectEconomics.baseRevenue > 0
+      ? ((projectEconomics.baseRevenue - stressTotalCost) /
+          projectEconomics.baseRevenue) *
+        100
+      : 0;
+
+  const marginErosion = baseMargin - stressMargin;
+
+  // Calculate break-even price increase
+  const marginBuffer = baseMargin - projectEconomics.targetMargin;
+  const breakEvenPriceIncrease =
+    baseFeedstockCost > 0
+      ? (marginBuffer / 100) *
+        projectEconomics.baseRevenue /
+        baseFeedstockCost *
+        100
+      : 0;
+
+  // Determine viability
+  let viabilityStatus: "viable" | "marginal" | "unviable";
+  if (stressMargin >= projectEconomics.targetMargin) {
+    viabilityStatus = "viable";
+  } else if (stressMargin >= 0) {
+    viabilityStatus = "marginal";
+  } else {
+    viabilityStatus = "unviable";
+  }
+
+  // Calculate per-contract impact
+  const affectedContracts = agreements.map(a => {
+    const price = a.pricePerTonne || 100;
+    const baseCost = a.committedVolume * price;
+    const stressCost = baseCost * (1 + priceIncreasePercent / 100);
+    return {
+      agreementId: a.id,
+      baseCost,
+      stressCost,
+      costIncrease: stressCost - baseCost,
+    };
+  });
+
+  return {
+    baseCost: baseFeedstockCost,
+    stressCost: stressFeedstockCost,
+    costIncrease,
+    baseMargin: Math.round(baseMargin * 10) / 10,
+    stressMargin: Math.round(stressMargin * 10) / 10,
+    marginErosion: Math.round(marginErosion * 10) / 10,
+    breakEvenPriceIncrease: Math.round(breakEvenPriceIncrease * 10) / 10,
+    viabilityStatus,
+    affectedContracts,
+  };
+}
+
+/**
+ * Run comprehensive stress test with all scenario types
+ */
+export async function runComprehensiveStressTest(params: {
+  projectId: number;
+  scenarioType:
+    | "supplier_loss"
+    | "supply_shortfall"
+    | "regional_shock"
+    | "price_spike";
+  scenarioParams: {
+    supplierId?: number;
+    shortfallPercent?: number;
+    region?: string;
+    reductionPercent?: number;
+    priceIncreasePercent?: number;
+  };
+  baseScore: number;
+  baseRating: string;
+  agreements: Array<{
+    id: number;
+    supplierId: number;
+    committedVolume: number;
+    supplierState?: string;
+    pricePerTonne?: number;
+  }>;
+  projectEconomics?: {
+    baseRevenue: number;
+    baseCost: number;
+    targetMargin: number;
+  };
+  covenants?: Array<{ type: string; threshold: number }>;
+  testedBy: number;
+}): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Create scenario record
+  const scenarioResult = await db.insert(stressScenarios).values({
+    scenarioName: `${params.scenarioType} - ${new Date().toISOString()}`,
+    scenarioType: params.scenarioType,
+    parameters: params.scenarioParams,
+    description: null,
+    createdBy: params.testedBy,
+    isTemplate: false,
+  });
+
+  const scenarioId = Number(scenarioResult[0].insertId);
+
+  // Run appropriate scenario simulation
+  let stressMetrics: {
+    baseHhi: number;
+    stressHhi: number;
+    supplyShortfallPercent: number;
+    remainingSuppliers: number;
+  };
+
+  let priceShockResults: Awaited<ReturnType<typeof runPriceShockScenario>> | null = null;
+
+  switch (params.scenarioType) {
+    case "supplier_loss":
+      if (!params.scenarioParams.supplierId) {
+        throw new Error("supplierId required for supplier_loss scenario");
+      }
+      stressMetrics = await runSupplierLossScenario(
+        params.projectId,
+        params.scenarioParams.supplierId,
+        params.agreements
+      );
+      break;
+
+    case "supply_shortfall":
+      if (params.scenarioParams.shortfallPercent === undefined) {
+        throw new Error("shortfallPercent required for supply_shortfall scenario");
+      }
+      stressMetrics = await runSupplyShortfallScenario(
+        params.projectId,
+        params.scenarioParams.shortfallPercent,
+        params.agreements
+      );
+      break;
+
+    case "regional_shock":
+      if (!params.scenarioParams.region || params.scenarioParams.reductionPercent === undefined) {
+        throw new Error("region and reductionPercent required for regional_shock scenario");
+      }
+      stressMetrics = await runRegionalEventScenario(
+        params.projectId,
+        params.scenarioParams.region,
+        params.scenarioParams.reductionPercent,
+        params.agreements
+      );
+      break;
+
+    case "price_spike":
+      if (params.scenarioParams.priceIncreasePercent === undefined || !params.projectEconomics) {
+        throw new Error("priceIncreasePercent and projectEconomics required for price_spike scenario");
+      }
+      priceShockResults = await runPriceShockScenario(
+        params.projectId,
+        params.scenarioParams.priceIncreasePercent,
+        params.agreements,
+        params.projectEconomics
+      );
+      // For price shock, HHI doesn't change
+      stressMetrics = {
+        baseHhi: calculateHHI(params.agreements.map(a => a.committedVolume)),
+        stressHhi: calculateHHI(params.agreements.map(a => a.committedVolume)),
+        supplyShortfallPercent: 0,
+        remainingSuppliers: params.agreements.length,
+      };
+      break;
+
+    default:
+      throw new Error("Unsupported scenario type");
+  }
+
+  // Calculate stress score
+  let stressScore: number;
+  if (params.scenarioType === "price_spike" && priceShockResults) {
+    // For price shock, reduce score based on margin erosion
+    const marginPenalty = Math.min(priceShockResults.marginErosion * 2, 30);
+    const viabilityPenalty = priceShockResults.viabilityStatus === "unviable" ? 20
+      : priceShockResults.viabilityStatus === "marginal" ? 10 : 0;
+    stressScore = Math.max(0, Math.round(params.baseScore - marginPenalty - viabilityPenalty));
+  } else {
+    const shortfallPenalty = stressMetrics.supplyShortfallPercent * 0.5;
+    const hhiIncrease = stressMetrics.stressHhi - stressMetrics.baseHhi;
+    const hhiPenalty = hhiIncrease > 0 ? Math.min(hhiIncrease / 100, 20) : 0;
+    stressScore = Math.max(0, Math.round(params.baseScore - shortfallPenalty - hhiPenalty));
+  }
+
+  const stressRating = scoreToRating(stressScore);
+  const ratingDelta = calculateRatingDelta(params.baseRating, stressRating);
+
+  // Calculate Tier 1 coverage
+  const baseTier1Coverage = 100;
+  const stressTier1Coverage = Math.max(
+    0,
+    baseTier1Coverage - stressMetrics.supplyShortfallPercent
+  );
+
+  // Check covenant breaches
+  const covenantBreaches = params.covenants
+    ? checkCovenantBreaches(
+        {
+          tier1Coverage: stressTier1Coverage,
+          hhi: stressMetrics.stressHhi,
+          supplyShortfall: stressMetrics.supplyShortfallPercent,
+        },
+        params.covenants
+      )
+    : [];
+
+  // Determine pass/fail
+  const passesStressTest = covenantBreaches.length === 0 && ratingDelta >= -1;
+  const minimumRatingMaintained = stressRating >= "BBB";
+
+  // Generate narrative
+  let narrativeSummary: string;
+  if (params.scenarioType === "price_spike" && priceShockResults) {
+    narrativeSummary = `Under ${params.scenarioParams.priceIncreasePercent}% price shock scenario, project margin would decline from ${priceShockResults.baseMargin}% to ${priceShockResults.stressMargin}%. Rating impact: ${params.baseRating} to ${stressRating} (${ratingDelta} notches). Viability: ${priceShockResults.viabilityStatus}. Break-even at ${priceShockResults.breakEvenPriceIncrease}% price increase.`;
+  } else if (params.scenarioType === "regional_shock") {
+    narrativeSummary = `Under regional shock scenario (${params.scenarioParams.region} -${params.scenarioParams.reductionPercent}%), project rating would decline from ${params.baseRating} to ${stressRating} (${ratingDelta} notches). Supply shortfall: ${stressMetrics.supplyShortfallPercent}%. HHI changes from ${stressMetrics.baseHhi} to ${stressMetrics.stressHhi}.`;
+  } else {
+    narrativeSummary = `Under ${params.scenarioType} scenario, project rating would decline from ${params.baseRating} to ${stressRating} (${ratingDelta} notches). Supply shortfall: ${stressMetrics.supplyShortfallPercent}%. HHI increases from ${stressMetrics.baseHhi} to ${stressMetrics.stressHhi}. ${covenantBreaches.length} covenant breach(es) detected.`;
+  }
+
+  // Generate recommendations
+  const recommendations: string[] = [];
+  if (stressMetrics.supplyShortfallPercent > 20) {
+    recommendations.push("Diversify supplier base to reduce concentration risk");
+  }
+  if (stressMetrics.stressHhi > 2500) {
+    recommendations.push("Add additional suppliers to reduce HHI below 2500");
+  }
+  if (covenantBreaches.length > 0) {
+    recommendations.push("Negotiate covenant headroom or implement mitigation measures");
+  }
+  if (params.scenarioType === "price_spike" && priceShockResults?.viabilityStatus !== "viable") {
+    recommendations.push("Negotiate price caps or index clauses in supply contracts");
+    recommendations.push("Consider hedging instruments or long-term fixed-price agreements");
+  }
+  if (params.scenarioType === "regional_shock") {
+    recommendations.push("Diversify supplier base across multiple regions");
+    recommendations.push("Consider weather/climate insurance products");
+  }
+
+  // Store results
+  const resultInsert = await db.insert(stressTestResults).values({
+    projectId: params.projectId,
+    scenarioId,
+    testDate: new Date(),
+    testedBy: params.testedBy,
+    baseRating: params.baseRating,
+    baseScore: params.baseScore,
+    baseHhi: stressMetrics.baseHhi,
+    baseTier1Coverage,
+    stressRating,
+    stressScore,
+    stressHhi: stressMetrics.stressHhi,
+    stressTier1Coverage,
+    ratingDelta,
+    scoreDelta: stressScore - params.baseScore,
+    hhiDelta: stressMetrics.stressHhi - stressMetrics.baseHhi,
+    supplyShortfallPercent: stressMetrics.supplyShortfallPercent,
+    remainingSuppliers: stressMetrics.remainingSuppliers,
+    covenantBreaches,
+    narrativeSummary,
+    recommendations,
+    passesStressTest,
+    minimumRatingMaintained,
+  });
+
+  return Number(resultInsert[0].insertId);
+}

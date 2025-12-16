@@ -2788,7 +2788,7 @@ export const appRouter = router({
 
   // Stress-Testing Engine (Phase 6)
   stressTesting: router({
-    // Run stress test
+    // Run stress test (legacy - supports original 3 scenarios)
     runStressTest: protectedProcedure
       .input(
         z.object({
@@ -2832,6 +2832,133 @@ export const appRouter = router({
           agreements: agreementData,
           testedBy: ctx.user.id,
         });
+      }),
+
+    // Run comprehensive stress test (supports all 4 scenarios including price_shock)
+    runComprehensiveTest: protectedProcedure
+      .input(
+        z.object({
+          projectId: z.number(),
+          scenarioType: z.enum([
+            "supplier_loss",
+            "supply_shortfall",
+            "regional_shock",
+            "price_spike",
+          ]),
+          scenarioParams: z.object({
+            supplierId: z.number().optional(),
+            shortfallPercent: z.number().optional(),
+            region: z.string().optional(),
+            reductionPercent: z.number().optional(),
+            priceIncreasePercent: z.number().optional(),
+          }),
+          baseScore: z.number(),
+          baseRating: z.string(),
+          projectEconomics: z.object({
+            baseRevenue: z.number(),
+            baseCost: z.number(),
+            targetMargin: z.number(),
+          }).optional(),
+          covenants: z
+            .array(
+              z.object({
+                type: z.string(),
+                threshold: z.number(),
+              })
+            )
+            .optional(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        // Get project agreements with additional fields
+        const agreements = await db.getSupplyAgreementsByProjectId(
+          input.projectId
+        );
+        const agreementData = agreements.map(a => ({
+          id: a.id,
+          supplierId: a.supplierId,
+          committedVolume: (a as any).committedVolume || 0,
+          supplierState: (a as any).supplierState,
+          pricePerTonne: (a as any).pricePerTonne,
+        }));
+
+        const { runComprehensiveStressTest } = await import("./stressTesting.js");
+        return await runComprehensiveStressTest({
+          ...input,
+          agreements: agreementData,
+          testedBy: ctx.user.id,
+        });
+      }),
+
+    // Run price shock scenario analysis
+    runPriceShockAnalysis: protectedProcedure
+      .input(
+        z.object({
+          projectId: z.number(),
+          priceIncreases: z.array(z.number()).default([20, 40, 60]),
+          projectEconomics: z.object({
+            baseRevenue: z.number(),
+            baseCost: z.number(),
+            targetMargin: z.number(),
+          }),
+        })
+      )
+      .query(async ({ input }) => {
+        const agreements = await db.getSupplyAgreementsByProjectId(
+          input.projectId
+        );
+        const agreementData = agreements.map(a => ({
+          id: a.id,
+          supplierId: a.supplierId,
+          committedVolume: (a as any).committedVolume || 0,
+          pricePerTonne: (a as any).pricePerTonne,
+        }));
+
+        const { runPriceShockScenario } = await import("./stressTesting.js");
+
+        // Run analysis for each price increase level
+        const results = await Promise.all(
+          input.priceIncreases.map(async (priceIncrease) => {
+            const result = await runPriceShockScenario(
+              input.projectId,
+              priceIncrease,
+              agreementData,
+              input.projectEconomics
+            );
+            return { priceIncrease, ...result };
+          })
+        );
+
+        return results;
+      }),
+
+    // Run regional shock scenario analysis
+    runRegionalAnalysis: protectedProcedure
+      .input(
+        z.object({
+          projectId: z.number(),
+          region: z.string(),
+          reductionPercent: z.number().default(50),
+        })
+      )
+      .query(async ({ input }) => {
+        const agreements = await db.getSupplyAgreementsByProjectId(
+          input.projectId
+        );
+        const agreementData = agreements.map(a => ({
+          id: a.id,
+          supplierId: a.supplierId,
+          committedVolume: (a as any).committedVolume || 0,
+          supplierState: (a as any).supplierState,
+        }));
+
+        const { runRegionalEventScenario } = await import("./stressTesting.js");
+        return await runRegionalEventScenario(
+          input.projectId,
+          input.region,
+          input.reductionPercent,
+          agreementData
+        );
       }),
 
     // Get stress test results for a project
