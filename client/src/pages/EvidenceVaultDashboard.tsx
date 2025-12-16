@@ -450,6 +450,12 @@ export default function EvidenceVaultDashboard() {
     { limit: 100 }
   );
 
+  // Fetch blockchain health status
+  const { data: blockchainHealth } = trpc.evidenceVault.blockchainHealth.useQuery();
+
+  // Fetch IPFS health status
+  const { data: ipfsHealth } = trpc.evidenceVault.ipfsHealth.useQuery();
+
   // Batch anchor mutation
   const batchAnchorMutation = trpc.evidenceVault.createBatchAnchor.useMutation({
     onSuccess: (data) => {
@@ -492,15 +498,20 @@ export default function EvidenceVaultDashboard() {
     const now = new Date();
     const periodStart = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
 
+    // Get contract address from blockchain health check or use environment default
+    const contractAddress = blockchainHealth?.walletAddress
+      ? process.env.VITE_EVIDENCE_CONTRACT || "0x0000000000000000000000000000000000000000"
+      : "0x0000000000000000000000000000000000000000";
+
     batchAnchorMutation.mutate({
       manifestIds: selectedManifests,
-      chainId: 1,
-      chainName: "ethereum",
-      contractAddress: "0x0000000000000000000000000000000000000000",
+      chainId: blockchainHealth?.chainId || 1,
+      chainName: blockchainHealth?.chainId === 11155111 ? "sepolia" : "ethereum",
+      contractAddress,
       batchPeriodStart: periodStart,
       batchPeriodEnd: now,
     });
-  }, [selectedManifests, batchAnchorMutation]);
+  }, [selectedManifests, batchAnchorMutation, blockchainHealth]);
 
   if (loading) {
     return (
@@ -538,6 +549,41 @@ export default function EvidenceVaultDashboard() {
               </p>
             </div>
             <div className="flex items-center gap-3">
+              {/* Service Status Indicators */}
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-lg text-xs">
+                <span className="text-muted-foreground">Blockchain:</span>
+                {blockchainHealth?.configured ? (
+                  blockchainHealth.connected ? (
+                    <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                      Connected
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                      Disconnected
+                    </Badge>
+                  )
+                ) : (
+                  <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                    Not Configured
+                  </Badge>
+                )}
+                <span className="text-muted-foreground ml-2">IPFS:</span>
+                {ipfsHealth?.configured ? (
+                  ipfsHealth.connected ? (
+                    <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                      Connected
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                      Disconnected
+                    </Badge>
+                  )
+                ) : (
+                  <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                    Not Configured
+                  </Badge>
+                )}
+              </div>
               <Button variant="outline" size="sm" onClick={handleRefresh}>
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
