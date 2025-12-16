@@ -41,6 +41,9 @@ const ComplianceDashboard = lazy(() => import("./pages/ComplianceDashboard"));
 const EvidenceManagement = lazy(() => import("./pages/EvidenceManagement"));
 const EvidenceVaultDashboard = lazy(() => import("./pages/EvidenceVaultDashboard"));
 const SupplyChainDashboard = lazy(() => import("./pages/SupplyChainDashboard"));
+const EmissionsCalculator = lazy(() => import("./pages/EmissionsCalculator"));
+const CredentialsDashboard = lazy(() => import("./pages/CredentialsDashboard"));
+const GOSchemeDashboard = lazy(() => import("./pages/GOSchemeDashboard"));
 const FeedstockMap = lazy(() => import("./pages/FeedstockMap"));
 const ProducerRegistration = lazy(() => import("./pages/ProducerRegistration"));
 const ProducerAccountSetup = lazy(() => import("./pages/ProducerAccountSetup"));
@@ -194,6 +197,9 @@ function Router() {
         <Route path="/admin/evidence" component={EvidenceManagement} />
         <Route path="/evidence-vault" component={EvidenceVaultDashboard} />
         <Route path="/supply-chain" component={SupplyChainDashboard} />
+        <Route path="/emissions" component={EmissionsCalculator} />
+        <Route path="/credentials" component={CredentialsDashboard} />
+        <Route path="/go-scheme" component={GOSchemeDashboard} />
         <Route
           path="/admin/assessor-workflow"
           component={AdminAssessorWorkflow}
