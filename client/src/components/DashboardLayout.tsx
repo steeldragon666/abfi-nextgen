@@ -34,6 +34,7 @@ import {
   Leaf,
   Search,
   BookOpen,
+  Database,
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -62,6 +63,7 @@ const adminMenuItems = [
     label: "Assessor Workflow",
     path: "/admin/assessor-workflow",
   },
+  { icon: Database, label: "RSIE Dashboard", path: "/admin/rsie" },
   { icon: Clock, label: "Monitoring Jobs", path: "/admin/monitoring-jobs" },
   { icon: Users, label: "User Management", path: "/admin/users" },
   { icon: PieChart, label: "Admin Dashboard", path: "/admin" },

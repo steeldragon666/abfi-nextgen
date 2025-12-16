@@ -82,6 +82,7 @@ const AdminAssessorWorkflow = lazy(
   () => import("@/pages/AdminAssessorWorkflow"),
 );
 const AdminUserManagement = lazy(() => import("@/pages/AdminUserManagement"));
+const AdminRSIE = lazy(() => import("@/pages/AdminRSIE"));
 const MonitoringJobsScheduler = lazy(
   () => import("./pages/MonitoringJobsScheduler"),
 );
@@ -191,6 +192,7 @@ function Router() {
           component={AdminAssessorWorkflow}
         />
         <Route path="/admin/users" component={AdminUserManagement} />
+        <Route path="/admin/rsie" component={AdminRSIE} />
         <Route
           path="/admin/monitoring-jobs"
           component={MonitoringJobsScheduler}
