@@ -9,6 +9,7 @@ import {
   chainAnchors,
   merkleProofs,
 } from "../drizzle/schema";
+import { getBlockchainService } from "./services/blockchain";
 
 // ============================================================================
 // EVIDENCE VAULT ROUTER - ABFI v3.1 Phase 1
@@ -275,7 +276,7 @@ export const evidenceVaultRouter = router({
       return { anchorId, merkleRoot: root, leafCount: manifests.length, treeDepth: depth, status: "pending" };
     }),
 
-  // Confirm anchor
+  // Confirm anchor (manual confirmation for external submissions)
   confirmAnchor: protectedProcedure
     .input(
       z.object({
@@ -310,6 +311,163 @@ export const evidenceVaultRouter = router({
         .where(eq(evidenceManifests.anchorId, input.anchorId));
 
       return { success: true, anchorId: input.anchorId };
+    }),
+
+  // Submit anchor to blockchain
+  submitToBlockchain: protectedProcedure
+    .input(z.object({ anchorId: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      }
+
+      // Get the anchor
+      const [anchor] = await db
+        .select()
+        .from(chainAnchors)
+        .where(eq(chainAnchors.id, input.anchorId))
+        .limit(1);
+
+      if (!anchor) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Anchor not found" });
+      }
+
+      if (anchor.status === "confirmed") {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Anchor already confirmed" });
+      }
+
+      // Get blockchain service
+      const blockchainService = getBlockchainService();
+      if (!blockchainService) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Blockchain service not configured. Set ETHEREUM_RPC_URL and EVIDENCE_ANCHOR_CONTRACT.",
+        });
+      }
+
+      // Update status to submitting
+      await db
+        .update(chainAnchors)
+        .set({ status: "submitting" })
+        .where(eq(chainAnchors.id, input.anchorId));
+
+      // Submit to blockchain
+      const result = await blockchainService.anchorMerkleRoot(
+        anchor.merkleRoot,
+        anchor.leafCount,
+        input.anchorId
+      );
+
+      if (!result.success) {
+        // Revert status on failure
+        await db
+          .update(chainAnchors)
+          .set({ status: "failed" })
+          .where(eq(chainAnchors.id, input.anchorId));
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Blockchain submission failed: ${result.error}`,
+        });
+      }
+
+      // Update with transaction details
+      await db
+        .update(chainAnchors)
+        .set({
+          txHash: result.txHash,
+          blockNumber: result.blockNumber,
+          blockTimestamp: result.blockTimestamp,
+          anchorId: result.onChainAnchorId,
+          status: "confirmed",
+          confirmedAt: new Date(),
+        })
+        .where(eq(chainAnchors.id, input.anchorId));
+
+      // Update all manifests in this batch
+      await db
+        .update(evidenceManifests)
+        .set({ anchorStatus: "anchored" })
+        .where(eq(evidenceManifests.anchorId, input.anchorId));
+
+      return {
+        success: true,
+        anchorId: input.anchorId,
+        txHash: result.txHash,
+        blockNumber: result.blockNumber,
+        onChainAnchorId: result.onChainAnchorId,
+        gasUsed: result.gasUsed,
+      };
+    }),
+
+  // Check blockchain service health
+  blockchainHealth: protectedProcedure.query(async () => {
+    const blockchainService = getBlockchainService();
+    if (!blockchainService) {
+      return {
+        configured: false,
+        connected: false,
+        chainId: 0,
+        blockNumber: 0,
+      };
+    }
+
+    const health = await blockchainService.healthCheck();
+    return {
+      configured: true,
+      ...health,
+    };
+  }),
+
+  // Verify Merkle proof on-chain
+  verifyOnChain: protectedProcedure
+    .input(z.object({ manifestId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return { verified: false, error: "Database not available" };
+
+      // Get proof data
+      const [proof] = await db
+        .select({
+          proof: merkleProofs,
+          anchor: chainAnchors,
+        })
+        .from(merkleProofs)
+        .innerJoin(chainAnchors, eq(merkleProofs.anchorId, chainAnchors.id))
+        .where(eq(merkleProofs.manifestId, input.manifestId))
+        .limit(1);
+
+      if (!proof) {
+        return { verified: false, error: "No proof found for this manifest" };
+      }
+
+      if (proof.anchor.status !== "confirmed") {
+        return { verified: false, error: "Anchor not yet confirmed on blockchain" };
+      }
+
+      const blockchainService = getBlockchainService();
+      if (!blockchainService) {
+        return { verified: false, error: "Blockchain service not configured" };
+      }
+
+      // Extract proof path hashes
+      const proofPath = (proof.proof.proofPath as Array<{ hash: string }>).map(p => p.hash);
+
+      // Verify on-chain
+      const verified = await blockchainService.verifyInclusion(
+        proof.anchor.merkleRoot,
+        proof.proof.leafHash,
+        proofPath
+      );
+
+      return {
+        verified,
+        merkleRoot: proof.anchor.merkleRoot,
+        leafHash: proof.proof.leafHash,
+        txHash: proof.anchor.txHash,
+        blockNumber: proof.anchor.blockNumber,
+      };
     }),
 
   // Get Merkle proof
