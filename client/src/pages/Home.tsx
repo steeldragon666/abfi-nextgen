@@ -40,6 +40,12 @@ import {
   TreeDeciduous,
   Menu,
   X,
+  Link2,
+  Fingerprint,
+  BadgeCheck,
+  Blocks,
+  ScrollText,
+  Cpu,
 } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
@@ -291,24 +297,31 @@ export default function Home() {
             <FadeInUp className="flex flex-wrap justify-center gap-3 mb-8">
               <Badge
                 variant="outline"
-                className="border-white/20 text-white/90 bg-white/5 backdrop-blur-sm px-3 py-1.5"
+                className="border-amber-400/40 text-amber-300 bg-amber-500/10 backdrop-blur-sm px-3 py-1.5"
               >
-                <Lock className="h-3 w-3 mr-1.5" />
-                SHA-256 Secured
+                <Blocks className="h-3 w-3 mr-1.5" />
+                Blockchain Anchored
+              </Badge>
+              <Badge
+                variant="outline"
+                className="border-emerald-400/40 text-emerald-300 bg-emerald-500/10 backdrop-blur-sm px-3 py-1.5"
+              >
+                <BadgeCheck className="h-3 w-3 mr-1.5" />
+                GO Certificates
               </Badge>
               <Badge
                 variant="outline"
                 className="border-white/20 text-white/90 bg-white/5 backdrop-blur-sm px-3 py-1.5"
               >
-                <Database className="h-3 w-3 mr-1.5" />
-                Temporal Versioning
+                <Fingerprint className="h-3 w-3 mr-1.5" />
+                Verifiable Credentials
               </Badge>
               <Badge
                 variant="outline"
                 className="border-white/20 text-white/90 bg-white/5 backdrop-blur-sm px-3 py-1.5"
               >
                 <Shield className="h-3 w-3 mr-1.5" />
-                Bank-Grade Compliance
+                Bank-Grade Infrastructure
               </Badge>
             </FadeInUp>
 
@@ -427,20 +440,20 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-muted-foreground">
             <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              <span className="text-sm font-medium">SOC 2 Type II</span>
+              <Blocks className="h-5 w-5 text-amber-600" />
+              <span className="text-sm font-medium">Ethereum Anchored</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <BadgeCheck className="h-5 w-5 text-emerald-600" />
+              <span className="text-sm font-medium">GO Scheme Ready</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Fingerprint className="h-5 w-5 text-blue-600" />
+              <span className="text-sm font-medium">W3C Verifiable Credentials</span>
             </div>
             <div className="flex items-center gap-2">
               <Lock className="h-5 w-5" />
-              <span className="text-sm font-medium">256-bit Encryption</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <FileCheck className="h-5 w-5" />
-              <span className="text-sm font-medium">ISO 27001</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Globe className="h-5 w-5" />
-              <span className="text-sm font-medium">APRA Compliant</span>
+              <span className="text-sm font-medium">SHA-256 + Keccak-256</span>
             </div>
           </div>
         </div>
@@ -627,40 +640,43 @@ export default function Home() {
           <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
               {
-                icon: Lock,
-                title: "SHA-256 Evidence Chain",
+                icon: Blocks,
+                title: "Blockchain Evidence Vault",
                 description:
-                  "Every document, assessment, and update is hashed and chained. Tampering is mathematically impossible.",
+                  "Documents are Merkle-batched and anchored to Ethereum. Every hash is permanently verifiable on-chain.",
+                highlight: true,
               },
               {
-                icon: Clock,
-                title: "Temporal Versioning",
+                icon: BadgeCheck,
+                title: "Guarantee of Origin (GO)",
                 description:
-                  "Query any rating, covenant status, or supply position as it existed on any historical date.",
+                  "Issue and track renewable energy certificates. Full lifecycle management from issuance to retirement.",
+                highlight: true,
+              },
+              {
+                icon: Fingerprint,
+                title: "Verifiable Credentials",
+                description:
+                  "W3C-compliant DIDs and VCs. Cryptographically signed certificates that any third party can verify.",
+                highlight: true,
+              },
+              {
+                icon: Link2,
+                title: "Smart Contract Integration",
+                description:
+                  "EvidenceAnchor smart contract on Ethereum. Automated Merkle root submissions with full audit trail.",
+              },
+              {
+                icon: Database,
+                title: "IPFS Document Storage",
+                description:
+                  "Decentralized, content-addressed storage. Documents are immutable and globally accessible.",
               },
               {
                 icon: Activity,
                 title: "Real-Time Monitoring",
                 description:
-                  "Covenant checks run automatically. Breaches trigger instant alerts to all stakeholders.",
-              },
-              {
-                icon: Award,
-                title: "5-Pillar Assessment",
-                description:
-                  "Volume security, counterparty quality, contract structure, concentration risk, operational readiness.",
-              },
-              {
-                icon: Layers,
-                title: "GQ1-GQ4 Qualification",
-                description:
-                  "Standardized grower tiers let you compare suppliers on consistent, auditable criteria.",
-              },
-              {
-                icon: FileText,
-                title: "Compliance Certificates",
-                description:
-                  "Generate bank-ready compliance packages with embedded cryptographic signatures.",
+                  "Automated covenant checks, breach alerts, and continuous supply chain verification.",
               },
             ].map((item, i) => (
               <StaggerItem key={i}>
@@ -794,6 +810,126 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Blockchain & GO Infrastructure - NEW SECTION */}
+      <section className="py-20 lg:py-28 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <GridPattern />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <FadeInUp className="text-center mb-16">
+            <Badge
+              variant="outline"
+              className="border-amber-400/40 text-amber-300 bg-amber-500/10 mb-4"
+            >
+              v3.1 Smart Infrastructure
+            </Badge>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4">
+              Blockchain-Powered Trust Layer
+            </h2>
+            <p className="text-lg text-slate-300 max-w-3xl mx-auto">
+              The only bioenergy platform with native blockchain anchoring,
+              Guarantee of Origin certificates, and W3C Verifiable Credentials.
+            </p>
+          </FadeInUp>
+
+          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
+            {/* Evidence Vault Card */}
+            <FadeInUp delay={0.1}>
+              <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/5 border border-amber-500/20 rounded-2xl p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="h-14 w-14 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                    <Blocks className="h-7 w-7 text-amber-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">Evidence Vault</h3>
+                    <p className="text-amber-300/80">Blockchain Document Anchoring</p>
+                  </div>
+                </div>
+                <ul className="space-y-3 mb-6">
+                  {[
+                    "SHA-256 document hashing with tamper detection",
+                    "Keccak-256 Merkle tree batching for efficiency",
+                    "Ethereum mainnet/testnet smart contract anchoring",
+                    "IPFS decentralized content-addressed storage",
+                    "Complete audit trail with on-chain verification",
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-slate-300">
+                      <CheckCircle2 className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/evidence-vault">
+                  <Button className="bg-amber-500 hover:bg-amber-600 text-white">
+                    Explore Evidence Vault
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </FadeInUp>
+
+            {/* GO Certificates Card */}
+            <FadeInUp delay={0.2}>
+              <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/5 border border-emerald-500/20 rounded-2xl p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="h-14 w-14 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                    <BadgeCheck className="h-7 w-7 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">GO Certificates</h3>
+                    <p className="text-emerald-300/80">Guarantee of Origin Scheme</p>
+                  </div>
+                </div>
+                <ul className="space-y-3 mb-6">
+                  {[
+                    "Issue renewable energy certificates per MWh",
+                    "Full lifecycle: issuance → transfer → retirement",
+                    "Blockchain-backed ownership verification",
+                    "Integration with energy market regulators",
+                    "Automated compliance and reporting",
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-slate-300">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/go-scheme">
+                  <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">
+                    Explore GO Scheme
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </FadeInUp>
+          </div>
+
+          {/* Verifiable Credentials Banner */}
+          <FadeInUp delay={0.3}>
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-4xl mx-auto">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="h-16 w-16 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0">
+                  <Fingerprint className="h-8 w-8 text-blue-400" />
+                </div>
+                <div className="text-center md:text-left flex-1">
+                  <h3 className="text-xl font-bold mb-2">W3C Verifiable Credentials</h3>
+                  <p className="text-slate-400">
+                    Every certificate, rating, and qualification is issued as a
+                    cryptographically-signed Verifiable Credential with a Decentralized Identifier (DID).
+                    Any third party can independently verify authenticity without contacting ABFI.
+                  </p>
+                </div>
+                <Link href="/credentials">
+                  <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 shrink-0">
+                    Learn More
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </FadeInUp>
+        </div>
+      </section>
+
       {/* Platform Capabilities */}
       <section className="py-20 lg:py-28 bg-muted/30">
         <div className="container mx-auto px-4">
@@ -802,62 +938,75 @@ export default function Home() {
               Platform Capabilities
             </Badge>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4">
-              Everything You Need, Built In
+              Complete Bioenergy Ecosystem
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A complete ecosystem for biomass supply chain management, from
-              discovery to compliance.
+              From supply discovery to compliance certificates - everything integrated
+              with blockchain-grade security.
             </p>
           </FadeInUp>
 
           <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {[
               {
+                icon: Blocks,
+                title: "Evidence Vault",
+                desc: "Blockchain-anchored document integrity",
+                highlight: true,
+              },
+              {
+                icon: BadgeCheck,
+                title: "GO Certificates",
+                desc: "Renewable energy certificate management",
+                highlight: true,
+              },
+              {
+                icon: Fingerprint,
+                title: "Verifiable Credentials",
+                desc: "W3C-standard DIDs and VCs",
+                highlight: true,
+              },
+              {
+                icon: Cpu,
+                title: "Smart Contracts",
+                desc: "Ethereum-based verification",
+                highlight: true,
+              },
+              {
                 icon: Globe,
                 title: "Futures Marketplace",
-                desc: "Browse and list long-term supply contracts",
+                desc: "Long-term supply contracts",
               },
               {
                 icon: MapPin,
                 title: "Interactive Maps",
-                desc: "Visualize supply chains geospatially",
-              },
-              {
-                icon: Target,
-                title: "Demand Signals",
-                desc: "Match supply with buyer requirements",
+                desc: "Geospatial supply visualization",
               },
               {
                 icon: Award,
                 title: "Bankability Scores",
-                desc: "Standardized project assessment",
+                desc: "AAA-CCC project ratings",
               },
               {
                 icon: Eye,
                 title: "Covenant Monitoring",
                 desc: "Real-time compliance tracking",
               },
-              {
-                icon: AlertTriangle,
-                title: "Breach Alerts",
-                desc: "Automated stakeholder notifications",
-              },
-              {
-                icon: FileCheck,
-                title: "Certificate Generation",
-                desc: "Bank-ready compliance packages",
-              },
-              {
-                icon: Database,
-                title: "Evidence Management",
-                desc: "Cryptographically secured documents",
-              },
             ].map((item, i) => (
               <StaggerItem key={i}>
-                <Card className="h-full hover:shadow-md transition-shadow">
+                <Card className={cn(
+                  "h-full hover:shadow-md transition-shadow",
+                  (item as any).highlight && "border-primary/30 bg-primary/5"
+                )}>
                   <CardHeader className="pb-2">
-                    <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-                      <item.icon className="h-5 w-5 text-primary" />
+                    <div className={cn(
+                      "h-10 w-10 rounded-lg flex items-center justify-center mb-3",
+                      (item as any).highlight ? "bg-primary/20" : "bg-primary/10"
+                    )}>
+                      <item.icon className={cn(
+                        "h-5 w-5",
+                        (item as any).highlight ? "text-primary" : "text-primary"
+                      )} />
                     </div>
                     <CardTitle className="text-base">{item.title}</CardTitle>
                   </CardHeader>
