@@ -43,7 +43,7 @@ export function getSessionCookieOptions(
     domain: undefined,
     httpOnly: true,
     path: "/",
-    sameSite: "none",
+    sameSite: "none" as const,
     secure: isSecureRequest(req),
   };
 }
