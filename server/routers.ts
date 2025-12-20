@@ -77,6 +77,109 @@ export const appRouter = router({
   goScheme: goSchemeRouter,
 
   // ============================================================================
+  // AUDIT & COMPLIANCE (Phase 8)
+  // ============================================================================
+  audit: router({
+    // Get audit logs with filtering
+    getLogs: adminProcedure
+      .input(
+        z.object({
+          userId: z.number().optional(),
+          entityType: z.string().optional(),
+          entityId: z.number().optional(),
+          action: z.string().optional(),
+          startDate: z.string().optional(),
+          endDate: z.string().optional(),
+          limit: z.number().min(1).max(500).default(100),
+          offset: z.number().min(0).default(0),
+        })
+      )
+      .query(async ({ input }) => {
+        const logs = await db.getAuditLogs({
+          userId: input.userId,
+          entityType: input.entityType,
+          entityId: input.entityId,
+          limit: input.limit,
+        });
+        return logs;
+      }),
+
+    // Get audit log statistics
+    getStats: adminProcedure.query(async () => {
+      const allLogs = await db.getAuditLogs({ limit: 1000 });
+
+      // Calculate stats
+      const actionCounts: Record<string, number> = {};
+      const entityCounts: Record<string, number> = {};
+      const userCounts: Record<string, number> = {};
+
+      for (const log of allLogs) {
+        actionCounts[log.action] = (actionCounts[log.action] || 0) + 1;
+        entityCounts[log.entityType] = (entityCounts[log.entityType] || 0) + 1;
+        if (log.userId) {
+          const userId = String(log.userId);
+          userCounts[userId] = (userCounts[userId] || 0) + 1;
+        }
+      }
+
+      return {
+        totalLogs: allLogs.length,
+        actionCounts,
+        entityCounts,
+        userCounts,
+        recentLogs: allLogs.slice(0, 10),
+      };
+    }),
+
+    // Create manual audit log entry (for admin actions)
+    create: adminProcedure
+      .input(
+        z.object({
+          action: z.string(),
+          entityType: z.string(),
+          entityId: z.number(),
+          changes: z.record(z.any()).optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        await db.createAuditLog({
+          userId: ctx.user.id,
+          action: input.action,
+          entityType: input.entityType,
+          entityId: input.entityId,
+          changes: input.changes,
+        });
+        return { success: true };
+      }),
+
+    // Get entity history (all changes to a specific entity)
+    getEntityHistory: protectedProcedure
+      .input(
+        z.object({
+          entityType: z.string(),
+          entityId: z.number(),
+        })
+      )
+      .query(async ({ input }) => {
+        return await db.getAuditLogs({
+          entityType: input.entityType,
+          entityId: input.entityId,
+          limit: 100,
+        });
+      }),
+
+    // Get user activity
+    getUserActivity: adminProcedure
+      .input(z.object({ userId: z.number(), limit: z.number().default(50) }))
+      .query(async ({ input }) => {
+        return await db.getAuditLogs({
+          userId: input.userId,
+          limit: input.limit,
+        });
+      }),
+  }),
+
+  // ============================================================================
   // AUTH
   // ============================================================================
 

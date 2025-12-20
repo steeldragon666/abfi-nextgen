@@ -20,8 +20,24 @@ import {
   FileText,
   Download,
   Eye,
+  Zap,
+  AlertTriangle,
+  ArrowRight,
 } from "lucide-react";
 import { RatingBadge, ScoreBreakdown } from "@/components/ScoreCard";
+import { Link } from "wouter";
+import { cn } from "@/lib/utils";
+
+const RATING_COLORS: Record<string, string> = {
+  AAA: "bg-emerald-500 text-white",
+  AA: "bg-green-500 text-white",
+  A: "bg-lime-500 text-white",
+  BBB: "bg-yellow-500 text-white",
+  BB: "bg-amber-500 text-white",
+  B: "bg-orange-500 text-white",
+  CCC: "bg-red-500 text-white",
+  CC: "bg-red-700 text-white",
+};
 
 export default function LenderPortal() {
   const { user, loading: authLoading } = useAuth();
@@ -30,6 +46,15 @@ export default function LenderPortal() {
   // Get projects the lender has been granted access to
   const { data: projects, isLoading: projectsLoading } =
     trpc.bankability.getMyLenderProjects.useQuery();
+
+  // Get stress test results for selected project
+  const { data: stressResults } = trpc.stressTesting.getProjectResults.useQuery(
+    { projectId: selectedProject! },
+    { enabled: !!selectedProject }
+  );
+
+  // Get latest stress test result
+  const latestStressTest = stressResults?.[0];
 
   if (authLoading || !user) {
     return (
@@ -359,6 +384,89 @@ export default function LenderPortal() {
                               },
                             ]}
                           />
+                        </CardContent>
+                      </Card>
+
+                      {/* Stress Test Results */}
+                      <Card>
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="flex items-center gap-2">
+                              <AlertTriangle className="h-5 w-5" />
+                              Stress Test Results
+                            </CardTitle>
+                            <Link href="/stress-testing">
+                              <Button variant="outline" size="sm">
+                                <Zap className="h-4 w-4 mr-2" />
+                                Run Test
+                              </Button>
+                            </Link>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          {latestStressTest ? (
+                            <div className="space-y-4">
+                              <div className={cn(
+                                "flex items-center gap-3 p-4 rounded-lg",
+                                latestStressTest.passesStressTest
+                                  ? "bg-green-50 border border-green-200"
+                                  : "bg-red-50 border border-red-200"
+                              )}>
+                                {latestStressTest.passesStressTest ? (
+                                  <CheckCircle className="h-5 w-5 text-green-600" />
+                                ) : (
+                                  <AlertCircle className="h-5 w-5 text-red-600" />
+                                )}
+                                <div className="flex-1">
+                                  <div className={cn(
+                                    "font-medium",
+                                    latestStressTest.passesStressTest ? "text-green-900" : "text-red-900"
+                                  )}>
+                                    {latestStressTest.passesStressTest ? "Passes Stress Test" : "Fails Stress Test"}
+                                  </div>
+                                  <p className={cn(
+                                    "text-sm",
+                                    latestStressTest.passesStressTest ? "text-green-700" : "text-red-700"
+                                  )}>
+                                    Rating impact: {latestStressTest.baseRating} → {latestStressTest.stressRating} ({latestStressTest.ratingDelta >= 0 ? "+" : ""}{latestStressTest.ratingDelta} notches)
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-3 gap-3 text-center">
+                                <div className="p-2 rounded bg-muted/50">
+                                  <div className="text-xs text-muted-foreground">Supply Shortfall</div>
+                                  <div className="font-mono font-semibold">{latestStressTest.supplyShortfallPercent}%</div>
+                                </div>
+                                <div className="p-2 rounded bg-muted/50">
+                                  <div className="text-xs text-muted-foreground">HHI Delta</div>
+                                  <div className="font-mono font-semibold">{latestStressTest.hhiDelta > 0 ? "+" : ""}{latestStressTest.hhiDelta}</div>
+                                </div>
+                                <div className="p-2 rounded bg-muted/50">
+                                  <div className="text-xs text-muted-foreground">Inv. Grade</div>
+                                  <div>{latestStressTest.minimumRatingMaintained ?
+                                    <CheckCircle className="h-4 w-4 text-green-600 mx-auto" /> :
+                                    <AlertCircle className="h-4 w-4 text-red-600 mx-auto" />
+                                  }</div>
+                                </div>
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                Last tested: {new Date(latestStressTest.testDate).toLocaleDateString("en-AU")}
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="text-center py-6">
+                              <AlertTriangle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                              <p className="text-sm text-muted-foreground mb-3">
+                                No stress tests have been run for this project
+                              </p>
+                              <Link href="/stress-testing">
+                                <Button size="sm">
+                                  <Zap className="h-4 w-4 mr-2" />
+                                  Run First Test
+                                </Button>
+                              </Link>
+                            </div>
+                          )}
                         </CardContent>
                       </Card>
 

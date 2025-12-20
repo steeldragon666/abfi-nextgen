@@ -114,6 +114,10 @@ const ForDevelopers = lazy(() => import("./pages/ForDevelopers"));
 const ForLenders = lazy(() => import("./pages/ForLenders"));
 const PlatformFeatures = lazy(() => import("./pages/PlatformFeatures"));
 const Explainers = lazy(() => import("./pages/Explainers"));
+const StressTesting = lazy(() => import("./pages/StressTesting"));
+const AuditLogs = lazy(() => import("./pages/AuditLogs"));
+const PlatformHealth = lazy(() => import("./pages/PlatformHealth"));
+const ProcurementScenarios = lazy(() => import("./pages/ProcurementScenarios"));
 
 // Loading fallback component
 function PageLoader() {
@@ -194,6 +198,10 @@ function Router() {
           component={BankabilityAssessment}
         />
         <Route path="/lender-portal" component={LenderPortal} />
+        <Route path="/stress-testing" component={StressTesting} />
+        <Route path="/admin/audit-logs" component={AuditLogs} />
+        <Route path="/platform-health" component={PlatformHealth} />
+        <Route path="/procurement-scenarios" component={ProcurementScenarios} />
         <Route path="/compliance-dashboard" component={ComplianceDashboard} />
         <Route path="/admin/evidence" component={EvidenceManagement} />
         <Route path="/evidence-vault" component={EvidenceVaultDashboard} />
