@@ -118,6 +118,9 @@ const StressTesting = lazy(() => import("./pages/StressTesting"));
 const AuditLogs = lazy(() => import("./pages/AuditLogs"));
 const PlatformHealth = lazy(() => import("./pages/PlatformHealth"));
 const ProcurementScenarios = lazy(() => import("./pages/ProcurementScenarios"));
+const LendingSentimentDashboard = lazy(() => import("./pages/LendingSentimentDashboard"));
+const FeedstockPriceDashboard = lazy(() => import("./pages/FeedstockPriceDashboard"));
+const PolicyCarbonDashboard = lazy(() => import("./pages/PolicyCarbonDashboard"));
 
 // Loading fallback component
 function PageLoader() {
@@ -202,6 +205,9 @@ function Router() {
         <Route path="/admin/audit-logs" component={AuditLogs} />
         <Route path="/platform-health" component={PlatformHealth} />
         <Route path="/procurement-scenarios" component={ProcurementScenarios} />
+        <Route path="/lending-sentiment" component={LendingSentimentDashboard} />
+        <Route path="/feedstock-prices" component={FeedstockPriceDashboard} />
+        <Route path="/policy-carbon" component={PolicyCarbonDashboard} />
         <Route path="/compliance-dashboard" component={ComplianceDashboard} />
         <Route path="/admin/evidence" component={EvidenceManagement} />
         <Route path="/evidence-vault" component={EvidenceVaultDashboard} />
