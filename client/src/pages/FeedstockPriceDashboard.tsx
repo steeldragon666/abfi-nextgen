@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   TrendingUp,
@@ -18,14 +17,7 @@ import {
   LineChart as LineChartIcon,
 } from "lucide-react";
 import { Link } from "wouter";
-import {
-  pricesApi,
-  type PriceKPI,
-  type PriceTimeSeries,
-  type RegionalPrice,
-  type ForwardCurve,
-  type TechnicalIndicator,
-} from "@/lib/intelligenceApi";
+import { trpc } from "@/lib/trpc";
 import {
   AreaChart,
   Area,
@@ -60,42 +52,53 @@ const REGION_COLORS: Record<string, string> = {
 };
 
 export default function FeedstockPriceDashboard() {
-  const [priceKPIs, setPriceKPIs] = useState<PriceKPI[]>([]);
   const [selectedCommodity, setSelectedCommodity] = useState("UCO");
-  const [period, setPeriod] = useState("1Y");
-  const [ohlcData, setOHLCData] = useState<PriceTimeSeries | null>(null);
-  const [regionalData, setRegionalData] = useState<{ commodity: string; regions: RegionalPrice[] } | null>(null);
-  const [forwardCurve, setForwardCurve] = useState<ForwardCurve | null>(null);
-  const [technicals, setTechnicals] = useState<TechnicalIndicator[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [period, setPeriod] = useState<"1M" | "3M" | "6M" | "1Y" | "2Y">("1Y");
 
-  const loadData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [kpis, ohlc, regional, forward, tech] = await Promise.all([
-        pricesApi.getKPIs(),
-        pricesApi.getOHLC(selectedCommodity, "AUS", period),
-        pricesApi.getHeatmap(selectedCommodity),
-        pricesApi.getForwardCurve(selectedCommodity),
-        pricesApi.getTechnicals(selectedCommodity),
-      ]);
-      setPriceKPIs(kpis);
-      setOHLCData(ohlc);
-      setRegionalData(regional);
-      setForwardCurve(forward);
-      setTechnicals(tech);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load data");
-    } finally {
-      setLoading(false);
-    }
+  // tRPC queries
+  const kpisQuery = trpc.prices.getKPIs.useQuery();
+  const ohlcQuery = trpc.prices.getOHLC.useQuery({
+    commodity: selectedCommodity,
+    region: "AUS",
+    period,
+  });
+  const heatmapQuery = trpc.prices.getHeatmap.useQuery({ commodity: selectedCommodity });
+  const forwardQuery = trpc.prices.getForwardCurve.useQuery({
+    commodity: selectedCommodity,
+    region: "AUS",
+  });
+  const technicalsQuery = trpc.prices.getTechnicals.useQuery({
+    commodity: selectedCommodity,
+    region: "AUS",
+  });
+
+  const priceKPIs = kpisQuery.data || [];
+  const ohlcData = ohlcQuery.data;
+  const regionalData = heatmapQuery.data;
+  const forwardCurve = forwardQuery.data;
+  const technicals = technicalsQuery.data || [];
+
+  const loading =
+    kpisQuery.isLoading ||
+    ohlcQuery.isLoading ||
+    heatmapQuery.isLoading ||
+    forwardQuery.isLoading ||
+    technicalsQuery.isLoading;
+
+  const error =
+    kpisQuery.error?.message ||
+    ohlcQuery.error?.message ||
+    heatmapQuery.error?.message ||
+    forwardQuery.error?.message ||
+    technicalsQuery.error?.message;
+
+  const loadData = () => {
+    kpisQuery.refetch();
+    ohlcQuery.refetch();
+    heatmapQuery.refetch();
+    forwardQuery.refetch();
+    technicalsQuery.refetch();
   };
-
-  useEffect(() => {
-    loadData();
-  }, [selectedCommodity, period]);
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-AU", {
@@ -215,7 +218,7 @@ export default function FeedstockPriceDashboard() {
                 <SelectItem value="palm">Palm Oil</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={period} onValueChange={setPeriod}>
+            <Select value={period} onValueChange={(v) => setPeriod(v as "1M" | "3M" | "6M" | "1Y" | "2Y")}>
               <SelectTrigger className="w-28">
                 <SelectValue placeholder="Period" />
               </SelectTrigger>

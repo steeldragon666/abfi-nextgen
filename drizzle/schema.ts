@@ -5209,3 +5209,112 @@ export const lenderSentimentScores = mysqlTable(
     dateIdx: index("lender_score_date_idx").on(table.date),
   })
 );
+
+// ============================================================================
+// FEEDSTOCK PRICES - Price Index Data
+// ============================================================================
+
+/**
+ * Feedstock Price OHLC Data
+ * Daily OHLC (Open, High, Low, Close) price data for feedstock commodities
+ */
+export const feedstockPrices = mysqlTable(
+  "feedstock_prices",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    commodity: varchar("commodity", { length: 50 }).notNull(), // UCO, Tallow, Canola, Palm
+    region: varchar("region", { length: 20 }).notNull(), // AUS, SEA, EU, NA, LATAM
+    date: date("date").notNull(),
+    open: decimal("open", { precision: 10, scale: 2 }).notNull(),
+    high: decimal("high", { precision: 10, scale: 2 }).notNull(),
+    low: decimal("low", { precision: 10, scale: 2 }).notNull(),
+    close: decimal("close", { precision: 10, scale: 2 }).notNull(),
+    volume: int("volume"), // Optional trading volume
+    source: varchar("source", { length: 100 }).default("ABFI Internal"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    commodityRegionDateIdx: uniqueIndex("commodity_region_date_idx").on(
+      table.commodity,
+      table.region,
+      table.date
+    ),
+    commodityIdx: index("price_commodity_idx").on(table.commodity),
+    regionIdx: index("price_region_idx").on(table.region),
+    dateIdx: index("price_date_idx").on(table.date),
+  })
+);
+
+/**
+ * Regional Price Summary
+ * Current prices by region for heatmap display
+ */
+export const regionalPriceSummary = mysqlTable(
+  "regional_price_summary",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    commodity: varchar("commodity", { length: 50 }).notNull(),
+    region: varchar("region", { length: 20 }).notNull(),
+    regionName: varchar("regionName", { length: 100 }).notNull(),
+    price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+    changePct: decimal("changePct", { precision: 6, scale: 2 }).notNull(),
+    currency: varchar("currency", { length: 10 }).notNull().default("AUD"),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    commodityRegionIdx: uniqueIndex("regional_commodity_region_idx").on(
+      table.commodity,
+      table.region
+    ),
+  })
+);
+
+/**
+ * Forward Curve Data
+ * Forward prices for different tenors
+ */
+export const forwardCurves = mysqlTable(
+  "forward_curves",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    commodity: varchar("commodity", { length: 50 }).notNull(),
+    region: varchar("region", { length: 20 }).notNull(),
+    tenor: varchar("tenor", { length: 20 }).notNull(), // Spot, 1M, 3M, 6M, 1Y
+    price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+    changeFromSpot: decimal("changeFromSpot", { precision: 6, scale: 2 }).notNull(),
+    asOfDate: date("asOfDate").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    commodityRegionDateIdx: uniqueIndex("forward_commodity_region_date_idx").on(
+      table.commodity,
+      table.region,
+      table.asOfDate,
+      table.tenor
+    ),
+  })
+);
+
+/**
+ * Technical Indicators
+ * Technical analysis indicators for commodities
+ */
+export const technicalIndicators = mysqlTable(
+  "technical_indicators",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    commodity: varchar("commodity", { length: 50 }).notNull(),
+    region: varchar("region", { length: 20 }).notNull().default("AUS"),
+    indicatorName: varchar("indicatorName", { length: 50 }).notNull(), // RSI, MACD, SMA20, etc.
+    value: decimal("value", { precision: 12, scale: 4 }).notNull(),
+    signal: mysqlEnum("signal", ["buy", "sell", "neutral"]).notNull(),
+    calculatedAt: timestamp("calculatedAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    commodityRegionIdx: uniqueIndex("tech_commodity_region_indicator_idx").on(
+      table.commodity,
+      table.region,
+      table.indicatorName
+    ),
+  })
+);

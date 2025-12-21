@@ -137,7 +137,7 @@ import {
   unique,
   uniqueIndex
 } from "drizzle-orm/mysql-core";
-var users, suppliers, properties, productionHistory, carbonPractices, existingContracts, marketplaceListings, buyers, feedstocks, certificates, qualityTests, inquiries, transactions, notifications, savedSearches, savedAnalyses, auditLogs, projects, supplyAgreements, growerQualifications, bankabilityAssessments, lenderAccess, covenantMonitoring, evidence, evidenceLinkages, certificateSnapshots, deliveryEvents, seasonalityProfiles, climateExposure, yieldEstimates, scoreCalculations, scoreSensitivityAnalysis, scoreImprovementSimulations, stressScenarios, stressTestResults, contractEnforceabilityScores, covenantBreachEvents, lenderReports, adminOverrides, certificateLegalMetadata, userConsents, disputeResolutions, dataRetentionPolicies, financialInstitutions, demandSignals, supplierResponses, platformTransactions, feedstockFutures, futuresYieldProjections, futuresEOI, dataSources, ingestionRuns, rsieScoringMethods, riskEvents, supplierSites, supplierRiskExposure, contractRiskExposure, weatherGridDaily, forecastGridHourly, userFeedback, abbaBaselineCells, biomassQualityProfiles, spatialLayers, intelligenceItems, evidenceManifests, chainAnchors, merkleProofs, consignments, freightLegs, consignmentEvidence, emissionCalculations, emissionFactors, didRegistry, verifiableCredentials, mcpConnections, mcpSyncLogs, goCertificates, auditPacks, stealthEntities, stealthSignals, stealthIngestionJobs, sentimentDocuments, sentimentDailyIndex, lenderSentimentScores;
+var users, suppliers, properties, productionHistory, carbonPractices, existingContracts, marketplaceListings, buyers, feedstocks, certificates, qualityTests, inquiries, transactions, notifications, savedSearches, savedAnalyses, auditLogs, projects, supplyAgreements, growerQualifications, bankabilityAssessments, lenderAccess, covenantMonitoring, evidence, evidenceLinkages, certificateSnapshots, deliveryEvents, seasonalityProfiles, climateExposure, yieldEstimates, scoreCalculations, scoreSensitivityAnalysis, scoreImprovementSimulations, stressScenarios, stressTestResults, contractEnforceabilityScores, covenantBreachEvents, lenderReports, adminOverrides, certificateLegalMetadata, userConsents, disputeResolutions, dataRetentionPolicies, financialInstitutions, demandSignals, supplierResponses, platformTransactions, feedstockFutures, futuresYieldProjections, futuresEOI, dataSources, ingestionRuns, rsieScoringMethods, riskEvents, supplierSites, supplierRiskExposure, contractRiskExposure, weatherGridDaily, forecastGridHourly, userFeedback, abbaBaselineCells, biomassQualityProfiles, spatialLayers, intelligenceItems, evidenceManifests, chainAnchors, merkleProofs, consignments, freightLegs, consignmentEvidence, emissionCalculations, emissionFactors, didRegistry, verifiableCredentials, mcpConnections, mcpSyncLogs, goCertificates, auditPacks, stealthEntities, stealthSignals, stealthIngestionJobs, sentimentDocuments, sentimentDailyIndex, lenderSentimentScores, feedstockPrices, regionalPriceSummary, forwardCurves, technicalIndicators;
 var init_schema = __esm({
   "drizzle/schema.ts"() {
     "use strict";
@@ -3880,6 +3880,96 @@ var init_schema = __esm({
         dateIdx: index("lender_score_date_idx").on(table.date)
       })
     );
+    feedstockPrices = mysqlTable(
+      "feedstock_prices",
+      {
+        id: int("id").primaryKey().autoincrement(),
+        commodity: varchar("commodity", { length: 50 }).notNull(),
+        // UCO, Tallow, Canola, Palm
+        region: varchar("region", { length: 20 }).notNull(),
+        // AUS, SEA, EU, NA, LATAM
+        date: date("date").notNull(),
+        open: decimal("open", { precision: 10, scale: 2 }).notNull(),
+        high: decimal("high", { precision: 10, scale: 2 }).notNull(),
+        low: decimal("low", { precision: 10, scale: 2 }).notNull(),
+        close: decimal("close", { precision: 10, scale: 2 }).notNull(),
+        volume: int("volume"),
+        // Optional trading volume
+        source: varchar("source", { length: 100 }).default("ABFI Internal"),
+        createdAt: timestamp("createdAt").defaultNow().notNull()
+      },
+      (table) => ({
+        commodityRegionDateIdx: uniqueIndex("commodity_region_date_idx").on(
+          table.commodity,
+          table.region,
+          table.date
+        ),
+        commodityIdx: index("price_commodity_idx").on(table.commodity),
+        regionIdx: index("price_region_idx").on(table.region),
+        dateIdx: index("price_date_idx").on(table.date)
+      })
+    );
+    regionalPriceSummary = mysqlTable(
+      "regional_price_summary",
+      {
+        id: int("id").primaryKey().autoincrement(),
+        commodity: varchar("commodity", { length: 50 }).notNull(),
+        region: varchar("region", { length: 20 }).notNull(),
+        regionName: varchar("regionName", { length: 100 }).notNull(),
+        price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+        changePct: decimal("changePct", { precision: 6, scale: 2 }).notNull(),
+        currency: varchar("currency", { length: 10 }).notNull().default("AUD"),
+        updatedAt: timestamp("updatedAt").defaultNow().notNull()
+      },
+      (table) => ({
+        commodityRegionIdx: uniqueIndex("regional_commodity_region_idx").on(
+          table.commodity,
+          table.region
+        )
+      })
+    );
+    forwardCurves = mysqlTable(
+      "forward_curves",
+      {
+        id: int("id").primaryKey().autoincrement(),
+        commodity: varchar("commodity", { length: 50 }).notNull(),
+        region: varchar("region", { length: 20 }).notNull(),
+        tenor: varchar("tenor", { length: 20 }).notNull(),
+        // Spot, 1M, 3M, 6M, 1Y
+        price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+        changeFromSpot: decimal("changeFromSpot", { precision: 6, scale: 2 }).notNull(),
+        asOfDate: date("asOfDate").notNull(),
+        createdAt: timestamp("createdAt").defaultNow().notNull()
+      },
+      (table) => ({
+        commodityRegionDateIdx: uniqueIndex("forward_commodity_region_date_idx").on(
+          table.commodity,
+          table.region,
+          table.asOfDate,
+          table.tenor
+        )
+      })
+    );
+    technicalIndicators = mysqlTable(
+      "technical_indicators",
+      {
+        id: int("id").primaryKey().autoincrement(),
+        commodity: varchar("commodity", { length: 50 }).notNull(),
+        region: varchar("region", { length: 20 }).notNull().default("AUS"),
+        indicatorName: varchar("indicatorName", { length: 50 }).notNull(),
+        // RSI, MACD, SMA20, etc.
+        value: decimal("value", { precision: 12, scale: 4 }).notNull(),
+        signal: mysqlEnum("signal", ["buy", "sell", "neutral"]).notNull(),
+        calculatedAt: timestamp("calculatedAt").defaultNow().notNull()
+      },
+      (table) => ({
+        commodityRegionIdx: uniqueIndex("tech_commodity_region_indicator_idx").on(
+          table.commodity,
+          table.region,
+          table.indicatorName
+        )
+      })
+    );
   }
 });
 
@@ -7159,17 +7249,17 @@ __export(temporal_exports, {
   isExpiringSoon: () => isExpiringSoon,
   wasEntityValidAt: () => wasEntityValidAt
 });
-import { eq as eq13, and as and11, lte as lte6, gte as gte8, isNull as isNull2, or as or4 } from "drizzle-orm";
+import { eq as eq14, and as and12, lte as lte6, gte as gte9, isNull as isNull2, or as or4 } from "drizzle-orm";
 async function getEntityAsOfDate(entityType, entityId, asOfDate) {
   const db = await getDb();
   if (!db) return null;
   const table = getTableForEntityType(entityType);
   if (!table) return null;
   const results = await db.select().from(table).where(
-    and11(
-      eq13(table.id, entityId),
+    and12(
+      eq14(table.id, entityId),
       lte6(table.validFrom, asOfDate),
-      or4(gte8(table.validTo, asOfDate), isNull2(table.validTo))
+      or4(gte9(table.validTo, asOfDate), isNull2(table.validTo))
     )
   ).limit(1);
   return results[0] || null;
@@ -7179,7 +7269,7 @@ async function getCurrentVersion(entityType, entityId) {
   if (!db) return null;
   const table = getTableForEntityType(entityType);
   if (!table) return null;
-  const results = await db.select().from(table).where(and11(eq13(table.id, entityId), eq13(table.isCurrent, true))).limit(1);
+  const results = await db.select().from(table).where(and12(eq14(table.id, entityId), eq14(table.isCurrent, true))).limit(1);
   return results[0] || null;
 }
 async function getEntityHistory(entityType, entityId) {
@@ -7187,7 +7277,7 @@ async function getEntityHistory(entityType, entityId) {
   if (!db) return [];
   const table = getTableForEntityType(entityType);
   if (!table) return [];
-  return await db.select().from(table).where(eq13(table.id, entityId)).orderBy(table.versionNumber);
+  return await db.select().from(table).where(eq14(table.id, entityId)).orderBy(table.versionNumber);
 }
 async function createNewVersion(entityType, oldEntityId, newEntityData, versionReason) {
   const db = await getDb();
@@ -7202,7 +7292,7 @@ async function createNewVersion(entityType, oldEntityId, newEntityData, versionR
   await db.update(table).set({
     isCurrent: false,
     validTo: now
-  }).where(eq13(table.id, oldEntityId));
+  }).where(eq14(table.id, oldEntityId));
   const newVersion = {
     ...newEntityData,
     versionNumber: currentVersion.versionNumber + 1,
@@ -7214,7 +7304,7 @@ async function createNewVersion(entityType, oldEntityId, newEntityData, versionR
   };
   const result = await db.insert(table).values(newVersion);
   const newVersionId = Number(result[0].insertId);
-  await db.update(table).set({ supersededById: newVersionId }).where(eq13(table.id, oldEntityId));
+  await db.update(table).set({ supersededById: newVersionId }).where(eq14(table.id, oldEntityId));
   return newVersionId;
 }
 async function getVersionTimeline(entityType, entityId) {
@@ -7328,7 +7418,7 @@ __export(stressTesting_exports, {
   runSupplyShortfallScenario: () => runSupplyShortfallScenario,
   scoreToRating: () => scoreToRating
 });
-import { eq as eq14, desc as desc11 } from "drizzle-orm";
+import { eq as eq15, desc as desc12 } from "drizzle-orm";
 function calculateHHI(supplierVolumes) {
   const totalVolume = supplierVolumes.reduce((sum, v) => sum + v, 0);
   if (totalVolume === 0) return 0;
@@ -7526,12 +7616,12 @@ async function runStressTest(params) {
 async function getStressTestResults(projectId) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(stressTestResults).where(eq14(stressTestResults.projectId, projectId)).orderBy(desc11(stressTestResults.testDate));
+  return await db.select().from(stressTestResults).where(eq15(stressTestResults.projectId, projectId)).orderBy(desc12(stressTestResults.testDate));
 }
 async function getStressTestResult(resultId) {
   const db = await getDb();
   if (!db) return null;
-  const results = await db.select().from(stressTestResults).where(eq14(stressTestResults.id, resultId)).limit(1);
+  const results = await db.select().from(stressTestResults).where(eq15(stressTestResults.id, resultId)).limit(1);
   return results[0] || null;
 }
 async function assessContractEnforceability(params) {
@@ -7574,7 +7664,7 @@ async function assessContractEnforceability(params) {
 async function getContractEnforceabilityScore(agreementId) {
   const db = await getDb();
   if (!db) return null;
-  const results = await db.select().from(contractEnforceabilityScores).where(eq14(contractEnforceabilityScores.agreementId, agreementId)).orderBy(desc11(contractEnforceabilityScores.assessedDate)).limit(1);
+  const results = await db.select().from(contractEnforceabilityScores).where(eq15(contractEnforceabilityScores.agreementId, agreementId)).orderBy(desc12(contractEnforceabilityScores.assessedDate)).limit(1);
   return results[0] || null;
 }
 async function runRegionalEventScenario(projectId, region, reductionPercent, agreements) {
@@ -7831,7 +7921,7 @@ __export(lenderPortal_exports, {
   recordCovenantBreach: () => recordCovenantBreach,
   resolveCovenantBreach: () => resolveCovenantBreach
 });
-import { eq as eq15, and as and13, desc as desc12, gte as gte9 } from "drizzle-orm";
+import { eq as eq16, and as and14, desc as desc13, gte as gte10 } from "drizzle-orm";
 async function checkCovenantCompliance(params) {
   const results = [];
   for (const covenant of params.covenants) {
@@ -7904,14 +7994,14 @@ async function recordCovenantBreach(params) {
 async function getCovenantBreachHistory(projectId, options) {
   const db = await getDb();
   if (!db) return [];
-  const conditions = [eq15(covenantBreachEvents.projectId, projectId)];
+  const conditions = [eq16(covenantBreachEvents.projectId, projectId)];
   if (options?.unresolved) {
-    conditions.push(eq15(covenantBreachEvents.resolved, false));
+    conditions.push(eq16(covenantBreachEvents.resolved, false));
   }
   if (options?.since) {
-    conditions.push(gte9(covenantBreachEvents.breachDate, options.since));
+    conditions.push(gte10(covenantBreachEvents.breachDate, options.since));
   }
-  return await db.select().from(covenantBreachEvents).where(and13(...conditions)).orderBy(desc12(covenantBreachEvents.breachDate));
+  return await db.select().from(covenantBreachEvents).where(and14(...conditions)).orderBy(desc13(covenantBreachEvents.breachDate));
 }
 async function resolveCovenantBreach(params) {
   const db = await getDb();
@@ -7921,19 +8011,19 @@ async function resolveCovenantBreach(params) {
     resolvedDate: /* @__PURE__ */ new Date(),
     resolutionNotes: params.resolutionNotes,
     resolvedBy: params.resolvedBy
-  }).where(eq15(covenantBreachEvents.id, params.breachId));
+  }).where(eq16(covenantBreachEvents.id, params.breachId));
 }
 async function getActiveAlerts(projectId) {
   const db = await getDb();
   if (!db) return [];
   const breaches = await db.select().from(covenantBreachEvents).where(
-    and13(
-      eq15(covenantBreachEvents.projectId, projectId),
-      eq15(covenantBreachEvents.resolved, false)
+    and14(
+      eq16(covenantBreachEvents.projectId, projectId),
+      eq16(covenantBreachEvents.resolved, false)
     )
   ).orderBy(
-    desc12(covenantBreachEvents.severity),
-    desc12(covenantBreachEvents.breachDate)
+    desc13(covenantBreachEvents.severity),
+    desc13(covenantBreachEvents.breachDate)
   );
   return breaches.map((breach) => ({
     id: breach.id,
@@ -7989,13 +8079,13 @@ async function generateMonthlyReport(params) {
 async function getLatestReport(projectId) {
   const db = await getDb();
   if (!db) return null;
-  const reports = await db.select().from(lenderReports).where(eq15(lenderReports.projectId, projectId)).orderBy(desc12(lenderReports.reportMonth)).limit(1);
+  const reports = await db.select().from(lenderReports).where(eq16(lenderReports.projectId, projectId)).orderBy(desc13(lenderReports.reportMonth)).limit(1);
   return reports[0] || null;
 }
 async function getProjectReports(projectId) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(lenderReports).where(eq15(lenderReports.projectId, projectId)).orderBy(desc12(lenderReports.reportMonth));
+  return await db.select().from(lenderReports).where(eq16(lenderReports.projectId, projectId)).orderBy(desc13(lenderReports.reportMonth));
 }
 async function finalizeReport(params) {
   const db = await getDb();
@@ -8005,7 +8095,7 @@ async function finalizeReport(params) {
     finalizedDate: /* @__PURE__ */ new Date(),
     reportPdfUrl: params.reportPdfUrl || null,
     evidencePackUrl: params.evidencePackUrl || null
-  }).where(eq15(lenderReports.id, params.reportId));
+  }).where(eq16(lenderReports.id, params.reportId));
 }
 async function markReportSent(reportId) {
   const db = await getDb();
@@ -8013,7 +8103,7 @@ async function markReportSent(reportId) {
   await db.update(lenderReports).set({
     status: "sent",
     sentDate: /* @__PURE__ */ new Date()
-  }).where(eq15(lenderReports.id, reportId));
+  }).where(eq16(lenderReports.id, reportId));
 }
 async function getLenderDashboardData(projectId) {
   const db = await getDb();
@@ -8064,7 +8154,7 @@ __export(compliance_exports, {
   updateDisputeStatus: () => updateDisputeStatus,
   withdrawConsent: () => withdrawConsent
 });
-import { eq as eq16, and as and14, desc as desc13, gte as gte10, lte as lte8 } from "drizzle-orm";
+import { eq as eq17, and as and15, desc as desc14, gte as gte11, lte as lte8 } from "drizzle-orm";
 async function createAuditLog2(params) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -8084,28 +8174,28 @@ async function queryAuditLogs(params) {
   if (!db) return [];
   const conditions = [];
   if (params.userId) {
-    conditions.push(eq16(auditLogs.userId, params.userId));
+    conditions.push(eq17(auditLogs.userId, params.userId));
   }
   if (params.entityType) {
-    conditions.push(eq16(auditLogs.entityType, params.entityType));
+    conditions.push(eq17(auditLogs.entityType, params.entityType));
   }
   if (params.entityId) {
-    conditions.push(eq16(auditLogs.entityId, params.entityId));
+    conditions.push(eq17(auditLogs.entityId, params.entityId));
   }
   if (params.action) {
-    conditions.push(eq16(auditLogs.action, params.action));
+    conditions.push(eq17(auditLogs.action, params.action));
   }
   if (params.startDate) {
-    conditions.push(gte10(auditLogs.createdAt, params.startDate));
+    conditions.push(gte11(auditLogs.createdAt, params.startDate));
   }
   if (params.endDate) {
     conditions.push(lte8(auditLogs.createdAt, params.endDate));
   }
   let baseQuery = db.select().from(auditLogs);
   if (conditions.length > 0) {
-    baseQuery = baseQuery.where(and14(...conditions));
+    baseQuery = baseQuery.where(and15(...conditions));
   }
-  baseQuery = baseQuery.orderBy(desc13(auditLogs.createdAt));
+  baseQuery = baseQuery.orderBy(desc14(auditLogs.createdAt));
   if (params.limit) {
     baseQuery = baseQuery.limit(params.limit);
   }
@@ -8147,12 +8237,12 @@ async function getActiveOverrides(entityType, entityId) {
   const db = await getDb();
   if (!db) return [];
   return await db.select().from(adminOverrides).where(
-    and14(
-      eq16(adminOverrides.entityType, entityType),
-      eq16(adminOverrides.entityId, entityId),
-      eq16(adminOverrides.revoked, false)
+    and15(
+      eq17(adminOverrides.entityType, entityType),
+      eq17(adminOverrides.entityId, entityId),
+      eq17(adminOverrides.revoked, false)
     )
-  ).orderBy(desc13(adminOverrides.overrideDate));
+  ).orderBy(desc14(adminOverrides.overrideDate));
 }
 async function revokeOverride(params) {
   const db = await getDb();
@@ -8162,7 +8252,7 @@ async function revokeOverride(params) {
     revokedDate: /* @__PURE__ */ new Date(),
     revokedBy: params.revokedBy,
     revocationReason: params.revocationReason
-  }).where(eq16(adminOverrides.id, params.overrideId));
+  }).where(eq17(adminOverrides.id, params.overrideId));
   await createAuditLog2({
     userId: params.revokedBy,
     action: "revoke_override",
@@ -8189,11 +8279,11 @@ async function recordUserConsent(params) {
 async function getUserConsents(userId, consentType) {
   const db = await getDb();
   if (!db) return [];
-  const conditions = [eq16(userConsents.userId, userId)];
+  const conditions = [eq17(userConsents.userId, userId)];
   if (consentType) {
-    conditions.push(eq16(userConsents.consentType, consentType));
+    conditions.push(eq17(userConsents.consentType, consentType));
   }
-  return await db.select().from(userConsents).where(and14(...conditions)).orderBy(desc13(userConsents.createdAt));
+  return await db.select().from(userConsents).where(and15(...conditions)).orderBy(desc14(userConsents.createdAt));
 }
 async function withdrawConsent(consentId) {
   const db = await getDb();
@@ -8201,7 +8291,7 @@ async function withdrawConsent(consentId) {
   await db.update(userConsents).set({
     withdrawn: true,
     withdrawnDate: /* @__PURE__ */ new Date()
-  }).where(eq16(userConsents.id, consentId));
+  }).where(eq17(userConsents.id, consentId));
 }
 async function createCertificateLegalMetadata(params) {
   const db = await getDb();
@@ -8261,21 +8351,21 @@ async function updateDisputeStatus(params) {
   if (params.status === "under_review" || params.status === "investigation") {
     updates.reviewStartDate = /* @__PURE__ */ new Date();
   }
-  await db.update(disputeResolutions).set(updates).where(eq16(disputeResolutions.id, params.disputeId));
+  await db.update(disputeResolutions).set(updates).where(eq17(disputeResolutions.id, params.disputeId));
 }
 async function getUserDisputes(userId, status) {
   const db = await getDb();
   if (!db) return [];
-  const conditions = [eq16(disputeResolutions.raisedBy, userId)];
+  const conditions = [eq17(disputeResolutions.raisedBy, userId)];
   if (status) {
-    conditions.push(eq16(disputeResolutions.status, status));
+    conditions.push(eq17(disputeResolutions.status, status));
   }
-  return await db.select().from(disputeResolutions).where(and14(...conditions)).orderBy(desc13(disputeResolutions.submittedDate));
+  return await db.select().from(disputeResolutions).where(and15(...conditions)).orderBy(desc14(disputeResolutions.submittedDate));
 }
 async function getRetentionPolicy(entityType) {
   const db = await getDb();
   if (!db) return null;
-  const policies = await db.select().from(dataRetentionPolicies).where(eq16(dataRetentionPolicies.entityType, entityType)).limit(1);
+  const policies = await db.select().from(dataRetentionPolicies).where(eq17(dataRetentionPolicies.entityType, entityType)).limit(1);
   return policies[0] || null;
 }
 async function initializeRetentionPolicies() {
@@ -8368,7 +8458,7 @@ __export(complianceReporting_exports, {
   getPlatformMetrics: () => getPlatformMetrics,
   getPreviousQuarter: () => getPreviousQuarter
 });
-import { eq as eq17, and as and15, gte as gte11, lte as lte9, count, desc as desc14 } from "drizzle-orm";
+import { eq as eq18, and as and16, gte as gte12, lte as lte9, count, desc as desc15 } from "drizzle-orm";
 function getCurrentQuarter() {
   const now = /* @__PURE__ */ new Date();
   const year = now.getFullYear();
@@ -8395,8 +8485,8 @@ async function getAuditMetrics(period) {
   const db = await getDb();
   if (!db) return null;
   const totalEvents = await db.select({ count: count() }).from(auditLogs).where(
-    and15(
-      gte11(auditLogs.createdAt, period.startDate),
+    and16(
+      gte12(auditLogs.createdAt, period.startDate),
       lte9(auditLogs.createdAt, period.endDate)
     )
   );
@@ -8404,29 +8494,29 @@ async function getAuditMetrics(period) {
     action: auditLogs.action,
     count: count()
   }).from(auditLogs).where(
-    and15(
-      gte11(auditLogs.createdAt, period.startDate),
+    and16(
+      gte12(auditLogs.createdAt, period.startDate),
       lte9(auditLogs.createdAt, period.endDate)
     )
-  ).groupBy(auditLogs.action).orderBy(desc14(count()));
+  ).groupBy(auditLogs.action).orderBy(desc15(count()));
   const eventsByEntity = await db.select({
     entityType: auditLogs.entityType,
     count: count()
   }).from(auditLogs).where(
-    and15(
-      gte11(auditLogs.createdAt, period.startDate),
+    and16(
+      gte12(auditLogs.createdAt, period.startDate),
       lte9(auditLogs.createdAt, period.endDate)
     )
-  ).groupBy(auditLogs.entityType).orderBy(desc14(count()));
+  ).groupBy(auditLogs.entityType).orderBy(desc15(count()));
   const activeUsers = await db.select({
     userId: auditLogs.userId,
     count: count()
   }).from(auditLogs).where(
-    and15(
-      gte11(auditLogs.createdAt, period.startDate),
+    and16(
+      gte12(auditLogs.createdAt, period.startDate),
       lte9(auditLogs.createdAt, period.endDate)
     )
-  ).groupBy(auditLogs.userId).orderBy(desc14(count())).limit(10);
+  ).groupBy(auditLogs.userId).orderBy(desc15(count())).limit(10);
   return {
     totalEvents: totalEvents[0]?.count || 0,
     eventsByAction,
@@ -8438,8 +8528,8 @@ async function getOverrideMetrics(period) {
   const db = await getDb();
   if (!db) return null;
   const totalOverrides = await db.select({ count: count() }).from(adminOverrides).where(
-    and15(
-      gte11(adminOverrides.overrideDate, period.startDate),
+    and16(
+      gte12(adminOverrides.overrideDate, period.startDate),
       lte9(adminOverrides.overrideDate, period.endDate)
     )
   );
@@ -8447,43 +8537,43 @@ async function getOverrideMetrics(period) {
     overrideType: adminOverrides.overrideType,
     count: count()
   }).from(adminOverrides).where(
-    and15(
-      gte11(adminOverrides.overrideDate, period.startDate),
+    and16(
+      gte12(adminOverrides.overrideDate, period.startDate),
       lte9(adminOverrides.overrideDate, period.endDate)
     )
-  ).groupBy(adminOverrides.overrideType).orderBy(desc14(count()));
+  ).groupBy(adminOverrides.overrideType).orderBy(desc15(count()));
   const activeOverrides = await db.select({ count: count() }).from(adminOverrides).where(
-    and15(
-      gte11(adminOverrides.overrideDate, period.startDate),
+    and16(
+      gte12(adminOverrides.overrideDate, period.startDate),
       lte9(adminOverrides.overrideDate, period.endDate),
-      eq17(adminOverrides.revoked, false)
+      eq18(adminOverrides.revoked, false)
     )
   );
   const revokedOverrides = await db.select({ count: count() }).from(adminOverrides).where(
-    and15(
-      gte11(adminOverrides.overrideDate, period.startDate),
+    and16(
+      gte12(adminOverrides.overrideDate, period.startDate),
       lte9(adminOverrides.overrideDate, period.endDate),
-      eq17(adminOverrides.revoked, true)
+      eq18(adminOverrides.revoked, true)
     )
   );
   const overridesByEntity = await db.select({
     entityType: adminOverrides.entityType,
     count: count()
   }).from(adminOverrides).where(
-    and15(
-      gte11(adminOverrides.overrideDate, period.startDate),
+    and16(
+      gte12(adminOverrides.overrideDate, period.startDate),
       lte9(adminOverrides.overrideDate, period.endDate)
     )
-  ).groupBy(adminOverrides.entityType).orderBy(desc14(count()));
+  ).groupBy(adminOverrides.entityType).orderBy(desc15(count()));
   const topRequesters = await db.select({
     requestedBy: adminOverrides.requestedBy,
     count: count()
   }).from(adminOverrides).where(
-    and15(
-      gte11(adminOverrides.overrideDate, period.startDate),
+    and16(
+      gte12(adminOverrides.overrideDate, period.startDate),
       lte9(adminOverrides.overrideDate, period.endDate)
     )
-  ).groupBy(adminOverrides.requestedBy).orderBy(desc14(count())).limit(10);
+  ).groupBy(adminOverrides.requestedBy).orderBy(desc15(count())).limit(10);
   return {
     totalOverrides: totalOverrides[0]?.count || 0,
     activeOverrides: activeOverrides[0]?.count || 0,
@@ -8497,8 +8587,8 @@ async function getConsentMetrics(period) {
   const db = await getDb();
   if (!db) return null;
   const totalConsents = await db.select({ count: count() }).from(userConsents).where(
-    and15(
-      gte11(userConsents.createdAt, period.startDate),
+    and16(
+      gte12(userConsents.createdAt, period.startDate),
       lte9(userConsents.createdAt, period.endDate)
     )
   );
@@ -8507,28 +8597,28 @@ async function getConsentMetrics(period) {
     granted: userConsents.granted,
     count: count()
   }).from(userConsents).where(
-    and15(
-      gte11(userConsents.createdAt, period.startDate),
+    and16(
+      gte12(userConsents.createdAt, period.startDate),
       lte9(userConsents.createdAt, period.endDate)
     )
   ).groupBy(userConsents.consentType, userConsents.granted);
   const withdrawals = await db.select({ count: count() }).from(userConsents).where(
-    and15(
-      gte11(userConsents.withdrawnDate, period.startDate),
+    and16(
+      gte12(userConsents.withdrawnDate, period.startDate),
       lte9(userConsents.withdrawnDate, period.endDate),
-      eq17(userConsents.withdrawn, true)
+      eq18(userConsents.withdrawn, true)
     )
   );
   const withdrawalsByType = await db.select({
     consentType: userConsents.consentType,
     count: count()
   }).from(userConsents).where(
-    and15(
-      gte11(userConsents.withdrawnDate, period.startDate),
+    and16(
+      gte12(userConsents.withdrawnDate, period.startDate),
       lte9(userConsents.withdrawnDate, period.endDate),
-      eq17(userConsents.withdrawn, true)
+      eq18(userConsents.withdrawn, true)
     )
-  ).groupBy(userConsents.consentType).orderBy(desc14(count()));
+  ).groupBy(userConsents.consentType).orderBy(desc15(count()));
   return {
     totalConsents: totalConsents[0]?.count || 0,
     consentsByType,
@@ -8540,8 +8630,8 @@ async function getDisputeMetrics(period) {
   const db = await getDb();
   if (!db) return null;
   const totalDisputes = await db.select({ count: count() }).from(disputeResolutions).where(
-    and15(
-      gte11(disputeResolutions.submittedDate, period.startDate),
+    and16(
+      gte12(disputeResolutions.submittedDate, period.startDate),
       lte9(disputeResolutions.submittedDate, period.endDate)
     )
   );
@@ -8549,45 +8639,45 @@ async function getDisputeMetrics(period) {
     disputeType: disputeResolutions.disputeType,
     count: count()
   }).from(disputeResolutions).where(
-    and15(
-      gte11(disputeResolutions.submittedDate, period.startDate),
+    and16(
+      gte12(disputeResolutions.submittedDate, period.startDate),
       lte9(disputeResolutions.submittedDate, period.endDate)
     )
-  ).groupBy(disputeResolutions.disputeType).orderBy(desc14(count()));
+  ).groupBy(disputeResolutions.disputeType).orderBy(desc15(count()));
   const disputesByStatus = await db.select({
     status: disputeResolutions.status,
     count: count()
   }).from(disputeResolutions).where(
-    and15(
-      gte11(disputeResolutions.submittedDate, period.startDate),
+    and16(
+      gte12(disputeResolutions.submittedDate, period.startDate),
       lte9(disputeResolutions.submittedDate, period.endDate)
     )
-  ).groupBy(disputeResolutions.status).orderBy(desc14(count()));
+  ).groupBy(disputeResolutions.status).orderBy(desc15(count()));
   const resolvedDisputes = await db.select({ count: count() }).from(disputeResolutions).where(
-    and15(
-      gte11(disputeResolutions.resolutionDate, period.startDate),
+    and16(
+      gte12(disputeResolutions.resolutionDate, period.startDate),
       lte9(disputeResolutions.resolutionDate, period.endDate),
-      eq17(disputeResolutions.status, "resolved")
+      eq18(disputeResolutions.status, "resolved")
     )
   );
   const resolutionOutcomes = await db.select({
     outcome: disputeResolutions.resolutionOutcome,
     count: count()
   }).from(disputeResolutions).where(
-    and15(
-      gte11(disputeResolutions.resolutionDate, period.startDate),
+    and16(
+      gte12(disputeResolutions.resolutionDate, period.startDate),
       lte9(disputeResolutions.resolutionDate, period.endDate),
-      eq17(disputeResolutions.status, "resolved")
+      eq18(disputeResolutions.status, "resolved")
     )
-  ).groupBy(disputeResolutions.resolutionOutcome).orderBy(desc14(count()));
+  ).groupBy(disputeResolutions.resolutionOutcome).orderBy(desc15(count()));
   const resolvedWithTimes = await db.select({
     submittedDate: disputeResolutions.submittedDate,
     resolutionDate: disputeResolutions.resolutionDate
   }).from(disputeResolutions).where(
-    and15(
-      gte11(disputeResolutions.resolutionDate, period.startDate),
+    and16(
+      gte12(disputeResolutions.resolutionDate, period.startDate),
       lte9(disputeResolutions.resolutionDate, period.endDate),
-      eq17(disputeResolutions.status, "resolved")
+      eq18(disputeResolutions.status, "resolved")
     )
   );
   let avgResolutionDays = 0;
@@ -8611,8 +8701,8 @@ async function getCertificateMetrics(period) {
   const db = await getDb();
   if (!db) return null;
   const totalCertificates = await db.select({ count: count() }).from(certificates).where(
-    and15(
-      gte11(certificates.issuedDate, period.startDate),
+    and16(
+      gte12(certificates.issuedDate, period.startDate),
       lte9(certificates.issuedDate, period.endDate)
     )
   );
@@ -8620,28 +8710,28 @@ async function getCertificateMetrics(period) {
     type: certificates.type,
     count: count()
   }).from(certificates).where(
-    and15(
-      gte11(certificates.issuedDate, period.startDate),
+    and16(
+      gte12(certificates.issuedDate, period.startDate),
       lte9(certificates.issuedDate, period.endDate)
     )
-  ).groupBy(certificates.type).orderBy(desc14(count()));
+  ).groupBy(certificates.type).orderBy(desc15(count()));
   const certificatesByStatus = await db.select({
     status: certificates.status,
     count: count()
   }).from(certificates).where(
-    and15(
-      gte11(certificates.issuedDate, period.startDate),
+    and16(
+      gte12(certificates.issuedDate, period.startDate),
       lte9(certificates.issuedDate, period.endDate)
     )
-  ).groupBy(certificates.status).orderBy(desc14(count()));
+  ).groupBy(certificates.status).orderBy(desc15(count()));
   const expiringSoon = await db.select({ count: count() }).from(certificates).where(
-    and15(
-      gte11(certificates.expiryDate, period.endDate),
+    and16(
+      gte12(certificates.expiryDate, period.endDate),
       lte9(
         certificates.expiryDate,
         new Date(period.endDate.getTime() + 30 * 24 * 60 * 60 * 1e3)
       ),
-      eq17(certificates.status, "active")
+      eq18(certificates.status, "active")
     )
   );
   return {
@@ -8655,18 +8745,18 @@ async function getPlatformMetrics(period) {
   const db = await getDb();
   if (!db) return null;
   const newUsers = await db.select({ count: count() }).from(users).where(
-    and15(
-      gte11(users.createdAt, period.startDate),
+    and16(
+      gte12(users.createdAt, period.startDate),
       lte9(users.createdAt, period.endDate)
     )
   );
   const newFeedstocks = await db.select({ count: count() }).from(feedstocks).where(
-    and15(
-      gte11(feedstocks.createdAt, period.startDate),
+    and16(
+      gte12(feedstocks.createdAt, period.startDate),
       lte9(feedstocks.createdAt, period.endDate)
     )
   );
-  const activeFeedstocks = await db.select({ count: count() }).from(feedstocks).where(eq17(feedstocks.status, "active"));
+  const activeFeedstocks = await db.select({ count: count() }).from(feedstocks).where(eq18(feedstocks.status, "active"));
   return {
     newUsers: newUsers[0]?.count || 0,
     newFeedstocks: newFeedstocks[0]?.count || 0,
@@ -16351,10 +16441,364 @@ var sentimentRouter = router({
   })
 });
 
-// server/routers.ts
-init_db();
+// server/pricesRouter.ts
 import { z as z12 } from "zod";
 import { TRPCError as TRPCError14 } from "@trpc/server";
+init_db();
+init_schema();
+import { eq as eq13, desc as desc11, gte as gte8, and as and11, sql as sql12 } from "drizzle-orm";
+async function requireDb5() {
+  const db = await getDb();
+  if (!db) {
+    throw new TRPCError14({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Database not available"
+    });
+  }
+  return db;
+}
+var COMMODITY_BASE_PRICES = {
+  UCO: 1250,
+  Tallow: 980,
+  Canola: 720,
+  Palm: 850
+};
+var REGIONS = [
+  { id: "AUS", name: "Australia" },
+  { id: "SEA", name: "Southeast Asia" },
+  { id: "EU", name: "Europe" },
+  { id: "NA", name: "North America" },
+  { id: "LATAM", name: "Latin America" }
+];
+function getMockKPIs() {
+  return Object.entries(COMMODITY_BASE_PRICES).map(([commodity, basePrice]) => {
+    const change = (Math.random() - 0.5) * 10;
+    return {
+      commodity,
+      price: Math.round(basePrice * (1 + change / 100)),
+      currency: "AUD",
+      unit: "MT",
+      change_pct: Math.round(change * 10) / 10,
+      change_direction: change > 0.5 ? "up" : change < -0.5 ? "down" : "flat"
+    };
+  });
+}
+function getMockOHLC(commodity, region, period) {
+  const basePrice = COMMODITY_BASE_PRICES[commodity] || 1e3;
+  const days = period === "1M" ? 30 : period === "3M" ? 90 : period === "6M" ? 180 : period === "1Y" ? 365 : 730;
+  const data = [];
+  const now = /* @__PURE__ */ new Date();
+  for (let i = days; i >= 0; i--) {
+    const date2 = new Date(now);
+    date2.setDate(date2.getDate() - i);
+    const trend = Math.sin(i / 30) * 50;
+    const noise = (Math.random() - 0.5) * 30;
+    const dayPrice = basePrice + trend + noise;
+    const open = dayPrice + (Math.random() - 0.5) * 20;
+    const close = dayPrice + (Math.random() - 0.5) * 20;
+    const high = Math.max(open, close) + Math.random() * 15;
+    const low = Math.min(open, close) - Math.random() * 15;
+    data.push({
+      date: date2.toISOString().split("T")[0],
+      open: Math.round(open * 100) / 100,
+      high: Math.round(high * 100) / 100,
+      low: Math.round(low * 100) / 100,
+      close: Math.round(close * 100) / 100,
+      volume: Math.floor(Math.random() * 5e4) + 1e4
+    });
+  }
+  return {
+    commodity,
+    region,
+    data,
+    source: "ABFI Internal"
+  };
+}
+function getMockHeatmap(commodity) {
+  const basePrice = COMMODITY_BASE_PRICES[commodity] || 1e3;
+  return {
+    commodity,
+    regions: REGIONS.map((r) => {
+      const regionMultiplier = r.id === "AUS" ? 1 : r.id === "SEA" ? 0.85 : r.id === "EU" ? 1.15 : r.id === "NA" ? 1.1 : 0.9;
+      const price = basePrice * regionMultiplier + (Math.random() - 0.5) * 50;
+      return {
+        region: r.id,
+        region_name: r.name,
+        price: Math.round(price),
+        change_pct: Math.round((Math.random() - 0.5) * 10 * 10) / 10,
+        currency: "AUD"
+      };
+    })
+  };
+}
+function getMockForwardCurve(commodity, region) {
+  const basePrice = COMMODITY_BASE_PRICES[commodity] || 1e3;
+  const isContango = Math.random() > 0.5;
+  const tenors = ["Spot", "1M", "3M", "6M", "1Y"];
+  const points = tenors.map((tenor, idx) => {
+    const spread = isContango ? idx * 15 : -idx * 10;
+    const price = basePrice + spread + (Math.random() - 0.5) * 10;
+    return {
+      tenor,
+      price: Math.round(price),
+      change_from_spot: idx === 0 ? 0 : Math.round(spread)
+    };
+  });
+  return {
+    commodity,
+    region,
+    curve_shape: isContango ? "contango" : "backwardation",
+    points,
+    as_of_date: (/* @__PURE__ */ new Date()).toISOString().split("T")[0]
+  };
+}
+function getMockTechnicals(commodity) {
+  const indicators = [
+    { name: "RSI (14)", baseValue: 50, range: 30 },
+    { name: "MACD", baseValue: 0, range: 20 },
+    { name: "SMA 20", baseValue: COMMODITY_BASE_PRICES[commodity] || 1e3, range: 50 },
+    { name: "SMA 50", baseValue: (COMMODITY_BASE_PRICES[commodity] || 1e3) - 20, range: 50 },
+    { name: "Bollinger %B", baseValue: 0.5, range: 0.5 }
+  ];
+  return indicators.map((ind) => {
+    const value = ind.baseValue + (Math.random() - 0.5) * ind.range;
+    let signal;
+    if (ind.name.includes("RSI")) {
+      signal = value > 70 ? "sell" : value < 30 ? "buy" : "neutral";
+    } else if (ind.name === "MACD") {
+      signal = value > 5 ? "buy" : value < -5 ? "sell" : "neutral";
+    } else if (ind.name === "Bollinger %B") {
+      signal = value > 0.8 ? "sell" : value < 0.2 ? "buy" : "neutral";
+    } else {
+      signal = Math.random() > 0.6 ? "buy" : Math.random() > 0.3 ? "neutral" : "sell";
+    }
+    return {
+      name: ind.name,
+      value: Math.round(value * 100) / 100,
+      signal
+    };
+  });
+}
+var pricesRouter = router({
+  /**
+   * Get price KPIs for all commodities
+   */
+  getKPIs: publicProcedure.query(async () => {
+    try {
+      const db = await requireDb5();
+      const commodities = ["UCO", "Tallow", "Canola", "Palm"];
+      const results = [];
+      for (const commodity of commodities) {
+        const [latest] = await db.select().from(feedstockPrices).where(and11(eq13(feedstockPrices.commodity, commodity), eq13(feedstockPrices.region, "AUS"))).orderBy(desc11(feedstockPrices.date)).limit(1);
+        if (latest) {
+          const [previous] = await db.select().from(feedstockPrices).where(
+            and11(
+              eq13(feedstockPrices.commodity, commodity),
+              eq13(feedstockPrices.region, "AUS"),
+              sql12`${feedstockPrices.date} < ${latest.date}`
+            )
+          ).orderBy(desc11(feedstockPrices.date)).limit(1);
+          const currentPrice = parseFloat(latest.close);
+          const previousPrice = previous ? parseFloat(previous.close) : currentPrice;
+          const changePct = previousPrice !== 0 ? (currentPrice - previousPrice) / previousPrice * 100 : 0;
+          results.push({
+            commodity,
+            price: currentPrice,
+            currency: "AUD",
+            unit: "MT",
+            change_pct: Math.round(changePct * 10) / 10,
+            change_direction: changePct > 0.5 ? "up" : changePct < -0.5 ? "down" : "flat"
+          });
+        }
+      }
+      if (results.length === 0) {
+        return getMockKPIs();
+      }
+      return results;
+    } catch (error) {
+      console.error("Failed to get price KPIs:", error);
+      return getMockKPIs();
+    }
+  }),
+  /**
+   * Get OHLC price data
+   */
+  getOHLC: publicProcedure.input(
+    z12.object({
+      commodity: z12.string(),
+      region: z12.string().default("AUS"),
+      period: z12.enum(["1M", "3M", "6M", "1Y", "2Y"]).default("1Y")
+    })
+  ).query(async ({ input }) => {
+    try {
+      const db = await requireDb5();
+      const days = input.period === "1M" ? 30 : input.period === "3M" ? 90 : input.period === "6M" ? 180 : input.period === "1Y" ? 365 : 730;
+      const startDate = /* @__PURE__ */ new Date();
+      startDate.setDate(startDate.getDate() - days);
+      const data = await db.select({
+        date: feedstockPrices.date,
+        open: feedstockPrices.open,
+        high: feedstockPrices.high,
+        low: feedstockPrices.low,
+        close: feedstockPrices.close,
+        volume: feedstockPrices.volume,
+        source: feedstockPrices.source
+      }).from(feedstockPrices).where(
+        and11(
+          eq13(feedstockPrices.commodity, input.commodity.toUpperCase()),
+          eq13(feedstockPrices.region, input.region),
+          gte8(feedstockPrices.date, startDate)
+        )
+      ).orderBy(feedstockPrices.date);
+      if (data.length === 0) {
+        return getMockOHLC(input.commodity, input.region, input.period);
+      }
+      return {
+        commodity: input.commodity,
+        region: input.region,
+        data: data.map((d) => ({
+          date: d.date instanceof Date ? d.date.toISOString().split("T")[0] : String(d.date),
+          open: parseFloat(d.open),
+          high: parseFloat(d.high),
+          low: parseFloat(d.low),
+          close: parseFloat(d.close),
+          volume: d.volume || 0
+        })),
+        source: data[0]?.source || "ABFI Internal"
+      };
+    } catch (error) {
+      console.error("Failed to get OHLC data:", error);
+      return getMockOHLC(input.commodity, input.region, input.period);
+    }
+  }),
+  /**
+   * Get regional price heatmap
+   */
+  getHeatmap: publicProcedure.input(
+    z12.object({
+      commodity: z12.string()
+    })
+  ).query(async ({ input }) => {
+    try {
+      const db = await requireDb5();
+      const regions = await db.select().from(regionalPriceSummary).where(eq13(regionalPriceSummary.commodity, input.commodity.toUpperCase()));
+      if (regions.length === 0) {
+        return getMockHeatmap(input.commodity);
+      }
+      return {
+        commodity: input.commodity,
+        regions: regions.map((r) => ({
+          region: r.region,
+          region_name: r.regionName,
+          price: parseFloat(r.price),
+          change_pct: parseFloat(r.changePct),
+          currency: r.currency
+        }))
+      };
+    } catch (error) {
+      console.error("Failed to get heatmap:", error);
+      return getMockHeatmap(input.commodity);
+    }
+  }),
+  /**
+   * Get forward curve
+   */
+  getForwardCurve: publicProcedure.input(
+    z12.object({
+      commodity: z12.string(),
+      region: z12.string().default("AUS")
+    })
+  ).query(async ({ input }) => {
+    try {
+      const db = await requireDb5();
+      const [latestDate] = await db.select({ asOfDate: forwardCurves.asOfDate }).from(forwardCurves).where(
+        and11(eq13(forwardCurves.commodity, input.commodity.toUpperCase()), eq13(forwardCurves.region, input.region))
+      ).orderBy(desc11(forwardCurves.asOfDate)).limit(1);
+      if (!latestDate) {
+        return getMockForwardCurve(input.commodity, input.region);
+      }
+      const points = await db.select().from(forwardCurves).where(
+        and11(
+          eq13(forwardCurves.commodity, input.commodity.toUpperCase()),
+          eq13(forwardCurves.region, input.region),
+          eq13(forwardCurves.asOfDate, latestDate.asOfDate)
+        )
+      );
+      const spotPrice = points.find((p) => p.tenor === "Spot");
+      const farPrice = points.find((p) => p.tenor === "1Y");
+      let curveShape = "flat";
+      if (spotPrice && farPrice) {
+        const spotVal = parseFloat(spotPrice.price);
+        const farVal = parseFloat(farPrice.price);
+        if (farVal > spotVal + 10) curveShape = "contango";
+        else if (farVal < spotVal - 10) curveShape = "backwardation";
+      }
+      return {
+        commodity: input.commodity,
+        region: input.region,
+        curve_shape: curveShape,
+        points: points.map((p) => ({
+          tenor: p.tenor,
+          price: parseFloat(p.price),
+          change_from_spot: parseFloat(p.changeFromSpot)
+        })),
+        as_of_date: latestDate.asOfDate instanceof Date ? latestDate.asOfDate.toISOString().split("T")[0] : String(latestDate.asOfDate)
+      };
+    } catch (error) {
+      console.error("Failed to get forward curve:", error);
+      return getMockForwardCurve(input.commodity, input.region);
+    }
+  }),
+  /**
+   * Get technical indicators
+   */
+  getTechnicals: publicProcedure.input(
+    z12.object({
+      commodity: z12.string(),
+      region: z12.string().default("AUS")
+    })
+  ).query(async ({ input }) => {
+    try {
+      const db = await requireDb5();
+      const indicators = await db.select().from(technicalIndicators).where(
+        and11(
+          eq13(technicalIndicators.commodity, input.commodity.toUpperCase()),
+          eq13(technicalIndicators.region, input.region)
+        )
+      );
+      if (indicators.length === 0) {
+        return getMockTechnicals(input.commodity);
+      }
+      return indicators.map((i) => ({
+        name: i.indicatorName,
+        value: parseFloat(i.value),
+        signal: i.signal
+      }));
+    } catch (error) {
+      console.error("Failed to get technicals:", error);
+      return getMockTechnicals(input.commodity);
+    }
+  }),
+  /**
+   * Get available commodities and regions
+   */
+  getCommodities: publicProcedure.query(async () => {
+    return {
+      commodities: [
+        { id: "UCO", name: "Used Cooking Oil", unit: "MT" },
+        { id: "Tallow", name: "Tallow", unit: "MT" },
+        { id: "Canola", name: "Canola Oil", unit: "MT" },
+        { id: "Palm", name: "Palm Oil", unit: "MT" }
+      ],
+      regions: REGIONS
+    };
+  })
+});
+
+// server/routers.ts
+init_db();
+import { z as z13 } from "zod";
+import { TRPCError as TRPCError15 } from "@trpc/server";
 
 // server/rating.ts
 function calculateAbfiScore(feedstock, certificates2, qualityTests2, transactions2) {
@@ -16860,7 +17304,7 @@ async function lookupABN(abn) {
 var supplierProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   const supplier = await getSupplierByUserId(ctx.user.id);
   if (!supplier) {
-    throw new TRPCError14({
+    throw new TRPCError15({
       code: "FORBIDDEN",
       message: "Supplier profile required"
     });
@@ -16870,7 +17314,7 @@ var supplierProcedure = protectedProcedure.use(async ({ ctx, next }) => {
 var buyerProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   const buyer = await getBuyerByUserId(ctx.user.id);
   if (!buyer) {
-    throw new TRPCError14({
+    throw new TRPCError15({
       code: "FORBIDDEN",
       message: "Buyer profile required"
     });
@@ -16879,7 +17323,7 @@ var buyerProcedure = protectedProcedure.use(async ({ ctx, next }) => {
 });
 var adminProcedure5 = protectedProcedure.use(async ({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
-    throw new TRPCError14({
+    throw new TRPCError15({
       code: "FORBIDDEN",
       message: "Admin access required"
     });
@@ -16902,21 +17346,22 @@ var appRouter = router({
   goScheme: goSchemeRouter,
   stealth: stealthRouter,
   sentiment: sentimentRouter,
+  prices: pricesRouter,
   // ============================================================================
   // AUDIT & COMPLIANCE (Phase 8)
   // ============================================================================
   audit: router({
     // Get audit logs with filtering
     getLogs: adminProcedure5.input(
-      z12.object({
-        userId: z12.number().optional(),
-        entityType: z12.string().optional(),
-        entityId: z12.number().optional(),
-        action: z12.string().optional(),
-        startDate: z12.string().optional(),
-        endDate: z12.string().optional(),
-        limit: z12.number().min(1).max(500).default(100),
-        offset: z12.number().min(0).default(0)
+      z13.object({
+        userId: z13.number().optional(),
+        entityType: z13.string().optional(),
+        entityId: z13.number().optional(),
+        action: z13.string().optional(),
+        startDate: z13.string().optional(),
+        endDate: z13.string().optional(),
+        limit: z13.number().min(1).max(500).default(100),
+        offset: z13.number().min(0).default(0)
       })
     ).query(async ({ input }) => {
       const logs = await getAuditLogs({
@@ -16951,11 +17396,11 @@ var appRouter = router({
     }),
     // Create manual audit log entry (for admin actions)
     create: adminProcedure5.input(
-      z12.object({
-        action: z12.string(),
-        entityType: z12.string(),
-        entityId: z12.number(),
-        changes: z12.record(z12.string(), z12.any()).optional()
+      z13.object({
+        action: z13.string(),
+        entityType: z13.string(),
+        entityId: z13.number(),
+        changes: z13.record(z13.string(), z13.any()).optional()
       })
     ).mutation(async ({ ctx, input }) => {
       await createAuditLog({
@@ -16969,9 +17414,9 @@ var appRouter = router({
     }),
     // Get entity history (all changes to a specific entity)
     getEntityHistory: protectedProcedure.input(
-      z12.object({
-        entityType: z12.string(),
-        entityId: z12.number()
+      z13.object({
+        entityType: z13.string(),
+        entityId: z13.number()
       })
     ).query(async ({ input }) => {
       return await getAuditLogs({
@@ -16981,7 +17426,7 @@ var appRouter = router({
       });
     }),
     // Get user activity
-    getUserActivity: adminProcedure5.input(z12.object({ userId: z12.number(), limit: z12.number().default(50) })).query(async ({ input }) => {
+    getUserActivity: adminProcedure5.input(z13.object({ userId: z13.number(), limit: z13.number().default(50) })).query(async ({ input }) => {
       return await getAuditLogs({
         userId: input.userId,
         limit: input.limit
@@ -16995,7 +17440,7 @@ var appRouter = router({
   // UTILITIES
   // ============================================================================
   utils: router({
-    validateABN: publicProcedure.input(z12.object({ abn: z12.string().length(11) })).query(async ({ input }) => {
+    validateABN: publicProcedure.input(z13.object({ abn: z13.string().length(11) })).query(async ({ input }) => {
       const result = await lookupABN(input.abn);
       return result;
     })
@@ -17024,49 +17469,49 @@ var appRouter = router({
     get: protectedProcedure.query(async ({ ctx }) => {
       const supplier = await getSupplierByUserId(ctx.user.id);
       if (!supplier) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Supplier profile not found"
         });
       }
       return supplier;
     }),
-    getById: protectedProcedure.input(z12.object({ id: z12.number() })).query(async ({ input }) => {
+    getById: protectedProcedure.input(z13.object({ id: z13.number() })).query(async ({ input }) => {
       return await getSupplierById(input.id);
     }),
     create: protectedProcedure.input(
-      z12.object({
-        abn: z12.string().length(11),
-        companyName: z12.string().min(1),
-        contactEmail: z12.string().email(),
-        contactPhone: z12.string().optional(),
-        addressLine1: z12.string().optional(),
-        addressLine2: z12.string().optional(),
-        city: z12.string().optional(),
-        state: z12.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
-        postcode: z12.string().optional(),
-        latitude: z12.string().optional(),
-        longitude: z12.string().optional(),
-        description: z12.string().optional(),
-        website: z12.string().optional()
+      z13.object({
+        abn: z13.string().length(11),
+        companyName: z13.string().min(1),
+        contactEmail: z13.string().email(),
+        contactPhone: z13.string().optional(),
+        addressLine1: z13.string().optional(),
+        addressLine2: z13.string().optional(),
+        city: z13.string().optional(),
+        state: z13.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
+        postcode: z13.string().optional(),
+        latitude: z13.string().optional(),
+        longitude: z13.string().optional(),
+        description: z13.string().optional(),
+        website: z13.string().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       if (!validateABN(input.abn)) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "BAD_REQUEST",
           message: "Invalid ABN"
         });
       }
       const existing = await getSupplierByABN(input.abn);
       if (existing) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "CONFLICT",
           message: "ABN already registered"
         });
       }
       const existingSupplier = await getSupplierByUserId(ctx.user.id);
       if (existingSupplier) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "CONFLICT",
           message: "Supplier profile already exists"
         });
@@ -17085,19 +17530,19 @@ var appRouter = router({
       return { supplierId };
     }),
     update: supplierProcedure.input(
-      z12.object({
-        companyName: z12.string().min(1).optional(),
-        contactEmail: z12.string().email().optional(),
-        contactPhone: z12.string().optional(),
-        addressLine1: z12.string().optional(),
-        addressLine2: z12.string().optional(),
-        city: z12.string().optional(),
-        state: z12.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
-        postcode: z12.string().optional(),
-        latitude: z12.string().optional(),
-        longitude: z12.string().optional(),
-        description: z12.string().optional(),
-        website: z12.string().optional()
+      z13.object({
+        companyName: z13.string().min(1).optional(),
+        contactEmail: z13.string().email().optional(),
+        contactPhone: z13.string().optional(),
+        addressLine1: z13.string().optional(),
+        addressLine2: z13.string().optional(),
+        city: z13.string().optional(),
+        state: z13.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
+        postcode: z13.string().optional(),
+        latitude: z13.string().optional(),
+        longitude: z13.string().optional(),
+        description: z13.string().optional(),
+        website: z13.string().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       await updateSupplier(ctx.supplier.id, input);
@@ -17114,54 +17559,54 @@ var appRouter = router({
     }),
     // Comprehensive producer registration (7-step flow)
     registerProducer: protectedProcedure.input(
-      z12.object({
+      z13.object({
         // Account Setup
-        abn: z12.string().length(11),
-        companyName: z12.string().min(1),
-        tradingName: z12.string().optional(),
-        contactEmail: z12.string().email(),
-        contactPhone: z12.string().optional(),
-        website: z12.string().optional(),
+        abn: z13.string().length(11),
+        companyName: z13.string().min(1),
+        tradingName: z13.string().optional(),
+        contactEmail: z13.string().email(),
+        contactPhone: z13.string().optional(),
+        website: z13.string().optional(),
         // Property Details
-        properties: z12.array(
-          z12.object({
-            propertyName: z12.string(),
-            primaryAddress: z12.string().optional(),
-            latitude: z12.string().optional(),
-            longitude: z12.string().optional(),
-            state: z12.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
-            postcode: z12.string().optional(),
-            region: z12.string().optional(),
-            totalLandArea: z12.number().optional(),
-            cultivatedArea: z12.number().optional()
+        properties: z13.array(
+          z13.object({
+            propertyName: z13.string(),
+            primaryAddress: z13.string().optional(),
+            latitude: z13.string().optional(),
+            longitude: z13.string().optional(),
+            state: z13.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
+            postcode: z13.string().optional(),
+            region: z13.string().optional(),
+            totalLandArea: z13.number().optional(),
+            cultivatedArea: z13.number().optional()
           })
         ).optional(),
         // Production Profile
-        feedstockTypes: z12.array(z12.string()).optional(),
-        annualProduction: z12.number().optional(),
+        feedstockTypes: z13.array(z13.string()).optional(),
+        annualProduction: z13.number().optional(),
         // Visibility preferences
-        profilePublic: z12.boolean().default(true),
-        showContactDetails: z12.boolean().default(false),
-        showExactLocation: z12.boolean().default(false),
-        allowDirectInquiries: z12.boolean().default(true)
+        profilePublic: z13.boolean().default(true),
+        showContactDetails: z13.boolean().default(false),
+        showExactLocation: z13.boolean().default(false),
+        allowDirectInquiries: z13.boolean().default(true)
       })
     ).mutation(async ({ ctx, input }) => {
       if (!validateABN(input.abn)) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "BAD_REQUEST",
           message: "Invalid ABN"
         });
       }
       const existing = await getSupplierByABN(input.abn);
       if (existing) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "CONFLICT",
           message: "ABN already registered"
         });
       }
       const existingSupplier = await getSupplierByUserId(ctx.user.id);
       if (existingSupplier) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "CONFLICT",
           message: "Supplier profile already exists"
         });
@@ -17197,29 +17642,29 @@ var appRouter = router({
   // ============================================================================
   buyers: router({
     create: protectedProcedure.input(
-      z12.object({
-        abn: z12.string().length(11),
-        companyName: z12.string().min(1),
-        contactEmail: z12.string().email(),
-        contactPhone: z12.string().optional(),
-        facilityName: z12.string().optional(),
-        facilityAddress: z12.string().optional(),
-        facilityLatitude: z12.string().optional(),
-        facilityLongitude: z12.string().optional(),
-        facilityState: z12.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
-        description: z12.string().optional(),
-        website: z12.string().optional()
+      z13.object({
+        abn: z13.string().length(11),
+        companyName: z13.string().min(1),
+        contactEmail: z13.string().email(),
+        contactPhone: z13.string().optional(),
+        facilityName: z13.string().optional(),
+        facilityAddress: z13.string().optional(),
+        facilityLatitude: z13.string().optional(),
+        facilityLongitude: z13.string().optional(),
+        facilityState: z13.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
+        description: z13.string().optional(),
+        website: z13.string().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       if (!validateABN(input.abn)) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "BAD_REQUEST",
           message: "Invalid ABN"
         });
       }
       const existingBuyer = await getBuyerByUserId(ctx.user.id);
       if (existingBuyer) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "CONFLICT",
           message: "Buyer profile already exists"
         });
@@ -17241,17 +17686,17 @@ var appRouter = router({
       return await getBuyerById(ctx.buyer.id);
     }),
     update: buyerProcedure.input(
-      z12.object({
-        companyName: z12.string().min(1).optional(),
-        contactEmail: z12.string().email().optional(),
-        contactPhone: z12.string().optional(),
-        facilityName: z12.string().optional(),
-        facilityAddress: z12.string().optional(),
-        facilityLatitude: z12.string().optional(),
-        facilityLongitude: z12.string().optional(),
-        facilityState: z12.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
-        description: z12.string().optional(),
-        website: z12.string().optional()
+      z13.object({
+        companyName: z13.string().min(1).optional(),
+        contactEmail: z13.string().email().optional(),
+        contactPhone: z13.string().optional(),
+        facilityName: z13.string().optional(),
+        facilityAddress: z13.string().optional(),
+        facilityLatitude: z13.string().optional(),
+        facilityLongitude: z13.string().optional(),
+        facilityState: z13.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
+        description: z13.string().optional(),
+        website: z13.string().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       await updateBuyer(ctx.buyer.id, input);
@@ -17269,11 +17714,11 @@ var appRouter = router({
   // ============================================================================
   financialInstitutions: router({
     register: protectedProcedure.input(
-      z12.object({
+      z13.object({
         // Institution Details
-        institutionName: z12.string().min(1),
-        abn: z12.string().length(11),
-        institutionType: z12.enum([
+        institutionName: z13.string().min(1),
+        abn: z13.string().length(11),
+        institutionType: z13.enum([
           "commercial_bank",
           "investment_bank",
           "private_equity",
@@ -17284,40 +17729,40 @@ var appRouter = router({
           "development_finance",
           "other"
         ]),
-        regulatoryBody: z12.string().optional(),
-        licenseNumber: z12.string().optional(),
+        regulatoryBody: z13.string().optional(),
+        licenseNumber: z13.string().optional(),
         // Authorized Representative
-        contactName: z12.string().min(1),
-        contactTitle: z12.string().optional(),
-        contactEmail: z12.string().email(),
-        contactPhone: z12.string().optional(),
+        contactName: z13.string().min(1),
+        contactTitle: z13.string().optional(),
+        contactEmail: z13.string().email(),
+        contactPhone: z13.string().optional(),
         // Verification
-        verificationMethod: z12.enum(["mygov_id", "document_upload", "manual_review"]).optional(),
+        verificationMethod: z13.enum(["mygov_id", "document_upload", "manual_review"]).optional(),
         // Access Tier
-        accessTier: z12.enum(["basic", "professional", "enterprise"]).default("basic"),
-        dataCategories: z12.array(z12.string()).optional(),
+        accessTier: z13.enum(["basic", "professional", "enterprise"]).default("basic"),
+        dataCategories: z13.array(z13.string()).optional(),
         // Compliance Declarations
-        authorizedRepresentative: z12.boolean(),
-        dataProtection: z12.boolean(),
-        regulatoryCompliance: z12.boolean(),
-        termsAccepted: z12.boolean()
+        authorizedRepresentative: z13.boolean(),
+        dataProtection: z13.boolean(),
+        regulatoryCompliance: z13.boolean(),
+        termsAccepted: z13.boolean()
       })
     ).mutation(async ({ ctx, input }) => {
       if (!validateABN(input.abn)) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "BAD_REQUEST",
           message: "Invalid ABN"
         });
       }
       if (!input.authorizedRepresentative || !input.dataProtection || !input.regulatoryCompliance || !input.termsAccepted) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "BAD_REQUEST",
           message: "All compliance declarations must be accepted"
         });
       }
       const existing = await getFinancialInstitutionByABN(input.abn);
       if (existing) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "CONFLICT",
           message: "ABN already registered"
         });
@@ -17326,7 +17771,7 @@ var appRouter = router({
         ctx.user.id
       );
       if (existingInstitution) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "CONFLICT",
           message: "Financial institution profile already exists"
         });
@@ -17349,8 +17794,8 @@ var appRouter = router({
   // ============================================================================
   feedstocks: router({
     create: supplierProcedure.input(
-      z12.object({
-        category: z12.enum([
+      z13.object({
+        category: z13.enum([
           "oilseed",
           "UCO",
           "tallow",
@@ -17359,23 +17804,23 @@ var appRouter = router({
           "algae",
           "other"
         ]),
-        type: z12.string().min(1),
-        sourceName: z12.string().optional(),
-        sourceAddress: z12.string().optional(),
-        latitude: z12.string(),
-        longitude: z12.string(),
-        state: z12.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]),
-        region: z12.string().optional(),
-        productionMethod: z12.enum([
+        type: z13.string().min(1),
+        sourceName: z13.string().optional(),
+        sourceAddress: z13.string().optional(),
+        latitude: z13.string(),
+        longitude: z13.string(),
+        state: z13.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]),
+        region: z13.string().optional(),
+        productionMethod: z13.enum([
           "crop",
           "waste",
           "residue",
           "processing_byproduct"
         ]),
-        annualCapacityTonnes: z12.number().int().positive(),
-        availableVolumeCurrent: z12.number().int().nonnegative(),
-        carbonIntensityValue: z12.number().int().optional(),
-        description: z12.string().optional()
+        annualCapacityTonnes: z13.number().int().positive(),
+        availableVolumeCurrent: z13.number().int().nonnegative(),
+        carbonIntensityValue: z13.number().int().optional(),
+        description: z13.string().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const abfiId = generateAbfiId(input.category, input.state);
@@ -17394,26 +17839,26 @@ var appRouter = router({
       return { feedstockId, abfiId };
     }),
     update: supplierProcedure.input(
-      z12.object({
-        id: z12.number(),
-        type: z12.string().min(1).optional(),
-        sourceName: z12.string().optional(),
-        sourceAddress: z12.string().optional(),
-        latitude: z12.string().optional(),
-        longitude: z12.string().optional(),
-        region: z12.string().optional(),
-        annualCapacityTonnes: z12.number().int().positive().optional(),
-        availableVolumeCurrent: z12.number().int().nonnegative().optional(),
-        carbonIntensityValue: z12.number().int().optional(),
-        description: z12.string().optional(),
-        pricePerTonne: z12.number().int().optional(),
-        priceVisibility: z12.enum(["public", "private", "on_request"]).optional()
+      z13.object({
+        id: z13.number(),
+        type: z13.string().min(1).optional(),
+        sourceName: z13.string().optional(),
+        sourceAddress: z13.string().optional(),
+        latitude: z13.string().optional(),
+        longitude: z13.string().optional(),
+        region: z13.string().optional(),
+        annualCapacityTonnes: z13.number().int().positive().optional(),
+        availableVolumeCurrent: z13.number().int().nonnegative().optional(),
+        carbonIntensityValue: z13.number().int().optional(),
+        description: z13.string().optional(),
+        pricePerTonne: z13.number().int().optional(),
+        priceVisibility: z13.enum(["public", "private", "on_request"]).optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
       const feedstock = await getFeedstockById(id);
       if (!feedstock || feedstock.supplierId !== ctx.supplier.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Not authorized"
         });
@@ -17430,10 +17875,10 @@ var appRouter = router({
     list: supplierProcedure.query(async ({ ctx }) => {
       return await getFeedstocksBySupplierId(ctx.supplier.id);
     }),
-    getById: publicProcedure.input(z12.object({ id: z12.number() })).query(async ({ input }) => {
+    getById: publicProcedure.input(z13.object({ id: z13.number() })).query(async ({ input }) => {
       const feedstock = await getFeedstockById(input.id);
       if (!feedstock || feedstock.status !== "active") {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Feedstock not found"
         });
@@ -17441,13 +17886,13 @@ var appRouter = router({
       return feedstock;
     }),
     search: publicProcedure.input(
-      z12.object({
-        category: z12.array(z12.string()).optional(),
-        state: z12.array(z12.string()).optional(),
-        minAbfiScore: z12.number().optional(),
-        maxCarbonIntensity: z12.number().optional(),
-        limit: z12.number().optional(),
-        offset: z12.number().optional()
+      z13.object({
+        category: z13.array(z13.string()).optional(),
+        state: z13.array(z13.string()).optional(),
+        minAbfiScore: z13.number().optional(),
+        maxCarbonIntensity: z13.number().optional(),
+        limit: z13.number().optional(),
+        offset: z13.number().optional()
       })
     ).query(async ({ input }) => {
       return await searchFeedstocks({
@@ -17455,10 +17900,10 @@ var appRouter = router({
         status: "active"
       });
     }),
-    calculateRating: supplierProcedure.input(z12.object({ feedstockId: z12.number() })).mutation(async ({ ctx, input }) => {
+    calculateRating: supplierProcedure.input(z13.object({ feedstockId: z13.number() })).mutation(async ({ ctx, input }) => {
       const feedstock = await getFeedstockById(input.feedstockId);
       if (!feedstock || feedstock.supplierId !== ctx.supplier.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Not authorized"
         });
@@ -17486,16 +17931,16 @@ var appRouter = router({
       );
       return { scores, improvements };
     }),
-    submitForReview: supplierProcedure.input(z12.object({ feedstockId: z12.number() })).mutation(async ({ ctx, input }) => {
+    submitForReview: supplierProcedure.input(z13.object({ feedstockId: z13.number() })).mutation(async ({ ctx, input }) => {
       const feedstock = await getFeedstockById(input.feedstockId);
       if (!feedstock || feedstock.supplierId !== ctx.supplier.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Not authorized"
         });
       }
       if (feedstock.status !== "draft") {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "BAD_REQUEST",
           message: "Only draft feedstocks can be submitted for review"
         });
@@ -17517,9 +17962,9 @@ var appRouter = router({
   // ============================================================================
   certificates: router({
     create: supplierProcedure.input(
-      z12.object({
-        feedstockId: z12.number(),
-        type: z12.enum([
+      z13.object({
+        feedstockId: z13.number(),
+        type: z13.enum([
           "ISCC_EU",
           "ISCC_PLUS",
           "RSB",
@@ -17528,17 +17973,17 @@ var appRouter = router({
           "ABFI",
           "OTHER"
         ]),
-        certificateNumber: z12.string().optional(),
-        issuedDate: z12.date().optional(),
-        expiryDate: z12.date().optional(),
-        documentUrl: z12.string().optional(),
-        documentKey: z12.string().optional(),
-        notes: z12.string().optional()
+        certificateNumber: z13.string().optional(),
+        issuedDate: z13.date().optional(),
+        expiryDate: z13.date().optional(),
+        documentUrl: z13.string().optional(),
+        documentKey: z13.string().optional(),
+        notes: z13.string().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const feedstock = await getFeedstockById(input.feedstockId);
       if (!feedstock || feedstock.supplierId !== ctx.supplier.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Not authorized"
         });
@@ -17552,10 +17997,10 @@ var appRouter = router({
       });
       return { certificateId: certId };
     }),
-    list: supplierProcedure.input(z12.object({ feedstockId: z12.number() })).query(async ({ ctx, input }) => {
+    list: supplierProcedure.input(z13.object({ feedstockId: z13.number() })).query(async ({ ctx, input }) => {
       const feedstock = await getFeedstockById(input.feedstockId);
       if (!feedstock || feedstock.supplierId !== ctx.supplier.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Not authorized"
         });
@@ -17563,25 +18008,25 @@ var appRouter = router({
       return await getCertificatesByFeedstockId(input.feedstockId);
     }),
     // Generate ABFI Rating Certificate PDF
-    generateABFICertificate: supplierProcedure.input(z12.object({ feedstockId: z12.number() })).mutation(async ({ ctx, input }) => {
+    generateABFICertificate: supplierProcedure.input(z13.object({ feedstockId: z13.number() })).mutation(async ({ ctx, input }) => {
       const { generateABFICertificate: generateABFICertificate2, calculateRatingGrade: calculateRatingGrade2 } = await Promise.resolve().then(() => (init_certificateGenerator(), certificateGenerator_exports));
       const { storagePut: storagePut2 } = await Promise.resolve().then(() => (init_storage(), storage_exports));
       const feedstock = await getFeedstockById(input.feedstockId);
       if (!feedstock || feedstock.supplierId !== ctx.supplier.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Not authorized"
         });
       }
       if (!feedstock.abfiScore) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "BAD_REQUEST",
           message: "Feedstock must have ABFI rating before generating certificate"
         });
       }
       const supplier = await getSupplierById(feedstock.supplierId);
       if (!supplier) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Supplier not found"
         });
@@ -17659,9 +18104,9 @@ var appRouter = router({
     }),
     // Generate Biological Asset Data Pack (BADP)
     generateBADP: supplierProcedure.input(
-      z12.object({
-        feedstockId: z12.number(),
-        preparedFor: z12.string()
+      z13.object({
+        feedstockId: z13.number(),
+        preparedFor: z13.string()
         // Client/investor name
       })
     ).mutation(async ({ ctx, input }) => {
@@ -17670,14 +18115,14 @@ var appRouter = router({
       const { storagePut: storagePut2 } = await Promise.resolve().then(() => (init_storage(), storage_exports));
       const feedstock = await getFeedstockById(input.feedstockId);
       if (!feedstock || feedstock.supplierId !== ctx.supplier.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Not authorized"
         });
       }
       const supplier = await getSupplierById(feedstock.supplierId);
       if (!supplier) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Supplier not found"
         });
@@ -17792,20 +18237,20 @@ var appRouter = router({
   // ============================================================================
   qualityTests: router({
     create: supplierProcedure.input(
-      z12.object({
-        feedstockId: z12.number(),
-        testDate: z12.date(),
-        laboratory: z12.string().optional(),
-        parameters: z12.any(),
-        overallPass: z12.boolean().optional(),
-        reportUrl: z12.string().optional(),
-        reportKey: z12.string().optional(),
-        notes: z12.string().optional()
+      z13.object({
+        feedstockId: z13.number(),
+        testDate: z13.date(),
+        laboratory: z13.string().optional(),
+        parameters: z13.any(),
+        overallPass: z13.boolean().optional(),
+        reportUrl: z13.string().optional(),
+        reportKey: z13.string().optional(),
+        notes: z13.string().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const feedstock = await getFeedstockById(input.feedstockId);
       if (!feedstock || feedstock.supplierId !== ctx.supplier.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Not authorized"
         });
@@ -17819,10 +18264,10 @@ var appRouter = router({
       });
       return { testId };
     }),
-    list: supplierProcedure.input(z12.object({ feedstockId: z12.number() })).query(async ({ ctx, input }) => {
+    list: supplierProcedure.input(z13.object({ feedstockId: z13.number() })).query(async ({ ctx, input }) => {
       const feedstock = await getFeedstockById(input.feedstockId);
       if (!feedstock || feedstock.supplierId !== ctx.supplier.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Not authorized"
         });
@@ -17835,15 +18280,15 @@ var appRouter = router({
   // ============================================================================
   inquiries: router({
     create: buyerProcedure.input(
-      z12.object({
-        supplierId: z12.number(),
-        feedstockId: z12.number().optional(),
-        subject: z12.string().min(1),
-        message: z12.string().min(1),
-        volumeRequired: z12.number().int().optional(),
-        deliveryLocation: z12.string().optional(),
-        deliveryTimeframeStart: z12.date().optional(),
-        deliveryTimeframeEnd: z12.date().optional()
+      z13.object({
+        supplierId: z13.number(),
+        feedstockId: z13.number().optional(),
+        subject: z13.string().min(1),
+        message: z13.string().min(1),
+        volumeRequired: z13.number().int().optional(),
+        deliveryLocation: z13.string().optional(),
+        deliveryTimeframeStart: z13.date().optional(),
+        deliveryTimeframeEnd: z13.date().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const inquiryId = await createInquiry({
@@ -17864,21 +18309,21 @@ var appRouter = router({
       return { inquiryId };
     }),
     respond: supplierProcedure.input(
-      z12.object({
-        inquiryId: z12.number(),
-        response: z12.string().min(1),
-        pricePerTonne: z12.number().optional(),
-        availableVolume: z12.number().optional(),
-        deliveryTimeframe: z12.string().optional(),
-        deliveryTerms: z12.string().optional(),
-        minimumOrder: z12.number().optional(),
-        status: z12.enum(["responded", "closed"]).optional()
+      z13.object({
+        inquiryId: z13.number(),
+        response: z13.string().min(1),
+        pricePerTonne: z13.number().optional(),
+        availableVolume: z13.number().optional(),
+        deliveryTimeframe: z13.string().optional(),
+        deliveryTerms: z13.string().optional(),
+        minimumOrder: z13.number().optional(),
+        status: z13.enum(["responded", "closed"]).optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const inquiry = await getInquiriesBySupplierId(ctx.supplier.id);
       const targetInquiry = inquiry.find((i) => i.id === input.inquiryId);
       if (!targetInquiry) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Not authorized"
         });
@@ -17913,7 +18358,7 @@ var appRouter = router({
       }
       return { success: true };
     }),
-    getById: protectedProcedure.input(z12.object({ id: z12.number() })).query(async ({ input }) => {
+    getById: protectedProcedure.input(z13.object({ id: z13.number() })).query(async ({ input }) => {
       return await getInquiryById(input.id);
     }),
     listForBuyer: buyerProcedure.query(async ({ ctx }) => {
@@ -17927,10 +18372,10 @@ var appRouter = router({
   // NOTIFICATIONS
   // ============================================================================
   notifications: router({
-    list: protectedProcedure.input(z12.object({ unreadOnly: z12.boolean().optional() })).query(async ({ ctx, input }) => {
+    list: protectedProcedure.input(z13.object({ unreadOnly: z13.boolean().optional() })).query(async ({ ctx, input }) => {
       return await getNotificationsByUserId(ctx.user.id, input.unreadOnly);
     }),
-    markAsRead: protectedProcedure.input(z12.object({ notificationId: z12.number() })).mutation(async ({ input }) => {
+    markAsRead: protectedProcedure.input(z13.object({ notificationId: z13.number() })).mutation(async ({ input }) => {
       await markNotificationAsRead(input.notificationId);
       return { success: true };
     }),
@@ -17944,10 +18389,10 @@ var appRouter = router({
   // ============================================================================
   savedSearches: router({
     create: buyerProcedure.input(
-      z12.object({
-        name: z12.string().min(1),
-        criteria: z12.any(),
-        notifyOnNewMatches: z12.boolean().optional()
+      z13.object({
+        name: z13.string().min(1),
+        criteria: z13.any(),
+        notifyOnNewMatches: z13.boolean().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const searchId = await createSavedSearch({
@@ -17959,7 +18404,7 @@ var appRouter = router({
     list: buyerProcedure.query(async ({ ctx }) => {
       return await getSavedSearchesByBuyerId(ctx.buyer.id);
     }),
-    delete: buyerProcedure.input(z12.object({ searchId: z12.number() })).mutation(async ({ input }) => {
+    delete: buyerProcedure.input(z13.object({ searchId: z13.number() })).mutation(async ({ input }) => {
       await deleteSavedSearch(input.searchId);
       return { success: true };
     })
@@ -17975,9 +18420,9 @@ var appRouter = router({
       return await getAllSuppliers({ verificationStatus: "pending" });
     }),
     verifySupplier: adminProcedure5.input(
-      z12.object({
-        supplierId: z12.number(),
-        approved: z12.boolean()
+      z13.object({
+        supplierId: z13.number(),
+        approved: z13.boolean()
       })
     ).mutation(async ({ ctx, input }) => {
       await updateSupplier(input.supplierId, {
@@ -18005,10 +18450,10 @@ var appRouter = router({
       return await searchFeedstocks({ status: "pending_review" });
     }),
     verifyFeedstock: adminProcedure5.input(
-      z12.object({
-        feedstockId: z12.number(),
-        approved: z12.boolean(),
-        verificationLevel: z12.enum([
+      z13.object({
+        feedstockId: z13.number(),
+        approved: z13.boolean(),
+        verificationLevel: z13.enum([
           "self_declared",
           "document_verified",
           "third_party_audited",
@@ -18044,10 +18489,10 @@ var appRouter = router({
       return { success: true };
     }),
     getAuditLogs: adminProcedure5.input(
-      z12.object({
-        entityType: z12.string().optional(),
-        entityId: z12.number().optional(),
-        limit: z12.number().optional()
+      z13.object({
+        entityType: z13.string().optional(),
+        entityId: z13.number().optional(),
+        limit: z13.number().optional()
       })
     ).query(async ({ input }) => {
       return await getAuditLogs(input);
@@ -18057,13 +18502,13 @@ var appRouter = router({
       return await getAllUsers();
     }),
     updateUserRole: adminProcedure5.input(
-      z12.object({
-        userId: z12.number(),
-        role: z12.enum(["admin", "supplier", "buyer"])
+      z13.object({
+        userId: z13.number(),
+        role: z13.enum(["admin", "supplier", "buyer"])
       })
     ).mutation(async ({ ctx, input }) => {
       if (input.userId === ctx.user.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Cannot change your own role"
         });
@@ -18085,18 +18530,18 @@ var appRouter = router({
   bankability: router({
     // Projects
     createProject: protectedProcedure.input(
-      z12.object({
-        name: z12.string(),
-        description: z12.string().optional(),
-        facilityLocation: z12.string().optional(),
-        state: z12.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
-        latitude: z12.string().optional(),
-        longitude: z12.string().optional(),
-        nameplateCapacity: z12.number(),
-        feedstockType: z12.string().optional(),
-        targetCOD: z12.date().optional(),
-        financialCloseTarget: z12.date().optional(),
-        debtTenor: z12.number().optional()
+      z13.object({
+        name: z13.string(),
+        description: z13.string().optional(),
+        facilityLocation: z13.string().optional(),
+        state: z13.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]).optional(),
+        latitude: z13.string().optional(),
+        longitude: z13.string().optional(),
+        nameplateCapacity: z13.number(),
+        feedstockType: z13.string().optional(),
+        targetCOD: z13.date().optional(),
+        financialCloseTarget: z13.date().optional(),
+        debtTenor: z13.number().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const projectId = await createProject({
@@ -18113,15 +18558,15 @@ var appRouter = router({
     }),
     // Project Registration Flow (7 steps)
     registerProject: protectedProcedure.input(
-      z12.object({
+      z13.object({
         // Step 1: Project Overview
-        projectName: z12.string(),
-        developerName: z12.string().optional(),
-        abn: z12.string().optional(),
-        website: z12.string().optional(),
-        region: z12.string().optional(),
-        siteAddress: z12.string().optional(),
-        developmentStage: z12.enum([
+        projectName: z13.string(),
+        developerName: z13.string().optional(),
+        abn: z13.string().optional(),
+        website: z13.string().optional(),
+        region: z13.string().optional(),
+        siteAddress: z13.string().optional(),
+        developmentStage: z13.enum([
           "concept",
           "prefeasibility",
           "feasibility",
@@ -18130,25 +18575,25 @@ var appRouter = router({
           "operational"
         ]).optional(),
         // Step 2: Technology Details
-        conversionTechnology: z12.string().optional(),
-        technologyProvider: z12.string().optional(),
-        primaryOutput: z12.string().optional(),
-        secondaryOutputs: z12.string().optional(),
-        nameplateCapacity: z12.string().optional(),
-        outputCapacity: z12.string().optional(),
-        outputUnit: z12.string().optional(),
+        conversionTechnology: z13.string().optional(),
+        technologyProvider: z13.string().optional(),
+        primaryOutput: z13.string().optional(),
+        secondaryOutputs: z13.string().optional(),
+        nameplateCapacity: z13.string().optional(),
+        outputCapacity: z13.string().optional(),
+        outputUnit: z13.string().optional(),
         // Step 3: Feedstock Requirements
-        feedstockType: z12.string().optional(),
-        secondaryFeedstocks: z12.string().optional(),
-        annualFeedstockVolume: z12.string().optional(),
-        feedstockQualitySpecs: z12.string().optional(),
-        supplyRadius: z12.string().optional(),
-        logisticsRequirements: z12.string().optional(),
+        feedstockType: z13.string().optional(),
+        secondaryFeedstocks: z13.string().optional(),
+        annualFeedstockVolume: z13.string().optional(),
+        feedstockQualitySpecs: z13.string().optional(),
+        supplyRadius: z13.string().optional(),
+        logisticsRequirements: z13.string().optional(),
         // Step 4: Funding Status
-        totalCapex: z12.string().optional(),
-        fundingSecured: z12.string().optional(),
-        fundingSources: z12.string().optional(),
-        investmentStage: z12.enum([
+        totalCapex: z13.string().optional(),
+        fundingSecured: z13.string().optional(),
+        fundingSources: z13.string().optional(),
+        investmentStage: z13.enum([
           "seed",
           "series_a",
           "series_b",
@@ -18156,22 +18601,22 @@ var appRouter = router({
           "post_fid",
           "operational"
         ]).optional(),
-        seekingInvestment: z12.boolean().optional(),
-        investmentAmount: z12.string().optional(),
+        seekingInvestment: z13.boolean().optional(),
+        investmentAmount: z13.string().optional(),
         // Step 5: Approvals & Permits
-        environmentalApproval: z12.boolean().optional(),
-        planningPermit: z12.boolean().optional(),
-        epaLicense: z12.boolean().optional(),
-        otherApprovals: z12.string().optional(),
-        approvalsNotes: z12.string().optional(),
+        environmentalApproval: z13.boolean().optional(),
+        planningPermit: z13.boolean().optional(),
+        epaLicense: z13.boolean().optional(),
+        otherApprovals: z13.string().optional(),
+        approvalsNotes: z13.string().optional(),
         // Step 6: Verification
-        verificationDocuments: z12.array(z12.string()).optional(),
-        verificationNotes: z12.string().optional(),
+        verificationDocuments: z13.array(z13.string()).optional(),
+        verificationNotes: z13.string().optional(),
         // Step 7: Opportunities
-        feedstockMatchingEnabled: z12.boolean().optional(),
-        financingInterest: z12.boolean().optional(),
-        partnershipInterest: z12.boolean().optional(),
-        publicVisibility: z12.enum(["private", "investors_only", "suppliers_only", "public"]).optional()
+        feedstockMatchingEnabled: z13.boolean().optional(),
+        financingInterest: z13.boolean().optional(),
+        partnershipInterest: z13.boolean().optional(),
+        publicVisibility: z13.enum(["private", "investors_only", "suppliers_only", "public"]).optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const projectData = {
@@ -18231,19 +18676,19 @@ var appRouter = router({
     listProjects: protectedProcedure.query(async ({ ctx }) => {
       return await getProjectsByUserId(ctx.user.id);
     }),
-    getProjectById: protectedProcedure.input(z12.object({ id: z12.number() })).query(async ({ ctx, input }) => {
+    getProjectById: protectedProcedure.input(z13.object({ id: z13.number() })).query(async ({ ctx, input }) => {
       const project = await getProjectById(input.id);
       if (!project || project.userId !== ctx.user.id) {
-        throw new TRPCError14({ code: "NOT_FOUND" });
+        throw new TRPCError15({ code: "NOT_FOUND" });
       }
       return project;
     }),
     updateProject: protectedProcedure.input(
-      z12.object({
-        id: z12.number(),
-        name: z12.string().optional(),
-        description: z12.string().optional(),
-        status: z12.enum([
+      z13.object({
+        id: z13.number(),
+        name: z13.string().optional(),
+        description: z13.string().optional(),
+        status: z13.enum([
           "planning",
           "development",
           "financing",
@@ -18256,7 +18701,7 @@ var appRouter = router({
       const { id, ...updates } = input;
       const project = await getProjectById(id);
       if (!project || project.userId !== ctx.user.id) {
-        throw new TRPCError14({ code: "NOT_FOUND" });
+        throw new TRPCError15({ code: "NOT_FOUND" });
       }
       await updateProject(id, updates);
       await createAuditLog({
@@ -18269,27 +18714,27 @@ var appRouter = router({
     }),
     // Supply Agreements
     createAgreement: protectedProcedure.input(
-      z12.object({
-        projectId: z12.number(),
-        supplierId: z12.number(),
-        tier: z12.enum(["tier1", "tier2", "option", "rofr"]),
-        annualVolume: z12.number(),
-        termYears: z12.number(),
-        startDate: z12.date(),
-        endDate: z12.date(),
-        pricingMechanism: z12.enum([
+      z13.object({
+        projectId: z13.number(),
+        supplierId: z13.number(),
+        tier: z13.enum(["tier1", "tier2", "option", "rofr"]),
+        annualVolume: z13.number(),
+        termYears: z13.number(),
+        startDate: z13.date(),
+        endDate: z13.date(),
+        pricingMechanism: z13.enum([
           "fixed",
           "fixed_with_escalation",
           "index_linked",
           "index_with_floor_ceiling",
           "spot_reference"
         ]),
-        takeOrPayPercentage: z12.number().optional()
+        takeOrPayPercentage: z13.number().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const project = await getProjectById(input.projectId);
       if (!project || project.userId !== ctx.user.id) {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       const agreementId = await createSupplyAgreement(input);
       await createAuditLog({
@@ -18300,31 +18745,31 @@ var appRouter = router({
       });
       return { agreementId };
     }),
-    getProjectAgreements: protectedProcedure.input(z12.object({ projectId: z12.number() })).query(async ({ ctx, input }) => {
+    getProjectAgreements: protectedProcedure.input(z13.object({ projectId: z13.number() })).query(async ({ ctx, input }) => {
       const project = await getProjectById(input.projectId);
       if (!project || project.userId !== ctx.user.id) {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       return await getSupplyAgreementsByProjectId(input.projectId);
     }),
     // Grower Qualifications
     createQualification: protectedProcedure.input(
-      z12.object({
-        supplierId: z12.number(),
-        level: z12.enum(["GQ1", "GQ2", "GQ3", "GQ4"]),
-        levelName: z12.string().optional(),
-        compositeScore: z12.number(),
-        assessmentDate: z12.date().optional(),
-        validFrom: z12.date(),
-        validUntil: z12.date(),
-        operatingHistoryScore: z12.number().optional(),
-        financialStrengthScore: z12.number().optional(),
-        landTenureScore: z12.number().optional(),
-        productionCapacityScore: z12.number().optional(),
-        creditScore: z12.number().optional(),
-        insuranceScore: z12.number().optional(),
-        assessmentNotes: z12.string().optional(),
-        status: z12.enum(["pending", "approved", "expired", "revoked"]).optional()
+      z13.object({
+        supplierId: z13.number(),
+        level: z13.enum(["GQ1", "GQ2", "GQ3", "GQ4"]),
+        levelName: z13.string().optional(),
+        compositeScore: z13.number(),
+        assessmentDate: z13.date().optional(),
+        validFrom: z13.date(),
+        validUntil: z13.date(),
+        operatingHistoryScore: z13.number().optional(),
+        financialStrengthScore: z13.number().optional(),
+        landTenureScore: z13.number().optional(),
+        productionCapacityScore: z13.number().optional(),
+        creditScore: z13.number().optional(),
+        insuranceScore: z13.number().optional(),
+        assessmentNotes: z13.string().optional(),
+        status: z13.enum(["pending", "approved", "expired", "revoked"]).optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const qualificationData = {
@@ -18342,22 +18787,22 @@ var appRouter = router({
       return { qualificationId };
     }),
     createGrowerQualification: protectedProcedure.input(
-      z12.object({
-        supplierId: z12.number(),
-        level: z12.enum(["GQ1", "GQ2", "GQ3", "GQ4"]),
-        levelName: z12.string().optional(),
-        compositeScore: z12.number(),
-        assessmentDate: z12.date().optional(),
-        validFrom: z12.date(),
-        validUntil: z12.date(),
-        operatingHistoryScore: z12.number().optional(),
-        financialStrengthScore: z12.number().optional(),
-        landTenureScore: z12.number().optional(),
-        productionCapacityScore: z12.number().optional(),
-        creditScore: z12.number().optional(),
-        insuranceScore: z12.number().optional(),
-        assessmentNotes: z12.string().optional(),
-        status: z12.enum(["pending", "approved", "expired", "revoked"]).optional()
+      z13.object({
+        supplierId: z13.number(),
+        level: z13.enum(["GQ1", "GQ2", "GQ3", "GQ4"]),
+        levelName: z13.string().optional(),
+        compositeScore: z13.number(),
+        assessmentDate: z13.date().optional(),
+        validFrom: z13.date(),
+        validUntil: z13.date(),
+        operatingHistoryScore: z13.number().optional(),
+        financialStrengthScore: z13.number().optional(),
+        landTenureScore: z13.number().optional(),
+        productionCapacityScore: z13.number().optional(),
+        creditScore: z13.number().optional(),
+        insuranceScore: z13.number().optional(),
+        assessmentNotes: z13.string().optional(),
+        status: z13.enum(["pending", "approved", "expired", "revoked"]).optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const qualificationData = {
@@ -18374,35 +18819,35 @@ var appRouter = router({
       });
       return { qualificationId };
     }),
-    getSupplierQualifications: protectedProcedure.input(z12.object({ supplierId: z12.number() })).query(async ({ input }) => {
+    getSupplierQualifications: protectedProcedure.input(z13.object({ supplierId: z13.number() })).query(async ({ input }) => {
       return await getGrowerQualificationsBySupplierId(input.supplierId);
     }),
     // Bankability Assessments
     createAssessment: protectedProcedure.input(
-      z12.object({
-        projectId: z12.number(),
-        assessmentNumber: z12.string(),
-        assessmentDate: z12.date(),
-        volumeSecurityScore: z12.number(),
-        counterpartyQualityScore: z12.number(),
-        contractStructureScore: z12.number(),
-        concentrationRiskScore: z12.number(),
-        operationalReadinessScore: z12.number(),
-        compositeScore: z12.number(),
-        rating: z12.enum(["AAA", "AA", "A", "BBB", "BB", "B", "CCC"]),
-        ratingDescription: z12.string().optional(),
-        tier1Volume: z12.number().optional(),
-        tier1Percent: z12.number().optional(),
-        tier2Volume: z12.number().optional(),
-        tier2Percent: z12.number().optional(),
-        optionsVolume: z12.number().optional(),
-        optionsPercent: z12.number().optional(),
-        rofrVolume: z12.number().optional(),
-        rofrPercent: z12.number().optional(),
-        totalAgreements: z12.number().optional(),
-        strengths: z12.array(z12.string()).optional(),
-        monitoringItems: z12.array(z12.string()).optional(),
-        status: z12.enum([
+      z13.object({
+        projectId: z13.number(),
+        assessmentNumber: z13.string(),
+        assessmentDate: z13.date(),
+        volumeSecurityScore: z13.number(),
+        counterpartyQualityScore: z13.number(),
+        contractStructureScore: z13.number(),
+        concentrationRiskScore: z13.number(),
+        operationalReadinessScore: z13.number(),
+        compositeScore: z13.number(),
+        rating: z13.enum(["AAA", "AA", "A", "BBB", "BB", "B", "CCC"]),
+        ratingDescription: z13.string().optional(),
+        tier1Volume: z13.number().optional(),
+        tier1Percent: z13.number().optional(),
+        tier2Volume: z13.number().optional(),
+        tier2Percent: z13.number().optional(),
+        optionsVolume: z13.number().optional(),
+        optionsPercent: z13.number().optional(),
+        rofrVolume: z13.number().optional(),
+        rofrPercent: z13.number().optional(),
+        totalAgreements: z13.number().optional(),
+        strengths: z13.array(z13.string()).optional(),
+        monitoringItems: z13.array(z13.string()).optional(),
+        status: z13.enum([
           "draft",
           "submitted",
           "under_review",
@@ -18413,7 +18858,7 @@ var appRouter = router({
     ).mutation(async ({ ctx, input }) => {
       const project = await getProjectById(input.projectId);
       if (!project || project.userId !== ctx.user.id) {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       const assessmentData = {
         ...input,
@@ -18428,35 +18873,35 @@ var appRouter = router({
       });
       return { assessmentId };
     }),
-    getProjectAssessments: protectedProcedure.input(z12.object({ projectId: z12.number() })).query(async ({ ctx, input }) => {
+    getProjectAssessments: protectedProcedure.input(z13.object({ projectId: z13.number() })).query(async ({ ctx, input }) => {
       const project = await getProjectById(input.projectId);
       if (!project || project.userId !== ctx.user.id) {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       return await getBankabilityAssessmentsByProjectId(input.projectId);
     }),
-    getLatestAssessment: protectedProcedure.input(z12.object({ projectId: z12.number() })).query(async ({ ctx, input }) => {
+    getLatestAssessment: protectedProcedure.input(z13.object({ projectId: z13.number() })).query(async ({ ctx, input }) => {
       const project = await getProjectById(input.projectId);
       if (!project || project.userId !== ctx.user.id) {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       return await getLatestBankabilityAssessment(input.projectId);
     }),
     // Admin Assessor Workflow
     listAssessments: protectedProcedure.query(async ({ ctx }) => {
       if (ctx.user.role !== "admin") {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       return await getAllBankabilityAssessments();
     }),
     approveAssessment: protectedProcedure.input(
-      z12.object({
-        assessmentId: z12.number(),
-        approverNotes: z12.string().optional()
+      z13.object({
+        assessmentId: z13.number(),
+        approverNotes: z13.string().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       if (ctx.user.role !== "admin") {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       await updateBankabilityAssessment(input.assessmentId, {
         status: "approved"
@@ -18473,13 +18918,13 @@ var appRouter = router({
       return { success: true };
     }),
     rejectAssessment: protectedProcedure.input(
-      z12.object({
-        assessmentId: z12.number(),
-        rejectionReason: z12.string()
+      z13.object({
+        assessmentId: z13.number(),
+        rejectionReason: z13.string()
       })
     ).mutation(async ({ ctx, input }) => {
       if (ctx.user.role !== "admin") {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       await updateBankabilityAssessment(input.assessmentId, {
         status: "rejected",
@@ -18495,20 +18940,20 @@ var appRouter = router({
       return { success: true };
     }),
     adjustAssessmentScore: protectedProcedure.input(
-      z12.object({
-        assessmentId: z12.number(),
-        adjustedScores: z12.record(z12.string(), z12.number()),
-        reason: z12.string()
+      z13.object({
+        assessmentId: z13.number(),
+        adjustedScores: z13.record(z13.string(), z13.number()),
+        reason: z13.string()
       })
     ).mutation(async ({ ctx, input }) => {
       if (ctx.user.role !== "admin") {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       const assessment = await getBankabilityAssessmentById(
         input.assessmentId
       );
       if (!assessment) {
-        throw new TRPCError14({ code: "NOT_FOUND" });
+        throw new TRPCError15({ code: "NOT_FOUND" });
       }
       const updates = {};
       if (input.adjustedScores.volumeSecurity !== void 0) {
@@ -18560,18 +19005,18 @@ var appRouter = router({
     }),
     // Lender Access
     grantLenderAccess: protectedProcedure.input(
-      z12.object({
-        projectId: z12.number(),
-        lenderName: z12.string(),
-        lenderEmail: z12.string(),
-        lenderContact: z12.string().optional(),
-        validFrom: z12.date(),
-        validUntil: z12.date()
+      z13.object({
+        projectId: z13.number(),
+        lenderName: z13.string(),
+        lenderEmail: z13.string(),
+        lenderContact: z13.string().optional(),
+        validFrom: z13.date(),
+        validUntil: z13.date()
       })
     ).mutation(async ({ ctx, input }) => {
       const project = await getProjectById(input.projectId);
       if (!project || project.userId !== ctx.user.id) {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       const accessToken = Math.random().toString(36).substring(2, 15);
       const accessId = await createLenderAccess({
@@ -18581,17 +19026,17 @@ var appRouter = router({
       });
       return { accessId, accessToken };
     }),
-    getProjectLenderAccess: protectedProcedure.input(z12.object({ projectId: z12.number() })).query(async ({ ctx, input }) => {
+    getProjectLenderAccess: protectedProcedure.input(z13.object({ projectId: z13.number() })).query(async ({ ctx, input }) => {
       const project = await getProjectById(input.projectId);
       if (!project || project.userId !== ctx.user.id) {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       return await getLenderAccessByProjectId(input.projectId);
     }),
     // Get projects that the current user has lender access to (by email)
     getMyLenderProjects: protectedProcedure.query(async ({ ctx }) => {
       if (!ctx.user.email) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "BAD_REQUEST",
           message: "User email is required"
         });
@@ -18602,7 +19047,7 @@ var appRouter = router({
     // Get lender access records for the current user
     getMyLenderAccess: protectedProcedure.query(async ({ ctx }) => {
       if (!ctx.user.email) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "BAD_REQUEST",
           message: "User email is required"
         });
@@ -18610,31 +19055,31 @@ var appRouter = router({
       return await getLenderAccessByEmail(ctx.user.email);
     }),
     // Download Certificate
-    downloadCertificate: protectedProcedure.input(z12.object({ assessmentId: z12.number() })).mutation(async ({ ctx, input }) => {
+    downloadCertificate: protectedProcedure.input(z13.object({ assessmentId: z13.number() })).mutation(async ({ ctx, input }) => {
       const assessment = await getBankabilityAssessmentById(
         input.assessmentId
       );
       if (!assessment) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Assessment not found"
         });
       }
       if (assessment.status !== "approved") {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "Certificate can only be downloaded for approved assessments"
         });
       }
       const project = await getProjectById(assessment.projectId);
       if (!project) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Project not found"
         });
       }
       if (project.userId !== ctx.user.id && ctx.user.role !== "admin") {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       const { generateBankabilityCertificate: generateBankabilityCertificate2, getBankabilityRating: getBankabilityRating2 } = await Promise.resolve().then(() => (init_bankabilityCertificate(), bankabilityCertificate_exports));
       const certificateData = {
@@ -18667,8 +19112,8 @@ var appRouter = router({
   evidence: router({
     // Upload evidence with automatic hashing
     upload: protectedProcedure.input(
-      z12.object({
-        type: z12.enum([
+      z13.object({
+        type: z13.enum([
           "lab_test",
           "audit_report",
           "registry_cert",
@@ -18681,12 +19126,12 @@ var appRouter = router({
           "delivery_record",
           "other"
         ]),
-        fileUrl: z12.string(),
-        fileHash: z12.string(),
-        fileSize: z12.number(),
-        mimeType: z12.string(),
-        originalFilename: z12.string(),
-        issuerType: z12.enum([
+        fileUrl: z13.string(),
+        fileHash: z13.string(),
+        fileSize: z13.number(),
+        mimeType: z13.string(),
+        originalFilename: z13.string(),
+        issuerType: z13.enum([
           "lab",
           "auditor",
           "registry",
@@ -18696,11 +19141,11 @@ var appRouter = router({
           "certification_body",
           "self_declared"
         ]),
-        issuerName: z12.string(),
-        issuerCredentials: z12.string().optional(),
-        issuedDate: z12.date(),
-        expiryDate: z12.date().optional(),
-        metadata: z12.record(z12.string(), z12.any()).optional()
+        issuerName: z13.string(),
+        issuerCredentials: z13.string().optional(),
+        issuedDate: z13.date(),
+        expiryDate: z13.date().optional(),
+        metadata: z13.record(z13.string(), z13.any()).optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const evidenceId = await createEvidence({
@@ -18718,13 +19163,13 @@ var appRouter = router({
       return { evidenceId };
     }),
     // Get evidence by ID
-    getById: protectedProcedure.input(z12.object({ id: z12.number() })).query(async ({ input }) => {
+    getById: protectedProcedure.input(z13.object({ id: z13.number() })).query(async ({ input }) => {
       return await getEvidenceById(input.id);
     }),
     // Get evidence by entity
     getByEntity: protectedProcedure.input(
-      z12.object({
-        entityType: z12.enum([
+      z13.object({
+        entityType: z13.enum([
           "feedstock",
           "supplier",
           "certificate",
@@ -18734,7 +19179,7 @@ var appRouter = router({
           "supply_agreement",
           "project"
         ]),
-        entityId: z12.number()
+        entityId: z13.number()
       })
     ).query(async ({ input }) => {
       return await getEvidenceLinkagesByEntity(
@@ -18743,14 +19188,14 @@ var appRouter = router({
       );
     }),
     // Get expiring evidence
-    getExpiring: protectedProcedure.input(z12.object({ daysAhead: z12.number().default(30) })).query(async ({ input }) => {
+    getExpiring: protectedProcedure.input(z13.object({ daysAhead: z13.number().default(30) })).query(async ({ input }) => {
       return await getExpiringEvidence(input.daysAhead);
     }),
     // Link evidence to entity
     linkToEntity: protectedProcedure.input(
-      z12.object({
-        evidenceId: z12.number(),
-        linkedEntityType: z12.enum([
+      z13.object({
+        evidenceId: z13.number(),
+        linkedEntityType: z13.enum([
           "feedstock",
           "supplier",
           "certificate",
@@ -18760,16 +19205,16 @@ var appRouter = router({
           "supply_agreement",
           "project"
         ]),
-        linkedEntityId: z12.number(),
-        linkageType: z12.enum([
+        linkedEntityId: z13.number(),
+        linkageType: z13.enum([
           "supports",
           "validates",
           "contradicts",
           "supersedes",
           "references"
         ]).default("supports"),
-        weightInCalculation: z12.number().optional(),
-        linkageNotes: z12.string().optional()
+        weightInCalculation: z13.number().optional(),
+        linkageNotes: z13.string().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const linkageId = await createEvidenceLinkage({
@@ -18787,10 +19232,10 @@ var appRouter = router({
     }),
     // Supersede evidence
     supersede: protectedProcedure.input(
-      z12.object({
-        oldEvidenceId: z12.number(),
-        newEvidenceId: z12.number(),
-        reason: z12.string()
+      z13.object({
+        oldEvidenceId: z13.number(),
+        newEvidenceId: z13.number(),
+        reason: z13.string()
       })
     ).mutation(async ({ ctx, input }) => {
       await supersedeEvidence(
@@ -18814,9 +19259,9 @@ var appRouter = router({
       return { success: true };
     }),
     // Verify evidence
-    verify: protectedProcedure.input(z12.object({ evidenceId: z12.number() })).mutation(async ({ ctx, input }) => {
+    verify: protectedProcedure.input(z13.object({ evidenceId: z13.number() })).mutation(async ({ ctx, input }) => {
       if (ctx.user.role !== "admin" && ctx.user.role !== "auditor") {
-        throw new TRPCError14({ code: "FORBIDDEN" });
+        throw new TRPCError15({ code: "FORBIDDEN" });
       }
       await updateEvidence(input.evidenceId, {
         verifiedBy: ctx.user.id,
@@ -18833,16 +19278,16 @@ var appRouter = router({
     }),
     // Create certificate snapshot
     createSnapshot: protectedProcedure.input(
-      z12.object({
-        certificateId: z12.number(),
-        frozenScoreData: z12.record(z12.string(), z12.any()),
-        frozenEvidenceSet: z12.array(
-          z12.object({
-            evidenceId: z12.number(),
-            fileHash: z12.string(),
-            type: z12.string(),
-            issuedDate: z12.string(),
-            issuerName: z12.string()
+      z13.object({
+        certificateId: z13.number(),
+        frozenScoreData: z13.record(z13.string(), z13.any()),
+        frozenEvidenceSet: z13.array(
+          z13.object({
+            evidenceId: z13.number(),
+            fileHash: z13.string(),
+            type: z13.string(),
+            issuedDate: z13.string(),
+            issuerName: z13.string()
           })
         )
       })
@@ -18871,7 +19316,7 @@ var appRouter = router({
       return { snapshotId, snapshotHash };
     }),
     // Get certificate snapshots
-    getSnapshotsByCertificate: protectedProcedure.input(z12.object({ certificateId: z12.number() })).query(async ({ input }) => {
+    getSnapshotsByCertificate: protectedProcedure.input(z13.object({ certificateId: z13.number() })).query(async ({ input }) => {
       return await getCertificateSnapshotsByCertificate(
         input.certificateId
       );
@@ -18881,15 +19326,15 @@ var appRouter = router({
   temporal: router({
     // Get entity as of specific date
     getAsOfDate: protectedProcedure.input(
-      z12.object({
-        entityType: z12.enum([
+      z13.object({
+        entityType: z13.enum([
           "feedstock",
           "certificate",
           "supply_agreement",
           "bankability_assessment"
         ]),
-        entityId: z12.number(),
-        asOfDate: z12.date()
+        entityId: z13.number(),
+        asOfDate: z13.date()
       })
     ).query(async ({ input }) => {
       const { getEntityAsOfDate: getEntityAsOfDate2 } = await Promise.resolve().then(() => (init_temporal(), temporal_exports));
@@ -18901,14 +19346,14 @@ var appRouter = router({
     }),
     // Get current version
     getCurrent: protectedProcedure.input(
-      z12.object({
-        entityType: z12.enum([
+      z13.object({
+        entityType: z13.enum([
           "feedstock",
           "certificate",
           "supply_agreement",
           "bankability_assessment"
         ]),
-        entityId: z12.number()
+        entityId: z13.number()
       })
     ).query(async ({ input }) => {
       const { getCurrentVersion: getCurrentVersion2 } = await Promise.resolve().then(() => (init_temporal(), temporal_exports));
@@ -18916,14 +19361,14 @@ var appRouter = router({
     }),
     // Get version history
     getHistory: protectedProcedure.input(
-      z12.object({
-        entityType: z12.enum([
+      z13.object({
+        entityType: z13.enum([
           "feedstock",
           "certificate",
           "supply_agreement",
           "bankability_assessment"
         ]),
-        entityId: z12.number()
+        entityId: z13.number()
       })
     ).query(async ({ input }) => {
       const { getEntityHistory: getEntityHistory2 } = await Promise.resolve().then(() => (init_temporal(), temporal_exports));
@@ -18931,14 +19376,14 @@ var appRouter = router({
     }),
     // Get version timeline
     getTimeline: protectedProcedure.input(
-      z12.object({
-        entityType: z12.enum([
+      z13.object({
+        entityType: z13.enum([
           "feedstock",
           "certificate",
           "supply_agreement",
           "bankability_assessment"
         ]),
-        entityId: z12.number()
+        entityId: z13.number()
       })
     ).query(async ({ input }) => {
       const { getVersionTimeline: getVersionTimeline2 } = await Promise.resolve().then(() => (init_temporal(), temporal_exports));
@@ -18946,15 +19391,15 @@ var appRouter = router({
     }),
     // Compare two versions
     compareVersions: protectedProcedure.input(
-      z12.object({
-        entityType: z12.enum([
+      z13.object({
+        entityType: z13.enum([
           "feedstock",
           "certificate",
           "supply_agreement",
           "bankability_assessment"
         ]),
-        oldVersionId: z12.number(),
-        newVersionId: z12.number()
+        oldVersionId: z13.number(),
+        newVersionId: z13.number()
       })
     ).query(async ({ input }) => {
       const { getCurrentVersion: getCurrentVersion2, compareVersions: compareVersions2 } = await Promise.resolve().then(() => (init_temporal(), temporal_exports));
@@ -18967,7 +19412,7 @@ var appRouter = router({
         input.newVersionId
       );
       if (!oldVersion || !newVersion) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Version not found"
         });
@@ -18979,15 +19424,15 @@ var appRouter = router({
   physicalReality: router({
     // Delivery Events
     recordDelivery: protectedProcedure.input(
-      z12.object({
-        agreementId: z12.number(),
-        scheduledDate: z12.date(),
-        actualDate: z12.date().optional(),
-        committedVolume: z12.number(),
-        actualVolume: z12.number().optional(),
-        onTime: z12.boolean().optional(),
-        qualityMet: z12.boolean().optional(),
-        status: z12.enum([
+      z13.object({
+        agreementId: z13.number(),
+        scheduledDate: z13.date(),
+        actualDate: z13.date().optional(),
+        committedVolume: z13.number(),
+        actualVolume: z13.number().optional(),
+        onTime: z13.boolean().optional(),
+        qualityMet: z13.boolean().optional(),
+        status: z13.enum([
           "scheduled",
           "in_transit",
           "delivered",
@@ -18995,7 +19440,7 @@ var appRouter = router({
           "cancelled",
           "failed"
         ]),
-        notes: z12.string().optional()
+        notes: z13.string().optional()
       })
     ).mutation(async ({ input, ctx }) => {
       const variancePercent = input.actualVolume && input.committedVolume ? Math.round(
@@ -19008,20 +19453,20 @@ var appRouter = router({
         qualityTestId: null
       });
     }),
-    getDeliveryHistory: protectedProcedure.input(z12.object({ agreementId: z12.number() })).query(async ({ input }) => {
+    getDeliveryHistory: protectedProcedure.input(z13.object({ agreementId: z13.number() })).query(async ({ input }) => {
       return await getDeliveryEventsByAgreement(input.agreementId);
     }),
-    getDeliveryPerformance: protectedProcedure.input(z12.object({ agreementId: z12.number() })).query(async ({ input }) => {
+    getDeliveryPerformance: protectedProcedure.input(z13.object({ agreementId: z13.number() })).query(async ({ input }) => {
       return await getDeliveryPerformanceMetrics(input.agreementId);
     }),
     // Seasonality
     addSeasonality: protectedProcedure.input(
-      z12.object({
-        feedstockId: z12.number(),
-        month: z12.number().min(1).max(12),
-        availabilityPercent: z12.number().min(0).max(100),
-        isPeakSeason: z12.boolean().optional(),
-        notes: z12.string().optional()
+      z13.object({
+        feedstockId: z13.number(),
+        month: z13.number().min(1).max(12),
+        availabilityPercent: z13.number().min(0).max(100),
+        isPeakSeason: z13.boolean().optional(),
+        notes: z13.string().optional()
       })
     ).mutation(async ({ input }) => {
       return await createSeasonalityProfile({
@@ -19031,15 +19476,15 @@ var appRouter = router({
         historicalYield: null
       });
     }),
-    getSeasonality: protectedProcedure.input(z12.object({ feedstockId: z12.number() })).query(async ({ input }) => {
+    getSeasonality: protectedProcedure.input(z13.object({ feedstockId: z13.number() })).query(async ({ input }) => {
       return await getSeasonalityByFeedstock(input.feedstockId);
     }),
     // Climate Exposure
     addClimateRisk: protectedProcedure.input(
-      z12.object({
-        supplierId: z12.number(),
-        feedstockId: z12.number().optional(),
-        exposureType: z12.enum([
+      z13.object({
+        supplierId: z13.number(),
+        feedstockId: z13.number().optional(),
+        exposureType: z13.enum([
           "drought",
           "flood",
           "bushfire",
@@ -19048,12 +19493,12 @@ var appRouter = router({
           "cyclone",
           "pest_outbreak"
         ]),
-        riskLevel: z12.enum(["low", "medium", "high", "extreme"]),
-        probabilityPercent: z12.number().min(0).max(100).optional(),
-        impactSeverity: z12.enum(["minor", "moderate", "major", "catastrophic"]).optional(),
-        mitigationMeasures: z12.string().optional(),
-        insuranceCoverage: z12.boolean().optional(),
-        notes: z12.string().optional()
+        riskLevel: z13.enum(["low", "medium", "high", "extreme"]),
+        probabilityPercent: z13.number().min(0).max(100).optional(),
+        impactSeverity: z13.enum(["minor", "moderate", "major", "catastrophic"]).optional(),
+        mitigationMeasures: z13.string().optional(),
+        insuranceCoverage: z13.boolean().optional(),
+        notes: z13.string().optional()
       })
     ).mutation(async ({ input, ctx }) => {
       return await createClimateExposure({
@@ -19066,25 +19511,25 @@ var appRouter = router({
         insuranceValue: null
       });
     }),
-    getSupplierClimateRisks: protectedProcedure.input(z12.object({ supplierId: z12.number() })).query(async ({ input }) => {
+    getSupplierClimateRisks: protectedProcedure.input(z13.object({ supplierId: z13.number() })).query(async ({ input }) => {
       return await getClimateExposureBySupplier(input.supplierId);
     }),
-    getFeedstockClimateRisks: protectedProcedure.input(z12.object({ feedstockId: z12.number() })).query(async ({ input }) => {
+    getFeedstockClimateRisks: protectedProcedure.input(z13.object({ feedstockId: z13.number() })).query(async ({ input }) => {
       return await getClimateExposureByFeedstock(input.feedstockId);
     }),
     // Yield Estimates
     addYieldEstimate: protectedProcedure.input(
-      z12.object({
-        feedstockId: z12.number(),
-        year: z12.number(),
-        season: z12.enum(["summer", "autumn", "winter", "spring", "annual"]).optional(),
-        p50Yield: z12.number(),
-        p75Yield: z12.number().optional(),
-        p90Yield: z12.number().optional(),
-        confidenceLevel: z12.enum(["low", "medium", "high"]),
-        methodology: z12.string().optional(),
-        weatherDependencyScore: z12.number().min(1).max(10).optional(),
-        notes: z12.string().optional()
+      z13.object({
+        feedstockId: z13.number(),
+        year: z13.number(),
+        season: z13.enum(["summer", "autumn", "winter", "spring", "annual"]).optional(),
+        p50Yield: z13.number(),
+        p75Yield: z13.number().optional(),
+        p90Yield: z13.number().optional(),
+        confidenceLevel: z13.enum(["low", "medium", "high"]),
+        methodology: z13.string().optional(),
+        weatherDependencyScore: z13.number().min(1).max(10).optional(),
+        notes: z13.string().optional()
       })
     ).mutation(async ({ input, ctx }) => {
       return await createYieldEstimate({
@@ -19093,10 +19538,10 @@ var appRouter = router({
         estimatedDate: /* @__PURE__ */ new Date()
       });
     }),
-    getYieldEstimates: protectedProcedure.input(z12.object({ feedstockId: z12.number() })).query(async ({ input }) => {
+    getYieldEstimates: protectedProcedure.input(z13.object({ feedstockId: z13.number() })).query(async ({ input }) => {
       return await getYieldEstimatesByFeedstock(input.feedstockId);
     }),
-    getLatestYield: protectedProcedure.input(z12.object({ feedstockId: z12.number() })).query(async ({ input }) => {
+    getLatestYield: protectedProcedure.input(z13.object({ feedstockId: z13.number() })).query(async ({ input }) => {
       return await getLatestYieldEstimate(input.feedstockId);
     })
   }),
@@ -19104,24 +19549,24 @@ var appRouter = router({
   stressTesting: router({
     // Run stress test (legacy - supports original 3 scenarios)
     runStressTest: protectedProcedure.input(
-      z12.object({
-        projectId: z12.number(),
-        scenarioType: z12.enum([
+      z13.object({
+        projectId: z13.number(),
+        scenarioType: z13.enum([
           "supplier_loss",
           "supply_shortfall",
           "regional_shock"
         ]),
-        scenarioParams: z12.object({
-          supplierId: z12.number().optional(),
-          shortfallPercent: z12.number().optional(),
-          region: z12.string().optional()
+        scenarioParams: z13.object({
+          supplierId: z13.number().optional(),
+          shortfallPercent: z13.number().optional(),
+          region: z13.string().optional()
         }),
-        baseScore: z12.number(),
-        baseRating: z12.string(),
-        covenants: z12.array(
-          z12.object({
-            type: z12.string(),
-            threshold: z12.number()
+        baseScore: z13.number(),
+        baseRating: z13.string(),
+        covenants: z13.array(
+          z13.object({
+            type: z13.string(),
+            threshold: z13.number()
           })
         ).optional()
       })
@@ -19143,32 +19588,32 @@ var appRouter = router({
     }),
     // Run comprehensive stress test (supports all 4 scenarios including price_shock)
     runComprehensiveTest: protectedProcedure.input(
-      z12.object({
-        projectId: z12.number(),
-        scenarioType: z12.enum([
+      z13.object({
+        projectId: z13.number(),
+        scenarioType: z13.enum([
           "supplier_loss",
           "supply_shortfall",
           "regional_shock",
           "price_spike"
         ]),
-        scenarioParams: z12.object({
-          supplierId: z12.number().optional(),
-          shortfallPercent: z12.number().optional(),
-          region: z12.string().optional(),
-          reductionPercent: z12.number().optional(),
-          priceIncreasePercent: z12.number().optional()
+        scenarioParams: z13.object({
+          supplierId: z13.number().optional(),
+          shortfallPercent: z13.number().optional(),
+          region: z13.string().optional(),
+          reductionPercent: z13.number().optional(),
+          priceIncreasePercent: z13.number().optional()
         }),
-        baseScore: z12.number(),
-        baseRating: z12.string(),
-        projectEconomics: z12.object({
-          baseRevenue: z12.number(),
-          baseCost: z12.number(),
-          targetMargin: z12.number()
+        baseScore: z13.number(),
+        baseRating: z13.string(),
+        projectEconomics: z13.object({
+          baseRevenue: z13.number(),
+          baseCost: z13.number(),
+          targetMargin: z13.number()
         }).optional(),
-        covenants: z12.array(
-          z12.object({
-            type: z12.string(),
-            threshold: z12.number()
+        covenants: z13.array(
+          z13.object({
+            type: z13.string(),
+            threshold: z13.number()
           })
         ).optional()
       })
@@ -19192,13 +19637,13 @@ var appRouter = router({
     }),
     // Run price shock scenario analysis
     runPriceShockAnalysis: protectedProcedure.input(
-      z12.object({
-        projectId: z12.number(),
-        priceIncreases: z12.array(z12.number()).default([20, 40, 60]),
-        projectEconomics: z12.object({
-          baseRevenue: z12.number(),
-          baseCost: z12.number(),
-          targetMargin: z12.number()
+      z13.object({
+        projectId: z13.number(),
+        priceIncreases: z13.array(z13.number()).default([20, 40, 60]),
+        projectEconomics: z13.object({
+          baseRevenue: z13.number(),
+          baseCost: z13.number(),
+          targetMargin: z13.number()
         })
       })
     ).query(async ({ input }) => {
@@ -19227,10 +19672,10 @@ var appRouter = router({
     }),
     // Run regional shock scenario analysis
     runRegionalAnalysis: protectedProcedure.input(
-      z12.object({
-        projectId: z12.number(),
-        region: z12.string(),
-        reductionPercent: z12.number().default(50)
+      z13.object({
+        projectId: z13.number(),
+        region: z13.string(),
+        reductionPercent: z13.number().default(50)
       })
     ).query(async ({ input }) => {
       const agreements = await getSupplyAgreementsByProjectId(
@@ -19251,31 +19696,31 @@ var appRouter = router({
       );
     }),
     // Get stress test results for a project
-    getProjectResults: protectedProcedure.input(z12.object({ projectId: z12.number() })).query(async ({ input }) => {
+    getProjectResults: protectedProcedure.input(z13.object({ projectId: z13.number() })).query(async ({ input }) => {
       const { getStressTestResults: getStressTestResults2 } = await Promise.resolve().then(() => (init_stressTesting(), stressTesting_exports));
       return await getStressTestResults2(input.projectId);
     }),
     // Get specific stress test result
-    getResult: protectedProcedure.input(z12.object({ resultId: z12.number() })).query(async ({ input }) => {
+    getResult: protectedProcedure.input(z13.object({ resultId: z13.number() })).query(async ({ input }) => {
       const { getStressTestResult: getStressTestResult2 } = await Promise.resolve().then(() => (init_stressTesting(), stressTesting_exports));
       return await getStressTestResult2(input.resultId);
     }),
     // Assess contract enforceability
     assessEnforceability: protectedProcedure.input(
-      z12.object({
-        agreementId: z12.number(),
-        governingLaw: z12.string(),
-        jurisdiction: z12.string(),
-        disputeResolution: z12.enum([
+      z13.object({
+        agreementId: z13.number(),
+        governingLaw: z13.string(),
+        jurisdiction: z13.string(),
+        disputeResolution: z13.enum([
           "litigation",
           "arbitration",
           "mediation",
           "expert_determination"
         ]),
-        hasTerminationProtections: z12.boolean(),
-        hasStepInRights: z12.boolean(),
-        hasSecurityPackage: z12.boolean(),
-        hasRemedies: z12.boolean()
+        hasTerminationProtections: z13.boolean(),
+        hasStepInRights: z13.boolean(),
+        hasSecurityPackage: z13.boolean(),
+        hasRemedies: z13.boolean()
       })
     ).mutation(async ({ input, ctx }) => {
       const { assessContractEnforceability: assessContractEnforceability2 } = await Promise.resolve().then(() => (init_stressTesting(), stressTesting_exports));
@@ -19285,7 +19730,7 @@ var appRouter = router({
       });
     }),
     // Get contract enforceability score
-    getEnforceabilityScore: protectedProcedure.input(z12.object({ agreementId: z12.number() })).query(async ({ input }) => {
+    getEnforceabilityScore: protectedProcedure.input(z13.object({ agreementId: z13.number() })).query(async ({ input }) => {
       const { getContractEnforceabilityScore: getContractEnforceabilityScore2 } = await Promise.resolve().then(() => (init_stressTesting(), stressTesting_exports));
       return await getContractEnforceabilityScore2(input.agreementId);
     })
@@ -19293,21 +19738,21 @@ var appRouter = router({
   // Lender Portal Enhancement (Phase 7)
   lender: router({
     // Get dashboard data
-    getDashboard: protectedProcedure.input(z12.object({ projectId: z12.number() })).query(async ({ input }) => {
+    getDashboard: protectedProcedure.input(z13.object({ projectId: z13.number() })).query(async ({ input }) => {
       const { getLenderDashboardData: getLenderDashboardData2 } = await Promise.resolve().then(() => (init_lenderPortal(), lenderPortal_exports));
       return await getLenderDashboardData2(input.projectId);
     }),
     // Get active alerts
-    getAlerts: protectedProcedure.input(z12.object({ projectId: z12.number() })).query(async ({ input }) => {
+    getAlerts: protectedProcedure.input(z13.object({ projectId: z13.number() })).query(async ({ input }) => {
       const { getActiveAlerts: getActiveAlerts2 } = await Promise.resolve().then(() => (init_lenderPortal(), lenderPortal_exports));
       return await getActiveAlerts2(input.projectId);
     }),
     // Get covenant breach history
     getBreachHistory: protectedProcedure.input(
-      z12.object({
-        projectId: z12.number(),
-        unresolved: z12.boolean().optional(),
-        since: z12.date().optional()
+      z13.object({
+        projectId: z13.number(),
+        unresolved: z13.boolean().optional(),
+        since: z13.date().optional()
       })
     ).query(async ({ input }) => {
       const { getCovenantBreachHistory: getCovenantBreachHistory2 } = await Promise.resolve().then(() => (init_lenderPortal(), lenderPortal_exports));
@@ -19318,9 +19763,9 @@ var appRouter = router({
     }),
     // Resolve covenant breach
     resolveBreach: protectedProcedure.input(
-      z12.object({
-        breachId: z12.number(),
-        resolutionNotes: z12.string()
+      z13.object({
+        breachId: z13.number(),
+        resolutionNotes: z13.string()
       })
     ).mutation(async ({ input, ctx }) => {
       const { resolveCovenantBreach: resolveCovenantBreach2 } = await Promise.resolve().then(() => (init_lenderPortal(), lenderPortal_exports));
@@ -19332,11 +19777,11 @@ var appRouter = router({
     }),
     // Generate monthly report
     generateReport: protectedProcedure.input(
-      z12.object({
-        projectId: z12.number(),
-        reportMonth: z12.string(),
-        executiveSummary: z12.string().optional(),
-        scoreChangesNarrative: z12.string().optional()
+      z13.object({
+        projectId: z13.number(),
+        reportMonth: z13.string(),
+        executiveSummary: z13.string().optional(),
+        scoreChangesNarrative: z13.string().optional()
       })
     ).mutation(async ({ input, ctx }) => {
       const { generateMonthlyReport: generateMonthlyReport2 } = await Promise.resolve().then(() => (init_lenderPortal(), lenderPortal_exports));
@@ -19346,21 +19791,21 @@ var appRouter = router({
       });
     }),
     // Get latest report
-    getLatestReport: protectedProcedure.input(z12.object({ projectId: z12.number() })).query(async ({ input }) => {
+    getLatestReport: protectedProcedure.input(z13.object({ projectId: z13.number() })).query(async ({ input }) => {
       const { getLatestReport: getLatestReport2 } = await Promise.resolve().then(() => (init_lenderPortal(), lenderPortal_exports));
       return await getLatestReport2(input.projectId);
     }),
     // Get all reports
-    getReports: protectedProcedure.input(z12.object({ projectId: z12.number() })).query(async ({ input }) => {
+    getReports: protectedProcedure.input(z13.object({ projectId: z13.number() })).query(async ({ input }) => {
       const { getProjectReports: getProjectReports2 } = await Promise.resolve().then(() => (init_lenderPortal(), lenderPortal_exports));
       return await getProjectReports2(input.projectId);
     }),
     // Finalize report
     finalizeReport: protectedProcedure.input(
-      z12.object({
-        reportId: z12.number(),
-        reportPdfUrl: z12.string().optional(),
-        evidencePackUrl: z12.string().optional()
+      z13.object({
+        reportId: z13.number(),
+        reportPdfUrl: z13.string().optional(),
+        evidencePackUrl: z13.string().optional()
       })
     ).mutation(async ({ input }) => {
       const { finalizeReport: finalizeReport2 } = await Promise.resolve().then(() => (init_lenderPortal(), lenderPortal_exports));
@@ -19368,7 +19813,7 @@ var appRouter = router({
       return { success: true };
     }),
     // Mark report as sent
-    markReportSent: protectedProcedure.input(z12.object({ reportId: z12.number() })).mutation(async ({ input }) => {
+    markReportSent: protectedProcedure.input(z13.object({ reportId: z13.number() })).mutation(async ({ input }) => {
       const { markReportSent: markReportSent2 } = await Promise.resolve().then(() => (init_lenderPortal(), lenderPortal_exports));
       await markReportSent2(input.reportId);
       return { success: true };
@@ -19378,14 +19823,14 @@ var appRouter = router({
   compliance: router({
     // Audit logs
     queryAuditLogs: protectedProcedure.input(
-      z12.object({
-        userId: z12.number().optional(),
-        entityType: z12.string().optional(),
-        entityId: z12.number().optional(),
-        action: z12.string().optional(),
-        startDate: z12.date().optional(),
-        endDate: z12.date().optional(),
-        limit: z12.number().optional()
+      z13.object({
+        userId: z13.number().optional(),
+        entityType: z13.string().optional(),
+        entityId: z13.number().optional(),
+        action: z13.string().optional(),
+        startDate: z13.date().optional(),
+        endDate: z13.date().optional(),
+        limit: z13.number().optional()
       })
     ).query(async ({ input }) => {
       const { queryAuditLogs: queryAuditLogs2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
@@ -19393,8 +19838,8 @@ var appRouter = router({
     }),
     // Admin overrides
     recordOverride: protectedProcedure.input(
-      z12.object({
-        overrideType: z12.enum([
+      z13.object({
+        overrideType: z13.enum([
           "score",
           "rating",
           "status",
@@ -19402,13 +19847,13 @@ var appRouter = router({
           "certification",
           "evidence_validity"
         ]),
-        entityType: z12.string(),
-        entityId: z12.number(),
-        originalValue: z12.any(),
-        overrideValue: z12.any(),
-        justification: z12.string(),
-        riskAssessment: z12.string().optional(),
-        expiryDate: z12.date().optional()
+        entityType: z13.string(),
+        entityId: z13.number(),
+        originalValue: z13.any(),
+        overrideValue: z13.any(),
+        justification: z13.string(),
+        riskAssessment: z13.string().optional(),
+        expiryDate: z13.date().optional()
       })
     ).mutation(async ({ input, ctx }) => {
       const { recordAdminOverride: recordAdminOverride2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
@@ -19419,18 +19864,18 @@ var appRouter = router({
       });
     }),
     getActiveOverrides: protectedProcedure.input(
-      z12.object({
-        entityType: z12.string(),
-        entityId: z12.number()
+      z13.object({
+        entityType: z13.string(),
+        entityId: z13.number()
       })
     ).query(async ({ input }) => {
       const { getActiveOverrides: getActiveOverrides2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
       return await getActiveOverrides2(input.entityType, input.entityId);
     }),
     revokeOverride: protectedProcedure.input(
-      z12.object({
-        overrideId: z12.number(),
-        revocationReason: z12.string()
+      z13.object({
+        overrideId: z13.number(),
+        revocationReason: z13.string()
       })
     ).mutation(async ({ input, ctx }) => {
       const { revokeOverride: revokeOverride2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
@@ -19442,8 +19887,8 @@ var appRouter = router({
     }),
     // User consents
     recordConsent: protectedProcedure.input(
-      z12.object({
-        consentType: z12.enum([
+      z13.object({
+        consentType: z13.enum([
           "terms_of_service",
           "privacy_policy",
           "data_processing",
@@ -19451,11 +19896,11 @@ var appRouter = router({
           "third_party_sharing",
           "certification_reliance"
         ]),
-        consentVersion: z12.string(),
-        consentText: z12.string(),
-        granted: z12.boolean(),
-        ipAddress: z12.string().optional(),
-        userAgent: z12.string().optional()
+        consentVersion: z13.string(),
+        consentText: z13.string(),
+        granted: z13.boolean(),
+        ipAddress: z13.string().optional(),
+        userAgent: z13.string().optional()
       })
     ).mutation(async ({ input, ctx }) => {
       const { recordUserConsent: recordUserConsent2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
@@ -19465,25 +19910,25 @@ var appRouter = router({
       });
     }),
     getUserConsents: protectedProcedure.input(
-      z12.object({
-        consentType: z12.string().optional()
+      z13.object({
+        consentType: z13.string().optional()
       })
     ).query(async ({ input, ctx }) => {
       const { getUserConsents: getUserConsents2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
       return await getUserConsents2(ctx.user.id, input.consentType);
     }),
-    withdrawConsent: protectedProcedure.input(z12.object({ consentId: z12.number() })).mutation(async ({ input }) => {
+    withdrawConsent: protectedProcedure.input(z13.object({ consentId: z13.number() })).mutation(async ({ input }) => {
       const { withdrawConsent: withdrawConsent2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
       await withdrawConsent2(input.consentId);
       return { success: true };
     }),
     // Certificate legal metadata
     createCertificateLegalMetadata: protectedProcedure.input(
-      z12.object({
-        certificateId: z12.number(),
-        issuerName: z12.string(),
-        issuerRole: z12.string(),
-        certificationScope: z12.string()
+      z13.object({
+        certificateId: z13.number(),
+        issuerName: z13.string(),
+        issuerRole: z13.string(),
+        certificationScope: z13.string()
       })
     ).mutation(async ({ input, ctx }) => {
       const { createCertificateLegalMetadata: createCertificateLegalMetadata2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
@@ -19494,8 +19939,8 @@ var appRouter = router({
     }),
     // Disputes
     submitDispute: protectedProcedure.input(
-      z12.object({
-        disputeType: z12.enum([
+      z13.object({
+        disputeType: z13.enum([
           "score_accuracy",
           "certificate_validity",
           "evidence_authenticity",
@@ -19503,20 +19948,20 @@ var appRouter = router({
           "service_quality",
           "billing"
         ]),
-        respondent: z12.number().optional(),
-        relatedEntityType: z12.string().optional(),
-        relatedEntityId: z12.number().optional(),
-        title: z12.string(),
-        description: z12.string(),
-        desiredOutcome: z12.string().optional(),
-        supportingEvidence: z12.array(
-          z12.object({
-            type: z12.string(),
-            url: z12.string(),
-            description: z12.string()
+        respondent: z13.number().optional(),
+        relatedEntityType: z13.string().optional(),
+        relatedEntityId: z13.number().optional(),
+        title: z13.string(),
+        description: z13.string(),
+        desiredOutcome: z13.string().optional(),
+        supportingEvidence: z13.array(
+          z13.object({
+            type: z13.string(),
+            url: z13.string(),
+            description: z13.string()
           })
         ).optional(),
-        priority: z12.enum(["low", "medium", "high", "urgent"]).optional()
+        priority: z13.enum(["low", "medium", "high", "urgent"]).optional()
       })
     ).mutation(async ({ input, ctx }) => {
       const { submitDispute: submitDispute2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
@@ -19526,9 +19971,9 @@ var appRouter = router({
       });
     }),
     updateDisputeStatus: protectedProcedure.input(
-      z12.object({
-        disputeId: z12.number(),
-        status: z12.enum([
+      z13.object({
+        disputeId: z13.number(),
+        status: z13.enum([
           "submitted",
           "under_review",
           "investigation",
@@ -19537,21 +19982,21 @@ var appRouter = router({
           "resolved",
           "closed"
         ]),
-        assignedTo: z12.number().optional(),
-        resolutionSummary: z12.string().optional(),
-        resolutionOutcome: z12.enum([
+        assignedTo: z13.number().optional(),
+        resolutionSummary: z13.string().optional(),
+        resolutionOutcome: z13.enum([
           "upheld",
           "partially_upheld",
           "rejected",
           "withdrawn",
           "settled"
         ]).optional(),
-        remediationActions: z12.array(
-          z12.object({
-            action: z12.string(),
-            responsible: z12.string(),
-            deadline: z12.string(),
-            completed: z12.boolean()
+        remediationActions: z13.array(
+          z13.object({
+            action: z13.string(),
+            responsible: z13.string(),
+            deadline: z13.string(),
+            completed: z13.boolean()
           })
         ).optional()
       })
@@ -19561,8 +20006,8 @@ var appRouter = router({
       return { success: true };
     }),
     getUserDisputes: protectedProcedure.input(
-      z12.object({
-        status: z12.string().optional()
+      z13.object({
+        status: z13.string().optional()
       })
     ).query(async ({ input, ctx }) => {
       const { getUserDisputes: getUserDisputes2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
@@ -19574,7 +20019,7 @@ var appRouter = router({
       return LEGAL_TEMPLATES2;
     }),
     // Retention policies
-    getRetentionPolicy: protectedProcedure.input(z12.object({ entityType: z12.string() })).query(async ({ input }) => {
+    getRetentionPolicy: protectedProcedure.input(z13.object({ entityType: z13.string() })).query(async ({ input }) => {
       const { getRetentionPolicy: getRetentionPolicy2 } = await Promise.resolve().then(() => (init_compliance(), compliance_exports));
       return await getRetentionPolicy2(input.entityType);
     })
@@ -19588,9 +20033,9 @@ var appRouter = router({
     }),
     // Generate report for specific period
     generateReport: protectedProcedure.input(
-      z12.object({
-        quarter: z12.number().min(1).max(4),
-        year: z12.number()
+      z13.object({
+        quarter: z13.number().min(1).max(4),
+        year: z13.number()
       })
     ).query(async ({ input }) => {
       const { generateComplianceReport: generateComplianceReport2 } = await Promise.resolve().then(() => (init_complianceReporting(), complianceReporting_exports));
@@ -19621,9 +20066,9 @@ var appRouter = router({
     }),
     // Get report summary as text
     getReportSummary: protectedProcedure.input(
-      z12.object({
-        quarter: z12.number().min(1).max(4),
-        year: z12.number()
+      z13.object({
+        quarter: z13.number().min(1).max(4),
+        year: z13.number()
       })
     ).query(async ({ input }) => {
       const { generateComplianceReport: generateComplianceReport2, formatReportSummary: formatReportSummary2 } = await Promise.resolve().then(() => (init_complianceReporting(), complianceReporting_exports));
@@ -19649,9 +20094,9 @@ var appRouter = router({
     }),
     // Get audit metrics only
     getAuditMetrics: protectedProcedure.input(
-      z12.object({
-        quarter: z12.number().min(1).max(4),
-        year: z12.number()
+      z13.object({
+        quarter: z13.number().min(1).max(4),
+        year: z13.number()
       })
     ).query(async ({ input }) => {
       const { getAuditMetrics: getAuditMetrics2 } = await Promise.resolve().then(() => (init_complianceReporting(), complianceReporting_exports));
@@ -19676,9 +20121,9 @@ var appRouter = router({
     }),
     // Get override metrics only
     getOverrideMetrics: protectedProcedure.input(
-      z12.object({
-        quarter: z12.number().min(1).max(4),
-        year: z12.number()
+      z13.object({
+        quarter: z13.number().min(1).max(4),
+        year: z13.number()
       })
     ).query(async ({ input }) => {
       const { getOverrideMetrics: getOverrideMetrics2 } = await Promise.resolve().then(() => (init_complianceReporting(), complianceReporting_exports));
@@ -19703,9 +20148,9 @@ var appRouter = router({
     }),
     // Get dispute metrics only
     getDisputeMetrics: protectedProcedure.input(
-      z12.object({
-        quarter: z12.number().min(1).max(4),
-        year: z12.number()
+      z13.object({
+        quarter: z13.number().min(1).max(4),
+        year: z13.number()
       })
     ).query(async ({ input }) => {
       const { getDisputeMetrics: getDisputeMetrics2 } = await Promise.resolve().then(() => (init_complianceReporting(), complianceReporting_exports));
@@ -19735,42 +20180,42 @@ var appRouter = router({
   savedAnalyses: router({
     // Save a new radius analysis
     save: protectedProcedure.input(
-      z12.object({
-        name: z12.string().min(1).max(255),
-        description: z12.string().optional(),
-        radiusKm: z12.number().int().min(10).max(200),
-        centerLat: z12.string(),
-        centerLng: z12.string(),
-        results: z12.object({
-          feasibilityScore: z12.number(),
-          facilities: z12.object({
-            sugarMills: z12.number(),
-            biogasFacilities: z12.number(),
-            biofuelPlants: z12.number(),
-            ports: z12.number(),
-            grainHubs: z12.number()
+      z13.object({
+        name: z13.string().min(1).max(255),
+        description: z13.string().optional(),
+        radiusKm: z13.number().int().min(10).max(200),
+        centerLat: z13.string(),
+        centerLng: z13.string(),
+        results: z13.object({
+          feasibilityScore: z13.number(),
+          facilities: z13.object({
+            sugarMills: z13.number(),
+            biogasFacilities: z13.number(),
+            biofuelPlants: z13.number(),
+            ports: z13.number(),
+            grainHubs: z13.number()
           }),
-          feedstockTonnes: z12.object({
-            bagasse: z12.number(),
-            grainStubble: z12.number(),
-            forestryResidue: z12.number(),
-            biogas: z12.number(),
-            total: z12.number()
+          feedstockTonnes: z13.object({
+            bagasse: z13.number(),
+            grainStubble: z13.number(),
+            forestryResidue: z13.number(),
+            biogas: z13.number(),
+            total: z13.number()
           }),
-          infrastructure: z12.object({
-            ports: z12.array(z12.string()),
-            railLines: z12.array(z12.string())
+          infrastructure: z13.object({
+            ports: z13.array(z13.string()),
+            railLines: z13.array(z13.string())
           }),
-          recommendations: z12.array(z12.string())
+          recommendations: z13.array(z13.string())
         }),
-        filterState: z12.object({
-          selectedStates: z12.array(z12.string()),
-          visibleLayers: z12.array(z12.string()),
-          capacityRanges: z12.record(
-            z12.string(),
-            z12.object({
-              min: z12.number(),
-              max: z12.number()
+        filterState: z13.object({
+          selectedStates: z13.array(z13.string()),
+          visibleLayers: z13.array(z13.string()),
+          capacityRanges: z13.record(
+            z13.string(),
+            z13.object({
+              min: z13.number(),
+              max: z13.number()
             })
           )
         }).optional()
@@ -19787,16 +20232,16 @@ var appRouter = router({
       return await getSavedAnalysesByUserId(ctx.user.id);
     }),
     // Get a specific saved analysis by ID
-    get: protectedProcedure.input(z12.object({ id: z12.number() })).query(async ({ ctx, input }) => {
+    get: protectedProcedure.input(z13.object({ id: z13.number() })).query(async ({ ctx, input }) => {
       const analysis = await getSavedAnalysisById(input.id);
       if (!analysis) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Analysis not found"
         });
       }
       if (analysis.userId !== ctx.user.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "You do not have access to this analysis"
         });
@@ -19805,16 +20250,16 @@ var appRouter = router({
     }),
     // Update a saved analysis
     update: protectedProcedure.input(
-      z12.object({
-        id: z12.number(),
-        name: z12.string().min(1).max(255).optional(),
-        description: z12.string().optional()
+      z13.object({
+        id: z13.number(),
+        name: z13.string().min(1).max(255).optional(),
+        description: z13.string().optional()
       })
     ).mutation(async ({ ctx, input }) => {
       const { id, ...updates } = input;
       const analysis = await getSavedAnalysisById(id);
       if (!analysis || analysis.userId !== ctx.user.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "You do not have access to this analysis"
         });
@@ -19823,10 +20268,10 @@ var appRouter = router({
       return { success: true };
     }),
     // Delete a saved analysis
-    delete: protectedProcedure.input(z12.object({ id: z12.number() })).mutation(async ({ ctx, input }) => {
+    delete: protectedProcedure.input(z13.object({ id: z13.number() })).mutation(async ({ ctx, input }) => {
       const analysis = await getSavedAnalysisById(input.id);
       if (!analysis || analysis.userId !== ctx.user.id) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "FORBIDDEN",
           message: "You do not have access to this analysis"
         });
@@ -19841,50 +20286,50 @@ var appRouter = router({
   producer: router({
     // Submit complete producer registration
     register: protectedProcedure.input(
-      z12.object({
+      z13.object({
         // Account info
-        abn: z12.string(),
-        companyName: z12.string(),
-        contactName: z12.string(),
-        email: z12.string().email(),
-        phone: z12.string(),
+        abn: z13.string(),
+        companyName: z13.string(),
+        contactName: z13.string(),
+        email: z13.string().email(),
+        phone: z13.string(),
         // Property info
-        propertyName: z12.string(),
-        primaryAddress: z12.string(),
-        state: z12.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]),
-        postcode: z12.string(),
-        latitude: z12.string(),
-        longitude: z12.string(),
-        totalLandArea: z12.number(),
-        waterAccessType: z12.enum([
+        propertyName: z13.string(),
+        primaryAddress: z13.string(),
+        state: z13.enum(["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]),
+        postcode: z13.string(),
+        latitude: z13.string(),
+        longitude: z13.string(),
+        totalLandArea: z13.number(),
+        waterAccessType: z13.enum([
           "irrigated_surface",
           "irrigated_groundwater",
           "irrigated_recycled",
           "dryland",
           "mixed_irrigation"
         ]).optional(),
-        boundaries: z12.string().optional(),
+        boundaries: z13.string().optional(),
         // Production profile
-        feedstockType: z12.string(),
-        currentSeasonYield: z12.number(),
-        historicalYields: z12.array(
-          z12.object({
-            seasonYear: z12.number(),
-            cropType: z12.string().optional(),
-            totalHarvest: z12.number(),
-            plantedArea: z12.number().optional(),
-            notes: z12.string().optional()
+        feedstockType: z13.string(),
+        currentSeasonYield: z13.number(),
+        historicalYields: z13.array(
+          z13.object({
+            seasonYear: z13.number(),
+            cropType: z13.string().optional(),
+            totalHarvest: z13.number(),
+            plantedArea: z13.number().optional(),
+            notes: z13.string().optional()
           })
         ),
         // Carbon practices (simplified for MVP - can expand later)
-        tillagePractice: z12.enum([
+        tillagePractice: z13.enum([
           "no_till",
           "minimum_till",
           "conventional",
           "multiple_passes"
         ]).optional(),
-        nitrogenKgPerHa: z12.number().optional(),
-        fertiliserType: z12.enum([
+        nitrogenKgPerHa: z13.number().optional(),
+        fertiliserType: z13.enum([
           "urea",
           "anhydrous_ammonia",
           "dap_map",
@@ -19892,29 +20337,29 @@ var appRouter = router({
           "controlled_release",
           "mixed_blend"
         ]).optional(),
-        carbonScore: z12.number().optional(),
+        carbonScore: z13.number().optional(),
         // Existing contracts
-        existingContracts: z12.array(
-          z12.object({
-            buyerName: z12.string(),
-            contractedVolumeTonnes: z12.number(),
-            contractEndDate: z12.string(),
+        existingContracts: z13.array(
+          z13.object({
+            buyerName: z13.string(),
+            contractedVolumeTonnes: z13.number(),
+            contractEndDate: z13.string(),
             // Will be converted to Date
-            isConfidential: z12.boolean().optional()
+            isConfidential: z13.boolean().optional()
           })
         ),
         // Marketplace listing
-        tonnesAvailableThisSeason: z12.number(),
-        tonnesAvailableAnnually: z12.number(),
-        minimumAcceptablePricePerTonne: z12.number(),
-        deliveryTermsPreferred: z12.enum([
+        tonnesAvailableThisSeason: z13.number(),
+        tonnesAvailableAnnually: z13.number(),
+        minimumAcceptablePricePerTonne: z13.number(),
+        deliveryTermsPreferred: z13.enum([
           "ex_farm",
           "delivered_to_buyer",
           "fob_port",
           "flexible"
         ]),
-        qualitySpecs: z12.string(),
-        visibility: z12.enum([
+        qualitySpecs: z13.string(),
+        visibility: z13.enum([
           "public_marketplace",
           "verified_buyers_only",
           "private_network",
@@ -19934,7 +20379,7 @@ var appRouter = router({
         supplier = await getSupplierByUserId(ctx.user.id);
       }
       if (!supplier) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to create supplier profile"
         });
@@ -19997,20 +20442,20 @@ var appRouter = router({
   // ============================================================================
   certificateVerification: router({
     generateCertificate: protectedProcedure.input(
-      z12.object({
-        feedstockId: z12.number()
+      z13.object({
+        feedstockId: z13.number()
       })
     ).mutation(async ({ input, ctx }) => {
       const feedstock = await getFeedstockById(input.feedstockId);
       if (!feedstock) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Feedstock not found"
         });
       }
       const supplier = await getSupplierById(feedstock.supplierId);
       if (!supplier) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Supplier not found"
         });
@@ -20073,8 +20518,8 @@ var appRouter = router({
       };
     }),
     verifyHash: publicProcedure.input(
-      z12.object({
-        hash: z12.string().length(64)
+      z13.object({
+        hash: z13.string().length(64)
         // SHA-256 hash is 64 hex characters
       })
     ).query(async ({ input }) => {
@@ -20113,13 +20558,13 @@ var appRouter = router({
       };
     }),
     generateHash: protectedProcedure.input(
-      z12.object({
-        certificateId: z12.number()
+      z13.object({
+        certificateId: z13.number()
       })
     ).mutation(async ({ input, ctx }) => {
       const certificate = await getCertificateById(input.certificateId);
       if (!certificate) {
-        throw new TRPCError14({
+        throw new TRPCError15({
           code: "NOT_FOUND",
           message: "Certificate not found"
         });
@@ -20443,22 +20888,22 @@ function registerOAuthRoutes(app2) {
 }
 
 // server/manus.ts
-import { z as z13 } from "zod";
+import { z as z14 } from "zod";
 var MANUS_API_URL = process.env.MANUS_API_URL || "https://api.manus.ai/v1";
 var MANUS_API_KEY = process.env.MANUS_API_KEY || "";
-var webhookEventSchema = z13.object({
-  event_id: z13.string(),
-  event_type: z13.enum(["task_created", "task_progress", "task_stopped"]),
-  task_id: z13.string(),
-  task_title: z13.string().optional(),
-  task_url: z13.string().optional(),
-  message: z13.string().optional(),
-  progress_type: z13.string().optional(),
-  stop_reason: z13.enum(["finish", "ask"]).optional(),
-  attachments: z13.array(z13.object({
-    file_name: z13.string(),
-    url: z13.string(),
-    size_bytes: z13.number()
+var webhookEventSchema = z14.object({
+  event_id: z14.string(),
+  event_type: z14.enum(["task_created", "task_progress", "task_stopped"]),
+  task_id: z14.string(),
+  task_title: z14.string().optional(),
+  task_url: z14.string().optional(),
+  message: z14.string().optional(),
+  progress_type: z14.string().optional(),
+  stop_reason: z14.enum(["finish", "ask"]).optional(),
+  attachments: z14.array(z14.object({
+    file_name: z14.string(),
+    url: z14.string(),
+    size_bytes: z14.number()
   })).optional()
 });
 var ManusClient = class {
@@ -20770,7 +21215,7 @@ var certificateVerificationRouter = router2;
 init_schema();
 import { Router as Router2 } from "express";
 import { drizzle as drizzle7 } from "drizzle-orm/mysql2";
-import { eq as eq18, and as and16 } from "drizzle-orm";
+import { eq as eq19, and as and17 } from "drizzle-orm";
 var router3 = Router2();
 async function getDb7() {
   if (!process.env.DATABASE_URL) return null;
@@ -20806,10 +21251,10 @@ router3.get(
         });
       }
       const [record] = await db.select().from(didRegistry).where(
-        and16(
-          eq18(didRegistry.controllerType, controllerType),
-          eq18(didRegistry.controllerId, controllerIdNum),
-          eq18(didRegistry.status, "active")
+        and17(
+          eq19(didRegistry.controllerType, controllerType),
+          eq19(didRegistry.controllerId, controllerIdNum),
+          eq19(didRegistry.status, "active")
         )
       ).limit(1);
       if (!record) {
@@ -20865,7 +21310,7 @@ router3.get("/1.0/identifiers/:did", async (req, res) => {
     if (!db) {
       return res.status(503).json(createErrorResponse("serviceUnavailable", "Database not available"));
     }
-    const [record] = await db.select().from(didRegistry).where(eq18(didRegistry.did, did)).limit(1);
+    const [record] = await db.select().from(didRegistry).where(eq19(didRegistry.did, did)).limit(1);
     if (!record) {
       return res.status(404).json(createErrorResponse("notFound", "DID not found"));
     }
@@ -20949,7 +21394,7 @@ router3.get("/dids", async (_req, res) => {
       controllerId: didRegistry.controllerId,
       status: didRegistry.status,
       createdAt: didRegistry.createdAt
-    }).from(didRegistry).where(eq18(didRegistry.status, "active")).limit(100);
+    }).from(didRegistry).where(eq19(didRegistry.status, "active")).limit(100);
     res.json({
       count: records.length,
       dids: records
