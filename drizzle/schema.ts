@@ -11,6 +11,7 @@ import {
   boolean,
   index,
   unique,
+  uniqueIndex,
 } from "drizzle-orm/mysql-core";
 
 /**
@@ -5110,3 +5111,101 @@ export const stealthIngestionJobs = mysqlTable(
 
 export type StealthIngestionJob = typeof stealthIngestionJobs.$inferSelect;
 export type InsertStealthIngestionJob = typeof stealthIngestionJobs.$inferInsert;
+
+// ============================================================================
+// LENDING SENTIMENT TABLES
+// ============================================================================
+
+/**
+ * Analyzed documents with sentiment classification
+ */
+export const sentimentDocuments = mysqlTable(
+  "sentiment_documents",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    sourceId: varchar("sourceId", { length: 255 }).notNull(),
+    source: varchar("source", { length: 100 }).notNull(), // rba, apra, afr, bank_earnings, etc.
+    title: varchar("title", { length: 500 }).notNull(),
+    content: text("content"),
+    url: varchar("url", { length: 1000 }),
+    publishedDate: timestamp("publishedDate").notNull(),
+    sentiment: mysqlEnum("sentiment", ["BULLISH", "BEARISH", "NEUTRAL"]).notNull(),
+    sentimentScore: decimal("sentimentScore", { precision: 5, scale: 2 }).notNull(), // -100 to +100
+    confidence: decimal("confidence", { precision: 5, scale: 4 }).notNull(), // 0 to 1
+    // Fear component breakdown (for bearish signals)
+    regulatoryRisk: decimal("regulatoryRisk", { precision: 5, scale: 2 }).default("0"),
+    technologyRisk: decimal("technologyRisk", { precision: 5, scale: 2 }).default("0"),
+    feedstockRisk: decimal("feedstockRisk", { precision: 5, scale: 2 }).default("0"),
+    counterpartyRisk: decimal("counterpartyRisk", { precision: 5, scale: 2 }).default("0"),
+    marketRisk: decimal("marketRisk", { precision: 5, scale: 2 }).default("0"),
+    esgConcerns: decimal("esgConcerns", { precision: 5, scale: 2 }).default("0"),
+    // Metadata
+    lender: varchar("lender", { length: 100 }), // If from a specific lender
+    keywords: json("keywords").$type<string[]>(),
+    rawData: json("rawData"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    sourceIdx: index("doc_source_idx").on(table.source),
+    sentimentIdx: index("doc_sentiment_idx").on(table.sentiment),
+    publishedIdx: index("doc_published_idx").on(table.publishedDate),
+    lenderIdx: index("doc_lender_idx").on(table.lender),
+    sourceIdIdx: uniqueIndex("doc_source_id_idx").on(table.sourceId),
+  })
+);
+
+export type SentimentDocument = typeof sentimentDocuments.$inferSelect;
+export type InsertSentimentDocument = typeof sentimentDocuments.$inferInsert;
+
+/**
+ * Daily aggregated sentiment index
+ */
+export const sentimentDailyIndex = mysqlTable(
+  "sentiment_daily_index",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    date: date("date").notNull(),
+    overallIndex: decimal("overallIndex", { precision: 6, scale: 2 }).notNull(), // -100 to +100
+    bullishCount: int("bullishCount").notNull().default(0),
+    bearishCount: int("bearishCount").notNull().default(0),
+    neutralCount: int("neutralCount").notNull().default(0),
+    documentsAnalyzed: int("documentsAnalyzed").notNull().default(0),
+    // Fear components (averaged for the day)
+    regulatoryRisk: decimal("regulatoryRisk", { precision: 5, scale: 2 }).default("0"),
+    technologyRisk: decimal("technologyRisk", { precision: 5, scale: 2 }).default("0"),
+    feedstockRisk: decimal("feedstockRisk", { precision: 5, scale: 2 }).default("0"),
+    counterpartyRisk: decimal("counterpartyRisk", { precision: 5, scale: 2 }).default("0"),
+    marketRisk: decimal("marketRisk", { precision: 5, scale: 2 }).default("0"),
+    esgConcerns: decimal("esgConcerns", { precision: 5, scale: 2 }).default("0"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    dateIdx: uniqueIndex("daily_date_idx").on(table.date),
+  })
+);
+
+export type SentimentDailyIndex = typeof sentimentDailyIndex.$inferSelect;
+export type InsertSentimentDailyIndex = typeof sentimentDailyIndex.$inferInsert;
+
+/**
+ * Per-lender sentiment tracking
+ */
+export const lenderSentimentScores = mysqlTable(
+  "lender_sentiment_scores",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    lender: varchar("lender", { length: 100 }).notNull(),
+    date: date("date").notNull(),
+    sentimentScore: decimal("sentimentScore", { precision: 6, scale: 2 }).notNull(),
+    documentCount: int("documentCount").notNull().default(0),
+    bullishCount: int("bullishCount").notNull().default(0),
+    bearishCount: int("bearishCount").notNull().default(0),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    lenderDateIdx: uniqueIndex("lender_date_idx").on(table.lender, table.date),
+    lenderIdx: index("lender_idx").on(table.lender),
+    dateIdx: index("lender_score_date_idx").on(table.date),
+  })
+);

@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   TrendingUp,
@@ -18,13 +17,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Link } from "wouter";
-import {
-  sentimentApi,
-  type SentimentIndex,
-  type SentimentTrend,
-  type LenderScore,
-  type DocumentFeed,
-} from "@/lib/intelligenceApi";
+import { trpc } from "@/lib/trpc";
 import {
   AreaChart,
   Area,
@@ -60,39 +53,29 @@ const FEAR_LABELS: Record<string, string> = {
 };
 
 export default function LendingSentimentDashboard() {
-  const [sentimentIndex, setSentimentIndex] = useState<SentimentIndex | null>(null);
-  const [sentimentTrend, setSentimentTrend] = useState<SentimentTrend[]>([]);
-  const [lenderScores, setLenderScores] = useState<LenderScore[]>([]);
-  const [documentFeed, setDocumentFeed] = useState<DocumentFeed[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [period, setPeriod] = useState("12m");
+  const [period, setPeriod] = useState<"1m" | "3m" | "6m" | "12m" | "24m">("12m");
   const [feedFilter, setFeedFilter] = useState<string>("all");
 
-  const loadData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [index, trend, lenders, docs] = await Promise.all([
-        sentimentApi.getIndex(),
-        sentimentApi.getTrend(period),
-        sentimentApi.getLenders(8),
-        sentimentApi.getDocumentFeed(15),
-      ]);
-      setSentimentIndex(index);
-      setSentimentTrend(trend);
-      setLenderScores(lenders);
-      setDocumentFeed(docs);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load data");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // tRPC queries
+  const indexQuery = trpc.sentiment.getIndex.useQuery();
+  const trendQuery = trpc.sentiment.getTrend.useQuery({ period });
+  const lendersQuery = trpc.sentiment.getLenders.useQuery({ limit: 8 });
+  const docsQuery = trpc.sentiment.getDocumentFeed.useQuery({ limit: 15 });
 
-  useEffect(() => {
-    loadData();
-  }, [period]);
+  const sentimentIndex = indexQuery.data;
+  const sentimentTrend = trendQuery.data || [];
+  const lenderScores = lendersQuery.data || [];
+  const documentFeed = docsQuery.data || [];
+
+  const loading = indexQuery.isLoading || trendQuery.isLoading || lendersQuery.isLoading || docsQuery.isLoading;
+  const error = indexQuery.error?.message || trendQuery.error?.message || lendersQuery.error?.message || docsQuery.error?.message;
+
+  const loadData = () => {
+    indexQuery.refetch();
+    trendQuery.refetch();
+    lendersQuery.refetch();
+    docsQuery.refetch();
+  };
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-AU", {
@@ -187,7 +170,7 @@ export default function LendingSentimentDashboard() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <Select value={period} onValueChange={setPeriod}>
+            <Select value={period} onValueChange={(v) => setPeriod(v as "1m" | "3m" | "6m" | "12m" | "24m")}>
               <SelectTrigger className="w-32">
                 <SelectValue placeholder="Period" />
               </SelectTrigger>
