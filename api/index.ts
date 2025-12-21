@@ -5,7 +5,6 @@
 
 import "dotenv/config";
 import express from "express";
-import type { Request, Response } from "express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "../server/routers";
 import { createContext } from "../server/_core/context";
@@ -24,7 +23,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 registerOAuthRoutes(app);
 
 // Manus AI webhook endpoint
-app.post("/api/webhooks/manus", async (req: Request, res: Response) => {
+app.post("/api/webhooks/manus", async (req: any, res: any) => {
   try {
     const result = await handleManusWebhook(req.body);
     if (result.success) {
@@ -56,7 +55,7 @@ app.use(
 );
 
 // Health check
-app.get("/api/health", (_req: Request, res: Response) => {
+app.get("/api/health", (_req: any, res: any) => {
   res.json({
     status: "ok",
     timestamp: new Date().toISOString(),

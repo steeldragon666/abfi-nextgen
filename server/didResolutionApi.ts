@@ -8,7 +8,7 @@
  * - GET /1.0/identifiers/:did - Universal resolver compatible endpoint
  */
 
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import { drizzle } from "drizzle-orm/mysql2";
 import { eq, and } from "drizzle-orm";
 import { didRegistry } from "../drizzle/schema";
@@ -42,7 +42,7 @@ interface DidResolutionResult {
  * Universal Resolver Discovery
  * GET /.well-known/did.json
  */
-router.get("/.well-known/did.json", (_req: Request, res: Response) => {
+router.get("/.well-known/did.json", (_req: any, res: any) => {
   const configuration = {
     "@context": "https://identity.foundation/.well-known/did-configuration/v1",
     linked_dids: [],
@@ -60,7 +60,7 @@ router.get("/.well-known/did.json", (_req: Request, res: Response) => {
  */
 router.get(
   "/.well-known/did/:controllerType/:controllerId",
-  async (req: Request, res: Response) => {
+  async (req: any, res: any) => {
     try {
       const { controllerType, controllerId } = req.params;
       const controllerIdNum = parseInt(controllerId, 10);
@@ -146,7 +146,7 @@ router.get(
  * Universal Resolver Compatible Endpoint
  * GET /1.0/identifiers/:did
  */
-router.get("/1.0/identifiers/:did", async (req: Request, res: Response) => {
+router.get("/1.0/identifiers/:did", async (req: any, res: any) => {
   try {
     const { did } = req.params;
 
@@ -250,7 +250,7 @@ router.get("/1.0/identifiers/:did", async (req: Request, res: Response) => {
  * List all active DIDs (for debugging/admin)
  * GET /dids
  */
-router.get("/dids", async (req: Request, res: Response) => {
+router.get("/dids", async (_req: any, res: any) => {
   try {
     const db = await getDb();
     if (!db) {
@@ -284,7 +284,7 @@ router.get("/dids", async (req: Request, res: Response) => {
  * Health check endpoint
  * GET /health
  */
-router.get("/health", async (_req: Request, res: Response) => {
+router.get("/health", async (_req: any, res: any) => {
   const db = await getDb();
   const ipfsService = getIPFSService();
 

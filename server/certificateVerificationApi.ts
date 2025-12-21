@@ -9,7 +9,7 @@
  * - GET /api/verify/:hash - Verify a certificate by its SHA-256 hash
  */
 
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import * as db from "./db";
 
 const router = Router();
@@ -22,8 +22,8 @@ const RATE_LIMIT_MAX_REQUESTS = 30; // 30 requests per minute
 /**
  * Simple rate limiting middleware
  */
-function rateLimit(req: Request, res: Response, next: () => void) {
-  const ip = req.ip || req.socket.remoteAddress || "unknown";
+function rateLimit(req: any, res: any, next: () => void) {
+  const ip = req.ip || req.socket?.remoteAddress || req.headers?.["x-forwarded-for"] || "unknown";
   const now = Date.now();
 
   const entry = rateLimitMap.get(ip);
@@ -82,7 +82,7 @@ function rateLimit(req: Request, res: Response, next: () => void) {
  *   message?: string
  * }
  */
-router.get("/:hash", rateLimit, async (req: Request, res: Response) => {
+router.get("/:hash", rateLimit, async (req: any, res: any) => {
   const { hash } = req.params;
 
   // Validate hash format (SHA-256 = 64 hex characters)
@@ -216,7 +216,7 @@ router.get("/:hash", rateLimit, async (req: Request, res: Response) => {
  * Get the evidence chain for a verified certificate.
  * Returns the list of evidence items that support the certificate.
  */
-router.get("/:hash/evidence", rateLimit, async (req: Request, res: Response) => {
+router.get("/:hash/evidence", rateLimit, async (req: any, res: any) => {
   const { hash } = req.params;
 
   // Validate hash format
@@ -271,7 +271,7 @@ router.get("/:hash/evidence", rateLimit, async (req: Request, res: Response) => 
  *
  * Health check endpoint for the verification API.
  */
-router.get("/", (_req: Request, res: Response) => {
+router.get("/", (_req: any, res: any) => {
   res.json({
     service: "ABFI Certificate Verification API",
     version: "1.0.0",

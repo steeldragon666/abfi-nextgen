@@ -1,5 +1,3 @@
-import type { Request } from "express";
-
 // Simple cookie options interface to avoid type conflicts
 interface SessionCookieOptions {
   domain: string | undefined;
@@ -9,16 +7,16 @@ interface SessionCookieOptions {
   secure: boolean;
 }
 
-function isSecureRequest(req: Request): boolean {
+function isSecureRequest(req: any): boolean {
   if (req.protocol === "https") return true;
 
-  const forwardedProto = req.get("x-forwarded-proto");
+  const forwardedProto = req.get?.("x-forwarded-proto") || req.headers?.["x-forwarded-proto"];
   if (!forwardedProto) return false;
 
-  return forwardedProto.split(",").some((p: string) => p.trim().toLowerCase() === "https");
+  return String(forwardedProto).split(",").some((p: string) => p.trim().toLowerCase() === "https");
 }
 
-export function getSessionCookieOptions(req: Request): SessionCookieOptions {
+export function getSessionCookieOptions(req: any): SessionCookieOptions {
   return {
     domain: undefined,
     httpOnly: true,
