@@ -135,7 +135,49 @@ Webhook ID: `DNwWhJF2F7SMJ6Ka3Zr2hJ`
 
 ## Handoff Notes
 
-### From Claude Code (Latest Session - 2025-12-25)
+### From Claude Code (Latest Session - 2025-12-25 Evening)
+
+#### Session Summary: Navy + Gold Design + DNS Issue Discovery
+
+**1. Design Token Updates**
+- Updated `client/src/index.css` with Navy + Gold palette
+- Primary color: Navy (#1E3A5A) via `--color-navy-500`
+- Accent color: Gold (#D4AF37) via `--color-gold-400`
+- Chart colors updated to Navy/Gold palette
+
+**2. Landing Page Redesign**
+- Hero section: Navy gradient background using oklch colors
+- Animated gradient orbs: Gold accent
+- H1 gradient text: Gold gradient on "Supply Chain Risk"
+- Trust bar: Navy background
+- CTA sections: Navy + Gold buttons
+
+**3. Manus Runtime Fix (vite.config.ts)**
+- Implemented async dynamic import for `vite-plugin-manus-runtime`
+- Plugin only loads in `serve` mode (development)
+- Prevents Manus runtime injection in production builds
+- Local builds produce 3KB index.html (correct)
+
+**4. Meta Tag Updates**
+- Changed all URLs from `abfi.manus.space` to `abfi.io`
+- Updated og:url, twitter:url, canonical link
+
+**5. DNS ISSUE DISCOVERED** ⚠️
+- **Problem**: abfi.io points to Cloudflare (104.18.26.246), NOT Vercel (76.76.21.21)
+- **Current NS**: `ns1.globaldomaingroup.com` / `ns2.globaldomaingroup.com`
+- **Required NS**: `ns1.vercel-dns.com` / `ns2.vercel-dns.com`
+- **Fix needed**: Update A record to `76.76.21.21` OR change nameservers to Vercel
+- Vercel deployments work correctly, but domain serves cached Cloudflare content
+
+**6. Commits**
+- `9d6d8b2` - fix: exclude Manus runtime from production builds + update meta URLs
+
+#### Pending Action
+User needs to update DNS configuration at domain registrar to point abfi.io to Vercel.
+
+---
+
+### From Claude Code (Previous Session - 2025-12-25)
 
 #### Session Summary: Full Figma Component Library + Manus Delegation
 
