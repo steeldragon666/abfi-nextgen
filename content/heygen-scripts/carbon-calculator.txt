@@ -1,0 +1,5 @@
+The Carbon Calculator helps you track your environmental impact. 
+Simply enter your purchase volume and select your feedstock type. 
+We automatically calculate Scope 1, 2, and 3 emissions reductions. 
+The results show your total CO2 savings compared to fossil fuels - share these in your ESG reports. 
+You can also download a certificate for your sustainability reporting.

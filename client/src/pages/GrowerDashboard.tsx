@@ -51,6 +51,7 @@ import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { SimpleLeafletMap, type MapMarker } from "@/components/SimpleLeafletMap";
 import type L from "leaflet";
+import { OnboardingModal } from "@/components/OnboardingModal";
 
 // Onboarding checklist items
 const ONBOARDING_CHECKLIST = [
@@ -134,6 +135,18 @@ export default function GrowerDashboard() {
   const mapRef = useRef<L.Map | null>(null);
   const [selectedListing, setSelectedListing] = useState<string | null>(null);
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Check if user should see onboarding
+  useEffect(() => {
+    const hasSeenOnboarding = localStorage.getItem('abfi_onboarding_completed');
+    const hasSkippedOnboarding = localStorage.getItem('abfi_onboarding_skipped');
+    
+    if (!hasSeenOnboarding && !hasSkippedOnboarding) {
+      const timer = setTimeout(() => setShowOnboarding(true), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
   const completedSteps = ONBOARDING_CHECKLIST.filter((item) => item.completed).length;
   const totalSteps = ONBOARDING_CHECKLIST.length;
   const progressPercent = (completedSteps / totalSteps) * 100;
@@ -173,6 +186,12 @@ export default function GrowerDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Onboarding Modal */}
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        userRole="grower"
+      />
       {/* Quick Stats Bar */}
       <div className="border-b bg-card/50">
         <div className="container mx-auto px-4 py-3">

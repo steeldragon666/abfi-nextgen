@@ -1,0 +1,9 @@
+Hi, I'm Sam from ABFI. Welcome to Australia's bioenergy feedstock marketplace. 
+In the next 2 minutes, I'll show you how to find suppliers, request quotes, and track your carbon credits. 
+First, let's take a quick tour of your dashboard. [PAUSE 2s]
+This is your Price Dashboard - it updates every 15 minutes with live data from 50+ certified suppliers. 
+Green arrows mean prices dropped - that's a good time to buy. 
+Now, let's look at the Marketplace where you can connect with verified suppliers. 
+Every supplier here holds Sustainability Certification - look for this green badge. 
+Finally, the Carbon Calculator tracks your CO2 savings vs fossil fuels - perfect for your ESG reports. 
+Ready to request your first quote? Click the button below and I'll guide you through it.
