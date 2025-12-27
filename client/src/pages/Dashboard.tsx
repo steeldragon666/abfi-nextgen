@@ -361,7 +361,7 @@ export default function Dashboard() {
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   <div className="h-10 w-10 rounded-full bg-gradient-to-br from-teal-500 to-[#D4AF37] flex items-center justify-center text-black font-semibold">
-                    {user?.name?.charAt(0) || "U"}
+                    {user?.name?.charAt(0) || "U" || "U"}
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold text-slate-900">

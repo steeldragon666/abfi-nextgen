@@ -312,7 +312,7 @@ function AppLayoutContent({ children, setSidebarWidth }: AppLayoutContentProps) 
                   <button className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-sidebar-accent/50 transition-colors w-full text-left group-data-[collapsible=icon]:justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring">
                     <Avatar className="h-9 w-9 border border-sidebar-border shrink-0 bg-sidebar-primary/20">
                       <AvatarFallback className="text-xs font-bold text-sidebar-primary bg-transparent">
-                        {user?.name?.charAt(0).toUpperCase()}
+                        {user?.name?.charAt(0)?.toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">

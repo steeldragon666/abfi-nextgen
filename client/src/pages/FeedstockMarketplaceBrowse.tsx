@@ -78,7 +78,7 @@ const FilterButton: React.FC<{ type: FeedstockType, isSelected: boolean, onClick
       onClick={onClick}
     >
       {/* Placeholder for custom icon */}
-      <span className="text-xl">{type.icon.charAt(0)}</span>
+      <span className="text-xl">{type?.icon?.charAt(0) || ""}</span>
       <span>{type.name}</span>
     </button>
   );
