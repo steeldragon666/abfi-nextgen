@@ -39,6 +39,35 @@ interface AIChatResponse {
   videoUrl?: string;
 }
 
+// Fallback responses when LLM is not available
+const FALLBACK_RESPONSES: Record<string, string> = {
+  quote:
+    "To request a quote, navigate to the Supplier Directory at /supplier-directory, select a supplier you're interested in, and click 'Request Quote'. Fill in your feedstock type, volume, delivery location, and company details. Suppliers typically respond within 24 hours with competitive pricing.",
+  certification:
+    "All ABFI suppliers must hold valid Sustainability Certification. Look for the gold 'Verified' badge on supplier profiles. Common certifications include ISCC EU for biofuels, RED II compliance, and FSC for forestry products. You can filter suppliers by certification type in the directory.",
+  carbon:
+    "Carbon intensity is calculated using our Emissions Calculator at /emissions. It factors in feedstock type, transportation distance, and processing methods. Results are reported in gCO2e/MJ, making it easy to compare against fossil fuel alternatives (typically 94 gCO2e/MJ for petrol).",
+  price:
+    "Check our Price Dashboard at /price-dashboard for live pricing on ethanol, biodiesel, and woodchip. Prices update every 15 minutes from 50+ verified suppliers. You can view 30-day trends and volume data to time your purchases strategically.",
+  minimum:
+    "Minimum orders vary by supplier and feedstock type. Typically, liquid biofuels (ethanol, biodiesel) start at 100 litres or 1 kilolitre, while solid biomass like woodchips starts at 1 tonne. Check individual supplier profiles for specific minimums.",
+  supplier:
+    "Browse our Supplier Directory at /supplier-directory to find certified biofuel producers. Each profile shows location, feedstock types, capacity, certifications, and ratings. Use the search to filter by feedstock, location, or certification.",
+  default:
+    "G'day! I'm Sam, your ABFI bioenergy expert. I can help you with requesting quotes, finding suppliers, understanding carbon calculations, and navigating the platform. What would you like to know more about?",
+};
+
+function getFallbackResponse(question: string): string {
+  const q = question.toLowerCase();
+  if (q.includes("quote") || q.includes("request")) return FALLBACK_RESPONSES.quote;
+  if (q.includes("certification") || q.includes("verified") || q.includes("certif")) return FALLBACK_RESPONSES.certification;
+  if (q.includes("carbon") || q.includes("emission") || q.includes("co2")) return FALLBACK_RESPONSES.carbon;
+  if (q.includes("price") || q.includes("cost") || q.includes("pricing")) return FALLBACK_RESPONSES.price;
+  if (q.includes("minimum") || q.includes("order") || q.includes("volume")) return FALLBACK_RESPONSES.minimum;
+  if (q.includes("supplier") || q.includes("find") || q.includes("browse")) return FALLBACK_RESPONSES.supplier;
+  return FALLBACK_RESPONSES.default;
+}
+
 aiChatRouter.post("/", async (req, res) => {
   try {
     const { question } = req.body as AIChatRequest;
@@ -47,19 +76,31 @@ aiChatRouter.post("/", async (req, res) => {
       return res.status(400).json({ error: "Invalid question" });
     }
 
-    // Get AI response using the LLM
-    const llmResponse = await invokeLLM({
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: question },
-      ],
-      maxTokens: 500,
-    });
+    let answer: string;
 
-    const answer =
-      typeof llmResponse.choices[0]?.message?.content === "string"
-        ? llmResponse.choices[0].message.content
-        : "I apologize, but I couldn't generate a response. Please try again.";
+    // Try to use LLM if configured, otherwise use fallback
+    if (ENV.forgeApiKey) {
+      try {
+        const llmResponse = await invokeLLM({
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: question },
+          ],
+          maxTokens: 500,
+        });
+
+        answer =
+          typeof llmResponse.choices[0]?.message?.content === "string"
+            ? llmResponse.choices[0].message.content
+            : getFallbackResponse(question);
+      } catch (llmError) {
+        console.error("[AI Chat] LLM error, using fallback:", llmError);
+        answer = getFallbackResponse(question);
+      }
+    } else {
+      // Use fallback responses when LLM is not configured
+      answer = getFallbackResponse(question);
+    }
 
     const response: AIChatResponse = { answer };
 
