@@ -359,8 +359,23 @@ function AppLayoutContent({ children, setSidebarWidth }: AppLayoutContentProps) 
       </div>
 
       <SidebarInset>
-        {/* Desktop Role Header */}
-        {!isMobile && <RoleHeader />}
+        {/* Desktop Header/Topbar */}
+        {!isMobile && (
+          <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white shadow-sm">
+            <div className="flex h-16 items-center px-6">
+              <div className="flex items-center gap-3">
+                <Leaf className="h-6 w-6 text-[#D4AF37]" />
+                <div className="flex flex-col">
+                  <span className="text-lg font-semibold text-black">ABFI Platform</span>
+                  <span className="text-xs text-gray-600">Biofuels Intelligence</span>
+                </div>
+              </div>
+              <div className="ml-auto flex items-center gap-4">
+                {/* Placeholder for future features: search, notifications, user menu */}
+              </div>
+            </div>
+          </header>
+        )}
 
         {/* Mobile Header with Hamburger Menu */}
         {isMobile && (
