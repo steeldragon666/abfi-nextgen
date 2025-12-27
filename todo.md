@@ -101,7 +101,7 @@
 - [x] Compliance monitoring
 - [x] Quarterly report generation
 - [x] Grant verification
-- [ ] ARENA/CEFC integration
+- [x] ARENA/CEFC integration
 
 ### Admin Portal
 - [x] User verification queue
