@@ -100,7 +100,7 @@
 ### Government Portal
 - [x] Compliance monitoring
 - [x] Quarterly report generation
-- [ ] Grant verification
+- [x] Grant verification
 - [ ] ARENA/CEFC integration
 
 ### Admin Portal

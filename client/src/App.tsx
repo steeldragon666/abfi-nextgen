@@ -48,6 +48,7 @@ const LenderPortfolioOverview = lazy(() => import("./pages/LenderPortfolioOvervi
 const LenderRiskAnalytics = lazy(() => import("./pages/LenderRiskAnalytics"));
 const AdminAuditLogs = lazy(() => import("./pages/AdminAuditLogs"));
 const ComplianceDashboard = lazy(() => import("./pages/ComplianceDashboard"));
+const GrantVerification = lazy(() => import("./pages/GrantVerification"));
 const EvidenceManagement = lazy(() => import("./pages/EvidenceManagement"));
 const EvidenceVaultDashboard = lazy(() => import("./pages/EvidenceVaultDashboard"));
 const SupplyChainDashboard = lazy(() => import("./pages/SupplyChainDashboard"));
@@ -267,6 +268,7 @@ function Router() {
         <Route path="/ratings/carbon-intensity" component={CarbonIntensityAnalysis} />
 
         <Route path="/compliance-dashboard" component={ComplianceDashboard} />
+        <Route path="/grant-verification" component={GrantVerification} />
         <Route path="/admin/evidence" component={EvidenceManagement} />
         <Route path="/evidence-vault" component={EvidenceVaultDashboard} />
         <Route path="/supply-chain" component={SupplyChainDashboard} />
