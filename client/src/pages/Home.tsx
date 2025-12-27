@@ -1,1296 +1,231 @@
-import { useAuth } from "@/_core/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { getLoginUrl } from "@/const";
-import {
-  ArrowRight,
-  Award,
-  BarChart3,
-  Leaf,
-  Shield,
-  TrendingUp,
-  MapPin,
-  FileCheck,
-  Zap,
-  Users,
-  Building2,
-  Banknote,
-  CheckCircle,
-  Lock,
-  Database,
-  Clock,
-  Eye,
-  FileText,
-  AlertTriangle,
-  Target,
-  Layers,
-  GitBranch,
-  Activity,
-  CheckCircle2,
-  ChevronRight,
-  Globe,
-  Sprout,
-  TreeDeciduous,
-  Menu,
-  X,
-  Link2,
-  Fingerprint,
-  BadgeCheck,
-  Blocks,
-  ScrollText,
-  Cpu,
-} from "lucide-react";
-import { Link } from "wouter";
-import { cn } from "@/lib/utils";
-import {
-  FadeInUp,
-  StaggerContainer,
-  StaggerItem,
-  HoverCard,
-  AnimatedCounter,
-  Floating,
-  Pulse,
-  FadeIn,
-  ScaleIn,
-  motion,
-} from "@/components/ui/motion";
-import { useState } from "react";
+import React from 'react';
+import { Leaf, Factory, TrendingUp, CheckCircle, Zap, BarChart, Shield, Users, Globe, ChevronRight } from 'lucide-react';
 
-// Animated background pattern component
-function GridPattern({ className }: { className?: string }) {
-  return (
-    <svg
-      className={cn("absolute inset-0 h-full w-full", className)}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <pattern
-          id="grid-pattern"
-          width="32"
-          height="32"
-          patternUnits="userSpaceOnUse"
-        >
-          <path
-            d="M0 32V0h32"
-            fill="none"
-            stroke="currentColor"
-            strokeOpacity="0.03"
-          />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-    </svg>
-  );
+// --- Design System Constants ---
+const GOLD = '#D4AF37';
+const BASE_TEXT_SIZE = 'text-lg'; // Approx 18px
+
+// --- Helper Components (Internal) ---
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant: 'primary' | 'ghost';
+  children: React.ReactNode;
 }
 
-// Animated circuit pattern for cryptographic theme
-function CircuitPattern({ className }: { className?: string }) {
+const Button: React.FC<ButtonProps> = ({ variant, children, className = '', ...props }) => {
+  const baseClasses = \`min-h-[48px] px-6 py-3 rounded-xl font-semibold transition-colors duration-200 \${BASE_TEXT_SIZE}\`;
+  
+  let variantClasses = '';
+  if (variant === 'primary') {
+    // Primary (bg-[#D4AF37] text-black)
+    variantClasses = \`bg-[${GOLD}] text-black hover:bg-opacity-90\`;
+  } else if (variant === 'ghost') {
+    // Ghost (transparent hover:bg-gray-100)
+    variantClasses = \`text-black hover:bg-gray-100\`;
+  }
+
   return (
-    <div
-      className={cn(
-        "absolute inset-0 overflow-hidden opacity-[0.02]",
-        className
-      )}
-    >
-      <svg
-        className="w-full h-full"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-      >
-        <pattern
-          id="circuit"
-          patternUnits="userSpaceOnUse"
-          width="20"
-          height="20"
-        >
-          <circle cx="10" cy="10" r="1" fill="currentColor" />
-          <path
-            d="M10 0 L10 8 M10 12 L10 20 M0 10 L8 10 M12 10 L20 10"
-            stroke="currentColor"
-            strokeWidth="0.5"
-            fill="none"
-          />
-        </pattern>
-        <rect width="100%" height="100%" fill="url(#circuit)" />
-      </svg>
+    <button className={\`\${baseClasses} \${variantClasses} \${className}\`} {...props}>
+      {children}
+    </button>
+  );
+};
+
+interface PathwayCardProps {
+  icon: React.ReactNode;
+  headline: string;
+  description: string;
+  ctaText: string;
+}
+
+const PathwayCard: React.FC<PathwayCardProps> = ({ icon, headline, description, ctaText }) => (
+  <div className="bg-white border border-gray-200 shadow-sm hover:shadow-md rounded-2xl p-8 flex flex-col space-y-4 transition-shadow duration-300">
+    <div className="text-black w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100">
+      {icon}
     </div>
-  );
+    <h3 className={\`text-2xl font-semibold text-black\`}>{headline}</h3>
+    <p className={\`text-gray-700 flex-grow \${BASE_TEXT_SIZE}\`}>{description}</p>
+    <Button variant="ghost" className="self-start">
+      {ctaText} <ChevronRight className="w-4 h-4 ml-2" />
+    </Button>
+  </div>
+);
+
+interface PillarItemProps {
+  number: number;
+  title: string;
 }
 
-// Bankability rating badge component
-function RatingBadge({ rating, label }: { rating: string; label: string }) {
-  const colors: Record<string, string> = {
-    AAA: "bg-[#D4AF37]",
-    AA: "bg-green-500",
-    A: "bg-lime-500",
-    BBB: "bg-yellow-500",
-    BB: "bg-[#D4AF37]",
-    B: "bg-orange-500",
-  };
-
-  return (
-    <div className="flex items-center gap-2">
-      <div
-        className={cn("w-3 h-3 rounded-full", colors[rating] || "bg-gray-400")}
-      />
-      <span className="font-mono text-sm font-semibold">{rating}</span>
-      <span className="text-xs text-gray-600">{label}</span>
+const PillarItem: React.FC<PillarItemProps> = ({ number, title }) => (
+  <div className="flex items-start space-x-4 p-4">
+    <div className={\`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-black font-semibold text-xl bg-[${GOLD}]\`}>
+      {number}
     </div>
-  );
-}
+    <p className={\`font-medium text-black \${BASE_TEXT_SIZE}\`}>{title}</p>
+  </div>
+);
 
-export default function Home() {
-  const { user, isAuthenticated } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+// --- Main Component ---
 
+const Home: React.FC = () => {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-background/95 backdrop-blur-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/">
-            <div className="flex items-center gap-3 group cursor-pointer">
-              <div className="p-2 rounded-xl bg-[#D4AF37]/10 group-hover:bg-[#D4AF37]/20 transition-colors">
-                <Leaf className="h-6 w-6 text-[#D4AF37]" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-foreground font-display">
-                  ABFI
-                </span>
-                <span className="text-[10px] text-gray-600 -mt-1 hidden sm:block">
-                  Bank-Grade Infrastructure
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
-            <Link href="/futures">
-              <Button variant="ghost" size="sm">
-                Marketplace
-              </Button>
-            </Link>
-            <Link href="/bankability">
-              <Button variant="ghost" size="sm">
-                Bankability
-              </Button>
-            </Link>
-            <Link href="/feedstock-map">
-              <Button variant="ghost" size="sm">
-                Map
-              </Button>
-            </Link>
-            <div className="w-px h-6 bg-border mx-2" />
-            {isAuthenticated ? (
-              <Link href="/dashboard">
-                <Button
-                  size="sm"
-                  rightIcon={<ArrowRight className="h-4 w-4" />}
-                >
-                  Dashboard
-                </Button>
-              </Link>
-            ) : (
-              <a href={getLoginUrl()}>
-                <Button
-                  size="sm"
-                  rightIcon={<ArrowRight className="h-4 w-4" />}
-                >
-                  Sign In
-                </Button>
-              </a>
-            )}
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden h-10 w-10 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
-          >
-            {mobileMenuOpen ? (
-              <X className="h-5 w-5 text-slate-700" />
-            ) : (
-              <Menu className="h-5 w-5 text-slate-700" />
-            )}
-          </button>
+    <div className="min-h-screen bg-white font-sans">
+      {/* Section 1: Hero Section (Black Background) */}
+      <header className="bg-black text-white py-24 px-8 md:px-16 lg:px-24">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-5xl md:text-7xl font-semibold mb-6 leading-tight">
+            The Future of Bioenergy Feedstock is Verifiable.
+          </h1>
+          <p className={\`max-w-3xl mb-10 \${BASE_TEXT_SIZE}\`}>
+            ABFI provides the critical transparency and standardization needed to de-risk investment in the bioenergy sector.
+          </p>
+          {/* Primary CTA: One primary gold CTA per screen */}
+          <Button variant="primary">
+            Get Certified Now
+          </Button>
         </div>
-
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t bg-background"
-          >
-            <nav className="container mx-auto px-4 py-4 flex flex-col gap-2">
-              <Link href="/futures">
-                <Button variant="ghost" className="w-full justify-start">
-                  Marketplace
-                </Button>
-              </Link>
-              <Link href="/bankability">
-                <Button variant="ghost" className="w-full justify-start">
-                  Bankability
-                </Button>
-              </Link>
-              <Link href="/feedstock-map">
-                <Button variant="ghost" className="w-full justify-start">
-                  Map
-                </Button>
-              </Link>
-              {isAuthenticated ? (
-                <Link href="/dashboard">
-                  <Button className="w-full mt-2">Dashboard</Button>
-                </Link>
-              ) : (
-                <a href={getLoginUrl()}>
-                  <Button className="w-full mt-2">Sign In</Button>
-                </a>
-              )}
-            </nav>
-          </motion.div>
-        )}
       </header>
 
-      {/* Hero Section - Enhanced */}
-      <section className="relative overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0 bg-white" />
-        <GridPattern className="text-black" />
-        <CircuitPattern />
-
-        {/* Animated Gradient Orbs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -50, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-[#D4AF37]/20 blur-[120px]"
-          />
-          <motion.div
-            animate={{
-              x: [0, -80, 0],
-              y: [0, 60, 0],
-              scale: [1.2, 1, 1.2],
-            }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-[#D4AF37]/15 blur-[100px]"
-          />
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10 py-20 lg:py-32">
-          <div className="max-w-5xl mx-auto">
-            {/* Trust Badges */}
-            <FadeInUp className="flex flex-wrap justify-center gap-3 mb-8">
-              <Badge
-                variant="outline"
-                className="border-[#D4AF37]/40 text-[#D4AF37] bg-[#D4AF37]/10 backdrop-blur-sm px-3 py-1.5"
-              >
-                <Blocks className="h-3 w-3 mr-1.5" />
-                Blockchain Anchored
-              </Badge>
-              <Badge
-                variant="outline"
-                className="border-[#D4AF37]/40 text-[#D4AF37] bg-[#D4AF37]/10 backdrop-blur-sm px-3 py-1.5"
-              >
-                <BadgeCheck className="h-3 w-3 mr-1.5" />
-                GO Certificates
-              </Badge>
-              <Badge
-                variant="outline"
-                className="border-white/20 text-black/90 bg-white/5 backdrop-blur-sm px-3 py-1.5"
-              >
-                <Fingerprint className="h-3 w-3 mr-1.5" />
-                Verifiable Credentials
-              </Badge>
-              <Badge
-                variant="outline"
-                className="border-white/20 text-black/90 bg-white/5 backdrop-blur-sm px-3 py-1.5"
-              >
-                <Shield className="h-3 w-3 mr-1.5" />
-                Bank-Grade Infrastructure
-              </Badge>
-            </FadeInUp>
-
-            {/* Main Headline */}
-            <FadeInUp delay={0.1} className="text-center mb-8">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold mb-6 leading-[1.1] text-black">
-                Australia's Bamboo
-                <br />
-                <span className="bg-gradient-to-r from-[#D4AF37] via-[#D4AF37] to-[#D4AF37] bg-clip-text text-transparent">
-                  Bioenergy Marketplace
-                </span>
-              </h1>
-              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Connect with verified Australian bamboo suppliers. Bank-grade
-                infrastructure transforms biomass supply agreements into
-                auditable, cryptographically-secured assets that lenders trust.
-              </p>
-            </FadeInUp>
-
-            {/* CTA Buttons */}
-            <FadeInUp
-              delay={0.2}
-              className="flex flex-wrap justify-center gap-4 mb-16"
-            >
-              <Link href="/browse">
-                <button className="btn-gold px-6 py-3 text-lg">
-                  <Leaf className="h-5 w-5 mr-2" />
-                  Browse Bamboo Feedstocks
-                </button>
-              </Link>
-              <Link href="/bankability">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white/30 text-black hover:bg-white/10 bg-transparent"
-                >
-                  <Building2 className="h-4 w-4 mr-2" />
-                  I'm a Developer
-                </Button>
-              </Link>
-              <Link href="/lender-portal">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white/30 text-black hover:bg-white/10 bg-transparent"
-                >
-                  <Banknote className="h-4 w-4 mr-2" />
-                  I'm a Lender
-                </Button>
-              </Link>
-            </FadeInUp>
-
-            {/* Live Stats Bar */}
-            <FadeInUp delay={0.3}>
-              <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 max-w-4xl mx-auto">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-                  <div className="text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-black font-mono">
-                      <AnimatedCounter
-                        value={45}
-                        suffix="+"
-                      />
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      Bamboo Suppliers
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-black font-mono">
-                      <AnimatedCounter value={650} suffix="k" />
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      Tonnes Bamboo/Year
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-black font-mono">
-                      <AnimatedCounter value={12} suffix="k" />
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      Hectares Certified
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-[#D4AF37] font-mono">
-                      A$145
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      Avg Price/Tonne
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </FadeInUp>
+      {/* Section 2: Trust Badges (White Background) */}
+      <section className="py-20 px-8 md:px-16 lg:px-24 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-semibold text-black mb-12 text-center">Trusted by Industry Leaders</h2>
+          <div className="flex flex-wrap justify-center items-center gap-12 opacity-70">
+            {/* Placeholder for 4-5 logos/badges */}
+            <CheckCircle className="w-10 h-10 text-black" />
+            <span className={\`font-medium text-black \${BASE_TEXT_SIZE}\`}>Verified by ABFI</span>
+            <Shield className="w-10 h-10 text-black" />
+            <span className={\`font-medium text-black \${BASE_TEXT_SIZE}\`}>ISO 9001 Certified</span>
+            <Users className="w-10 h-10 text-black" />
+            <span className={\`font-medium text-black \${BASE_TEXT_SIZE}\`}>Global Partner Network</span>
           </div>
         </div>
+      </section>
 
-        {/* Bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg
-            viewBox="0 0 1440 100"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-full"
-          >
-            <path
-              d="M0 100V50C240 10 480 0 720 20C960 40 1200 80 1440 50V100H0Z"
-              className="fill-background"
+      {/* Section 3: Three Pathways Cards (White Background) */}
+      <section className="py-20 px-8 md:px-16 lg:px-24 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-semibold text-black mb-16 text-center">Your Pathway to Verifiable Bioenergy</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <PathwayCard
+              icon={<Leaf className="w-6 h-6" />}
+              headline="Producer Certification"
+              description="Standardize your feedstock with verifiable Grade, Yield, and Traceability data."
+              ctaText="Learn More"
             />
-          </svg>
+            <PathwayCard
+              icon={<Factory className="w-6 h-6" />}
+              headline="Project Developer Sourcing"
+              description="Secure your supply chain with risk-scored, volume-guaranteed, and contract-verified feedstocks."
+              ctaText="Learn More"
+            />
+            <PathwayCard
+              icon={<TrendingUp className="w-6 h-6" />}
+              headline="Investor Due Diligence"
+              description="Expedite financial closure with clear ESG, Compliance, and Financial Viability reports."
+              ctaText="Learn More"
+            />
+          </div>
         </div>
       </section>
 
-      {/* Trust Bar */}
-      <section className="py-8 bg-muted/30 border-y">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-gray-600">
-            <div className="flex items-center gap-2">
-              <Blocks className="h-5 w-5 text-[#D4AF37]" />
-              <span className="text-sm font-medium">Ethereum Anchored</span>
+      {/* Section 4: Rating System Display (Black Background) */}
+      <section className="bg-black text-white py-20 px-8 md:px-16 lg:px-24">
+        <div className="max-w-6xl mx-auto">
+          <h2 className={\`text-4xl font-semibold mb-12 text-center text-[${GOLD}]\`}>ABFI Feedstock Rating System</h2>
+          <p className={\`text-center max-w-4xl mx-auto mb-16 \${BASE_TEXT_SIZE}\`}>
+            Our proprietary P, B, C, R grading system provides an objective, standardized measure of feedstock quality,
+            de-risking supply chain decisions for all stakeholders.
+          </p>
+          
+          {/* Metric Display: Max 3 metrics visible at once */}
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div className="p-6 rounded-xl border border-gray-800">
+              <p className="text-5xl font-bold mb-2 text-white">P-</p>
+              <p className={\`font-medium text-[${GOLD}] \${BASE_TEXT_SIZE}\`}>Average Grade</p>
             </div>
-            <div className="flex items-center gap-2">
-              <BadgeCheck className="h-5 w-5 text-[#D4AF37]" />
-              <span className="text-sm font-medium">GO Scheme Ready</span>
+            <div className="p-6 rounded-xl border border-gray-800">
+              <p className="text-5xl font-bold mb-2 text-white">1.2M</p>
+              <p className={\`font-medium text-[${GOLD}] \${BASE_TEXT_SIZE}\`}>Total Volume Certified (Tons)</p>
             </div>
-            <div className="flex items-center gap-2">
-              <Fingerprint className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-medium">W3C Verifiable Credentials</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Lock className="h-5 w-5" />
-              <span className="text-sm font-medium">SHA-256 + Keccak-256</span>
+            <div className="p-6 rounded-xl border border-gray-800">
+              <p className="text-5xl font-bold mb-2 text-white">45</p>
+              <p className={\`font-medium text-[${GOLD}] \${BASE_TEXT_SIZE}\`}>Projects De-risked</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Three Pathways Section */}
-      <section className="py-20 lg:py-28 bg-background relative">
-        <div className="container mx-auto px-4">
-          <FadeInUp className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
-              Three Pathways to Success
-            </Badge>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground mb-4">
-              Built for Every Stakeholder
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Whether you grow Australian bamboo, develop bioenergy projects, or finance them — ABFI
-              provides the infrastructure to make deals happen with confidence.
-            </p>
-          </FadeInUp>
-
-          <StaggerContainer className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Growers Card */}
-            <StaggerItem>
-              <HoverCard className="h-full">
-                <Card className="h-full border-2 border-transparent hover:border-[#D4AF37]/30 transition-colors overflow-hidden group">
-                  <div className="h-2 bg-gradient-to-r from-[#D4AF37] to-green-500" />
-                  <CardHeader className="pb-4">
-                    <div className="h-14 w-14 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center mb-4 group-hover:bg-[#D4AF37]/20 transition-colors">
-                      <TreeDeciduous className="h-7 w-7 text-[#D4AF37]" />
-                    </div>
-                    <CardTitle className="text-2xl">
-                      Bamboo Growers
-                    </CardTitle>
-                    <CardDescription className="text-base">
-                      Transform your bamboo plantation into bankable
-                      commodities with ABFI-verified credentials.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <ul className="space-y-3">
-                      {[
-                        "Pre-qualify for GQ1-GQ4 grower status",
-                        "List bamboo futures up to 25 years forward",
-                        "Receive EOIs from verified Australian buyers",
-                        "Track all biomass contracts in one place",
-                      ].map((item, i) => (
-                        <li key={i} className="flex items-start gap-3 text-sm">
-                          <CheckCircle2 className="h-4 w-4 text-[#D4AF37] shrink-0 mt-0.5" />
-                          <span className="text-gray-600">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="pt-4 border-t">
-                      <Link href="/for-growers">
-                        <Button
-                          className="w-full bg-[#D4AF37] hover:bg-[#D4AF37]"
-                          rightIcon={<ArrowRight className="h-4 w-4" />}
-                        >
-                          Start Growing Value
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              </HoverCard>
-            </StaggerItem>
-
-            {/* Developers Card */}
-            <StaggerItem>
-              <HoverCard className="h-full">
-                <Card className="h-full border-2 border-transparent hover:border-[#D4AF37]/30 transition-colors overflow-hidden group">
-                  <div className="h-2 bg-gradient-to-r from-[#D4AF37] to-[#E5C158]" />
-                  <CardHeader className="pb-4">
-                    <div className="h-14 w-14 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center mb-4 group-hover:bg-[#D4AF37]/20 transition-colors">
-                      <Building2 className="h-7 w-7 text-[#D4AF37]" />
-                    </div>
-                    <CardTitle className="text-2xl">
-                      Project Developers
-                    </CardTitle>
-                    <CardDescription className="text-base">
-                      De-risk your bioenergy project with institutional-grade
-                      supply chain assessment.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <ul className="space-y-3">
-                      {[
-                        "Access verified supplier network",
-                        "Get AAA-CCC bankability ratings",
-                        "Generate compliance certificates",
-                        "Continuous covenant monitoring",
-                      ].map((item, i) => (
-                        <li key={i} className="flex items-start gap-3 text-sm">
-                          <CheckCircle2 className="h-4 w-4 text-[#D4AF37] shrink-0 mt-0.5" />
-                          <span className="text-gray-600">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="pt-4 border-t">
-                      <Link href="/for-developers">
-                        <Button
-                          className="w-full bg-[#D4AF37] hover:bg-[#D4AF37] text-black"
-                          rightIcon={<ArrowRight className="h-4 w-4" />}
-                        >
-                          Assess Your Project
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              </HoverCard>
-            </StaggerItem>
-
-            {/* Lenders Card */}
-            <StaggerItem>
-              <HoverCard className="h-full">
-                <Card className="h-full border-2 border-transparent hover:border-blue-500/30 transition-colors overflow-hidden group">
-                  <div className="h-2 bg-gradient-to-r from-blue-500 to-indigo-500" />
-                  <CardHeader className="pb-4">
-                    <div className="h-14 w-14 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
-                      <Banknote className="h-7 w-7 text-blue-600" />
-                    </div>
-                    <CardTitle className="text-2xl">
-                      Lenders & Financiers
-                    </CardTitle>
-                    <CardDescription className="text-base">
-                      Monitor covenants in real-time with cryptographic proof of
-                      supply chain integrity.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <ul className="space-y-3">
-                      {[
-                        "Real-time covenant compliance",
-                        "Automated breach alerts",
-                        "Independent verification",
-                        "Historical audit trails",
-                      ].map((item, i) => (
-                        <li key={i} className="flex items-start gap-3 text-sm">
-                          <CheckCircle2 className="h-4 w-4 text-blue-500 shrink-0 mt-0.5" />
-                          <span className="text-gray-600">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="pt-4 border-t">
-                      <Link href="/for-lenders">
-                        <Button
-                          className="w-full bg-blue-500 hover:bg-blue-600"
-                          rightIcon={<ArrowRight className="h-4 w-4" />}
-                        >
-                          Access Lender Portal
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              </HoverCard>
-            </StaggerItem>
-          </StaggerContainer>
+      {/* Section 5: 5-Pillar Assessment (White Background) */}
+      <section className="py-20 px-8 md:px-16 lg:px-24 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-semibold text-black mb-16 text-center">The 5 Pillars of Verifiable Feedstock</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-12">
+            <PillarItem number={1} title="Supply Volume & Contract" />
+            <PillarItem number={2} title="Yield & Seasonality" />
+            <PillarItem number={3} title="Carbon Sequestration" />
+            <PillarItem number={4} title="Water Use & Land Management" />
+            <PillarItem number={5} title="Financial Viability & Risk Score" />
+          </div>
         </div>
       </section>
 
-      {/* Technical Differentiation */}
-      <section className="py-20 lg:py-28 bg-white text-black relative overflow-hidden">
-        <GridPattern className="text-black" />
-        <div className="container mx-auto px-4 relative z-10">
-          <FadeInUp className="text-center mb-16">
-            <Badge
-              variant="outline"
-              className="border-white/20 text-black/90 mb-4"
-            >
-              Why ABFI is Different
-            </Badge>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4">
-              Infrastructure, Not Just Software
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Every data point is cryptographically secured, temporally
-              versioned, and audit-ready from day one.
-            </p>
-          </FadeInUp>
-
-          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {[
-              {
-                icon: Blocks,
-                title: "Blockchain Evidence Vault",
-                description:
-                  "Documents are Merkle-batched and anchored to Ethereum. Every hash is permanently verifiable on-chain.",
-                highlight: true,
-              },
-              {
-                icon: BadgeCheck,
-                title: "Guarantee of Origin (GO)",
-                description:
-                  "Issue and track renewable energy certificates. Full lifecycle management from issuance to retirement.",
-                highlight: true,
-              },
-              {
-                icon: Fingerprint,
-                title: "Verifiable Credentials",
-                description:
-                  "W3C-compliant DIDs and VCs. Cryptographically signed certificates that any third party can verify.",
-                highlight: true,
-              },
-              {
-                icon: Link2,
-                title: "Smart Contract Integration",
-                description:
-                  "EvidenceAnchor smart contract on Ethereum. Automated Merkle root submissions with full audit trail.",
-              },
-              {
-                icon: Database,
-                title: "IPFS Document Storage",
-                description:
-                  "Decentralized, content-addressed storage. Documents are immutable and globally accessible.",
-              },
-              {
-                icon: Activity,
-                title: "Real-Time Monitoring",
-                description:
-                  "Automated covenant checks, breach alerts, and continuous supply chain verification.",
-              },
-            ].map((item, i) => (
-              <StaggerItem key={i}>
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-colors">
-                  <div className="h-12 w-12 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center mb-4">
-                    <item.icon className="h-6 w-6 text-[#D4AF37]" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-500">{item.description}</p>
-                </div>
-              </StaggerItem>
+      {/* Section 6: Platform Capabilities Grid (Black Background) */}
+      <section className="bg-black text-white py-20 px-8 md:px-16 lg:px-24">
+        <div className="max-w-6xl mx-auto">
+          <h2 className={\`text-4xl font-semibold mb-12 text-center text-[${GOLD}]\`}>Platform Capabilities</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+            {['Real-time Ledger', 'Audit Trail', 'Market Insights', 'Risk Scoring'].map((cap, index) => (
+              <div key={index} className="p-6 rounded-xl border border-gray-800 hover:border-white transition-colors duration-300">
+                <Zap className="w-8 h-8 mx-auto mb-4 text-white" />
+                <p className={\`font-semibold text-white \${BASE_TEXT_SIZE}\`}>{cap}</p>
+              </div>
             ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* Bankability Rating Section */}
-      <section className="py-20 lg:py-28 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-            <FadeInUp>
-              <Badge variant="outline" className="mb-4">
-                The ABFI Rating System
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">
-                From Subjective to Systematic
-              </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Traditional biomass supply assessment relies on spreadsheets and
-                gut feel. ABFI provides the industry's first standardized,
-                auditable bankability framework.
-              </p>
-
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                  <RatingBadge rating="AAA" label="Prime Investment Grade" />
-                  <span className="text-sm text-gray-600">
-                    Lowest Risk
-                  </span>
-                </div>
-                <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                  <RatingBadge rating="AA" label="High Investment Grade" />
-                  <span className="text-sm text-gray-600">
-                    Very Low Risk
-                  </span>
-                </div>
-                <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                  <RatingBadge rating="A" label="Investment Grade" />
-                  <span className="text-sm text-gray-600">
-                    Low Risk
-                  </span>
-                </div>
-                <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                  <RatingBadge rating="BBB" label="Lower Investment Grade" />
-                  <span className="text-sm text-gray-600">
-                    Moderate Risk
-                  </span>
-                </div>
-              </div>
-
-              <Link href="/bankability">
-                <Button
-                  size="lg"
-                  rightIcon={<ArrowRight className="h-4 w-4" />}
-                >
-                  Learn About Ratings
-                </Button>
-              </Link>
-            </FadeInUp>
-
-            <FadeInUp delay={0.2}>
-              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 text-black">
-                <h3 className="text-xl font-semibold mb-6">
-                  5-Pillar Assessment Framework
-                </h3>
-                <div className="space-y-4">
-                  {[
-                    {
-                      name: "Volume Security",
-                      score: 92,
-                      color: "bg-[#D4AF37]",
-                    },
-                    {
-                      name: "Counterparty Quality",
-                      score: 88,
-                      color: "bg-green-500",
-                    },
-                    {
-                      name: "Contract Structure",
-                      score: 95,
-                      color: "bg-[#D4AF37]",
-                    },
-                    {
-                      name: "Concentration Risk",
-                      score: 78,
-                      color: "bg-yellow-500",
-                    },
-                    {
-                      name: "Operational Readiness",
-                      score: 85,
-                      color: "bg-green-500",
-                    },
-                  ].map((pillar, i) => (
-                    <div key={i}>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>{pillar.name}</span>
-                        <span className="font-mono">{pillar.score}%</span>
-                      </div>
-                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${pillar.score}%` }}
-                          transition={{ duration: 1, delay: i * 0.1 }}
-                          className={cn("h-full rounded-full", pillar.color)}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-between">
-                  <span className="text-gray-500">Overall Rating</span>
-                  <div className="flex items-center gap-3">
-                    <span className="text-4xl font-bold font-mono text-[#D4AF37]">
-                      AA+
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </FadeInUp>
           </div>
         </div>
       </section>
 
-      {/* Blockchain & GO Infrastructure - NEW SECTION */}
-      <section className="py-20 lg:py-28 bg-white text-black relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <GridPattern />
-        </div>
-        <div className="container mx-auto px-4 relative z-10">
-          <FadeInUp className="text-center mb-16">
-            <Badge
-              variant="outline"
-              className="border-amber-400/40 text-amber-300 bg-[#D4AF37]/10 mb-4"
-            >
-              v3.1 Smart Infrastructure
-            </Badge>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4">
-              Blockchain-Powered Trust Layer
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              The only bioenergy platform with native blockchain anchoring,
-              Guarantee of Origin certificates, and W3C Verifiable Credentials.
-            </p>
-          </FadeInUp>
-
-          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
-            {/* Evidence Vault Card */}
-            <FadeInUp delay={0.1}>
-              <div className="bg-gradient-to-br from-[#D4AF37]/10 to-orange-500/5 border border-[#D4AF37]/20 rounded-2xl p-8">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="h-14 w-14 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center">
-                    <Blocks className="h-7 w-7 text-amber-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold">Evidence Vault</h3>
-                    <p className="text-amber-300/80">Blockchain Document Anchoring</p>
-                  </div>
-                </div>
-                <ul className="space-y-3 mb-6">
-                  {[
-                    "SHA-256 document hashing with tamper detection",
-                    "Keccak-256 Merkle tree batching for efficiency",
-                    "Ethereum mainnet/testnet smart contract anchoring",
-                    "IPFS decentralized content-addressed storage",
-                    "Complete audit trail with on-chain verification",
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-gray-600">
-                      <CheckCircle2 className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/evidence-vault">
-                  <Button className="bg-[#D4AF37] hover:bg-[#D4AF37] text-black">
-                    Explore Evidence Vault
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </FadeInUp>
-
-            {/* GO Certificates Card */}
-            <FadeInUp delay={0.2}>
-              <div className="bg-gradient-to-br from-[#D4AF37]/10 to-teal-500/5 border border-[#D4AF37]/20 rounded-2xl p-8">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="h-14 w-14 rounded-xl bg-[#D4AF37]/20 flex items-center justify-center">
-                    <BadgeCheck className="h-7 w-7 text-[#D4AF37]" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold">GO Certificates</h3>
-                    <p className="text-emerald-300/80">Guarantee of Origin Scheme</p>
-                  </div>
-                </div>
-                <ul className="space-y-3 mb-6">
-                  {[
-                    "Issue renewable energy certificates per MWh",
-                    "Full lifecycle: issuance → transfer → retirement",
-                    "Blockchain-backed ownership verification",
-                    "Integration with energy market regulators",
-                    "Automated compliance and reporting",
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-gray-600">
-                      <CheckCircle2 className="h-5 w-5 text-[#D4AF37] shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/go-scheme">
-                  <Button className="bg-[#D4AF37] hover:bg-[#D4AF37] text-black">
-                    Explore GO Scheme
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </FadeInUp>
-          </div>
-
-          {/* Verifiable Credentials Banner */}
-          <FadeInUp delay={0.3}>
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-4xl mx-auto">
-              <div className="flex flex-col md:flex-row items-center gap-6">
-                <div className="h-16 w-16 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0">
-                  <Fingerprint className="h-8 w-8 text-blue-400" />
-                </div>
-                <div className="text-center md:text-left flex-1">
-                  <h3 className="text-xl font-bold mb-2">W3C Verifiable Credentials</h3>
-                  <p className="text-gray-500">
-                    Every certificate, rating, and qualification is issued as a
-                    cryptographically-signed Verifiable Credential with a Decentralized Identifier (DID).
-                    Any third party can independently verify authenticity without contacting ABFI.
-                  </p>
-                </div>
-                <Link href="/credentials">
-                  <Button variant="outline" className="border-white/20 text-black hover:bg-white/10 shrink-0">
-                    Learn More
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </FadeInUp>
+      {/* Section 7: Testimonials (White Background) */}
+      <section className="py-20 px-8 md:px-16 lg:px-24 bg-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <blockquote className="text-4xl italic font-light text-black mb-8 leading-snug">
+            “ABFI's certification cut our due diligence time by 60% and unlocked critical project financing.”
+          </blockquote>
+          <p className={\`font-semibold text-black \${BASE_TEXT_SIZE}\`}>
+            Jane Doe, Head of Sustainable Finance, Global Bank
+          </p>
         </div>
       </section>
 
-      {/* Platform Capabilities */}
-      <section className="py-20 lg:py-28 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <FadeInUp className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
-              Platform Capabilities
-            </Badge>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4">
-              Complete Bioenergy Ecosystem
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              From supply discovery to compliance certificates - everything integrated
-              with blockchain-grade security.
-            </p>
-          </FadeInUp>
+      {/* Section 8: Footer (Black Background) */}
+      <footer className="bg-black text-white py-12 px-8 md:px-16 lg:px-24">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+          {/* Logo/Branding */}
+          <div className="text-2xl font-bold text-white">
+            ABFI <span className={\`text-[${GOLD}]\`}>Platform</span>
+          </div>
 
-          <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {[
-              {
-                icon: Blocks,
-                title: "Evidence Vault",
-                desc: "Blockchain-anchored document integrity",
-                highlight: true,
-              },
-              {
-                icon: BadgeCheck,
-                title: "GO Certificates",
-                desc: "Renewable energy certificate management",
-                highlight: true,
-              },
-              {
-                icon: Fingerprint,
-                title: "Verifiable Credentials",
-                desc: "W3C-standard DIDs and VCs",
-                highlight: true,
-              },
-              {
-                icon: Cpu,
-                title: "Smart Contracts",
-                desc: "Ethereum-based verification",
-                highlight: true,
-              },
-              {
-                icon: Globe,
-                title: "Futures Marketplace",
-                desc: "Long-term supply contracts",
-              },
-              {
-                icon: MapPin,
-                title: "Interactive Maps",
-                desc: "Geospatial supply visualization",
-              },
-              {
-                icon: Award,
-                title: "Bankability Scores",
-                desc: "AAA-CCC project ratings",
-              },
-              {
-                icon: Eye,
-                title: "Covenant Monitoring",
-                desc: "Real-time compliance tracking",
-              },
-            ].map((item, i) => (
-              <StaggerItem key={i}>
-                <Card className={cn(
-                  "h-full hover:shadow-md transition-shadow",
-                  (item as any).highlight && "border-primary/30 bg-primary/5"
-                )}>
-                  <CardHeader className="pb-2">
-                    <div className={cn(
-                      "h-10 w-10 rounded-lg flex items-center justify-center mb-3",
-                      (item as any).highlight ? "bg-[#D4AF37]/20" : "bg-[#D4AF37]/10"
-                    )}>
-                      <item.icon className={cn(
-                        "h-5 w-5",
-                        (item as any).highlight ? "text-[#D4AF37]" : "text-[#D4AF37]"
-                      )} />
-                    </div>
-                    <CardTitle className="text-base">{item.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-gray-600">{item.desc}</p>
-                  </CardContent>
-                </Card>
-              </StaggerItem>
+          {/* Navigation Links */}
+          <nav className="flex flex-wrap justify-center space-x-6">
+            {['About', 'Contact', 'Terms', 'Privacy'].map((link) => (
+              <a key={link} href="#" className={\`text-gray-400 hover:text-white transition-colors duration-200 \${BASE_TEXT_SIZE}\`}>
+                {link}
+              </a>
             ))}
-          </StaggerContainer>
-        </div>
-      </section>
+          </nav>
 
-      {/* Social Proof */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <FadeInUp className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-              Trusted by Industry Leaders
-            </h2>
-          </FadeInUp>
-
-          <StaggerContainer className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {[
-              {
-                quote:
-                  "ABFI's bankability framework gave our lenders the confidence to proceed with $120M in project finance.",
-                author: "Project Director",
-                company: "Major Bioenergy Developer",
-              },
-              {
-                quote:
-                  "The real-time covenant monitoring has transformed how we manage feedstock risk in our portfolio.",
-                author: "Head of Structured Finance",
-                company: "Infrastructure Bank",
-              },
-              {
-                quote:
-                  "Finally, a platform that treats agricultural supply with the same rigor as financial instruments.",
-                author: "CEO",
-                company: "Agricultural Cooperative",
-              },
-            ].map((testimonial, i) => (
-              <StaggerItem key={i}>
-                <Card className="h-full">
-                  <CardContent className="pt-6">
-                    <p className="text-gray-600 mb-6 italic">
-                      "{testimonial.quote}"
-                    </p>
-                    <div>
-                      <p className="font-semibold">{testimonial.author}</p>
-                      <p className="text-sm text-gray-600">
-                        {testimonial.company}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-primary via-primary to-primary/90 text-[#D4AF37]-foreground relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <GridPattern />
-        </div>
-        <div className="container mx-auto px-4 relative z-10">
-          <FadeInUp className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-6">
-              Ready to Build Bankable Biomass?
-            </h2>
-            <p className="text-xl opacity-90 mb-10">
-              Join the platform that's setting the standard for bioenergy supply
-              chain infrastructure.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/producer-registration">
-                <Button
-                  size="xl"
-                  variant="secondary"
-                  rightIcon={<ArrowRight className="h-5 w-5" />}
-                >
-                  Get Started Free
-                </Button>
-              </Link>
-              <Link href="/platform-features">
-                <Button
-                  size="xl"
-                  variant="outline"
-                  className="border-white/30 text-black hover:bg-white/10"
-                >
-                  Explore Features
-                </Button>
-              </Link>
-            </div>
-          </FadeInUp>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t bg-white text-gray-600 py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-10">
-            {/* Brand */}
-            <div className="lg:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="p-1.5 rounded-lg bg-[#D4AF37]/20">
-                  <Leaf className="h-5 w-5 text-[#D4AF37]" />
-                </div>
-                <span className="text-lg font-bold font-display text-black">
-                  ABFI
-                </span>
-              </div>
-              <p className="text-sm leading-relaxed mb-6 max-w-sm">
-                Australian Bioenergy Feedstock Institute — Bank-grade
-                infrastructure for biomass supply chain management and project
-                finance.
-              </p>
-              <div className="flex gap-3">
-                <Badge
-                  variant="outline"
-                  className="border-gray-200 text-gray-500 text-xs"
-                >
-                  <Lock className="h-3 w-3 mr-1" />
-                  SOC 2
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="border-gray-200 text-gray-500 text-xs"
-                >
-                  <Shield className="h-3 w-3 mr-1" />
-                  ISO 27001
-                </Badge>
-              </div>
-            </div>
-
-            {/* For Growers */}
-            <div>
-              <h3 className="font-semibold mb-4 text-black">For Growers</h3>
-              <ul className="space-y-3 text-sm">
-                <li>
-                  <Link
-                    href="/producer-registration"
-                    className="hover:text-black transition-colors"
-                  >
-                    Register Supply
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/supplier/futures"
-                    className="hover:text-black transition-colors"
-                  >
-                    List Futures
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/for-growers"
-                    className="hover:text-black transition-colors"
-                  >
-                    Grower Benefits
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/grower-qualification"
-                    className="hover:text-black transition-colors"
-                  >
-                    GQ Tiers
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* For Developers */}
-            <div>
-              <h3 className="font-semibold mb-4 text-black">For Developers</h3>
-              <ul className="space-y-3 text-sm">
-                <li>
-                  <Link
-                    href="/futures"
-                    className="hover:text-black transition-colors"
-                  >
-                    Marketplace
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/bankability"
-                    className="hover:text-black transition-colors"
-                  >
-                    Bankability
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/for-developers"
-                    className="hover:text-black transition-colors"
-                  >
-                    How It Works
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/feedstock-map"
-                    className="hover:text-black transition-colors"
-                  >
-                    Supply Map
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* For Lenders */}
-            <div>
-              <h3 className="font-semibold mb-4 text-black">For Lenders</h3>
-              <ul className="space-y-3 text-sm">
-                <li>
-                  <Link
-                    href="/lender-portal"
-                    className="hover:text-black transition-colors"
-                  >
-                    Lender Portal
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/compliance-dashboard"
-                    className="hover:text-black transition-colors"
-                  >
-                    Compliance
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/for-lenders"
-                    className="hover:text-black transition-colors"
-                  >
-                    Risk Framework
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/platform-features"
-                    className="hover:text-black transition-colors"
-                  >
-                    Platform Features
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          {/* Social Media Icons Placeholder */}
+          <div className="flex space-x-4">
+            <Globe className="w-6 h-6 text-gray-400 hover:text-white cursor-pointer" />
+            <BarChart className="w-6 h-6 text-gray-400 hover:text-white cursor-pointer" />
           </div>
-
-          <div className="border-t border-gray-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-black0">
-              © {new Date().getFullYear()} Australian Bioenergy Feedstock
-              Institute. All rights reserved.
-            </p>
-            <div className="flex gap-6 text-sm text-black0">
-              <Link
-                href="/privacy"
-                className="hover:text-black transition-colors"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/terms"
-                className="hover:text-black transition-colors"
-              >
-                Terms
-              </Link>
-              <Link
-                href="/security"
-                className="hover:text-black transition-colors"
-              >
-                Security
-              </Link>
-            </div>
-          </div>
+        </div>
+        <div className="text-center mt-8 text-gray-500 text-sm">
+          &copy; {new Date().getFullYear()} ABFI Platform. All rights reserved.
         </div>
       </footer>
     </div>
   );
-}
+};
+
+export default Home;

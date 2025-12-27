@@ -1,519 +1,198 @@
-/**
- * Developer Dashboard - Redesigned
- *
- * Features:
- * - Split layout with GIS map for supplier sourcing
- * - Deal pipeline visualization (Kanban-style)
- * - Supply confidence tools
- * - Risk scoring integration
- * - Real-time price and policy feeds
- */
+import React from 'react';
 
-import { useState, useRef, useCallback } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Factory,
-  Search,
-  FileText,
-  Clock,
-  ChevronRight,
-  Filter,
-  MapPin,
-  Leaf,
-  Shield,
-  BarChart3,
-  TrendingUp,
-  AlertTriangle,
-  CheckCircle2,
-  XCircle,
-  Eye,
-  Plus,
-  Target,
-  Layers,
-  Building2,
-  Truck,
-  Calendar,
-  DollarSign,
-} from "lucide-react";
-import { Link } from "wouter";
-import { cn } from "@/lib/utils";
-import { SimpleLeafletMap, type MapMarker } from "@/components/SimpleLeafletMap";
+// Define the color constants for clarity and adherence to the design system
+const COLOR_GOLD = '#D4AF37';
+const COLOR_BLACK = '#000000';
+const COLOR_WHITE = '#FFFFFF';
 
-// Pipeline stages
-const PIPELINE_STAGES = [
-  { id: "discovery", label: "Discovery", color: "bg-slate-500" },
-  { id: "outreach", label: "Outreach", color: "bg-blue-500" },
-  { id: "negotiation", label: "Negotiation", color: "bg-[#D4AF37]" },
-  { id: "contracted", label: "Contracted", color: "bg-[#D4AF37]" },
-];
+// Helper component for the primary gold button
+const PrimaryButton: React.FC<{ children: React.ReactNode, onClick?: () => void }> = ({ children, onClick }) => (
+  <button
+    onClick={onClick}
+    // Large touch target (min 48px height) and gold primary style
+    className="bg-[#D4AF37] text-black font-semibold py-3 px-6 rounded-lg min-h-[48px] transition duration-150 ease-in-out hover:bg-opacity-90 focus:outline-none focus:ring-4 focus:ring-[#D4AF37] focus:ring-opacity-50"
+  >
+    {children}
+  </button>
+);
 
-// Mock deal pipeline data
-const DEAL_PIPELINE = [
-  {
-    id: "1",
-    name: "Queensland Canola Collective",
-    stage: "negotiation",
-    type: "Canola",
-    volume: "15,000 t/yr",
-    location: { lat: -27.4698, lng: 153.0251, label: "Brisbane, QLD" },
-    rating: "AA+",
-    value: "$4.2M",
-    probability: 75,
-    nextAction: "Contract review",
-    dueDate: "Jan 15",
-  },
-  {
-    id: "2",
-    name: "Southern Tallow Processing",
-    stage: "discovery",
-    type: "Tallow",
-    volume: "8,500 t/yr",
-    location: { lat: -37.8136, lng: 144.9631, label: "Melbourne, VIC" },
-    rating: "A",
-    value: "$2.1M",
-    probability: 25,
-    nextAction: "Initial contact",
-    dueDate: "Jan 20",
-  },
-  {
-    id: "3",
-    name: "NSW UCO Network",
-    stage: "outreach",
-    type: "UCO",
-    volume: "12,000 t/yr",
-    location: { lat: -33.8688, lng: 151.2093, label: "Sydney, NSW" },
-    rating: "AA",
-    value: "$3.5M",
-    probability: 50,
-    nextAction: "Site visit scheduled",
-    dueDate: "Jan 12",
-  },
-  {
-    id: "4",
-    name: "Perth Grain Cooperative",
-    stage: "contracted",
-    type: "Canola",
-    volume: "20,000 t/yr",
-    location: { lat: -31.9505, lng: 115.8605, label: "Perth, WA" },
-    rating: "AA+",
-    value: "$5.8M",
-    probability: 100,
-    nextAction: "Delivery Q2 2025",
-    dueDate: "Signed",
-  },
-];
+// Helper component for the Metric Cards (Max 3 metrics visible at once)
+interface MetricCardProps {
+  title: string;
+  value: string;
+  status?: 'Verified' | 'Pending' | 'Attention' | 'Risk';
+}
 
-// Quick stats
-const QUICK_STATS = [
-  { label: "Pipeline Value", value: "$15.6M", icon: DollarSign, color: "text-[#D4AF37]" },
-  { label: "Active Deals", value: "4", icon: Target, color: "text-blue-600" },
-  { label: "Suppliers Tracked", value: "247", icon: Building2, color: "text-purple-600" },
-  { label: "Avg. Confidence", value: "72%", icon: Shield, color: "text-[#D4AF37]" },
-];
+const MetricCard: React.FC<MetricCardProps> = ({ title, value, status }) => {
+  let statusClasses = '';
+  let statusText = status;
 
-// Registry suppliers for map
-const REGISTRY_SUPPLIERS = [
-  { id: "s1", name: "Darling Downs Grains", type: "Canola", location: { lat: -27.5589, lng: 151.9539 }, rating: "AA+", volume: "25,000 t/yr" },
-  { id: "s2", name: "Gippsland Organics", type: "Canola", location: { lat: -38.2551, lng: 146.4892 }, rating: "A+", volume: "12,000 t/yr" },
-  { id: "s3", name: "Adelaide Rendering Co", type: "Tallow", location: { lat: -34.9285, lng: 138.6007 }, rating: "A", volume: "8,000 t/yr" },
-  { id: "s4", name: "Newcastle UCO Recyclers", type: "UCO", location: { lat: -32.9283, lng: 151.7817 }, rating: "B+", volume: "5,000 t/yr" },
-  { id: "s5", name: "Riverina Ag Services", type: "Canola", location: { lat: -35.1082, lng: 147.3598 }, rating: "AA", volume: "18,000 t/yr" },
-];
-
-// Intelligence feeds
-const INTELLIGENCE_FEEDS = [
-  { id: "1", type: "price", title: "Canola prices up 3.2%", time: "2h ago", href: "/feedstock-prices" },
-  { id: "2", type: "policy", title: "NSW RFS consultation open", time: "5h ago", href: "/policy-carbon" },
-  { id: "3", type: "signal", title: "New HVO project in QLD", time: "1d ago", href: "/stealth-discovery" },
-];
-
-export default function DeveloperDashboard() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFeedstock, setSelectedFeedstock] = useState<string>("all");
-  const [selectedDeal, setSelectedDeal] = useState<string | null>(null);
-  const [activeView, setActiveView] = useState<"map" | "pipeline">("map");
-
-  // Convert suppliers and deals to map markers
-  const mapMarkers: MapMarker[] = [
-    // Registry suppliers (gray markers)
-    ...REGISTRY_SUPPLIERS.map((supplier) => ({
-      id: supplier.id,
-      lat: supplier.location.lat,
-      lng: supplier.location.lng,
-      title: supplier.name,
-      color: "#94a3b8", // slate-400
-      onClick: () => setSelectedDeal(supplier.id),
-    })),
-    // Pipeline deals (colored by stage)
-    ...DEAL_PIPELINE.filter(deal => deal.location).map((deal) => {
-      const stageColors: Record<string, string> = {
-        discovery: "#64748b", // slate-500
-        outreach: "#3b82f6", // blue-500
-        negotiation: "#f59e0b", // amber-500
-        contracted: "#22c55e", // emerald-500
-      };
-      return {
-        id: deal.id,
-        lat: deal.location.lat,
-        lng: deal.location.lng,
-        title: deal.name,
-        color: stageColors[deal.stage] || "#3b82f6",
-        onClick: () => setSelectedDeal(deal.id),
-      };
-    }),
-  ];
-
-  const getDealsForStage = (stageId: string) => {
-    return DEAL_PIPELINE.filter((deal) => deal.stage === stageId);
-  };
+  switch (status) {
+    case 'Verified':
+      statusClasses = 'bg-[#D4AF37] text-black'; // Gold bg
+      break;
+    case 'Pending':
+      statusClasses = 'bg-gray-200 text-black';
+      break;
+    case 'Attention':
+      statusClasses = 'bg-amber-500 text-white';
+      break;
+    case 'Risk':
+      statusClasses = 'bg-red-500 text-white';
+      break;
+    default:
+      statusText = '';
+      statusClasses = 'hidden';
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Quick Stats Bar */}
-      <div className="border-b bg-card/50">
-        <div className="container mx-auto px-4 py-3">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {QUICK_STATS.map((stat, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-muted/50 flex items-center justify-center">
-                  <stat.icon className={cn("h-5 w-5", stat.color)} />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-xs text-gray-600">{stat.label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 transition duration-150 ease-in-out hover:shadow-md flex flex-col justify-between">
+      <div className="flex justify-between items-start mb-4">
+        <h3 className="text-lg font-medium text-gray-700">{title}</h3>
+        {status && (
+          <span className={`text-xs font-medium px-3 py-1 rounded-full ${statusClasses}`}>
+            {statusText}
+          </span>
+        )}
       </div>
-
-      {/* Main Content */}
-      <div className="flex flex-col lg:flex-row h-[calc(100vh-120px)]">
-        {/* Left Sidebar - Search & Pipeline */}
-        <div className="w-full lg:w-[420px] border-r bg-card/50 flex flex-col">
-          {/* Search Bar */}
-          <div className="p-4 border-b">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
-                <Input
-                  placeholder="Search suppliers..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
-              </div>
-              <Select value={selectedFeedstock} onValueChange={setSelectedFeedstock}>
-                <SelectTrigger className="w-32">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="canola">Canola</SelectItem>
-                  <SelectItem value="tallow">Tallow</SelectItem>
-                  <SelectItem value="uco">UCO</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <ScrollArea className="flex-1">
-            <div className="p-4 space-y-4">
-              {/* View Toggle */}
-              <div className="flex gap-2">
-                <Button
-                  variant={activeView === "map" ? "default" : "outline"}
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => setActiveView("map")}
-                >
-                  <MapPin className="h-4 w-4 mr-2" />
-                  Supplier Map
-                </Button>
-                <Button
-                  variant={activeView === "pipeline" ? "default" : "outline"}
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => setActiveView("pipeline")}
-                >
-                  <Layers className="h-4 w-4 mr-2" />
-                  Pipeline
-                </Button>
-              </div>
-
-              {/* Deal Pipeline */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Target className="h-4 w-4 text-blue-600" />
-                    Deal Pipeline
-                  </h3>
-                  <Badge variant="outline" className="text-xs">
-                    {DEAL_PIPELINE.length} deals
-                  </Badge>
-                </div>
-
-                {/* Pipeline Stages Summary */}
-                <div className="grid grid-cols-4 gap-1 mb-4">
-                  {PIPELINE_STAGES.map((stage) => {
-                    const count = getDealsForStage(stage.id).length;
-                    return (
-                      <div key={stage.id} className="text-center">
-                        <div
-                          className={cn(
-                            "h-1.5 rounded-full mb-1",
-                            stage.color
-                          )}
-                        />
-                        <p className="text-xs text-gray-600">{stage.label}</p>
-                        <p className="text-lg font-bold">{count}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Deal Cards */}
-                <div className="space-y-2">
-                  {DEAL_PIPELINE.map((deal) => {
-                    const stage = PIPELINE_STAGES.find((s) => s.id === deal.stage);
-                    return (
-                      <div
-                        key={deal.id}
-                        className={cn(
-                          "p-3 rounded-lg border cursor-pointer transition-all hover:shadow-sm",
-                          selectedDeal === deal.id
-                            ? "border-primary ring-1 ring-primary/20"
-                            : "hover:border-primary/30"
-                        )}
-                        onClick={() => setSelectedDeal(deal.id)}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <p className="font-medium text-sm truncate">{deal.name}</p>
-                              <Badge
-                                className={cn("text-xs shrink-0", stage?.color, "text-black")}
-                              >
-                                {stage?.label}
-                              </Badge>
-                            </div>
-                            <div className="flex items-center gap-2 mt-1 text-xs text-gray-600">
-                              <span className="flex items-center gap-1">
-                                <MapPin className="h-3 w-3" />
-                                {deal.location.label}
-                              </span>
-                              <span>|</span>
-                              <span>{deal.type}</span>
-                            </div>
-                          </div>
-                          <div className="text-right shrink-0">
-                            <p className="text-sm font-bold text-[#D4AF37]">{deal.value}</p>
-                            <p className="text-xs text-gray-600">{deal.probability}%</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between mt-2 pt-2 border-t text-xs">
-                          <span className="text-gray-600">{deal.nextAction}</span>
-                          <Badge variant="outline" className="text-xs">
-                            {deal.dueDate}
-                          </Badge>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Intelligence Feeds */}
-              <div>
-                <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-purple-600" />
-                  Intelligence Feeds
-                </h3>
-                <div className="space-y-2">
-                  {INTELLIGENCE_FEEDS.map((feed) => (
-                    <Link key={feed.id} href={feed.href}>
-                      <div className="p-2 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            {feed.type === "price" && <TrendingUp className="h-4 w-4 text-[#D4AF37]" />}
-                            {feed.type === "policy" && <FileText className="h-4 w-4 text-blue-500" />}
-                            {feed.type === "signal" && <Eye className="h-4 w-4 text-[#D4AF37]" />}
-                            <span className="text-sm">{feed.title}</span>
-                          </div>
-                          <span className="text-xs text-gray-600">{feed.time}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Quick Actions */}
-              <div>
-                <h3 className="text-sm font-semibold mb-3">Quick Actions</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  <Link href="/browse">
-                    <Button variant="outline" size="sm" className="w-full justify-start">
-                      <Search className="h-4 w-4 mr-2" />
-                      Browse Registry
-                    </Button>
-                  </Link>
-                  <Link href="/procurement-scenarios">
-                    <Button variant="outline" size="sm" className="w-full justify-start">
-                      <Shield className="h-4 w-4 mr-2" />
-                      Confidence Tool
-                    </Button>
-                  </Link>
-                  <Link href="/feedstock-prices">
-                    <Button variant="outline" size="sm" className="w-full justify-start">
-                      <BarChart3 className="h-4 w-4 mr-2" />
-                      Price Charts
-                    </Button>
-                  </Link>
-                  <Link href="/policy-carbon">
-                    <Button variant="outline" size="sm" className="w-full justify-start">
-                      <Clock className="h-4 w-4 mr-2" />
-                      Policy Timeline
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </ScrollArea>
-        </div>
-
-        {/* Map/Pipeline Area */}
-        <div className="flex-1 relative min-h-[400px] lg:min-h-0">
-          {activeView === "map" ? (
-            <>
-              <SimpleLeafletMap
-                className="w-full h-full"
-                center={{ lat: -25.2744, lng: 133.7751 }}
-                zoom={4}
-                markers={mapMarkers}
-              />
-
-              {/* Map Legend */}
-              <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur p-3 rounded-lg shadow-lg border">
-                <h4 className="text-xs font-semibold mb-2">Supplier Network</h4>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="h-3 w-3 rounded-full bg-blue-500" />
-                    <span>In Pipeline ({DEAL_PIPELINE.length})</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="h-3 w-3 rounded-full bg-slate-400" />
-                    <span>Registry ({REGISTRY_SUPPLIERS.length})</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Search Registry Button */}
-              <Link href="/browse">
-                <Button className="absolute bottom-4 right-4 shadow-lg" size="lg">
-                  <Search className="h-5 w-5 mr-2" />
-                  Search Registry
-                </Button>
-              </Link>
-            </>
-          ) : (
-            /* Pipeline Kanban View */
-            <div className="h-full p-4 overflow-x-auto">
-              <div className="flex gap-4 h-full min-w-max">
-                {PIPELINE_STAGES.map((stage) => (
-                  <div
-                    key={stage.id}
-                    className="w-80 flex flex-col bg-muted/30 rounded-lg"
-                  >
-                    <div className="p-3 border-b">
-                      <div className="flex items-center gap-2">
-                        <div className={cn("h-3 w-3 rounded-full", stage.color)} />
-                        <h3 className="font-semibold text-sm">{stage.label}</h3>
-                        <Badge variant="secondary" className="ml-auto">
-                          {getDealsForStage(stage.id).length}
-                        </Badge>
-                      </div>
-                    </div>
-                    <ScrollArea className="flex-1 p-2">
-                      <div className="space-y-2">
-                        {getDealsForStage(stage.id).map((deal) => (
-                          <Card
-                            key={deal.id}
-                            className={cn(
-                              "cursor-pointer transition-all",
-                              selectedDeal === deal.id && "ring-1 ring-primary"
-                            )}
-                            onClick={() => setSelectedDeal(deal.id)}
-                          >
-                            <CardContent className="p-3">
-                              <div className="flex items-start justify-between mb-2">
-                                <div>
-                                  <p className="font-medium text-sm">{deal.name}</p>
-                                  <p className="text-xs text-gray-600">
-                                    {deal.type} · {deal.volume}
-                                  </p>
-                                </div>
-                                <Badge
-                                  className={cn(
-                                    "text-xs",
-                                    deal.rating.startsWith("AA")
-                                      ? "bg-emerald-100 text-emerald-800"
-                                      : deal.rating.startsWith("A")
-                                      ? "bg-blue-100 text-blue-800"
-                                      : "bg-slate-100 text-slate-800"
-                                  )}
-                                >
-                                  {deal.rating}
-                                </Badge>
-                              </div>
-                              <div className="flex items-center justify-between text-xs">
-                                <span className="text-[#D4AF37] font-bold">
-                                  {deal.value}
-                                </span>
-                                <span className="text-gray-600">
-                                  {deal.probability}% probability
-                                </span>
-                              </div>
-                              <div className="mt-2 pt-2 border-t flex items-center gap-1 text-xs text-gray-600">
-                                <Calendar className="h-3 w-3" />
-                                {deal.nextAction} · {deal.dueDate}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                        {getDealsForStage(stage.id).length === 0 && (
-                          <div className="text-center py-8 text-gray-600 text-sm">
-                            No deals in this stage
-                          </div>
-                        )}
-                      </div>
-                    </ScrollArea>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      <p className="text-4xl font-semibold text-black">{value}</p>
     </div>
   );
+};
+
+// Helper component for Deal Pipeline Cards (Cards-first design)
+interface DealCardProps {
+  dealName: string;
+  stage: string;
+  bankabilityScore: number;
+  riskLevel: 'Low' | 'Medium' | 'High';
 }
+
+const DealCard: React.FC<DealCardProps> = ({ dealName, stage, bankabilityScore, riskLevel }) => {
+  const riskColor = riskLevel === 'High' ? 'text-red-500' : riskLevel === 'Medium' ? 'text-amber-500' : 'text-green-500';
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-5 transition duration-150 ease-in-out hover:shadow-md cursor-pointer">
+      <h4 className="text-xl font-semibold mb-2">{dealName}</h4>
+      <p className="text-sm font-medium text-gray-500 mb-3">Stage: <span className="text-black">{stage}</span></p>
+      
+      <div className="space-y-2 text-sm">
+        <div className="flex justify-between">
+          <span className="font-medium">Bankability Score:</span>
+          <span className="font-semibold">{bankabilityScore}%</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-medium">Risk Level:</span>
+          <span className={`font-semibold ${riskColor}`}>{riskLevel}</span>
+        </div>
+      </div>
+      
+      {/* Large touch target for a secondary action */}
+      <button className="mt-4 w-full text-black border border-black bg-white font-medium py-2 px-4 rounded-lg text-sm min-h-[48px] hover:bg-gray-50">
+        View Deal Room
+      </button>
+    </div>
+  );
+};
+
+// Main Developer Dashboard Component
+const DeveloperDashboard: React.FC = () => {
+  // Mock data for the dashboard
+  const metricsData: MetricCardProps[] = [
+    { title: 'Bankability Score', value: '85%', status: 'Verified' },
+    { title: 'Supply Coverage', value: '12 / 15', status: 'Attention' },
+    { title: 'Risk Surfacing', value: 'High', status: 'Risk' },
+  ];
+
+  const dealPipelineData: DealCardProps[] = [
+    { dealName: 'Project Alpha Solar Farm', stage: 'Due Diligence', bankabilityScore: 78, riskLevel: 'Medium' },
+    { dealName: 'Green Energy Fund Q4', stage: 'Term Sheet', bankabilityScore: 92, riskLevel: 'Low' },
+    { dealName: 'Urban Wind Turbine Pilot', stage: 'Origination', bankabilityScore: 65, riskLevel: 'High' },
+    { dealName: 'Hydro Power Plant Upgrade', stage: 'Closing', bankabilityScore: 95, riskLevel: 'Low' },
+  ];
+
+  return (
+    <div className="p-10 bg-gray-50 min-h-screen">
+      <header className="flex justify-between items-center mb-10">
+        <h1 className="text-3xl font-semibold text-black">Developer Dashboard</h1>
+        {/* One primary gold CTA per screen */}
+        <PrimaryButton>Start New Deal Workflow</PrimaryButton>
+      </header>
+
+      {/* Section 1: Key Metrics (Max 3 metrics visible at once) */}
+      <section className="mb-10">
+        <h2 className="text-xl font-semibold mb-4">Key Performance Indicators</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {metricsData.map((metric, index) => (
+            <MetricCard key={index} {...metric} />
+          ))}
+        </div>
+      </section>
+
+      {/* Section 2: Deal Pipeline (Cards-first design) */}
+      <section className="mb-10">
+        <h2 className="text-xl font-semibold mb-4">Deal Pipeline (4 Active)</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {dealPipelineData.map((deal, index) => (
+            <DealCard key={index} {...deal} />
+          ))}
+        </div>
+      </section>
+
+      {/* Section 3: Marketplace Browse Interface & Deal Room Workflow (Progressive Disclosure) */}
+      <section className="mb-10">
+        <h2 className="text-xl font-semibold mb-4">Marketplace & Workflow</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Marketplace Browse Interface Card */}
+          <div className="lg:col-span-2 bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+            <h3 className="text-2xl font-semibold mb-4">Browse Marketplace</h3>
+            <p className="text-base font-medium mb-4">Find new supply and financing opportunities.</p>
+            
+            {/* Form/Input for browsing - Large inputs, gold focus rings, black labels */}
+            <label htmlFor="marketplace-search" className="block text-black font-medium mb-2">Search for Opportunities</label>
+            <input 
+              id="marketplace-search"
+              type="text" 
+              placeholder="e.g., Solar, Africa, $50M"
+              className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] text-lg"
+            />
+            
+            {/* Secondary CTA for browsing */}
+            <button className="mt-4 w-full text-black border border-black bg-white font-medium py-3 px-4 rounded-lg min-h-[48px] hover:bg-gray-50">
+              Search Marketplace
+            </button>
+          </div>
+
+          {/* Deal Room Workflow Summary Card */}
+          <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+            <h3 className="text-2xl font-semibold mb-4">Deal Room Workflow</h3>
+            <p className="text-base font-medium mb-4">Manage your active deal rooms and next steps.</p>
+            
+            <ul className="space-y-3 text-base">
+              <li className="flex justify-between items-center">
+                <span className="font-medium">Pending Approvals:</span>
+                <span className="font-semibold text-amber-500">3</span>
+              </li>
+              <li className="flex justify-between items-center">
+                <span className="font-medium">Documents to Sign:</span>
+                <span className="font-semibold text-red-500">1</span>
+              </li>
+              <li className="flex justify-between items-center">
+                <span className="font-medium">Next Milestone:</span>
+                <span className="font-semibold">Project Alpha</span>
+              </li>
+            </ul>
+            
+            {/* Ghost Button for Progressive Disclosure */}
+            <button className="mt-6 w-full text-black font-medium py-3 px-4 rounded-lg min-h-[48px] hover:bg-gray-100 transition duration-150 ease-in-out">
+              Go to Workflow Manager
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default DeveloperDashboard;
