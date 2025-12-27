@@ -70,11 +70,12 @@ const PillarItem: React.FC<PillarItemProps> = ({ number, title }) => (
 const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-white font-sans">
+      {/* FIGMA REDESIGN - Black/White/Gold Design System */}
       {/* Section 1: Hero Section (Black Background) */}
       <header className="bg-black text-white py-24 px-8 md:px-16 lg:px-24">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-semibold mb-6 leading-tight">
-            The Future of Bioenergy Feedstock is Verifiable.
+            The Future of Bioenergy Feedstock is Verifiable
           </h1>
           <p className={`max-w-3xl mb-10 ${BASE_TEXT_SIZE}`}>
             ABFI provides the critical transparency and standardization needed to de-risk investment in the bioenergy sector.
