@@ -216,6 +216,43 @@ export function createSSERouter(): Router {
     });
   });
 
+  // Test endpoint to send a notification (development only)
+  router.post("/test", (req, res) => {
+    if (process.env.NODE_ENV === "production") {
+      res.status(403).json({ error: "Not available in production" });
+      return;
+    }
+
+    const { userId, title, message } = req.body;
+    const targetUserId = userId || 1;
+
+    const notification = {
+      id: Date.now(),
+      type: "system",
+      title: title || "Test Notification",
+      message: message || "This is a test notification from SSE!",
+      createdAt: new Date(),
+    };
+
+    const sentCount = sendNotificationToUser(targetUserId, notification);
+
+    // Also broadcast to all clients if no specific user
+    if (!userId) {
+      broadcastNotification({
+        type: "system",
+        title: notification.title,
+        message: notification.message,
+      });
+    }
+
+    res.json({
+      success: true,
+      sentCount,
+      totalConnections: clients.size,
+      notification,
+    });
+  });
+
   return router;
 }
 

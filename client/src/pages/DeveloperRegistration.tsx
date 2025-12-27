@@ -48,7 +48,7 @@ const TextInput: React.FC<InputProps> = ({ label, id, ...props }) => (
     <input
       id={id}
       type="text"
-      className={`w-full py-3 px-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[${COLOR_GOLD}] focus:border-transparent`\}
+      className={`w-full py-3 px-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[${COLOR_GOLD}] focus:border-transparent`}
       {...props}
     />
   </div>
@@ -162,7 +162,7 @@ const ProjectInformation: React.FC<StepProps & { prevStep: () => void }> = ({ da
         <textarea
           id="projectDescription"
           rows={4}
-          className={`w-full py-3 px-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[${COLOR_GOLD}] focus:border-transparent`\}
+          className={`w-full py-3 px-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[${COLOR_GOLD}] focus:border-transparent`}
           value={data.projectDescription}
           onChange={(e) => updateData({ projectDescription: e.target.value })}
           required
