@@ -163,21 +163,29 @@ export function securityHeaders(options: SecurityHeadersOptions = {}) {
  */
 function buildCSPDirectives(nonce: string, config: SecurityHeadersOptions): string {
   const directives: string[] = [];
+  const isDevelopment = process.env.NODE_ENV === "development";
 
   // default-src: Fallback for all resource types
   directives.push("default-src 'self'");
 
   // script-src: JavaScript sources
-  const scriptSources = [
-    "'self'",
-    `'nonce-${nonce}'`,
-    "'strict-dynamic'", // Allows scripts loaded by trusted scripts
-    // Trusted external scripts
-    "https://js.sentry.io",
-    "https://www.googletagmanager.com",
-    "https://va.vercel-scripts.com", // Vercel Analytics
-    ...(config.trustedScriptSources || []),
-  ];
+  // In development, allow unsafe-inline and unsafe-eval for Vite HMR
+  const scriptSources = isDevelopment
+    ? [
+        "'self'",
+        "'unsafe-inline'",
+        "'unsafe-eval'", // Required for Vite HMR
+      ]
+    : [
+        "'self'",
+        `'nonce-${nonce}'`,
+        "'strict-dynamic'", // Allows scripts loaded by trusted scripts
+        // Trusted external scripts
+        "https://js.sentry.io",
+        "https://www.googletagmanager.com",
+        "https://va.vercel-scripts.com", // Vercel Analytics
+        ...(config.trustedScriptSources || []),
+      ];
   directives.push(`script-src ${scriptSources.join(" ")}`);
 
   // style-src: CSS sources
@@ -229,6 +237,8 @@ function buildCSPDirectives(nonce: string, config: SecurityHeadersOptions): stri
   // connect-src: XHR, WebSocket, EventSource destinations
   const connectSources = [
     "'self'",
+    // Vite HMR websocket in development
+    ...(isDevelopment ? ["ws://localhost:*", "ws://127.0.0.1:*"] : []),
     // Authentication
     "https://api.okta.com",
     "https://*.okta.com",
