@@ -20,14 +20,17 @@ var init_env = __esm({
   "server/_core/env.ts"() {
     "use strict";
     ENV = {
-      appId: process.env.VITE_APP_ID ?? "",
+      appId: process.env.VITE_APP_ID || "abfi-dev-app",
       cookieSecret: process.env.JWT_SECRET ?? "",
       databaseUrl: process.env.DATABASE_URL ?? "",
       oAuthServerUrl: process.env.OAUTH_SERVER_URL ?? "",
       ownerOpenId: process.env.OWNER_OPEN_ID ?? "",
       isProduction: process.env.NODE_ENV === "production",
       forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
-      forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? ""
+      forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+      // HeyGen AI Avatar Configuration
+      heygenApiKey: process.env.HEYGEN_API_KEY ?? "",
+      heygenAvatarId: process.env.HEYGEN_AVATAR_ID ?? "sam_australian_001"
     };
   }
 });
@@ -4072,6 +4075,39 @@ var init_schema = __esm({
   }
 });
 
+// server/_core/sse.ts
+import { Router } from "express";
+function sendNotificationToUser(userId, notification) {
+  let sentCount = 0;
+  for (const client of clients.values()) {
+    if (client.userId === userId) {
+      try {
+        const data = JSON.stringify({
+          type: "notification",
+          payload: notification,
+          timestamp: Date.now()
+        });
+        client.response.write(`data: ${data}
+
+`);
+        sentCount++;
+      } catch (error) {
+        console.warn(`[SSE] Failed to send to client ${client.id}:`, error);
+        clients.delete(client.id);
+      }
+    }
+  }
+  return sentCount;
+}
+var clients;
+var init_sse = __esm({
+  "server/_core/sse.ts"() {
+    "use strict";
+    init_db();
+    clients = /* @__PURE__ */ new Map();
+  }
+});
+
 // server/db.ts
 import {
   eq,
@@ -4345,7 +4381,21 @@ async function createNotification(notification) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const result = await db.insert(notifications).values(notification);
-  return Number(result.insertId);
+  const notificationId = Number(result.insertId);
+  try {
+    sendNotificationToUser(notification.userId, {
+      id: notificationId,
+      type: notification.type,
+      title: notification.title,
+      message: notification.message,
+      relatedEntityType: notification.relatedEntityType ?? null,
+      relatedEntityId: notification.relatedEntityId ?? null,
+      createdAt: /* @__PURE__ */ new Date()
+    });
+  } catch (error) {
+    console.warn("[Notification] SSE delivery failed:", error);
+  }
+  return notificationId;
 }
 async function getNotificationsByUserId(userId, unreadOnly = false) {
   const db = await getDb();
@@ -5454,6 +5504,7 @@ var init_db = __esm({
     "use strict";
     init_schema();
     init_env();
+    init_sse();
     init_schema();
     _db = null;
     _pool = null;
@@ -9037,6 +9088,7 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 // shared/const.ts
 var COOKIE_NAME = "app_session_id";
 var ONE_YEAR_MS = 1e3 * 60 * 60 * 24 * 365;
+var SESSION_TIMEOUT_MS = 1e3 * 60 * 60 * 8;
 var AXIOS_TIMEOUT_MS = 3e4;
 var UNAUTHED_ERR_MSG = "Please login (10001)";
 var NOT_ADMIN_ERR_MSG = "You do not have required permission (10002)";
@@ -9049,12 +9101,15 @@ function isSecureRequest(req) {
   return String(forwardedProto).split(",").some((p) => p.trim().toLowerCase() === "https");
 }
 function getSessionCookieOptions(req) {
+  const isSecure = isSecureRequest(req);
   return {
     domain: void 0,
     httpOnly: true,
     path: "/",
-    sameSite: "none",
-    secure: isSecureRequest(req)
+    // Use "lax" for CSRF protection while allowing top-level navigation
+    // "none" requires secure context, "lax" is the secure default
+    sameSite: isSecure ? "lax" : "lax",
+    secure: isSecure
   };
 }
 
@@ -18821,6 +18876,44 @@ var appRouter = router({
     })
   }),
   // ============================================================================
+  // FEEDBACK (Helpdesk Integration)
+  // ============================================================================
+  feedback: router({
+    submit: publicProcedure.input(
+      z14.object({
+        type: z14.enum(["bug", "feature", "question", "general"]),
+        subject: z14.string().max(100).optional(),
+        message: z14.string().min(1).max(2e3),
+        pageUrl: z14.string().optional(),
+        userAgent: z14.string().optional()
+      })
+    ).mutation(async ({ ctx, input }) => {
+      const feedbackId = await createUserFeedback({
+        userId: ctx.user?.id ?? null,
+        otherFeedback: `[${input.type.toUpperCase()}] ${input.subject ? input.subject + ": " : ""}${input.message}
+
+Page: ${input.pageUrl || "N/A"}
+User Agent: ${input.userAgent || "N/A"}`,
+        featureRequests: input.type === "feature" ? input.message : null
+      });
+      return { success: true, feedbackId };
+    }),
+    list: adminProcedure5.input(
+      z14.object({
+        limit: z14.number().min(1).max(100).optional(),
+        offset: z14.number().min(0).optional()
+      })
+    ).query(async ({ input }) => {
+      return await listUserFeedback({
+        limit: input.limit,
+        offset: input.offset
+      });
+    }),
+    stats: adminProcedure5.query(async () => {
+      return await getFeedbackStats();
+    })
+  }),
+  // ============================================================================
   // SAVED SEARCHES
   // ============================================================================
   savedSearches: router({
@@ -21308,12 +21401,12 @@ function registerOAuthRoutes(app2) {
       });
       const sessionToken = await sdk.createSessionToken(userInfo.openId, {
         name: userInfo.name || "",
-        expiresInMs: ONE_YEAR_MS
+        expiresInMs: SESSION_TIMEOUT_MS
       });
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, {
         ...cookieOptions,
-        maxAge: ONE_YEAR_MS
+        maxAge: SESSION_TIMEOUT_MS
       });
       res.redirect(302, "/");
     } catch (error) {
@@ -21476,8 +21569,8 @@ async function handleManusWebhook(payload) {
 
 // server/certificateVerificationApi.ts
 init_db();
-import { Router } from "express";
-var router2 = Router();
+import { Router as Router2 } from "express";
+var router2 = Router2();
 var rateLimitMap = /* @__PURE__ */ new Map();
 var RATE_LIMIT_WINDOW_MS = 60 * 1e3;
 var RATE_LIMIT_MAX_REQUESTS = 30;
@@ -21649,10 +21742,10 @@ var certificateVerificationRouter = router2;
 
 // server/didResolutionApi.ts
 init_schema();
-import { Router as Router2 } from "express";
+import { Router as Router3 } from "express";
 import { drizzle as drizzle7 } from "drizzle-orm/mysql2";
 import { eq as eq20, and as and18 } from "drizzle-orm";
-var router3 = Router2();
+var router3 = Router3();
 async function getDb7() {
   if (!process.env.DATABASE_URL) return null;
   return drizzle7(process.env.DATABASE_URL);
