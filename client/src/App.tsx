@@ -50,6 +50,7 @@ const AdminAuditLogs = lazy(() => import("./pages/AdminAuditLogs"));
 const ComplianceDashboard = lazy(() => import("./pages/ComplianceDashboard"));
 const GrantVerification = lazy(() => import("./pages/GrantVerification"));
 const ARENACEFCDashboard = lazy(() => import("./pages/ARENACEFCDashboard"));
+const ABARESLandUse = lazy(() => import("./pages/ABARESLandUse"));
 const EvidenceManagement = lazy(() => import("./pages/EvidenceManagement"));
 const EvidenceVaultDashboard = lazy(() => import("./pages/EvidenceVaultDashboard"));
 const SupplyChainDashboard = lazy(() => import("./pages/SupplyChainDashboard"));
@@ -271,6 +272,7 @@ function Router() {
         <Route path="/compliance-dashboard" component={ComplianceDashboard} />
         <Route path="/grant-verification" component={GrantVerification} />
         <Route path="/arena-cefc" component={ARENACEFCDashboard} />
+        <Route path="/abares-land-use" component={ABARESLandUse} />
         <Route path="/admin/evidence" component={EvidenceManagement} />
         <Route path="/evidence-vault" component={EvidenceVaultDashboard} />
         <Route path="/supply-chain" component={SupplyChainDashboard} />

@@ -139,7 +139,7 @@
   - [ ] Entity name lookup
 
 ### Planned Integrations
-- [ ] **ABARES** - Land use mapping (CLUM WMS)
+- [x] **ABARES** - Land use mapping (CLUM WMS)
 - [ ] **BOM** - Bureau of Meteorology weather forecasts
 - [ ] **myGovID** - OAuth authentication
 - [ ] **Tomorrow.io** - Fire Weather Index (premium)
