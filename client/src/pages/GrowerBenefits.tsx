@@ -9,7 +9,7 @@ import {
   X,
   Check,
 } from "lucide-react";
-import EarningsCalculator from "../components/EarningsCalculator";
+import EarningsCalculator from "@/components/EarningsCalculator";
 
 export default function GrowerBenefits() {
   const problems = [

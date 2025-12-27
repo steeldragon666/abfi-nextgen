@@ -74,7 +74,7 @@ const FilterButton: React.FC<{ type: FeedstockType, isSelected: boolean, onClick
 
   return (
     <button
-      className={\`\${baseClasses} \${isSelected ? selectedClasses : unselectedClasses} flex items-center space-x-2\`}
+      className={`\${baseClasses} \${isSelected ? selectedClasses : unselectedClasses} flex items-center space-x-2`}
       onClick={onClick}
     >
       {/* Placeholder for custom icon */}

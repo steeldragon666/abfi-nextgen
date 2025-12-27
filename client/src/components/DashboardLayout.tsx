@@ -45,7 +45,7 @@ import {
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },

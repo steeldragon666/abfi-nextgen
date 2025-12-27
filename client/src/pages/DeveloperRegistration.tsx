@@ -42,13 +42,13 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const TextInput: React.FC<InputProps> = ({ label, id, ...props }) => (
   <div className="mb-6">
-    <label htmlFor={id} className={\`block text-base font-medium text-[\${COLOR_BLACK}] mb-2\`}>
+    <label htmlFor={id} className={`block text-base font-medium text-[\${COLOR_BLACK}] mb-2`}>
       {label}
     </label>
     <input
       id={id}
       type="text"
-      className={\`w-full py-3 px-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[\${COLOR_GOLD}] focus:border-transparent\`\}
+      className={`w-full py-3 px-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[\${COLOR_GOLD}] focus:border-transparent`\}
       {...props}
     />
   </div>
@@ -64,11 +64,11 @@ const Button: React.FC<ButtonProps> = ({ variant, children, className = '', ...p
   switch (variant) {
     case 'primary':
       // Primary (bg-[#D4AF37] text-black)
-      baseClasses += \` bg-[\${COLOR_GOLD}] text-[\${COLOR_BLACK}] hover:bg-opacity-90\`;
+      baseClasses += ` bg-[\${COLOR_GOLD}] text-[\${COLOR_BLACK}] hover:bg-opacity-90`;
       break;
     case 'secondary':
       // Secondary (bg-white border-black)
-      baseClasses += \` bg-[\${COLOR_WHITE}] border border-[\${COLOR_BLACK}] text-[\${COLOR_BLACK}] hover:bg-gray-50\`;
+      baseClasses += ` bg-[\${COLOR_WHITE}] border border-[\${COLOR_BLACK}] text-[\${COLOR_BLACK}] hover:bg-gray-50`;
       break;
     case 'ghost':
       // Ghost (transparent hover:bg-gray-100)
@@ -77,7 +77,7 @@ const Button: React.FC<ButtonProps> = ({ variant, children, className = '', ...p
   }
 
   return (
-    <button className={\`\${baseClasses} \${className}\`} {...props}>
+    <button className={`\${baseClasses} \${className}`} {...props}>
       {children}
     </button>
   );
@@ -104,7 +104,7 @@ const CompanyDetails: React.FC<StepProps> = ({ data, updateData, nextStep }) => 
 
   return (
     <form onSubmit={handleSubmit} className="p-8">
-      <h2 className={\`text-2xl font-semibold text-[\${COLOR_BLACK}] mb-8\`}>Company Details</h2>
+      <h2 className={`text-2xl font-semibold text-[\${COLOR_BLACK}] mb-8`}>Company Details</h2>
       <TextInput
         id="companyName"
         label="Company Name (Plain English Label)"
@@ -147,7 +147,7 @@ const ProjectInformation: React.FC<StepProps & { prevStep: () => void }> = ({ da
 
   return (
     <form onSubmit={handleSubmit} className="p-8">
-      <h2 className={\`text-2xl font-semibold text-[\${COLOR_BLACK}] mb-8\`}>Project Information</h2>
+      <h2 className={`text-2xl font-semibold text-[\${COLOR_BLACK}] mb-8`}>Project Information</h2>
       <TextInput
         id="projectName"
         label="Project Name"
@@ -156,13 +156,13 @@ const ProjectInformation: React.FC<StepProps & { prevStep: () => void }> = ({ da
         required
       />
       <div className="mb-6">
-        <label htmlFor="projectDescription" className={\`block text-base font-medium text-[\${COLOR_BLACK}] mb-2\`}>
+        <label htmlFor="projectDescription" className={`block text-base font-medium text-[\${COLOR_BLACK}] mb-2`}>
           Project Description
         </label>
         <textarea
           id="projectDescription"
           rows={4}
-          className={\`w-full py-3 px-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[\${COLOR_GOLD}] focus:border-transparent\`\}
+          className={`w-full py-3 px-4 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[\${COLOR_GOLD}] focus:border-transparent`\}
           value={data.projectDescription}
           onChange={(e) => updateData({ projectDescription: e.target.value })}
           required
@@ -199,7 +199,7 @@ const SupplyRequirements: React.FC<StepProps & { prevStep: () => void }> = ({ da
 
   return (
     <form onSubmit={handleSubmit} className="p-8">
-      <h2 className={\`text-2xl font-semibold text-[\${COLOR_BLACK}] mb-8\`}>Supply Requirements Form</h2>
+      <h2 className={`text-2xl font-semibold text-[\${COLOR_BLACK}] mb-8`}>Supply Requirements Form</h2>
       <TextInput
         id="materialType"
         label="Material Type"
@@ -244,7 +244,7 @@ const VerificationSteps: React.FC<StepProps & { prevStep: () => void }> = ({ dat
 
   const verificationStatus = useMemo(() => {
     if (data.isVerified) {
-      return { label: 'Verified', color: COLOR_GOLD, bg: \`bg-[\${COLOR_GOLD}] text-[\${COLOR_BLACK}]\` };
+      return { label: 'Verified', color: COLOR_GOLD, bg: `bg-[\${COLOR_GOLD}] text-[\${COLOR_BLACK}]` };
     }
     // Simulate a pending state based on form completion
     const isComplete = Object.values(data).slice(0, -1).every(val => val !== '' && val !== 0);
@@ -256,14 +256,14 @@ const VerificationSteps: React.FC<StepProps & { prevStep: () => void }> = ({ dat
 
   return (
     <div className="p-8">
-      <h2 className={\`text-2xl font-semibold text-[\${COLOR_BLACK}] mb-8\`}>Verification Steps</h2>
+      <h2 className={`text-2xl font-semibold text-[\${COLOR_BLACK}] mb-8`}>Verification Steps</h2>
       
       {/* Card-first design for metrics/status */}
-      <div className={\`p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-[\${COLOR_WHITE}] mb-6\`}>
+      <div className={`p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-[\${COLOR_WHITE}] mb-6`}>
         <h3 className="text-xl font-semibold mb-4">Registration Status</h3>
         <div className="flex items-center justify-between">
           <p className="text-base font-medium">Current Status:</p>
-          <span className={\`text-sm font-semibold px-3 py-1 rounded-full \${verificationStatus.bg}\`}>
+          <span className={`text-sm font-semibold px-3 py-1 rounded-full \${verificationStatus.bg}`}>
             {verificationStatus.label}
           </span>
         </div>
@@ -307,14 +307,14 @@ const Confirmation: React.FC<{ data: DeveloperRegistrationData }> = ({ data }) =
             <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: COLOR_GOLD }}>
                 <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
             </div>
-            <h2 className={\`text-3xl font-semibold text-[\${COLOR_BLACK}] mt-4 mb-4\`}>Registration Complete!</h2>
+            <h2 className={`text-3xl font-semibold text-[\${COLOR_BLACK}] mt-4 mb-4`}>Registration Complete!</h2>
             <p className="text-xl text-gray-700 mb-8">
                 Thank you, <span className="font-semibold">{data.companyName}</span>. Your developer registration has been successfully submitted for review.
             </p>
             
-            <div className={\`p-6 rounded-xl border border-gray-200 shadow-sm bg-[\${COLOR_WHITE}] inline-block\`}>
+            <div className={`p-6 rounded-xl border border-gray-200 shadow-sm bg-[\${COLOR_WHITE}] inline-block`}>
                 <p className="text-base font-medium text-gray-700">
-                    Current Status: <span className={\`text-sm font-semibold px-3 py-1 rounded-full bg-gray-200 text-gray-700 ml-2\`}>Pending Review</span>
+                    Current Status: <span className={`text-sm font-semibold px-3 py-1 rounded-full bg-gray-200 text-gray-700 ml-2`}>Pending Review</span>
                 </p>
             </div>
 
@@ -368,30 +368,30 @@ const DeveloperRegistration: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-10" style={{ fontSize: '18px' }}>
-      <div className={\`w-full max-w-3xl bg-[\${COLOR_WHITE}] rounded-2xl border border-gray-200 shadow-xl overflow-hidden\`}>
+      <div className={`w-full max-w-3xl bg-[\${COLOR_WHITE}] rounded-2xl border border-gray-200 shadow-xl overflow-hidden`}>
         
         {/* Step Indicator */}
         <div className="p-8 border-b border-gray-200">
-          <h1 className={\`text-3xl font-semibold text-[\${COLOR_BLACK}] mb-4\`}>Developer Registration</h1>
+          <h1 className={`text-3xl font-semibold text-[\${COLOR_BLACK}] mb-4`}>Developer Registration</h1>
           <div className="flex justify-between items-center">
             {steps.slice(0, 4).map((s) => (
               <div key={s.id} className="flex-1 flex items-center">
                 <div 
-                  className={\`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 \${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 \${
                     step > s.id 
-                      ? \`bg-[\${COLOR_GOLD}] text-[\${COLOR_BLACK}]\` 
+                      ? `bg-[\${COLOR_GOLD}] text-[\${COLOR_BLACK}]` 
                       : step === s.id 
-                        ? \`bg-[\${COLOR_BLACK}] text-[\${COLOR_WHITE}]\` 
+                        ? `bg-[\${COLOR_BLACK}] text-[\${COLOR_WHITE}]` 
                         : 'bg-gray-200 text-gray-500'
-                  }\`}
+                  }`}
                 >
                   {s.id}
                 </div>
-                <span className={\`ml-3 text-sm font-medium hidden sm:inline \${step >= s.id ? 'text-black' : 'text-gray-500'}\`}>
+                <span className={`ml-3 text-sm font-medium hidden sm:inline \${step >= s.id ? 'text-black' : 'text-gray-500'}`}>
                   {s.title}
                 </span>
                 {s.id < 4 && (
-                  <div className={\`flex-1 h-1 mx-4 transition-colors duration-300 \${step > s.id ? \`bg-[\${COLOR_GOLD}]\` : 'bg-gray-200'}\`} />
+                  <div className={`flex-1 h-1 mx-4 transition-colors duration-300 \${step > s.id ? `bg-[\${COLOR_GOLD}]` : 'bg-gray-200'}`} />
                 )}
               </div>
             ))}
@@ -400,7 +400,7 @@ const DeveloperRegistration: React.FC = () => {
 
         {/* Current Step Content (Card-first design) */}
         <div className="p-4">
-            <div className={\`rounded-xl border border-gray-200 shadow-sm bg-[\${COLOR_WHITE}]\`}>
+            <div className={`rounded-xl border border-gray-200 shadow-sm bg-[\${COLOR_WHITE}]`}>
                 {CurrentStepComponent}
             </div>
         </div>

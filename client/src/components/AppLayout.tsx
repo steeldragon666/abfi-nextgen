@@ -48,7 +48,7 @@ import {
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import RoleHeader from "./RoleHeader";
 
 // Menu structure
