@@ -51,6 +51,7 @@ import {
 } from "@/components/ui/motion";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useState, useMemo } from "react";
+import { H1, H2, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // Transport mode icons
 function getTransportIcon(mode: string) {
@@ -95,7 +96,7 @@ function ResultCard({
         <span className="text-sm text-gray-600">{label}</span>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="text-2xl font-bold font-mono">{value}</span>
+        <MetricValue size="lg">{value}</MetricValue>
         <span className="text-sm text-gray-600">{unit}</span>
       </div>
     </div>
@@ -633,7 +634,7 @@ export default function EmissionsCalculator() {
             <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
               <Calculator className="h-8 w-8 text-[#D4AF37]" />
             </div>
-            <CardTitle className="text-2xl">Emissions Calculator</CardTitle>
+            <H2 className="text-2xl">Emissions Calculator</H2>
             <CardDescription>
               ISO 14083, ISO 14064-1, and CORSIA compliant emissions calculations for your biofuel supply chain
             </CardDescription>
@@ -658,13 +659,13 @@ export default function EmissionsCalculator() {
         <FadeInUp className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-1 flex items-center gap-3">
+              <H1 className="text-3xl text-slate-900 mb-1 flex items-center gap-3">
                 <BarChart3 className="h-8 w-8 text-[#D4AF37]" />
                 Emissions Calculator
-              </h1>
-              <p className="text-gray-600">
+              </H1>
+              <Body className="text-gray-600">
                 ISO 14083, ISO 14064-1, and CORSIA compliant emissions calculations
-              </p>
+              </Body>
             </div>
           </div>
         </FadeInUp>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Leaf, Factory, TrendingUp, CheckCircle, Zap, BarChart, Shield, Users, Globe, ChevronRight } from 'lucide-react';
+import { H1, H2, H3, Body, MetricValue } from '@/components/Typography';
 
 // --- Design System Constants ---
 const GOLD = '#D4AF37';
@@ -74,12 +75,12 @@ const Home: React.FC = () => {
       {/* Section 1: Hero Section (Black Background) */}
       <header className="bg-black text-white py-24 px-8 md:px-16 lg:px-24">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-semibold mb-6 leading-tight">
+          <H1 className="text-5xl md:text-7xl mb-6 leading-tight text-white">
             The Future of Bioenergy Feedstock is Verifiable
-          </h1>
-          <p className={`max-w-3xl mb-10 ${BASE_TEXT_SIZE}`}>
+          </H1>
+          <Body size="lg" className={`max-w-3xl mb-10 ${BASE_TEXT_SIZE}`}>
             ABFI provides the critical transparency and standardization needed to de-risk investment in the bioenergy sector.
-          </p>
+          </Body>
           {/* Primary CTA: One primary gold CTA per screen */}
           <Button variant="primary">
             Get Certified Now
@@ -90,7 +91,7 @@ const Home: React.FC = () => {
       {/* Section 2: Trust Badges (White Background) */}
       <section className="py-20 px-8 md:px-16 lg:px-24 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-semibold text-black mb-12 text-center">Trusted by Industry Leaders</h2>
+          <H2 className="text-3xl text-black mb-12 text-center">Trusted by Industry Leaders</H2>
           <div className="flex flex-wrap justify-center items-center gap-12 opacity-70">
             {/* Placeholder for 4-5 logos/badges */}
             <CheckCircle className="w-10 h-10 text-black" />
@@ -106,7 +107,7 @@ const Home: React.FC = () => {
       {/* Section 3: Three Pathways Cards (White Background) */}
       <section className="py-20 px-8 md:px-16 lg:px-24 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-semibold text-black mb-16 text-center">Your Pathway to Verifiable Bioenergy</h2>
+          <H2 className="text-4xl text-black mb-16 text-center">Your Pathway to Verifiable Bioenergy</H2>
           <div className="grid md:grid-cols-3 gap-8">
             <PathwayCard
               icon={<Leaf className="w-6 h-6" />}
@@ -133,25 +134,25 @@ const Home: React.FC = () => {
       {/* Section 4: Rating System Display (Black Background) */}
       <section className="bg-black text-white py-20 px-8 md:px-16 lg:px-24">
         <div className="max-w-6xl mx-auto">
-          <h2 className={`text-4xl font-semibold mb-12 text-center text-[${GOLD}]`}>ABFI Feedstock Rating System</h2>
-          <p className={`text-center max-w-4xl mx-auto mb-16 ${BASE_TEXT_SIZE}`}>
+          <H2 className={`text-4xl mb-12 text-center text-[${GOLD}]`}>ABFI Feedstock Rating System</H2>
+          <Body size="lg" className={`text-center max-w-4xl mx-auto mb-16 ${BASE_TEXT_SIZE}`}>
             Our proprietary P, B, C, R grading system provides an objective, standardized measure of feedstock quality,
             de-risking supply chain decisions for all stakeholders.
-          </p>
-          
+          </Body>
+
           {/* Metric Display: Max 3 metrics visible at once */}
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div className="p-6 rounded-xl border border-gray-800">
-              <p className="text-5xl font-bold mb-2 text-white">P-</p>
-              <p className={`font-medium text-[${GOLD}] ${BASE_TEXT_SIZE}`}>Average Grade</p>
+              <MetricValue size="xl" className="text-white mb-2">P-</MetricValue>
+              <Body className={`font-medium text-[${GOLD}]`}>Average Grade</Body>
             </div>
             <div className="p-6 rounded-xl border border-gray-800">
-              <p className="text-5xl font-bold mb-2 text-white">1.2M</p>
-              <p className={`font-medium text-[${GOLD}] ${BASE_TEXT_SIZE}`}>Total Volume Certified (Tons)</p>
+              <MetricValue size="xl" className="text-white mb-2">1.2M</MetricValue>
+              <Body className={`font-medium text-[${GOLD}]`}>Total Volume Certified (Tons)</Body>
             </div>
             <div className="p-6 rounded-xl border border-gray-800">
-              <p className="text-5xl font-bold mb-2 text-white">45</p>
-              <p className={`font-medium text-[${GOLD}] ${BASE_TEXT_SIZE}`}>Projects De-risked</p>
+              <MetricValue size="xl" className="text-white mb-2">45</MetricValue>
+              <Body className={`font-medium text-[${GOLD}]`}>Projects De-risked</Body>
             </div>
           </div>
         </div>
@@ -160,7 +161,7 @@ const Home: React.FC = () => {
       {/* Section 5: 5-Pillar Assessment (White Background) */}
       <section className="py-20 px-8 md:px-16 lg:px-24 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-semibold text-black mb-16 text-center">The 5 Pillars of Verifiable Feedstock</h2>
+          <H2 className="text-4xl text-black mb-16 text-center">The 5 Pillars of Verifiable Feedstock</H2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-12">
             <PillarItem number={1} title="Supply Volume & Contract" />
             <PillarItem number={2} title="Yield & Seasonality" />
@@ -174,7 +175,7 @@ const Home: React.FC = () => {
       {/* Section 6: Platform Capabilities Grid (Black Background) */}
       <section className="bg-black text-white py-20 px-8 md:px-16 lg:px-24">
         <div className="max-w-6xl mx-auto">
-          <h2 className={`text-4xl font-semibold mb-12 text-center text-[${GOLD}]`}>Platform Capabilities</h2>
+          <H2 className={`text-4xl mb-12 text-center text-[${GOLD}]`}>Platform Capabilities</H2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {['Real-time Ledger', 'Audit Trail', 'Market Insights', 'Risk Scoring'].map((cap, index) => (
               <div key={index} className="p-6 rounded-xl border border-gray-800 hover:border-white transition-colors duration-300">

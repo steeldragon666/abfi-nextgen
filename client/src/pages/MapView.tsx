@@ -26,6 +26,7 @@ import { Award, Filter, Leaf, List, MapIcon, MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { MapView as GoogleMapView } from "@/components/Map";
+import { H1, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 export default function MapView() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -191,12 +192,12 @@ export default function MapView() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-[#D4AF37] mb-2">
+          <H1 className="text-4xl text-[#D4AF37] mb-2">
             Feedstock Map
-          </h1>
-          <p className="text-gray-600">
+          </H1>
+          <Body className="text-gray-600">
             Explore verified biofuel feedstock sources across Australia
-          </p>
+          </Body>
         </div>
 
         <div className="grid lg:grid-cols-4 gap-6">
@@ -369,9 +370,9 @@ export default function MapView() {
                       </CardDescription>
                     </div>
                     <div className="text-right">
-                      <div className="flex items-center gap-1 text-[#D4AF37] font-bold text-xl">
+                      <div className="flex items-center gap-1 text-[#D4AF37]">
                         <Award className="h-5 w-5" />
-                        {selectedFeedstock.abfiScore || "N/A"}
+                        <MetricValue size="md">{selectedFeedstock.abfiScore || "N/A"}</MetricValue>
                       </div>
                       <div className="text-xs text-gray-500">
                         {selectedFeedstock.abfiScore
@@ -384,15 +385,15 @@ export default function MapView() {
                 <CardContent>
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <div>
-                      <p className="text-sm text-gray-600">Annual Capacity</p>
-                      <p className="font-medium">
+                      <DataLabel>Annual Capacity</DataLabel>
+                      <p className="font-mono tabular-nums font-medium">
                         {selectedFeedstock.annualCapacityTonnes.toLocaleString()}{" "}
                         tonnes
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Available Now</p>
-                      <p className="font-medium">
+                      <DataLabel>Available Now</DataLabel>
+                      <p className="font-mono tabular-nums font-medium">
                         {selectedFeedstock.availableVolumeCurrent.toLocaleString()}{" "}
                         tonnes
                       </p>
@@ -400,18 +401,16 @@ export default function MapView() {
                     {selectedFeedstock.pricePerTonne &&
                       selectedFeedstock.priceVisibility === "public" && (
                         <div>
-                          <p className="text-sm text-gray-600">Price</p>
-                          <p className="font-medium">
+                          <DataLabel>Price</DataLabel>
+                          <p className="font-mono tabular-nums font-medium">
                             {formatPrice(selectedFeedstock.pricePerTonne)}/tonne
                           </p>
                         </div>
                       )}
                     {selectedFeedstock.carbonIntensityValue && (
                       <div>
-                        <p className="text-sm text-gray-600">
-                          Carbon Intensity
-                        </p>
-                        <p className="font-medium">
+                        <DataLabel>Carbon Intensity</DataLabel>
+                        <p className="font-mono tabular-nums font-medium">
                           {selectedFeedstock.carbonIntensityValue} gCO2e/MJ
                         </p>
                       </div>

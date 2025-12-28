@@ -26,6 +26,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { Link, useLocation, useSearch } from "wouter";
+import { H1, H2, Body } from "@/components/Typography";
 
 // Zod validation schema
 const quoteRequestSchema = z.object({
@@ -122,10 +123,10 @@ export default function QuoteRequest() {
               <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-6">
                 <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
-              <h2 className="text-2xl font-bold mb-2">Quote Request Submitted</h2>
-              <p className="text-gray-600 mb-6">
+              <H2 className="text-2xl mb-2">Quote Request Submitted</H2>
+              <Body className="text-gray-600 mb-6">
                 Your request has been sent to the supplier. You'll receive a response within 2-3 business days.
-              </p>
+              </Body>
               <div className="flex gap-3 justify-center">
                 <Link href="/supplier-directory">
                   <Button variant="outline">Browse More Suppliers</Button>
@@ -160,16 +161,16 @@ export default function QuoteRequest() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <FileText className="h-8 w-8 text-[#D4AF37]" />
-            <h1 className="text-3xl font-bold">Request a Quote</h1>
+            <H1 className="text-3xl">Request a Quote</H1>
           </div>
-          <p className="text-gray-600">
+          <Body className="text-gray-600">
             Fill in your requirements below and we'll connect you with verified suppliers.
             {supplierId && (
               <span className="ml-1 text-[#D4AF37]">
                 (Supplier #{supplierId} selected)
               </span>
             )}
-          </p>
+          </Body>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>

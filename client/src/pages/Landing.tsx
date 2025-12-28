@@ -26,6 +26,7 @@ import {
   AnimatedCounter,
   motion,
 } from "@/components/ui/motion";
+import { H1, H2, H5, Body, MetricValue } from "@/components/Typography";
 
 // Intent pathway cards configuration - Navy + Gold Corporate Theme
 const INTENT_PATHWAYS = [
@@ -144,21 +145,21 @@ export default function Landing() {
             </FadeInUp>
 
             <FadeInUp delay={0.1}>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight text-white">
+              <H1 className="text-4xl sm:text-5xl lg:text-6xl mb-6 leading-tight text-white">
                 Transform Biofuel
                 <span className="block bg-gradient-to-r from-[#D4AF37] to-[#F4CF67] bg-clip-text text-transparent">
                   Supply Chain Risk
                 </span>
                 Into Strategic Advantage
-              </h1>
+              </H1>
             </FadeInUp>
 
             <FadeInUp delay={0.2}>
-              <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+              <Body size="lg" className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
                 Verified feedstock registry, real-time market intelligence, and
                 cryptographic audit trails. The infrastructure powering Australia's
                 bioenergy transition.
-              </p>
+              </Body>
             </FadeInUp>
 
             <FadeInUp delay={0.3}>
@@ -246,9 +247,9 @@ export default function Landing() {
               <BarChart3 className="h-3 w-3 mr-1.5" />
               Live Market Intelligence
             </Badge>
-            <h2 className="text-3xl font-display font-bold mb-4">
+            <H2 className="text-3xl mb-4">
               Real-Time Market Signals
-            </h2>
+            </H2>
             <p className="text-gray-600 max-w-xl mx-auto">
               Sample of our intelligence feeds. Sign up for full access including
               absolute pricing and confidence bands.
@@ -265,14 +266,13 @@ export default function Landing() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center justify-center gap-2">
-                      <span className={cn(
-                        "text-3xl font-bold",
+                      <MetricValue size="lg" className={cn(
                         teaser.direction === "up" && "text-[#D4AF37]",
                         teaser.direction === "down" && "text-red-600",
                         teaser.direction === "neutral" && "text-blue-600"
                       )}>
                         {teaser.change}
-                      </span>
+                      </MetricValue>
                       <Badge variant="outline" className="text-xs">
                         {teaser.period}
                       </Badge>
@@ -306,15 +306,15 @@ export default function Landing() {
             {TRUST_STATS.map((stat, index) => (
               <FadeInUp key={index} delay={index * 0.1}>
                 <div>
-                  <div className="text-4xl font-bold font-mono mb-2 text-white">
+                  <MetricValue size="xl" className="text-white mb-2">
                     {stat.prefix}
                     <AnimatedCounter
                       value={stat.value}
                       decimals={stat.decimals || 0}
                       suffix={stat.suffix}
                     />
-                  </div>
-                  <div className="text-gray-400">{stat.label}</div>
+                  </MetricValue>
+                  <Body size="sm" className="text-gray-400">{stat.label}</Body>
                 </div>
               </FadeInUp>
             ))}
@@ -326,13 +326,13 @@ export default function Landing() {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <FadeInUp className="text-center mb-16">
-            <h2 className="text-3xl font-display font-bold mb-4">
+            <H2 className="text-3xl mb-4">
               Built for the Bioenergy Ecosystem
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            </H2>
+            <Body className="text-gray-600 max-w-2xl mx-auto">
               Every feature designed with regulatory compliance, financial due diligence,
               and supply chain integrity in mind.
-            </p>
+            </Body>
           </FadeInUp>
 
           <StaggerContainer className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -375,13 +375,13 @@ export default function Landing() {
       <section className="py-20 bg-gradient-to-br from-black to-zinc-900 text-white">
         <div className="container mx-auto px-4 text-center">
           <FadeInUp>
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-6 text-white">
+            <H2 className="text-3xl md:text-4xl mb-6 text-white">
               Ready to Transform Your Supply Chain?
-            </h2>
-            <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+            </H2>
+            <Body size="lg" className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
               Join Australia's leading biofuels platform. Free access to all
               intelligence features during early access.
-            </p>
+            </Body>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/explore">
                 <Button size="lg" className="bg-[#D4AF37] text-black hover:bg-[#E5C158] font-semibold">
