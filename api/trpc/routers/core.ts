@@ -8,7 +8,8 @@ import { createTrpcHandler, router, publicProcedure, protectedProcedure, adminPr
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import * as db from "../../../server/db";
-import { validateABN, lookupABN } from "../../../server/abnValidation";
+import { lookupABN } from "../../../server/abnValidation";
+import { validateABN } from "../../../server/utils";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "../../../server/_core/cookies";
 
