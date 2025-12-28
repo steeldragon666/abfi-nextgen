@@ -12,9 +12,56 @@
  */
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { setCorsHeaders, setSecurityHeaders, logRequest, handleError } from "../_lib/middleware";
 import type { User } from "../../drizzle/schema";
 import { sdk } from "../../server/_core/sdk";
+
+// =============================================================================
+// Inlined Middleware (to avoid ESM module resolution issues)
+// =============================================================================
+
+const ALLOWED_ORIGINS = [
+  "http://localhost:3000",
+  "http://localhost:3002",
+  "http://localhost:5173",
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "",
+  process.env.PRODUCTION_URL || "",
+].filter(Boolean);
+
+function setCorsHeaders(req: VercelRequest, res: VercelResponse): boolean {
+  const origin = req.headers.origin || "";
+  const isAllowed = ALLOWED_ORIGINS.some(allowed =>
+    origin === allowed || origin.endsWith(".vercel.app")
+  );
+  if (isAllowed) res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Cookie");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "86400");
+  if (req.method === "OPTIONS") { res.status(200).end(); return true; }
+  return false;
+}
+
+function setSecurityHeaders(res: VercelResponse): void {
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  if (process.env.NODE_ENV === "production") {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  }
+}
+
+function logRequest(req: VercelRequest, startTime: number): void {
+  console.log(`[${req.method || "GET"}] ${req.url || "/"} - ${Date.now() - startTime}ms`);
+}
+
+function handleError(res: VercelResponse, error: unknown): void {
+  console.error("[API Error]", error);
+  res.status(500).json({
+    error: "Internal Server Error",
+    message: process.env.NODE_ENV === "development" && error instanceof Error ? error.message : undefined,
+  });
+}
 
 // Lazy import the full router only when needed (backwards compatibility)
 // For new integrations, use the individual router endpoints instead
