@@ -446,9 +446,10 @@ test.describe("Page-Specific Design Tests", () => {
     const h1 = page.locator("h1").first();
     await expect(h1).toBeVisible();
 
-    // Should have CTA buttons
+    // Should have CTA buttons or pathway links
+    // The landing page has pathway cards linking to /grower/dashboard, /developer/dashboard, etc.
     const ctaButtons = page.locator(
-      "a[href*='/for-'], a[href*='register'], button:has-text('Get Started')"
+      "a[href*='/grower'], a[href*='/developer'], a[href*='/finance'], a[href*='/explore'], button:has-text('Get Started'), a:has-text('Get Started'), a:has-text('Find Your Path')"
     );
     expect(await ctaButtons.count()).toBeGreaterThan(0);
   });

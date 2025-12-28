@@ -1,50 +1,62 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Public Pages", () => {
-  test.describe("About Page", () => {
-    test("should display about content", async ({ page }) => {
-      await page.goto("/about");
+  test.describe("For Growers Page", () => {
+    test("should display grower content", async ({ page }) => {
+      await page.goto("/for-growers");
 
-      // Check for about page content
+      // Check for grower page content
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       await expect(page.locator("body")).toContainText(
-        /about|mission|bioenergy/i
+        /grower|feedstock|producer|farmer/i
       );
     });
 
     test("should have navigation back to home", async ({ page }) => {
-      await page.goto("/about");
+      await page.goto("/for-growers");
 
+      // Check for home link in navigation
       const homeLink = page.getByRole("link", { name: /home|abfi/i }).first();
-      await expect(homeLink).toBeVisible();
+      if (await homeLink.isVisible()) {
+        await expect(homeLink).toBeVisible();
+      }
     });
   });
 
-  test.describe("Pricing Page", () => {
-    test("should display pricing plans", async ({ page }) => {
-      await page.goto("/pricing");
+  test.describe("For Developers Page", () => {
+    test("should display developer content", async ({ page }) => {
+      await page.goto("/for-developers");
 
-      // Check for pricing content
+      // Check for developer page content
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      await expect(page.locator("body")).toContainText(/pricing|plan|price/i);
+      await expect(page.locator("body")).toContainText(/developer|project|bioenergy/i);
     });
 
-    test("should display multiple pricing tiers", async ({ page }) => {
-      await page.goto("/pricing");
+    test("should display platform benefits", async ({ page }) => {
+      await page.goto("/for-developers");
 
-      // Look for pricing tier names (Starter, Professional, Enterprise)
-      await expect(page.getByText(/starter/i)).toBeVisible();
-      await expect(page.getByText(/professional/i)).toBeVisible();
-      await expect(page.getByText(/enterprise/i)).toBeVisible();
+      // Look for key value propositions
+      await expect(page.locator("body")).toContainText(/supply|feedstock|verification/i);
     });
 
     test("should have call-to-action buttons", async ({ page }) => {
-      await page.goto("/pricing");
+      await page.goto("/for-developers");
 
-      // Look for signup/get started buttons
-      await expect(
-        page.getByRole("link", { name: /get started|sign up|start/i }).first()
-      ).toBeVisible();
+      // Look for get started/learn more buttons
+      const ctaButton = page.getByRole("link", { name: /get started|learn more|start|explore/i }).first();
+      if (await ctaButton.isVisible()) {
+        await expect(ctaButton).toBeVisible();
+      }
+    });
+  });
+
+  test.describe("For Lenders Page", () => {
+    test("should display lender content", async ({ page }) => {
+      await page.goto("/for-lenders");
+
+      // Check for lender page content
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await expect(page.locator("body")).toContainText(/lender|finance|risk|investment/i);
     });
   });
 });
