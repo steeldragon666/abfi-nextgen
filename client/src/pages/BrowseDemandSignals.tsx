@@ -2,6 +2,7 @@
  * BrowseDemandSignals - Browse feedstock demand signals from verified buyers.
  */
 import { useState } from "react";
+import { H1, H2, H3, H4, Body, MetricValue, DataLabel } from "@/components/Typography";
 import { useLocation } from "wouter";
 import {
   Card,

@@ -3,6 +3,7 @@
  * Admin-only page for managing data sources, weather integration, risk events, and monitoring.
  */
 import { useAuth } from "@/_core/hooks/useAuth";
+import { H1, H2, H3, H4, Body, MetricValue, DataLabel } from "@/components/Typography";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import {

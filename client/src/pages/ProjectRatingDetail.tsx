@@ -5,6 +5,7 @@
  */
 
 import { useRoute, useLocation } from "wouter";
+import { H1, H2, H3, H4, Body, MetricValue, DataLabel } from "@/components/Typography";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

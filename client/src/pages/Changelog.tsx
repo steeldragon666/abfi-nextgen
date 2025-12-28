@@ -5,6 +5,7 @@
  */
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { H1, H2, H3, H4, Body, MetricValue, DataLabel } from "@/components/Typography";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {

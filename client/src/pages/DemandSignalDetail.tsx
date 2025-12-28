@@ -2,6 +2,7 @@
  * DemandSignalDetail - View demand signal details and submit response.
  */
 import { useState } from "react";
+import { H1, H2, H3, H4, Body, MetricValue, DataLabel } from "@/components/Typography";
 import { useRoute, useLocation } from "wouter";
 import {
   Card,

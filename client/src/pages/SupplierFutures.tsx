@@ -2,6 +2,7 @@
  * SupplierFutures - Supplier dashboard for managing futures listings.
  */
 import { useAuth } from "@/_core/hooks/useAuth";
+import { H1, H2, H3, H4, Body, MetricValue, DataLabel } from "@/components/Typography";
 import { Button } from "@/components/ui/button";
 import {
   Card,

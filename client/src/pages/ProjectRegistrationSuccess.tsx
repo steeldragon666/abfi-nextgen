@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { H1, H2, H3, H4, Body, MetricValue, DataLabel } from "@/components/Typography";
 import { Check, ArrowRight, FileText, Clock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

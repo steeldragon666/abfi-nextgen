@@ -2,6 +2,7 @@
  * CreateDemandSignal - Multi-step form for creating feedstock demand signals.
  */
 import { useState } from "react";
+import { H1, H2, H3, H4, Body, MetricValue, DataLabel } from "@/components/Typography";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import {
