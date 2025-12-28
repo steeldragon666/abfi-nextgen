@@ -103,9 +103,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       valid: true,
       certificate: {
         snapshotDate: snapshot.snapshotDate,
-        certificateType: certificate.certificateType,
-        entityName: certificate.entityName,
-        entityType: certificate.entityType,
+        certificateType: certificate.type,
+        ratingGrade: certificate.ratingGrade,
         rating: scoreData.rating,
         score: scoreData.abfiScore,
         evidenceCount: evidenceSet.length,
