@@ -1,16 +1,67 @@
 import { useState } from "react";
 import { ExplainerCarousel, EXPLAINER_SETS } from "@/components/ExplainerCarousel";
 import DashboardLayout from "@/components/DashboardLayout";
+import { HeyGenExplainerVideo } from "@/components/HeyGenExplainerVideo";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Hash,
   Cloud,
   AlertTriangle,
   TrendingUp,
   Database,
-  ChevronRight
+  ChevronRight,
+  Video,
+  BookOpen,
+  Sprout,
+  Shield,
+  BarChart3,
+  Zap,
 } from "lucide-react";
 
 type ExplainerKey = keyof typeof EXPLAINER_SETS;
+
+// HeyGen Video Scenes Configuration
+// Video ID: 5f5f9ed9fafe40e2b35e061bda01a8b4
+const HEYGEN_VIDEO_ID = "5f5f9ed9fafe40e2b35e061bda01a8b4";
+
+const VIDEO_SCENES = [
+  {
+    id: 0,
+    title: "Platform Overview",
+    description: "Introduction to the ABFI platform and its core capabilities for bioenergy supply chain management.",
+    startTime: 0,
+    endTime: 30, // Adjust based on actual video timestamps
+    icon: <Sprout className="w-5 h-5" />,
+    color: "#22c55e",
+  },
+  {
+    id: 1,
+    title: "Data Integrity",
+    description: "How SHA-256 hashing and blockchain technology ensure tamper-proof evidence storage.",
+    startTime: 30,
+    endTime: 60, // Adjust based on actual video timestamps
+    icon: <Shield className="w-5 h-5" />,
+    color: "#D4AF37",
+  },
+  {
+    id: 2,
+    title: "Risk Intelligence",
+    description: "Real-time supply chain monitoring, weather alerts, and supply shock detection systems.",
+    startTime: 60,
+    endTime: 90, // Adjust based on actual video timestamps
+    icon: <BarChart3 className="w-5 h-5" />,
+    color: "#3b82f6",
+  },
+  {
+    id: 3,
+    title: "Bankability Scoring",
+    description: "How the ABFI rating framework assesses and rates feedstock suppliers for lender confidence.",
+    startTime: 90,
+    endTime: 120, // Adjust based on actual video timestamps
+    icon: <Zap className="w-5 h-5" />,
+    color: "#8b5cf6",
+  },
+];
 
 const EXPLAINER_CATEGORIES = [
   {
@@ -47,6 +98,7 @@ const EXPLAINER_CATEGORIES = [
 
 export default function Explainers() {
   const [activeExplainer, setActiveExplainer] = useState<ExplainerKey>("sha256");
+  const [activeTab, setActiveTab] = useState<"video" | "panels">("video");
   const activeSet = EXPLAINER_SETS[activeExplainer];
 
   return (
@@ -68,10 +120,38 @@ export default function Explainers() {
             Visual guides explaining how ABFI's technology protects your bioenergy investments
             through data integrity, weather intelligence, and supply chain monitoring.
           </p>
+
+          {/* Tab Selector */}
+          <div className="mt-6">
+            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "video" | "panels")}>
+              <TabsList className="bg-white/50">
+                <TabsTrigger value="video" className="flex items-center gap-2">
+                  <Video className="w-4 h-4" />
+                  AI Video Explainer
+                </TabsTrigger>
+                <TabsTrigger value="panels" className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  Interactive Panels
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto py-10 px-8">
+        {/* Video Explainer Tab */}
+        {activeTab === "video" && (
+          <HeyGenExplainerVideo
+            videoId={HEYGEN_VIDEO_ID}
+            title="ABFI Platform Overview"
+            description="Watch our AI avatar guide you through the key features and capabilities of the Australian Bioenergy Feedstock Intelligence platform."
+            scenes={VIDEO_SCENES}
+          />
+        )}
+
+        {/* Interactive Panels Tab */}
+        {activeTab === "panels" && (
         <div className="grid grid-cols-12 gap-8">
           {/* Sidebar Navigation */}
           <div className="col-span-4">
@@ -202,6 +282,7 @@ export default function Explainers() {
             </div>
           </div>
         </div>
+        )}
       </div>
       </div>
     </DashboardLayout>
