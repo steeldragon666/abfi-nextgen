@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { PageLayout, PageContainer } from "@/components/layout";
+import { AvatarAssistant } from "@/components/AIHelper/AvatarAssistant";
 
 // Animation variants
 const containerVariants = {
@@ -328,6 +329,9 @@ export function SimplifiedDashboard() {
           </motion.div>
         </motion.div>
       </PageContainer>
+
+      {/* Sam AI Assistant */}
+      <AvatarAssistant />
     </PageLayout>
   );
 }
