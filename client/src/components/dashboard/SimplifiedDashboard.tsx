@@ -22,6 +22,7 @@ import { Link } from "wouter";
 import { PageLayout, PageContainer } from "@/components/layout";
 import { AvatarAssistant } from "@/components/AIHelper/AvatarAssistant";
 import { TourProvider, useTour, StepType } from "@reactour/tour";
+import { H1, H2, H5, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // Animation variants
 const containerVariants = {
@@ -201,14 +202,14 @@ export function SimplifiedDashboard() {
               </span>
             </motion.div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-display">
+            <H1 className="text-4xl md:text-5xl lg:text-6xl mb-6">
               Welcome to <span className="text-[#D4AF37]">ABFI</span>
-            </h1>
+            </H1>
 
-            <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+            <Body size="lg" className="text-gray-300 max-w-2xl mx-auto mb-8 md:text-xl">
               Trade biofuel feedstock. Track carbon intensity. Power Australia's
               renewable energy future with verified suppliers and real-time pricing.
-            </p>
+            </Body>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -259,12 +260,12 @@ export function SimplifiedDashboard() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-bold text-slate-900">
+                  <MetricValue size="lg" className="text-slate-900">
                     ${ethanolPrice.toFixed(2)}/L
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">
+                  </MetricValue>
+                  <Body size="sm" className="text-gray-500 mt-1">
                     Updated every 15 minutes
-                  </p>
+                  </Body>
                   <Button variant="link" className="p-0 mt-2 h-auto" asChild>
                     <Link href="/price-dashboard">
                       View Dashboard <ArrowRight className="ml-1 h-4 w-4" />
@@ -287,12 +288,12 @@ export function SimplifiedDashboard() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-bold text-slate-900">
+                  <MetricValue size="lg" className="text-slate-900">
                     {supplierCount}+
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">
+                  </MetricValue>
+                  <Body size="sm" className="text-gray-500 mt-1">
                     Across all Australian states
-                  </p>
+                  </Body>
                   <Button variant="link" className="p-0 mt-2 h-auto" asChild>
                     <Link href="/supplier-directory">
                       Browse Marketplace <ArrowRight className="ml-1 h-4 w-4" />
@@ -315,10 +316,10 @@ export function SimplifiedDashboard() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-bold text-slate-900">2,450+</p>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <MetricValue size="lg" className="text-slate-900">2,450+</MetricValue>
+                  <Body size="sm" className="text-gray-500 mt-1">
                     tCO2e tracked on platform
-                  </p>
+                  </Body>
                   <Button variant="link" className="p-0 mt-2 h-auto" asChild>
                     <Link href="/emissions">
                       Calculate Yours <ArrowRight className="ml-1 h-4 w-4" />
@@ -332,12 +333,12 @@ export function SimplifiedDashboard() {
           {/* Quick Start Section */}
           <motion.div variants={itemVariants} className="mb-12" data-tour="quick-start">
             <div className="bg-gradient-to-r from-slate-50 to-emerald-50 rounded-2xl p-8 border border-gray-200">
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+              <H2 className="text-2xl mb-2">
                 Quick Start
-              </h2>
-              <p className="text-gray-600 mb-6">
+              </H2>
+              <Body className="text-gray-600 mb-6">
                 Get started in under 2 minutes with these essential actions
-              </p>
+              </Body>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Button
@@ -406,21 +407,21 @@ export function SimplifiedDashboard() {
 
           {/* Features Grid */}
           <motion.div variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">
+            <H2 className="text-2xl mb-6">
               Platform Features
-            </h2>
+            </H2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card className="hover:shadow-md transition-shadow cursor-pointer group">
                 <CardContent className="p-6">
                   <div className="p-3 bg-blue-100 rounded-xl w-fit mb-4 group-hover:scale-110 transition-transform">
                     <FileSearch className="w-6 h-6 text-blue-600" />
                   </div>
-                  <h3 className="font-semibold text-slate-900 mb-2">
+                  <H5 className="text-slate-900 mb-2">
                     Evidence Vault
-                  </h3>
-                  <p className="text-sm text-gray-600">
+                  </H5>
+                  <Body size="sm" className="text-gray-600">
                     Blockchain-verified sustainability documentation
-                  </p>
+                  </Body>
                 </CardContent>
               </Card>
 
@@ -429,12 +430,12 @@ export function SimplifiedDashboard() {
                   <div className="p-3 bg-amber-100 rounded-xl w-fit mb-4 group-hover:scale-110 transition-transform">
                     <TrendingUp className="w-6 h-6 text-amber-600" />
                   </div>
-                  <h3 className="font-semibold text-slate-900 mb-2">
+                  <H5 className="text-slate-900 mb-2">
                     Futures Trading
-                  </h3>
-                  <p className="text-sm text-gray-600">
+                  </H5>
+                  <Body size="sm" className="text-gray-600">
                     Lock in prices with forward contracts
-                  </p>
+                  </Body>
                 </CardContent>
               </Card>
 
@@ -443,12 +444,12 @@ export function SimplifiedDashboard() {
                   <div className="p-3 bg-green-100 rounded-xl w-fit mb-4 group-hover:scale-110 transition-transform">
                     <ShieldCheck className="w-6 h-6 text-green-600" />
                   </div>
-                  <h3 className="font-semibold text-slate-900 mb-2">
+                  <H5 className="text-slate-900 mb-2">
                     Lender Portal
-                  </h3>
-                  <p className="text-sm text-gray-600">
+                  </H5>
+                  <Body size="sm" className="text-gray-600">
                     Project assessment for financiers
-                  </p>
+                  </Body>
                 </CardContent>
               </Card>
 
@@ -457,12 +458,12 @@ export function SimplifiedDashboard() {
                   <div className="p-3 bg-purple-100 rounded-xl w-fit mb-4 group-hover:scale-110 transition-transform">
                     <Leaf className="w-6 h-6 text-purple-600" />
                   </div>
-                  <h3 className="font-semibold text-slate-900 mb-2">
+                  <H5 className="text-slate-900 mb-2">
                     GO Certificates
-                  </h3>
-                  <p className="text-sm text-gray-600">
+                  </H5>
+                  <Body size="sm" className="text-gray-600">
                     Guarantee of Origin certification
-                  </p>
+                  </Body>
                 </CardContent>
               </Card>
             </div>
