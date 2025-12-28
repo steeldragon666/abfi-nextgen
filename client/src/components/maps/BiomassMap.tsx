@@ -63,22 +63,37 @@ const WMS_LAYERS = {
 // Returns real-time power generation from biomass, bagasse, landfill gas, etc.
 export const AREMI_BIOENERGY_URL = "http://services.aremi.nicta.com.au/aemo/v3/csv/bio";
 
-// Interface for AREMI bioenergy generator data
+// Interface for AREMI bioenergy generator data (from API response)
 export interface AremiBioenergyGenerator {
   stationName: string;
-  currentOutputMW: number;
+  currentOutputMW: number | null;
   region: string;
+  mostRecentOutputTime: string | null;
+  percentOfMaxCap: number | null;
+  percentOfRegCap: number | null;
   maxCapMW: number;
   regCapMW: number;
-  fuelSource: string;
-  fuelDescriptor: string;
-  technologyType: string;
   participant: string;
+  category: string;
+  classification: string;
+  fuelSourcePrimary: string;
+  fuelSourceDescriptor: string;
+  technologyTypePrimary: string;
+  technologyTypeDescriptor: string;
   duid: string;
   lat: number;
   lon: number;
-  percentOfMaxCap: number;
 }
+
+// Fuel type colors for live generators
+const FUEL_TYPE_COLORS: Record<string, string> = {
+  "Bagasse": "#22c55e",           // green - sugar cane
+  "Landfill Methane / Landfill Gas": "#8b5cf6",  // purple
+  "Sewerage / Waste Water": "#3b82f6",  // blue
+  "Biogas - sludge": "#06b6d4",   // cyan
+  "Biomass": "#84cc16",           // lime
+  default: "#f59e0b",             // amber
+};
 
 // Biofuel project locations with metadata and bankability ratings
 export interface BiofuelProject {
@@ -510,9 +525,11 @@ interface BiomassMapProps {
   zoom?: number;
   showProjects?: boolean;
   showCatchments?: boolean;
+  showLiveGenerators?: boolean; // Show live AREMI bioenergy generators
   catchmentRadius?: number; // km
   selectedLayers?: string[];
   onProjectClick?: (project: BiofuelProject) => void;
+  onGeneratorClick?: (generator: AremiBioenergyGenerator) => void;
   onMapReady?: (map: L.Map) => void;
 }
 
@@ -522,17 +539,28 @@ export function BiomassMap({
   zoom = DEFAULT_ZOOM,
   showProjects = true,
   showCatchments = true,
+  showLiveGenerators = false,
   catchmentRadius = 50,
   selectedLayers = [],
   onProjectClick,
+  onGeneratorClick,
   onMapReady,
 }: BiomassMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
   const circlesRef = useRef<L.Circle[]>([]);
+  const generatorMarkersRef = useRef<L.Marker[]>([]);
   const wmsLayersRef = useRef<Record<string, L.TileLayer.WMS>>({});
   const [isReady, setIsReady] = useState(false);
+  const [liveGenerators, setLiveGenerators] = useState<AremiBioenergyGenerator[]>([]);
+  const [generatorsLoading, setGeneratorsLoading] = useState(false);
+  const [generatorsSummary, setGeneratorsSummary] = useState<{
+    totalGenerators: number;
+    activeGenerators: number;
+    totalCapacityMW: number;
+    currentOutputMW: number;
+  } | null>(null);
 
   // Initialize map
   useEffect(() => {
@@ -566,6 +594,189 @@ export function BiomassMap({
       mapRef.current = null;
     };
   }, []);
+
+  // Fetch live bioenergy generators from AREMI/AEMO
+  useEffect(() => {
+    if (!showLiveGenerators) {
+      setLiveGenerators([]);
+      setGeneratorsSummary(null);
+      return;
+    }
+
+    const fetchGenerators = async () => {
+      setGeneratorsLoading(true);
+      try {
+        const response = await fetch("/api/australian-data/aremi/bioenergy");
+        if (!response.ok) throw new Error("Failed to fetch bioenergy data");
+        const data = await response.json();
+        setLiveGenerators(data.generators || []);
+        setGeneratorsSummary(data.summary || null);
+      } catch (error) {
+        console.error("[BiomassMap] Error fetching live generators:", error);
+        setLiveGenerators([]);
+      } finally {
+        setGeneratorsLoading(false);
+      }
+    };
+
+    fetchGenerators();
+
+    // Refresh every 5 minutes (AEMO data updates every 5 min)
+    const interval = setInterval(fetchGenerators, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [showLiveGenerators]);
+
+  // Handle live generator markers
+  useEffect(() => {
+    if (!mapRef.current || !isReady) return;
+
+    // Clear existing generator markers
+    generatorMarkersRef.current.forEach((marker) => marker.remove());
+    generatorMarkersRef.current = [];
+
+    if (!showLiveGenerators || liveGenerators.length === 0) return;
+
+    const map = mapRef.current;
+
+    liveGenerators.forEach((generator) => {
+      const fuelColor = FUEL_TYPE_COLORS[generator.fuelSourceDescriptor] || FUEL_TYPE_COLORS.default;
+      const isActive = generator.currentOutputMW !== null && generator.currentOutputMW > 0;
+      const outputPercent = generator.percentOfMaxCap || 0;
+
+      // Create custom icon with pulse animation for active generators
+      const icon = L.divIcon({
+        className: "custom-generator-marker",
+        html: `
+          <div style="position: relative;">
+            ${isActive ? `
+              <div style="
+                position: absolute;
+                width: 32px;
+                height: 32px;
+                background-color: ${fuelColor}40;
+                border-radius: 50%;
+                animation: pulse 2s infinite;
+                top: -4px;
+                left: -4px;
+              "></div>
+            ` : ""}
+            <div style="
+              width: 24px;
+              height: 24px;
+              background-color: ${isActive ? fuelColor : "#6b7280"};
+              border: 3px solid white;
+              border-radius: 50%;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              position: relative;
+              z-index: 1;
+            ">
+              <span style="font-size: 10px; color: white; font-weight: bold;">⚡</span>
+            </div>
+          </div>
+        `,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+      });
+
+      const marker = L.marker([generator.lat, generator.lon], { icon });
+
+      // Create popup content
+      const popupContent = `
+        <div style="font-family: system-ui, -apple-system, sans-serif; min-width: 260px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <h3 style="margin: 0; font-weight: 600; font-size: 14px; color: #1a1a1a; flex: 1;">
+              ${generator.stationName}
+            </h3>
+            <span style="
+              background-color: ${isActive ? "#22c55e" : "#6b7280"};
+              color: white;
+              padding: 2px 8px;
+              border-radius: 4px;
+              font-weight: 600;
+              font-size: 10px;
+              margin-left: 8px;
+            ">${isActive ? "ACTIVE" : "OFFLINE"}</span>
+          </div>
+
+          <div style="
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background-color: ${fuelColor}20;
+            border: 1px solid ${fuelColor}40;
+            color: ${fuelColor};
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 8px;
+          ">
+            ${generator.fuelSourceDescriptor || generator.fuelSourcePrimary}
+          </div>
+
+          ${isActive ? `
+            <div style="margin-bottom: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px;">
+                <span style="color: #666;">Current Output</span>
+                <span style="font-weight: 600; color: #22c55e;">${generator.currentOutputMW?.toFixed(1)} MW</span>
+              </div>
+              <div style="background: #e5e7eb; border-radius: 4px; height: 6px; overflow: hidden;">
+                <div style="background: ${fuelColor}; width: ${Math.min(outputPercent, 100)}%; height: 100%; border-radius: 4px;"></div>
+              </div>
+              <div style="font-size: 10px; color: #666; text-align: right; margin-top: 2px;">
+                ${outputPercent.toFixed(1)}% of capacity
+              </div>
+            </div>
+          ` : ""}
+
+          <div style="display: grid; gap: 3px; font-size: 11px;">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #666;">Max Capacity:</span>
+              <span style="font-weight: 500;">${generator.maxCapMW} MW</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #666;">Region:</span>
+              <span style="font-weight: 500;">${generator.region}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #666;">Technology:</span>
+              <span style="font-weight: 500;">${generator.technologyTypeDescriptor || generator.technologyTypePrimary}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #666;">Operator:</span>
+              <span style="font-weight: 500; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${generator.participant}">${generator.participant}</span>
+            </div>
+            ${generator.mostRecentOutputTime ? `
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #666;">Last Update:</span>
+                <span style="font-weight: 500;">${new Date(generator.mostRecentOutputTime).toLocaleString("en-AU", { dateStyle: "short", timeStyle: "short" })}</span>
+              </div>
+            ` : ""}
+          </div>
+
+          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 10px; color: #9ca3af;">
+            DUID: ${generator.duid} | Data: AEMO/AREMI
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent, {
+        maxWidth: 300,
+        className: "generator-popup",
+      });
+
+      if (onGeneratorClick) {
+        marker.on("click", () => onGeneratorClick(generator));
+      }
+
+      marker.addTo(map);
+      generatorMarkersRef.current.push(marker);
+    });
+  }, [isReady, showLiveGenerators, liveGenerators, onGeneratorClick]);
 
   // Handle project markers
   useEffect(() => {
@@ -791,4 +1002,4 @@ export function BiomassMap({
 }
 
 // Export project data and WMS layer config for external use
-export { BIOFUEL_PROJECTS, WMS_LAYERS, STATUS_COLORS, RATING_COLORS };
+export { BIOFUEL_PROJECTS, WMS_LAYERS, STATUS_COLORS, RATING_COLORS, FUEL_TYPE_COLORS };

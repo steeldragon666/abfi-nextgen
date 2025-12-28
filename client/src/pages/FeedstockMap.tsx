@@ -52,7 +52,9 @@ import {
   WMS_LAYERS,
   STATUS_COLORS,
   RATING_COLORS,
+  FUEL_TYPE_COLORS,
   type BiofuelProject,
+  type AremiBioenergyGenerator,
 } from "@/components/maps";
 
 // Fix Leaflet default marker icons
@@ -125,7 +127,16 @@ export default function FeedstockMap() {
   const [mapInitialized, setMapInitialized] = useState(false);
   const [showProjects, setShowProjects] = useState(true);
   const [showCatchments, setShowCatchments] = useState(true);
+  const [showLiveGenerators, setShowLiveGenerators] = useState(true);
   const [selectedProject, setSelectedProject] = useState<BiofuelProject | null>(null);
+  const [liveGenerators, setLiveGenerators] = useState<AremiBioenergyGenerator[]>([]);
+  const [generatorsSummary, setGeneratorsSummary] = useState<{
+    totalGenerators: number;
+    activeGenerators: number;
+    totalCapacityMW: number;
+    currentOutputMW: number;
+  } | null>(null);
+  const generatorMarkersRef = useRef<L.Marker[]>([]);
 
   // GeoJSON data storage
   const [layerData, setLayerData] = useState<Record<string, GeoJSONData>>({});
@@ -312,6 +323,176 @@ export default function FeedstockMap() {
     };
     loadData();
   }, []);
+
+  // Fetch live bioenergy generators from AREMI/AEMO
+  useEffect(() => {
+    if (!showLiveGenerators) {
+      setLiveGenerators([]);
+      setGeneratorsSummary(null);
+      return;
+    }
+
+    const fetchGenerators = async () => {
+      try {
+        const response = await fetch("/api/australian-data/aremi/bioenergy");
+        if (!response.ok) throw new Error("Failed to fetch bioenergy data");
+        const data = await response.json();
+        setLiveGenerators(data.generators || []);
+        setGeneratorsSummary(data.summary || null);
+      } catch (error) {
+        console.error("[FeedstockMap] Error fetching live generators:", error);
+        setLiveGenerators([]);
+      }
+    };
+
+    fetchGenerators();
+
+    // Refresh every 5 minutes (AEMO data updates every 5 min)
+    const interval = setInterval(fetchGenerators, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [showLiveGenerators]);
+
+  // Render live generator markers
+  useEffect(() => {
+    if (!mapRef.current || !mapInitialized) return;
+
+    // Clear existing generator markers
+    generatorMarkersRef.current.forEach((marker) => marker.remove());
+    generatorMarkersRef.current = [];
+
+    if (!showLiveGenerators || liveGenerators.length === 0) return;
+
+    const map = mapRef.current;
+
+    liveGenerators.forEach((generator) => {
+      const fuelColor = FUEL_TYPE_COLORS[generator.fuelSourceDescriptor] || FUEL_TYPE_COLORS.default || "#f59e0b";
+      const isActive = generator.currentOutputMW !== null && generator.currentOutputMW > 0;
+      const outputPercent = generator.percentOfMaxCap || 0;
+
+      // Create custom icon with pulse animation for active generators
+      const icon = L.divIcon({
+        className: "custom-generator-marker",
+        html: `
+          <div style="position: relative;">
+            ${isActive ? `
+              <div style="
+                position: absolute;
+                width: 32px;
+                height: 32px;
+                background-color: ${fuelColor}40;
+                border-radius: 50%;
+                animation: pulse 2s infinite;
+                top: -4px;
+                left: -4px;
+              "></div>
+            ` : ""}
+            <div style="
+              width: 24px;
+              height: 24px;
+              background-color: ${isActive ? fuelColor : "#6b7280"};
+              border: 3px solid white;
+              border-radius: 50%;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              position: relative;
+              z-index: 1;
+            ">
+              <span style="font-size: 10px; color: white; font-weight: bold;">⚡</span>
+            </div>
+          </div>
+        `,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+      });
+
+      const marker = L.marker([generator.lat, generator.lon], { icon });
+
+      // Create popup content
+      const popupContent = `
+        <div style="font-family: system-ui, -apple-system, sans-serif; min-width: 260px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <h3 style="margin: 0; font-weight: 600; font-size: 14px; color: #1a1a1a; flex: 1;">
+              ${generator.stationName}
+            </h3>
+            <span style="
+              background-color: ${isActive ? "#22c55e" : "#6b7280"};
+              color: white;
+              padding: 2px 8px;
+              border-radius: 4px;
+              font-weight: 600;
+              font-size: 10px;
+              margin-left: 8px;
+            ">${isActive ? "ACTIVE" : "OFFLINE"}</span>
+          </div>
+
+          <div style="
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background-color: ${fuelColor}20;
+            border: 1px solid ${fuelColor}40;
+            color: ${fuelColor};
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 8px;
+          ">
+            ${generator.fuelSourceDescriptor || generator.fuelSourcePrimary}
+          </div>
+
+          ${isActive ? `
+            <div style="margin-bottom: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px;">
+                <span style="color: #666;">Current Output</span>
+                <span style="font-weight: 600; color: #22c55e;">${generator.currentOutputMW?.toFixed(1)} MW</span>
+              </div>
+              <div style="background: #e5e7eb; border-radius: 4px; height: 6px; overflow: hidden;">
+                <div style="background: ${fuelColor}; width: ${Math.min(Math.abs(outputPercent), 100)}%; height: 100%; border-radius: 4px;"></div>
+              </div>
+              <div style="font-size: 10px; color: #666; text-align: right; margin-top: 2px;">
+                ${Math.abs(outputPercent).toFixed(1)}% of capacity
+              </div>
+            </div>
+          ` : ""}
+
+          <div style="display: grid; gap: 3px; font-size: 11px;">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #666;">Max Capacity:</span>
+              <span style="font-weight: 500;">${generator.maxCapMW} MW</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #666;">Region:</span>
+              <span style="font-weight: 500;">${generator.region}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #666;">Technology:</span>
+              <span style="font-weight: 500;">${generator.technologyTypeDescriptor || generator.technologyTypePrimary}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #666;">Operator:</span>
+              <span style="font-weight: 500; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${generator.participant}">${generator.participant}</span>
+            </div>
+          </div>
+
+          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 10px; color: #9ca3af;">
+            DUID: ${generator.duid} | Live data from AEMO/AREMI
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent, {
+        maxWidth: 300,
+        className: "generator-popup",
+      });
+
+      marker.addTo(map);
+      generatorMarkersRef.current.push(marker);
+    });
+  }, [mapInitialized, showLiveGenerators, liveGenerators]);
 
   // Render biofuel project markers
   useEffect(() => {
@@ -888,6 +1069,16 @@ export default function FeedstockMap() {
                     />
                     <Label className="text-sm">Show Catchments</Label>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      checked={showLiveGenerators}
+                      onCheckedChange={(c) => setShowLiveGenerators(!!c)}
+                    />
+                    <Label className="text-sm flex items-center gap-1">
+                      <Zap className="h-3 w-3 text-amber-500" />
+                      Live Generators (AEMO)
+                    </Label>
+                  </div>
                   <div className="grid grid-cols-2 gap-2 mt-3 text-xs">
                     {Object.entries(STATUS_COLORS).map(([status, color]) => (
                       <div key={status} className="flex items-center gap-1.5">
@@ -902,6 +1093,39 @@ export default function FeedstockMap() {
                   <div className="text-xs text-gray-600 mt-2">
                     {BIOFUEL_PROJECTS.length} projects mapped
                   </div>
+                  {showLiveGenerators && generatorsSummary && (
+                    <div className="mt-3 pt-3 border-t space-y-1">
+                      <div className="flex items-center gap-1 text-xs font-medium text-amber-600">
+                        <Zap className="h-3 w-3" />
+                        Live Bioenergy ({generatorsSummary.totalGenerators} generators)
+                      </div>
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Active:</span>
+                          <span className="font-mono text-green-600">{generatorsSummary.activeGenerators}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Output:</span>
+                          <span className="font-mono text-green-600">{generatorsSummary.currentOutputMW} MW</span>
+                        </div>
+                        <div className="flex justify-between col-span-2">
+                          <span className="text-gray-600">Total Capacity:</span>
+                          <span className="font-mono">{generatorsSummary.totalCapacityMW} MW</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {Object.entries(FUEL_TYPE_COLORS).filter(([k]) => k !== "default").map(([fuel, color]) => (
+                          <div key={fuel} className="flex items-center gap-1 text-[10px]">
+                            <div
+                              className="w-2.5 h-2.5 rounded-full"
+                              style={{ backgroundColor: color }}
+                            />
+                            <span className="truncate max-w-[80px]">{fuel.split(" / ")[0]}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
