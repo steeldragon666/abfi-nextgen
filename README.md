@@ -111,26 +111,60 @@ cp .env.example .env
 
 ### Environment Variables
 
+All client-side `VITE_*` variables are validated at startup. See `client/src/config/env.ts` for validation rules and defaults.
+
 ```env
-# Database
+# =====================
+# Server Configuration
+# =====================
+
+# Database (required)
 DATABASE_URL=mysql://user:password@host:port/database
 
 # Authentication
 JWT_SECRET=your-secret-key
 OAUTH_SERVER_URL=http://localhost:3000
 
-# Google Maps
-VITE_GOOGLE_MAPS_API_KEY=your-api-key
-
-# Supabase (optional)
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-
-# External APIs
+# External APIs (server-side)
 HEYGEN_API_KEY=your-heygen-key
 OPENAI_API_KEY=your-openai-key
 TOMORROW_IO_API_KEY=your-weather-key
+
+# =====================
+# Client Configuration (VITE_*)
+# =====================
+
+# Authentication (optional - dev fallbacks provided)
+VITE_OAUTH_PORTAL_URL=https://your-oauth-portal.com
+VITE_APP_ID=abfi-platform
+
+# API Endpoints (optional - dev fallbacks provided)
+VITE_INTELLIGENCE_API_URL=https://abfi-ai.vercel.app
+VITE_STEALTH_API_URL=https://stealth-discovery.vercel.app
+
+# Maps - choose one:
+# Option 1: Frontend Forge proxy (recommended)
+VITE_FRONTEND_FORGE_API_KEY=your-forge-key
+VITE_FRONTEND_FORGE_API_URL=https://api.frontendforge.dev
+
+# Option 2: Direct Google Maps API
+VITE_GOOGLE_MAPS_API_KEY=your-google-maps-key
+
+# Monitoring (optional - disabled if not set)
+VITE_SENTRY_DSN=https://xxx@xxx.ingest.sentry.io/xxx
+VITE_APP_VERSION=1.0.0
+
+# Blockchain (optional)
+VITE_EVIDENCE_CONTRACT=0x...
 ```
+
+#### Environment Variable Validation
+
+The client validates all `VITE_*` variables using Zod at startup:
+- **Development**: Warnings logged, defaults applied
+- **Production**: Throws error if validation fails
+
+See `client/src/config/env.ts` for the full schema.
 
 ### Development
 

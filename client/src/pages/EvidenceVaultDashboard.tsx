@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { blockchainConfig } from "@/config/env";
 import { H1, H2, H3, H4, Body, MetricValue, DataLabel } from "@/components/Typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -504,7 +505,7 @@ export default function EvidenceVaultDashboard() {
 
     // Get contract address from blockchain health check or use environment default
     const contractAddress = blockchainHealth?.walletAddress
-      ? process.env.VITE_EVIDENCE_CONTRACT || "0x0000000000000000000000000000000000000000"
+      ? blockchainConfig.evidenceContract || "0x0000000000000000000000000000000000000000"
       : "0x0000000000000000000000000000000000000000";
 
     batchAnchorMutation.mutate({

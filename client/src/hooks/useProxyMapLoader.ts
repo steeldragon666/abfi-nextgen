@@ -4,16 +4,15 @@
  * otherwise falls back to direct Google Maps API key.
  */
 import { useEffect, useState, useRef } from "react";
+import { mapsConfig } from "@/config/env";
 
 // Forge proxy configuration
-const FORGE_API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
-const FORGE_BASE_URL =
-  import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
-  "https://forge.butterfly-effect.dev";
+const FORGE_API_KEY = mapsConfig.frontendForgeApiKey;
+const FORGE_BASE_URL = mapsConfig.frontendForgeApiUrl;
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
 
 // Direct Google Maps API key (fallback)
-const DIRECT_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const DIRECT_API_KEY = mapsConfig.googleMapsApiKey;
 
 // Determine which approach to use
 const USE_PROXY = !!FORGE_API_KEY;

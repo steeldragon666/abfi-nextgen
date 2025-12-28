@@ -10,10 +10,12 @@
  *   const { data } = trpc.stealth.getDashboardStats.useQuery();
  */
 
+import { apiConfig } from "@/config/env";
+
 // API base URL - will need to be configured for deployment
 const STEALTH_API_URL = import.meta.env.DEV
   ? '/api/stealth'  // Proxy in development
-  : (import.meta.env.VITE_STEALTH_API_URL || 'https://stealth-discovery.vercel.app');
+  : apiConfig.stealthUrl;
 
 // Types
 export interface EntitySummary {

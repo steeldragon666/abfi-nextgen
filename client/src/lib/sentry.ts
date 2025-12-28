@@ -6,9 +6,10 @@
  */
 
 import * as Sentry from "@sentry/react";
+import { monitoringConfig } from "@/config/env";
 
 // Check if running in production and DSN is configured
-const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN;
+const SENTRY_DSN = monitoringConfig.sentryDsn;
 const IS_PRODUCTION = import.meta.env.PROD;
 const ENVIRONMENT = import.meta.env.MODE || "development";
 
@@ -72,7 +73,7 @@ export function initSentry(): void {
       event.tags = {
         ...event.tags,
         platform: "abfi",
-        version: import.meta.env.VITE_APP_VERSION || "unknown",
+        version: monitoringConfig.appVersion,
       };
 
       return event;

@@ -3,11 +3,13 @@
  * Connects to the abfi-ai service for sentiment, prices, and policy data.
  */
 
+import { apiConfig } from "@/config/env";
+
 // In development, use empty string to leverage Vite proxy
 // In production, use the full URL
 const INTELLIGENCE_API_URL = import.meta.env.DEV
   ? ''
-  : (import.meta.env.VITE_INTELLIGENCE_API_URL || 'https://abfi-ai.vercel.app');
+  : apiConfig.intelligenceUrl;
 
 interface FearComponents {
   regulatory_risk: number;
