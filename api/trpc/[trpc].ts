@@ -69,15 +69,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const appRouter = await getAppRouter();
 
     // Create context compatible with server routers (needs req, res, user)
+    // sdk.authenticateRequest expects Express-style req with .get() method
+    const cookieHeader = headers.get("cookie") || "";
+    const expressLikeReq = {
+      get: (name: string) => name === "cookie" ? cookieHeader : headers.get(name),
+      headers: { cookie: cookieHeader },
+    };
+
     const createCompatibleContext = async () => {
       let user: User | null = null;
       try {
-        user = await sdk.authenticateRequest(request);
+        user = await sdk.authenticateRequest(expressLikeReq);
       } catch {
         user = null;
       }
       // Server routers expect Express-like req/res but only use user in most cases
-      // For Vercel, we provide the Fetch Request and mock the res since it's not used
       return {
         req: request as any,
         res: res as any,
