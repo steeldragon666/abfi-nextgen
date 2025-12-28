@@ -22,6 +22,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import { H1, H3, Body, Currency, Percentage, MetricValue, DataLabel } from "@/components/Typography";
 
 // Mock data for 30-day price trends
 const feedstockPrices = [
@@ -112,11 +113,11 @@ export default function PriceDashboard() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <BarChart3 className="h-8 w-8 text-[#D4AF37]" />
-            <h1 className="text-3xl font-bold">Price Dashboard</h1>
+            <H1>Price Dashboard</H1>
           </div>
-          <p className="text-gray-600">
+          <Body className="text-muted-foreground">
             Real-time feedstock pricing updated every 15 minutes. All prices in AUD.
-          </p>
+          </Body>
         </div>
 
         {/* Current Price Cards */}
@@ -156,14 +157,14 @@ export default function PriceDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl font-bold">
+                  <MetricValue size="xl" className="text-foreground">
                     {item.name === "Woodchip" ? `$${item.price}` : `$${item.price.toFixed(2)}`}
-                  </span>
-                  <span className="text-gray-500 mb-1">{item.unit}</span>
+                  </MetricValue>
+                  <span className="text-muted-foreground mb-1 text-sm">{item.unit}</span>
                 </div>
-                <div className="flex items-center gap-2 mt-3 text-sm text-gray-600">
+                <div className="flex items-center gap-2 mt-3 text-sm text-muted-foreground">
                   <Truck className="h-4 w-4" />
-                  <span>Volume yesterday: {item.volume}</span>
+                  <span>Volume yesterday: <span className="font-mono tabular-nums font-medium">{item.volume}</span></span>
                 </div>
               </CardContent>
             </Card>
@@ -230,6 +231,8 @@ export default function PriceDashboard() {
                     border: "1px solid #e5e7eb",
                     borderRadius: "8px",
                     boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    fontFamily: "var(--font-numeric)",
+                    fontVariantNumeric: "tabular-nums",
                   }}
                 />
                 <Legend
@@ -275,13 +278,13 @@ export default function PriceDashboard() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <DollarSign className="h-8 w-8 text-[#D4AF37]" />
-                  <span className="text-green-600 text-sm font-medium">
+                  <span className="text-balance-positive text-sm">
                     {metric.change}
                   </span>
                 </div>
                 <div className="mt-4">
-                  <p className="text-2xl font-bold">{metric.value}</p>
-                  <p className="text-sm text-gray-600">{metric.name}</p>
+                  <MetricValue size="lg">{metric.value}</MetricValue>
+                  <DataLabel>{metric.name}</DataLabel>
                 </div>
               </CardContent>
             </Card>
@@ -291,10 +294,10 @@ export default function PriceDashboard() {
           <Card className="bg-gradient-to-br from-[#D4AF37]/10 to-[#D4AF37]/5 border-[#D4AF37]/30">
             <CardContent className="pt-6 flex flex-col justify-between h-full">
               <div>
-                <h3 className="font-semibold text-lg mb-2">Ready to Trade?</h3>
-                <p className="text-sm text-gray-600 mb-4">
+                <H3 className="text-lg mb-2">Ready to Trade?</H3>
+                <Body size="sm" className="text-muted-foreground mb-4">
                   Get personalized quotes from verified suppliers.
-                </p>
+                </Body>
               </div>
               <Link href="/quote-request">
                 <Button className="w-full bg-[#D4AF37] text-black hover:bg-[#E5C158]">
