@@ -13,7 +13,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { setCorsHeaders, setSecurityHeaders, logRequest, handleError } from "../_lib/middleware";
-import { createContext } from "../_lib/context";
+import type { User } from "../../drizzle/schema";
+import { sdk } from "../../server/_core/sdk";
 
 // Lazy import the full router only when needed (backwards compatibility)
 // For new integrations, use the individual router endpoints instead
@@ -67,11 +68,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Lazy load the full router
     const appRouter = await getAppRouter();
 
+    // Create context compatible with server routers (needs req, res, user)
+    const createCompatibleContext = async () => {
+      let user: User | null = null;
+      try {
+        user = await sdk.authenticateRequest(request);
+      } catch {
+        user = null;
+      }
+      // Server routers expect Express-like req/res but only use user in most cases
+      // For Vercel, we provide the Fetch Request and mock the res since it's not used
+      return {
+        req: request as any,
+        res: res as any,
+        user,
+      };
+    };
+
     const response = await fetchRequestHandler({
       endpoint: "/api/trpc",
       req: request,
       router: appRouter,
-      createContext: () => createContext(request),
+      createContext: createCompatibleContext,
     });
 
     // Copy response headers

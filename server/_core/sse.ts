@@ -5,7 +5,12 @@
  * This avoids polling overhead and enables instant notification delivery.
  */
 
-import { Request, Response, Router } from "express";
+import type { Request as ExpressRequest, Response as ExpressResponse, Router } from "express";
+import { Router as ExpressRouter } from "express";
+
+// Use explicit type aliases to avoid confusion with Fetch API types
+type Request = ExpressRequest;
+type Response = ExpressResponse;
 import { getNotificationsByUserId } from "../db";
 
 interface SSEClient {
@@ -185,7 +190,7 @@ async function handleSSEConnection(req: Request, res: Response) {
   });
 
   // Handle errors
-  req.on("error", (error) => {
+  req.on("error", (error: Error) => {
     console.warn(`[SSE] Client ${clientId} error:`, error);
     clearInterval(heartbeatInterval);
     clients.delete(clientId);
@@ -196,13 +201,13 @@ async function handleSSEConnection(req: Request, res: Response) {
  * Create the SSE router
  */
 export function createSSERouter(): Router {
-  const router = Router();
+  const router = ExpressRouter();
 
   // SSE endpoint for notifications
   router.get("/notifications", handleSSEConnection);
 
   // Debug endpoint to check active connections (admin only in production)
-  router.get("/status", (_req, res) => {
+  router.get("/status", (_req: Request, res: Response) => {
     const connections: { userId: number; connectedAt: string }[] = [];
     for (const client of clients.values()) {
       connections.push({
@@ -217,7 +222,7 @@ export function createSSERouter(): Router {
   });
 
   // Test endpoint to send a notification (development only)
-  router.post("/test", (req, res) => {
+  router.post("/test", (req: Request, res: Response) => {
     if (process.env.NODE_ENV === "production") {
       res.status(403).json({ error: "Not available in production" });
       return;
