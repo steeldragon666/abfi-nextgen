@@ -23,6 +23,7 @@ import { ArrowLeft, Leaf, Package } from "lucide-react";
 import { useState } from "react";
 import { Link, Redirect, useLocation } from "wouter";
 import { toast } from "sonner";
+import { H1, H3, Body } from "@/components/Typography";
 
 export default function FeedstockCreate() {
   const { user, isAuthenticated } = useAuth();
@@ -150,13 +151,13 @@ export default function FeedstockCreate() {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-2">
             <Package className="h-8 w-8 text-[#D4AF37]" />
-            <h1 className="text-4xl font-bold text-[#D4AF37]">
+            <H1 className="text-4xl text-[#D4AF37]">
               List New Feedstock
-            </h1>
+            </H1>
           </div>
-          <p className="text-gray-600">
+          <Body className="text-gray-600">
             Add a new feedstock to the ABFI marketplace
-          </p>
+          </Body>
         </div>
 
         <Card>
@@ -170,7 +171,7 @@ export default function FeedstockCreate() {
           <CardContent className="space-y-6">
             {/* Basic Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Basic Information</h3>
+              <H3 className="text-lg">Basic Information</H3>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -217,7 +218,7 @@ export default function FeedstockCreate() {
 
             {/* Location */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Location</h3>
+              <H3 className="text-lg">Location</H3>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -252,7 +253,7 @@ export default function FeedstockCreate() {
 
             {/* Supply Details */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Supply Details</h3>
+              <H3 className="text-lg">Supply Details</H3>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -323,7 +324,7 @@ export default function FeedstockCreate() {
 
             {/* Quality Metrics */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Quality Metrics</h3>
+              <H3 className="text-lg">Quality Metrics</H3>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>

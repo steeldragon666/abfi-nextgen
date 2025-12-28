@@ -35,6 +35,7 @@ import {
   BarChart3,
   Info,
 } from "lucide-react";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // Rating color schemes
 const getRatingColor = (rating: string) => {
@@ -140,8 +141,8 @@ export default function BankabilityRatings() {
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">ABFI Bankability Rating Framework</h1>
-          <p className="text-gray-600">Version 3.0 — Australian Biofuels Project Assessment System</p>
+          <H1 className="text-2xl font-bold tracking-tight">ABFI Bankability Rating Framework</H1>
+          <Body className="text-gray-600">Version 3.0 — Australian Biofuels Project Assessment System</Body>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setLocation("/ratings/projects")}>
@@ -159,38 +160,38 @@ export default function BankabilityRatings() {
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
         <Card className="col-span-1">
           <CardContent className="p-4 text-center">
-            <div className="text-3xl font-bold text-[#D4AF37]">1</div>
-            <div className="text-xs text-gray-600">Investment Grade</div>
+            <MetricValue className="text-3xl font-bold text-[#D4AF37]">1</MetricValue>
+            <DataLabel className="text-xs text-gray-600">Investment Grade</DataLabel>
           </CardContent>
         </Card>
         <Card className="col-span-1">
           <CardContent className="p-4 text-center">
-            <div className="text-3xl font-bold text-[#D4AF37]">7</div>
-            <div className="text-xs text-gray-600">Borderline/Spec</div>
+            <MetricValue className="text-3xl font-bold text-[#D4AF37]">7</MetricValue>
+            <DataLabel className="text-xs text-gray-600">Borderline/Spec</DataLabel>
           </CardContent>
         </Card>
         <Card className="col-span-1">
           <CardContent className="p-4 text-center">
-            <div className="text-3xl font-bold text-red-600">5</div>
-            <div className="text-xs text-gray-600">High Risk</div>
+            <MetricValue className="text-3xl font-bold text-red-600">5</MetricValue>
+            <DataLabel className="text-xs text-gray-600">High Risk</DataLabel>
           </CardContent>
         </Card>
         <Card className="col-span-1">
           <CardContent className="p-4 text-center">
-            <div className="text-3xl font-bold">0</div>
-            <div className="text-xs text-gray-600">GC1 Projects</div>
+            <MetricValue className="text-3xl font-bold">0</MetricValue>
+            <DataLabel className="text-xs text-gray-600">GC1 Projects</DataLabel>
           </CardContent>
         </Card>
         <Card className="col-span-1">
           <CardContent className="p-4 text-center">
-            <div className="text-3xl font-bold text-blue-600">12</div>
-            <div className="text-xs text-gray-600">TR1-TR2 Tech</div>
+            <MetricValue className="text-3xl font-bold text-blue-600">12</MetricValue>
+            <DataLabel className="text-xs text-gray-600">TR1-TR2 Tech</DataLabel>
           </CardContent>
         </Card>
         <Card className="col-span-1">
           <CardContent className="p-4 text-center">
-            <div className="text-3xl font-bold text-green-600">89%</div>
-            <div className="text-xs text-gray-600">CI-A/B Rated</div>
+            <MetricValue className="text-3xl font-bold text-green-600">89%</MetricValue>
+            <DataLabel className="text-xs text-gray-600">CI-A/B Rated</DataLabel>
           </CardContent>
         </Card>
       </div>
@@ -200,12 +201,12 @@ export default function BankabilityRatings() {
         <CardContent className="p-4 flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-[#D4AF37] mt-0.5 shrink-0" />
           <div>
-            <h3 className="font-semibold text-amber-900">Critical Finding: Universal Grower Contract Gap</h3>
-            <p className="text-sm text-amber-800 mt-1">
+            <H3 className="font-semibold text-amber-900">Critical Finding: Universal Grower Contract Gap</H3>
+            <Body className="text-sm text-amber-800 mt-1">
               No Australian biofuels project achieves GC1 or GC2. Every project relies on aggregator relationships,
               mill partnerships without grower contracts, spot market assumptions, or non-existent agricultural development.
               Only exception: Malabar Biomethane (municipal waste is population-guaranteed).
-            </p>
+            </Body>
           </div>
         </CardContent>
       </Card>
@@ -239,9 +240,9 @@ export default function BankabilityRatings() {
                     <Badge key={r} className={`${getRatingColor(r)} text-xs`}>{r}</Badge>
                   ))}
                 </div>
-                <p className="text-xs text-gray-600">
+                <Body className="text-xs text-gray-600">
                   Composite rating reflecting overall project financeability based on all sub-ratings
-                </p>
+                </Body>
               </CardContent>
             </Card>
 
@@ -260,9 +261,9 @@ export default function BankabilityRatings() {
                     <Badge key={r} className={`${getRatingColor(r)} text-xs`}>{r}</Badge>
                   ))}
                 </div>
-                <p className="text-xs text-gray-600">
+                <Body className="text-xs text-gray-600">
                   Feedstock supply security from binding contracts to aspirational claims
-                </p>
+                </Body>
               </CardContent>
             </Card>
 
@@ -281,9 +282,9 @@ export default function BankabilityRatings() {
                     <Badge key={r} className={`${getRatingColor(r)} text-xs`}>{r}</Badge>
                   ))}
                 </div>
-                <p className="text-xs text-gray-600">
+                <Body className="text-xs text-gray-600">
                   Technology maturity from commercial-proven to R&D stage
-                </p>
+                </Body>
               </CardContent>
             </Card>
 
@@ -302,9 +303,9 @@ export default function BankabilityRatings() {
                     <Badge key={r} className={`${getRatingColor(r)} text-xs`}>{r}</Badge>
                   ))}
                 </div>
-                <p className="text-xs text-gray-600">
+                <Body className="text-xs text-gray-600">
                   Lifecycle GHG emissions vs 89 gCO₂e/MJ baseline
-                </p>
+                </Body>
               </CardContent>
             </Card>
 
@@ -323,9 +324,9 @@ export default function BankabilityRatings() {
                     <Badge key={r} className={`${getRatingColor(r)} text-xs`}>{r}</Badge>
                   ))}
                 </div>
-                <p className="text-xs text-gray-600">
+                <Body className="text-xs text-gray-600">
                   Offtake agreement quality from binding to unsubstantiated
-                </p>
+                </Body>
               </CardContent>
             </Card>
 
@@ -344,9 +345,9 @@ export default function BankabilityRatings() {
                     <Badge key={r} className={`${getRatingColor(r)} text-xs`}>{r}</Badge>
                   ))}
                 </div>
-                <p className="text-xs text-gray-600">
+                <Body className="text-xs text-gray-600">
                   Government funding status from secured to no engagement
-                </p>
+                </Body>
               </CardContent>
             </Card>
           </div>

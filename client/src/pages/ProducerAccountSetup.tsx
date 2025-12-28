@@ -14,6 +14,7 @@ import { Progress } from "@/components/ui/progress";
 import { Leaf, ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { H1, H2, H3, Body } from "@/components/Typography";
 
 export default function ProducerAccountSetup() {
   const [, setLocation] = useLocation();

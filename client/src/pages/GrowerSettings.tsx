@@ -55,6 +55,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 export default function GrowerSettings() {
   const [saving, setSaving] = useState(false);
@@ -127,10 +128,10 @@ export default function GrowerSettings() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-2xl font-bold">Settings</h1>
-              <p className="text-muted-foreground text-sm">
+              <H1 className="text-2xl font-bold">Settings</H1>
+              <Body className="text-muted-foreground text-sm">
                 Manage your account preferences
-              </p>
+              </Body>
             </div>
           </div>
         </div>
@@ -308,10 +309,10 @@ export default function GrowerSettings() {
                     className="flex items-center justify-between py-2"
                   >
                     <div>
-                      <p className="font-medium">{item.label}</p>
-                      <p className="text-sm text-muted-foreground">
+                      <H3 className="font-medium">{item.label}</H3>
+                      <Body className="text-sm text-muted-foreground">
                         {item.description}
-                      </p>
+                      </Body>
                     </div>
                     <Switch
                       checked={notifications[item.key as keyof typeof notifications]}
@@ -357,10 +358,10 @@ export default function GrowerSettings() {
                     className="flex items-center justify-between py-2"
                   >
                     <div>
-                      <p className="font-medium">{item.label}</p>
-                      <p className="text-sm text-muted-foreground">
+                      <H3 className="font-medium">{item.label}</H3>
+                      <Body className="text-sm text-muted-foreground">
                         {item.description}
-                      </p>
+                      </Body>
                     </div>
                     <Switch
                       checked={notifications[item.key as keyof typeof notifications]}
@@ -414,10 +415,10 @@ export default function GrowerSettings() {
                     className="flex items-center justify-between py-2"
                   >
                     <div>
-                      <p className="font-medium">{item.label}</p>
-                      <p className="text-sm text-muted-foreground">
+                      <H3 className="font-medium">{item.label}</H3>
+                      <Body className="text-sm text-muted-foreground">
                         {item.description}
-                      </p>
+                      </Body>
                     </div>
                     <Switch
                       checked={privacy[item.key as keyof typeof privacy] as boolean}

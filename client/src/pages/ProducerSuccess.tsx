@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, Home, LayoutDashboard, Search } from "lucide-react";
 import { Link } from "wouter";
+import { H1, H2, Body } from "@/components/Typography";
 
 export default function ProducerSuccess() {
   return (
@@ -16,18 +17,18 @@ export default function ProducerSuccess() {
           </div>
 
           {/* Success Message */}
-          <h1 className="mb-3 text-3xl font-bold text-[#0F3A5C]">
+          <H1 className="mb-3 text-[#0F3A5C]">
             Welcome to ABFI!
-          </h1>
-          <p className="mb-8 text-lg text-gray-600">
+          </H1>
+          <Body className="mb-8 text-lg text-gray-600">
             Your feedstock listing has been published to the marketplace.
-          </p>
+          </Body>
 
           {/* What Happens Next */}
           <div className="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-6 text-left">
-            <h2 className="mb-4 text-xl font-semibold text-[#0F3A5C]">
+            <H2 className="mb-4 text-[#0F3A5C]">
               What happens next?
-            </h2>
+            </H2>
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start gap-3">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#F4C430] text-sm font-semibold text-[#0F3A5C]">

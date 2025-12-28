@@ -70,6 +70,7 @@ import {
 import DashboardLayout from "@/components/DashboardLayout";
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
+import { H1, Body, MetricValue } from "@/components/Typography";
 
 // Stats card component
 function StatsCard({
@@ -539,13 +540,13 @@ export default function SupplyChainDashboard() {
         <FadeInUp className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-1 flex items-center gap-3">
+              <H1 className="text-3xl text-slate-900 mb-1 flex items-center gap-3">
                 <Truck className="h-8 w-8 text-blue-600" />
                 Supply Chain
-              </h1>
-              <p className="text-gray-600">
+              </H1>
+              <Body className="text-gray-600">
                 Track consignments, freight legs, and chain of custody evidence
-              </p>
+              </Body>
             </div>
             <div className="flex items-center gap-3">
               <Button variant="outline" size="sm" onClick={handleRefresh}>

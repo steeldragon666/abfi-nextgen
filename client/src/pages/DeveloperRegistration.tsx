@@ -1,4 +1,5 @@
 import React, { useState, FormEvent, useMemo } from 'react';
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // --- Design System Colors and Constants ---
 const COLOR_GOLD = '#D4AF37';
@@ -104,7 +105,7 @@ const CompanyDetails: React.FC<StepProps> = ({ data, updateData, nextStep }) => 
 
   return (
     <form onSubmit={handleSubmit} className="p-8">
-      <h2 className={`text-2xl font-semibold text-[${COLOR_BLACK}] mb-8`}>Company Details</h2>
+      <H2 className="mb-8">Company Details</H2>
       <TextInput
         id="companyName"
         label="Company Name (Plain English Label)"
@@ -147,7 +148,7 @@ const ProjectInformation: React.FC<StepProps & { prevStep: () => void }> = ({ da
 
   return (
     <form onSubmit={handleSubmit} className="p-8">
-      <h2 className={`text-2xl font-semibold text-[${COLOR_BLACK}] mb-8`}>Project Information</h2>
+      <H2 className="mb-8">Project Information</H2>
       <TextInput
         id="projectName"
         label="Project Name"
@@ -199,7 +200,7 @@ const SupplyRequirements: React.FC<StepProps & { prevStep: () => void }> = ({ da
 
   return (
     <form onSubmit={handleSubmit} className="p-8">
-      <h2 className={`text-2xl font-semibold text-[${COLOR_BLACK}] mb-8`}>Supply Requirements Form</h2>
+      <H2 className="mb-8">Supply Requirements Form</H2>
       <TextInput
         id="materialType"
         label="Material Type"
@@ -256,11 +257,11 @@ const VerificationSteps: React.FC<StepProps & { prevStep: () => void }> = ({ dat
 
   return (
     <div className="p-8">
-      <h2 className={`text-2xl font-semibold text-[${COLOR_BLACK}] mb-8`}>Verification Steps</h2>
-      
+      <H2 className="mb-8">Verification Steps</H2>
+
       {/* Card-first design for metrics/status */}
       <div className={`p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-[${COLOR_WHITE}] mb-6`}>
-        <h3 className="text-xl font-semibold mb-4">Registration Status</h3>
+        <H3 className="mb-4">Registration Status</H3>
         <div className="flex items-center justify-between">
           <p className="text-base font-medium">Current Status:</p>
           <span className={`text-sm font-semibold px-3 py-1 rounded-full ${verificationStatus.bg}`}>
@@ -271,23 +272,23 @@ const VerificationSteps: React.FC<StepProps & { prevStep: () => void }> = ({ dat
         {/* Max 3 metrics visible at once - showing key completion metrics */}
         <div className="mt-4 grid grid-cols-3 gap-4 text-center">
             <div className="p-2 border-r border-gray-200">
-                <p className="text-2xl font-semibold">{data.companyName ? '100%' : '0%'}</p>
-                <p className="text-sm text-gray-500">Company</p>
+                <MetricValue>{data.companyName ? '100%' : '0%'}</MetricValue>
+                <DataLabel>Company</DataLabel>
             </div>
             <div className="p-2 border-r border-gray-200">
-                <p className="text-2xl font-semibold">{data.projectName ? '100%' : '0%'}</p>
-                <p className="text-sm text-gray-500">Project</p>
+                <MetricValue>{data.projectName ? '100%' : '0%'}</MetricValue>
+                <DataLabel>Project</DataLabel>
             </div>
             <div className="p-2">
-                <p className="text-2xl font-semibold">{data.materialType ? '100%' : '0%'}</p>
-                <p className="text-sm text-gray-500">Supply</p>
+                <MetricValue>{data.materialType ? '100%' : '0%'}</MetricValue>
+                <DataLabel>Supply</DataLabel>
             </div>
         </div>
       </div>
 
-      <p className="text-base mb-6">
+      <Body className="mb-6">
         Please click the button below to submit your registration for final verification. This process may take up to 24 hours.
-      </p>
+      </Body>
 
       <div className="mt-8 flex justify-between">
         <Button variant="ghost" type="button" onClick={prevStep}>
@@ -307,10 +308,10 @@ const Confirmation: React.FC<{ data: DeveloperRegistrationData }> = ({ data }) =
             <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: COLOR_GOLD }}>
                 <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
             </div>
-            <h2 className={`text-3xl font-semibold text-[${COLOR_BLACK}] mt-4 mb-4`}>Registration Complete!</h2>
-            <p className="text-xl text-gray-700 mb-8">
+            <H2 className="mt-4 mb-4">Registration Complete!</H2>
+            <Body className="text-xl mb-8">
                 Thank you, <span className="font-semibold">{data.companyName}</span>. Your developer registration has been successfully submitted for review.
-            </p>
+            </Body>
             
             <div className={`p-6 rounded-xl border border-gray-200 shadow-sm bg-[${COLOR_WHITE}] inline-block`}>
                 <p className="text-base font-medium text-gray-700">
@@ -372,7 +373,7 @@ const DeveloperRegistration: React.FC = () => {
         
         {/* Step Indicator */}
         <div className="p-8 border-b border-gray-200">
-          <h1 className={`text-3xl font-semibold text-[${COLOR_BLACK}] mb-4`}>Developer Registration</h1>
+          <H1 className="mb-4">Developer Registration</H1>
           <div className="flex justify-between items-center">
             {steps.slice(0, 4).map((s) => (
               <div key={s.id} className="flex-1 flex items-center">

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // --- Type Definitions ---
 
@@ -76,8 +77,8 @@ const Step1RoleSelection: React.FC<StepProps> = ({ formData, updateFormData, onN
 
   return (
     <div className={CARD_CLASSES}>
-      <h2 className="text-2xl font-semibold mb-6 text-[${COLOR_BLACK}]">Step 1: Role Selection</h2>
-      <p className="mb-6 text-lg">Please select the role that best describes your primary involvement with the platform.</p>
+      <H2 className="text-2xl font-semibold mb-6 text-[${COLOR_BLACK}]">Step 1: Role Selection</H2>
+      <Body className="mb-6 text-lg">Please select the role that best describes your primary involvement with the platform.</Body>
       
       <div className="space-y-4">
         {roles.map((role) => (
@@ -127,7 +128,7 @@ const Step2PropertyDetails: React.FC<StepProps> = ({ formData, updateFormData, o
 
   return (
     <div className={CARD_CLASSES}>
-      <h2 className="text-2xl font-semibold mb-6 text-[${COLOR_BLACK}]">Step 2: Property Details</h2>
+      <H2 className="text-2xl font-semibold mb-6 text-[${COLOR_BLACK}]">Step 2: Property Details</H2>
       <div className="space-y-6">
         <div>
           <label htmlFor="legalEntityName" className={LABEL_CLASSES}>Legal Entity Name (Required)</label>
@@ -222,7 +223,7 @@ const Step3ProductionProfile: React.FC<StepProps> = ({ formData, updateFormData,
   return (
     <div className="space-y-6">
       <div className={CARD_CLASSES}>
-        <h2 className="text-2xl font-semibold mb-6 text-[${COLOR_BLACK}]">Step 3: Production Profile</h2>
+        <H2 className="text-2xl font-semibold mb-6 text-[${COLOR_BLACK}]">Step 3: Production Profile</H2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="primaryCrop" className={LABEL_CLASSES}>Primary Crop/Commodity (Required)</label>
@@ -268,19 +269,19 @@ const Step3ProductionProfile: React.FC<StepProps> = ({ formData, updateFormData,
 
       {/* Metric Card - Max 3 metrics visible at once */}
       <div className={CARD_CLASSES + ' p-6'}>
-        <h3 className="text-xl font-semibold mb-4 text-[${COLOR_BLACK}]">Key Metrics</h3>
+        <H3 className="text-xl font-semibold mb-4 text-[${COLOR_BLACK}]">Key Metrics</H3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-sm text-gray-500">Carbon Potential</p>
-            <p className="text-2xl font-semibold text-[${COLOR_BLACK}]">TBD</p>
+            <DataLabel className="text-sm text-gray-500">Carbon Potential</DataLabel>
+            <MetricValue className="text-2xl font-semibold text-[${COLOR_BLACK}]">TBD</MetricValue>
           </div>
           <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-sm text-gray-500">Water Usage (Est.)</p>
-            <p className="text-2xl font-semibold text-[${COLOR_BLACK}]">N/A</p>
+            <DataLabel className="text-sm text-gray-500">Water Usage (Est.)</DataLabel>
+            <MetricValue className="text-2xl font-semibold text-[${COLOR_BLACK}]">N/A</MetricValue>
           </div>
           <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-sm text-gray-500">Biodiversity Score</p>
-            <p className="text-2xl font-semibold text-[${COLOR_BLACK}]">0.0</p>
+            <DataLabel className="text-sm text-gray-500">Biodiversity Score</DataLabel>
+            <MetricValue className="text-2xl font-semibold text-[${COLOR_BLACK}]">0.0</MetricValue>
           </div>
         </div>
       </div>
@@ -316,8 +317,8 @@ const Step4EvidenceUpload: React.FC<StepProps> = ({ formData, updateFormData, on
 
   return (
     <div className={CARD_CLASSES}>
-      <h2 className="text-2xl font-semibold mb-6 text-[${COLOR_BLACK}]">Step 4: Evidence Upload</h2>
-      <p className="mb-6 text-lg">Please upload the required documents to complete your registration.</p>
+      <H2 className="text-2xl font-semibold mb-6 text-[${COLOR_BLACK}]">Step 4: Evidence Upload</H2>
+      <Body className="mb-6 text-lg">Please upload the required documents to complete your registration.</Body>
 
       {/* Drag-and-drop interface */}
       <div
@@ -335,7 +336,7 @@ const Step4EvidenceUpload: React.FC<StepProps> = ({ formData, updateFormData, on
       </div>
 
       {/* Required Documents List */}
-      <h3 className="text-xl font-semibold mb-4 text-[${COLOR_BLACK}]">Required Documents</h3>
+      <H3 className="text-xl font-semibold mb-4 text-[${COLOR_BLACK}]">Required Documents</H3>
       <ul className="space-y-3">
         {requiredDocuments.map((doc, index) => (
           <li key={index} className="flex justify-between items-center p-3 border border-gray-100 rounded-lg">
@@ -407,7 +408,7 @@ const GrowerRegistrationFlow: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-semibold mb-10 text-[${COLOR_BLACK}]">Grower Registration</h1>
+      <H1 className="text-3xl font-semibold mb-10 text-[${COLOR_BLACK}]">Grower Registration</H1>
       
       <StepIndicator currentStep={currentStep} steps={steps} />
       

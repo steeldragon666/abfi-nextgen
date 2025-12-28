@@ -10,6 +10,7 @@ import {
   Check,
 } from "lucide-react";
 import EarningsCalculator from "@/components/EarningsCalculator";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 export default function GrowerBenefits() {
   const problems = [
@@ -130,15 +131,9 @@ export default function GrowerBenefits() {
             >
               <Shield className="h-6 w-6 text-black" />
             </div>
-            <h1
-              className="text-3xl"
-              style={{
-                fontFamily: "'DM Serif Display', serif",
-                color: "#1a2e1a",
-              }}
-            >
+            <H1 className="text-3xl" style={{ color: "#1a2e1a" }}>
               BioFeed <span style={{ color: "#2d5a27" }}>AU</span>
-            </h1>
+            </H1>
           </div>
 
           <div
@@ -151,10 +146,9 @@ export default function GrowerBenefits() {
             For Growers
           </div>
 
-          <h2
+          <H2
             className="text-5xl mb-4"
             style={{
-              fontFamily: "'DM Serif Display', serif",
               fontWeight: 400,
               color: "#1a2e1a",
               lineHeight: 1.2,
@@ -164,9 +158,9 @@ export default function GrowerBenefits() {
             <em style={{ color: "#2d5a27", fontStyle: "normal" }}>
               Fair Prices
             </em>
-          </h2>
+          </H2>
 
-          <p
+          <Body
             style={{
               fontSize: "18px",
               color: "#4a5a4a",
@@ -178,7 +172,7 @@ export default function GrowerBenefits() {
             Stop losing money to middlemen. Connect directly with verified
             buyers, get paid faster, and build a reputation that earns premium
             pricing.
-          </p>
+          </Body>
         </header>
 
         {/* Problem/Solution Comparison */}
@@ -200,15 +194,14 @@ export default function GrowerBenefits() {
             >
               Without Us
             </div>
-            <h3
+            <H3
               className="text-2xl mb-5 mt-2"
               style={{
-                fontFamily: "'DM Serif Display', serif",
                 color: "#dc2626",
               }}
             >
               The Old Way
-            </h3>
+            </H3>
             <ul className="space-y-0">
               {problems.map((problem, idx) => (
                 <li
@@ -264,15 +257,14 @@ export default function GrowerBenefits() {
             >
               With BioFeed AU
             </div>
-            <h3
+            <H3
               className="text-2xl mb-5 mt-2"
               style={{
-                fontFamily: "'DM Serif Display', serif",
                 color: "#2d5a27",
               }}
             >
               The Better Way
-            </h3>
+            </H3>
             <ul className="space-y-0">
               {solutions.map((solution, idx) => (
                 <li
@@ -321,16 +313,15 @@ export default function GrowerBenefits() {
             >
               🛡️
             </div>
-            <h3
+            <H3
               className="text-4xl mb-3 text-black"
               style={{
-                fontFamily: "'DM Serif Display', serif",
                 fontWeight: 400,
               }}
             >
               Built-In Grower Protections
-            </h3>
-            <p
+            </H3>
+            <Body
               style={{
                 color: "rgba(255,255,255,0.7)",
                 fontSize: "16px",
@@ -341,7 +332,7 @@ export default function GrowerBenefits() {
             >
               We level the playing field so you can negotiate from a position of
               strength
-            </p>
+            </Body>
           </div>
 
           <div className="grid grid-cols-3 gap-6 relative z-10">
@@ -383,19 +374,18 @@ export default function GrowerBenefits() {
         {/* Price Discovery */}
         <section className="mb-16">
           <div className="text-center mb-10">
-            <h3
+            <H3
               className="text-4xl mb-3"
               style={{
-                fontFamily: "'DM Serif Display', serif",
                 fontWeight: 400,
                 color: "#1a2e1a",
               }}
             >
               See The Difference
-            </h3>
-            <p style={{ color: "#4a5a4a", fontSize: "16px", fontWeight: 300 }}>
+            </H3>
+            <Body style={{ color: "#4a5a4a", fontSize: "16px", fontWeight: 300 }}>
               Example: Bagasse pricing in Queensland (per tonne, delivered)
-            </p>
+            </Body>
           </div>
 
           <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
@@ -410,13 +400,13 @@ export default function GrowerBenefits() {
                   outlineOffset: "-4px",
                 }}
               >
-                <div
+                <DataLabel
                   className="text-sm font-semibold uppercase tracking-wide mb-3"
                   style={{ color: "#6b7c6b" }}
                 >
                   {item.label}
-                </div>
-                <div
+                </DataLabel>
+                <MetricValue
                   className="text-4xl font-bold mb-2"
                   style={{
                     fontFamily: "'IBM Plex Mono', monospace",
@@ -424,7 +414,7 @@ export default function GrowerBenefits() {
                   }}
                 >
                   {item.price}
-                </div>
+                </MetricValue>
                 {item.highlight && (
                   <div
                     className="text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full inline-block"
@@ -462,16 +452,15 @@ export default function GrowerBenefits() {
         {/* Additional Benefits */}
         <section className="mb-16">
           <div className="text-center mb-10">
-            <h3
+            <H3
               className="text-4xl mb-3"
               style={{
-                fontFamily: "'DM Serif Display', serif",
                 fontWeight: 400,
                 color: "#1a2e1a",
               }}
             >
               More Ways We Help
-            </h3>
+            </H3>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
@@ -486,13 +475,13 @@ export default function GrowerBenefits() {
               >
                 <div className="text-5xl flex-shrink-0">{benefit.icon}</div>
                 <div>
-                  <h4
+                  <H3
                     className="text-lg font-semibold mb-2"
                     style={{ color: "#1a2e1a" }}
                   >
                     {benefit.title}
-                  </h4>
-                  <p
+                  </H3>
+                  <Body
                     style={{
                       fontSize: "14px",
                       color: "#4a5a4a",
@@ -501,7 +490,7 @@ export default function GrowerBenefits() {
                     }}
                   >
                     {benefit.description}
-                  </p>
+                  </Body>
                 </div>
               </div>
             ))}
@@ -516,13 +505,13 @@ export default function GrowerBenefits() {
             boxShadow: "0 8px 32px rgba(45, 90, 39, 0.3)",
           }}
         >
-          <h3
+          <H3
             className="text-3xl mb-4 text-black"
-            style={{ fontFamily: "'DM Serif Display', serif", fontWeight: 400 }}
+            style={{ fontWeight: 400 }}
           >
             Ready to Get Fair Prices?
-          </h3>
-          <p
+          </H3>
+          <Body
             className="text-lg mb-8"
             style={{
               color: "rgba(255,255,255,0.9)",
@@ -533,7 +522,7 @@ export default function GrowerBenefits() {
           >
             Join 500+ Australian growers already earning more through direct
             market access
-          </p>
+          </Body>
           <button
             className="px-8 py-4 rounded-xl font-semibold text-lg transition-all hover:scale-105"
             style={{

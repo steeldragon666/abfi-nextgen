@@ -57,6 +57,7 @@ import {
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { SimpleLeafletMap, type MapMarker } from "@/components/SimpleLeafletMap";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // Pipeline stages
 const PIPELINE_STAGES = [
@@ -198,8 +199,8 @@ export default function DeveloperDashboard() {
                   <stat.icon className={cn("h-5 w-5", stat.color)} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-xs text-gray-600">{stat.label}</p>
+                  <MetricValue>{stat.value}</MetricValue>
+                  <DataLabel>{stat.label}</DataLabel>
                 </div>
               </div>
             ))}
@@ -264,10 +265,10 @@ export default function DeveloperDashboard() {
               {/* Deal Pipeline */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <H3 className="flex items-center gap-2">
                     <Target className="h-4 w-4 text-blue-600" />
                     Deal Pipeline
-                  </h3>
+                  </H3>
                   <Badge variant="outline" className="text-xs">
                     {DEAL_PIPELINE.length} deals
                   </Badge>
@@ -285,8 +286,8 @@ export default function DeveloperDashboard() {
                             stage.color
                           )}
                         />
-                        <p className="text-xs text-gray-600">{stage.label}</p>
-                        <p className="text-lg font-bold">{count}</p>
+                        <DataLabel>{stage.label}</DataLabel>
+                        <MetricValue className="text-lg">{count}</MetricValue>
                       </div>
                     );
                   })}
@@ -345,10 +346,10 @@ export default function DeveloperDashboard() {
 
               {/* Intelligence Feeds */}
               <div>
-                <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <H3 className="mb-3 flex items-center gap-2">
                   <BarChart3 className="h-4 w-4 text-purple-600" />
                   Intelligence Feeds
-                </h3>
+                </H3>
                 <div className="space-y-2">
                   {INTELLIGENCE_FEEDS.map((feed) => (
                     <Link key={feed.id} href={feed.href}>
@@ -370,7 +371,7 @@ export default function DeveloperDashboard() {
 
               {/* Quick Actions */}
               <div>
-                <h3 className="text-sm font-semibold mb-3">Quick Actions</h3>
+                <H3 className="mb-3">Quick Actions</H3>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/browse">
                     <Button variant="outline" size="sm" className="w-full justify-start">
@@ -421,7 +422,7 @@ export default function DeveloperDashboard() {
 
               {/* Map Legend */}
               <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur p-3 rounded-lg shadow-lg border">
-                <h4 className="text-xs font-semibold mb-2">Supplier Network</h4>
+                <H3 className="mb-2">Supplier Network</H3>
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 text-xs">
                     <div className="h-3 w-3 rounded-full bg-blue-500" />
@@ -454,7 +455,7 @@ export default function DeveloperDashboard() {
                     <div className="p-3 border-b">
                       <div className="flex items-center gap-2">
                         <div className={cn("h-3 w-3 rounded-full", stage.color)} />
-                        <h3 className="font-semibold text-sm">{stage.label}</h3>
+                        <H3>{stage.label}</H3>
                         <Badge variant="secondary" className="ml-auto">
                           {getDealsForStage(stage.id).length}
                         </Badge>

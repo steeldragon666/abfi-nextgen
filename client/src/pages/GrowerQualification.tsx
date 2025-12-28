@@ -30,6 +30,7 @@ import {
   Shield,
   Calendar,
 } from "lucide-react";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 export default function GrowerQualification() {
   const { supplierId } = useParams<{ supplierId: string }>();
@@ -388,14 +389,14 @@ export default function GrowerQualification() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center py-6">
-                  <div
+                  <MetricValue
                     className={`text-6xl font-bold mb-2 ${qualification.color}`}
                   >
                     {compositeScore}
-                  </div>
-                  <div className="text-sm text-gray-600 mb-4">
+                  </MetricValue>
+                  <DataLabel className="text-sm text-gray-600 mb-4">
                     Composite Score
-                  </div>
+                  </DataLabel>
 
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-muted rounded-full">
                     <Award className="h-5 w-5" />
@@ -407,38 +408,38 @@ export default function GrowerQualification() {
 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">
+                    <DataLabel className="text-gray-600">
                       Operating History
-                    </span>
-                    <span className="font-medium">{operatingHistoryScore}</span>
+                    </DataLabel>
+                    <MetricValue className="font-medium">{operatingHistoryScore}</MetricValue>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">
+                    <DataLabel className="text-gray-600">
                       Financial Strength
-                    </span>
-                    <span className="font-medium">
+                    </DataLabel>
+                    <MetricValue className="font-medium">
                       {financialStrengthScore}
-                    </span>
+                    </MetricValue>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Land Tenure</span>
-                    <span className="font-medium">{landTenureScore}</span>
+                    <DataLabel className="text-gray-600">Land Tenure</DataLabel>
+                    <MetricValue className="font-medium">{landTenureScore}</MetricValue>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">
+                    <DataLabel className="text-gray-600">
                       Production Capacity
-                    </span>
-                    <span className="font-medium">
+                    </DataLabel>
+                    <MetricValue className="font-medium">
                       {productionCapacityScore}
-                    </span>
+                    </MetricValue>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Credit Rating</span>
-                    <span className="font-medium">{creditScore}</span>
+                    <DataLabel className="text-gray-600">Credit Rating</DataLabel>
+                    <MetricValue className="font-medium">{creditScore}</MetricValue>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Insurance</span>
-                    <span className="font-medium">{insuranceScore}</span>
+                    <DataLabel className="text-gray-600">Insurance</DataLabel>
+                    <MetricValue className="font-medium">{insuranceScore}</MetricValue>
                   </div>
                 </div>
               </CardContent>
@@ -453,40 +454,40 @@ export default function GrowerQualification() {
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <div>
-                  <div className="font-semibold text-green-600">
+                  <H3 className="font-semibold text-green-600">
                     GQ1 - Premier (85-100)
-                  </div>
-                  <p className="text-gray-600">
+                  </H3>
+                  <Body className="text-gray-600">
                     Highest tier. Suitable for Tier 1 core agreements with
                     minimal security requirements.
-                  </p>
+                  </Body>
                 </div>
                 <div>
-                  <div className="font-semibold text-blue-600">
+                  <H3 className="font-semibold text-blue-600">
                     GQ2 - Qualified (70-84)
-                  </div>
-                  <p className="text-gray-600">
+                  </H3>
+                  <Body className="text-gray-600">
                     Strong growers suitable for Tier 1 or Tier 2 with moderate
                     security.
-                  </p>
+                  </Body>
                 </div>
                 <div>
-                  <div className="font-semibold text-yellow-600">
+                  <H3 className="font-semibold text-yellow-600">
                     GQ3 - Developing (55-69)
-                  </div>
-                  <p className="text-gray-600">
+                  </H3>
+                  <Body className="text-gray-600">
                     Emerging growers suitable for Tier 2 or options with
                     enhanced security.
-                  </p>
+                  </Body>
                 </div>
                 <div>
-                  <div className="font-semibold text-orange-600">
+                  <H3 className="font-semibold text-orange-600">
                     GQ4 - Provisional (&lt;55)
-                  </div>
-                  <p className="text-gray-600">
+                  </H3>
+                  <Body className="text-gray-600">
                     New or unproven growers. Require substantial security and
                     monitoring.
-                  </p>
+                  </Body>
                 </div>
               </CardContent>
             </Card>

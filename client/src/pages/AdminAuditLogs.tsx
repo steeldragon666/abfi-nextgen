@@ -70,6 +70,7 @@ import {
 import { Link } from "wouter";
 import { format, subDays } from "date-fns";
 import { cn } from "@/lib/utils";
+import { H1, Body, MetricValue } from "@/components/Typography";
 
 // Mock data
 const auditLogs = [
@@ -261,10 +262,10 @@ export default function AdminAuditLogs() {
                 </Button>
               </Link>
               <div>
-                <h1 className="text-2xl font-bold">Audit Logs</h1>
-                <p className="text-muted-foreground text-sm">
+                <H1 className="text-2xl">Audit Logs</H1>
+                <Body size="sm" className="text-muted-foreground">
                   System activity and security monitoring
-                </p>
+                </Body>
               </div>
             </div>
             <Button onClick={handleExport}>
@@ -286,8 +287,8 @@ export default function AdminAuditLogs() {
                   <Shield className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{auditLogs.length}</p>
-                  <p className="text-sm text-muted-foreground">Total Events</p>
+                  <MetricValue size="md">{auditLogs.length}</MetricValue>
+                  <Body size="sm" className="text-muted-foreground">Total Events</Body>
                 </div>
               </div>
             </CardContent>

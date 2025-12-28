@@ -29,6 +29,7 @@ import {
 import { Link, Redirect } from "wouter";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { H1, H3, Body, MetricValue } from "@/components/Typography";
 
 export default function AdminDashboard() {
   const { user, isAuthenticated, loading } = useAuth();
@@ -98,10 +99,10 @@ export default function AdminDashboard() {
             <Shield className="h-6 w-6 text-[#D4AF37]" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <p className="text-gray-600">
+            <H1 className="text-2xl">Admin Dashboard</H1>
+            <Body className="text-gray-600">
               Manage verifications and platform operations
-            </p>
+            </Body>
           </div>
         </div>
 
@@ -299,7 +300,7 @@ export default function AdminDashboard() {
                   <div className="p-3 rounded-full bg-success/10 w-fit mx-auto mb-4">
                     <CheckCircle2 className="h-8 w-8 text-success" />
                   </div>
-                  <h3 className="heading-3 mb-2">All Caught Up!</h3>
+                  <H3 className="mb-2">All Caught Up!</H3>
                   <p className="text-gray-600">
                     No pending supplier verifications
                   </p>
@@ -419,7 +420,7 @@ export default function AdminDashboard() {
                   <div className="p-3 rounded-full bg-success/10 w-fit mx-auto mb-4">
                     <CheckCircle2 className="h-8 w-8 text-success" />
                   </div>
-                  <h3 className="heading-3 mb-2">All Caught Up!</h3>
+                  <H3 className="mb-2">All Caught Up!</H3>
                   <p className="text-gray-600">
                     No pending feedstock verifications
                   </p>

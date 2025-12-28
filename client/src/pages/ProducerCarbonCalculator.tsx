@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { Checkbox } from "@/components/ui/checkbox";
+import { H1, H2, H3, Body, MetricValue } from "@/components/Typography";
 
 export default function ProducerCarbonCalculator() {
   const [, setLocation] = useLocation();
@@ -196,10 +197,10 @@ export default function ProducerCarbonCalculator() {
                   <form onSubmit={handleSubmit} className="space-y-8">
                     {/* Tillage Practices */}
                     <div className="space-y-4">
-                      <h3 className="flex items-center gap-2 text-lg font-semibold text-[#0F3A5C]">
+                      <H3 className="flex items-center gap-2 text-[#0F3A5C]">
                         Tillage Practices
                         <Info className="h-4 w-4 text-gray-400" />
-                      </h3>
+                      </H3>
 
                       <div className="space-y-2">
                         <Label>Primary Tillage Method *</Label>
@@ -235,9 +236,9 @@ export default function ProducerCarbonCalculator() {
 
                     {/* Fertilizer Management */}
                     <div className="space-y-4">
-                      <h3 className="flex items-center gap-2 text-lg font-semibold text-[#0F3A5C]">
+                      <H3 className="flex items-center gap-2 text-[#0F3A5C]">
                         Fertilizer Management
-                      </h3>
+                      </H3>
 
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
@@ -348,9 +349,9 @@ export default function ProducerCarbonCalculator() {
 
                     {/* Crop Protection */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                      <H3 className="text-[#0F3A5C]">
                         Crop Protection
-                      </h3>
+                      </H3>
 
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
@@ -423,9 +424,9 @@ export default function ProducerCarbonCalculator() {
 
                     {/* Machinery & Energy */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                      <H3 className="text-[#0F3A5C]">
                         Machinery & Energy
-                      </h3>
+                      </H3>
 
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
@@ -539,9 +540,9 @@ export default function ProducerCarbonCalculator() {
 
                     {/* Land Use & Sequestration */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                      <H3 className="text-[#0F3A5C]">
                         Land Use & Sequestration
-                      </h3>
+                      </H3>
 
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
@@ -692,14 +693,14 @@ export default function ProducerCarbonCalculator() {
                   </CardHeader>
                   <CardContent className="pt-6">
                     <div className="text-center">
-                      <div
-                        className={`mb-4 text-6xl font-bold ${carbonScore.color}`}
+                      <MetricValue
+                        className={`mb-4 ${carbonScore.color}`}
                       >
                         {carbonScore.rating || "—"}
-                      </div>
-                      <p className="mb-6 text-sm text-gray-600">
+                      </MetricValue>
+                      <Body className="mb-6 text-sm text-gray-600">
                         Carbon Intensity: {carbonScore.intensity} gCO₂e/MJ
-                      </p>
+                      </Body>
 
                       {carbonScore.rating && (
                         <div className="space-y-3">

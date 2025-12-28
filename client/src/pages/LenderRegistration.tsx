@@ -1,4 +1,5 @@
 import React, { useState, FormEvent } from 'react';
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // --- Design System Components ---
 
@@ -64,11 +65,11 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ title, children, isOpen, onToggle }) => (
   <div className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-    <div 
-      className="p-6 flex justify-between items-center cursor-pointer min-h-[48px]" 
+    <div
+      className="p-6 flex justify-between items-center cursor-pointer min-h-[48px]"
       onClick={onToggle}
     >
-      <h2 className="text-2xl font-semibold text-black">{title}</h2>
+      <H2 className="text-2xl font-semibold text-black">{title}</H2>
       <span className="text-black text-2xl">{isOpen ? '−' : '+'}</span>
     </div>
     {isOpen && (
@@ -165,10 +166,10 @@ const LenderRegistration: React.FC = () => {
     <div className="min-h-screen bg-gray-50 p-8 text-[18px]">
       <div className="max-w-4xl mx-auto">
         <header className="mb-8 space-y-2">
-          <h1 className="text-4xl font-semibold text-black">Lender Registration</h1>
-          <p className="text-gray-600">
+          <H1 className="text-4xl font-semibold text-black">Lender Registration</H1>
+          <Body className="text-gray-600">
             Please provide your institution's details, lending preferences, and compliance information.
-          </p>
+          </Body>
           <div className="pt-2">
             <StatusBadge status="Pending" />
           </div>

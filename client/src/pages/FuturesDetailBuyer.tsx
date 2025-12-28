@@ -35,6 +35,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { formatDate } from "@/const";
 import { PageLayout, PageContainer } from "@/components/layout";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 import {
   ArrowLeft,
   Calendar,
@@ -569,9 +570,9 @@ export default function FuturesDetailBuyer() {
                     {CROP_TYPE_LABELS[futures.cropType]}
                   </Badge>
                 </div>
-                <h1 className="text-2xl md:text-3xl font-display font-bold">
+                <H1 className="text-2xl md:text-3xl">
                   {futures.title}
-                </h1>
+                </H1>
                 <div className="flex items-center gap-2 mt-2 text-black/70">
                   <MapPin className="h-4 w-4" />
                   <span>
@@ -583,11 +584,11 @@ export default function FuturesDetailBuyer() {
             </div>
 
             <div className="lg:text-right">
-              <div className="text-sm text-black/70 mb-1">Total Available</div>
-              <div className="text-4xl md:text-5xl font-bold font-mono">
+              <DataLabel className="text-black/70 mb-1">Total Available</DataLabel>
+              <MetricValue className="text-4xl md:text-5xl">
                 {totalAvailable.toLocaleString()}
-              </div>
-              <div className="text-black/70">tonnes</div>
+              </MetricValue>
+              <DataLabel className="text-black/70">tonnes</DataLabel>
             </div>
           </div>
         </PageContainer>
@@ -609,29 +610,29 @@ export default function FuturesDetailBuyer() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-muted/50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">
+                    <DataLabel className="text-gray-600 mb-1">
                       Total Projected
-                    </p>
-                    <p className="text-2xl font-bold font-mono">
+                    </DataLabel>
+                    <MetricValue className="text-2xl">
                       {totalProjected.toLocaleString()}
-                    </p>
-                    <p className="text-xs text-gray-600">tonnes</p>
+                    </MetricValue>
+                    <DataLabel className="text-gray-600">tonnes</DataLabel>
                   </div>
                   <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">
+                    <DataLabel className="text-gray-600 mb-1">
                       Contracted
-                    </p>
-                    <p className="text-2xl font-bold text-blue-600 font-mono">
+                    </DataLabel>
+                    <MetricValue className="text-2xl text-blue-600">
                       {totalContracted.toLocaleString()}
-                    </p>
-                    <p className="text-xs text-gray-600">tonnes</p>
+                    </MetricValue>
+                    <DataLabel className="text-gray-600">tonnes</DataLabel>
                   </div>
                   <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <p className="text-sm text-green-600 mb-1">Available</p>
-                    <p className="text-2xl font-bold text-green-700 font-mono">
+                    <DataLabel className="text-green-600 mb-1">Available</DataLabel>
+                    <MetricValue className="text-2xl text-green-700">
                       {totalAvailable.toLocaleString()}
-                    </p>
-                    <p className="text-xs text-gray-600">tonnes</p>
+                    </MetricValue>
+                    <DataLabel className="text-gray-600">tonnes</DataLabel>
                   </div>
                 </div>
                 <div>
@@ -726,15 +727,15 @@ export default function FuturesDetailBuyer() {
                   </h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-gray-600">
+                      <DataLabel className="text-gray-600">
                         Indicative Price
-                      </p>
-                      <p className="text-2xl font-bold text-[#D4AF37] font-mono">
+                      </DataLabel>
+                      <MetricValue className="text-2xl text-[#D4AF37]">
                         {futures.indicativePricePerTonne
                           ? `$${parseFloat(futures.indicativePricePerTonne).toFixed(2)}`
                           : "Negotiable"}
-                      </p>
-                      <p className="text-xs text-gray-600">per tonne</p>
+                      </MetricValue>
+                      <DataLabel className="text-gray-600">per tonne</DataLabel>
                     </div>
                     <div>
                       <p className="text-sm text-gray-600">

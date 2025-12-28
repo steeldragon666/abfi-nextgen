@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 import {
   ArrowRight,
   Award,
@@ -78,9 +79,9 @@ function RatingScale() {
 
   return (
     <div className="bg-white rounded-xl p-6 text-black">
-      <h4 className="text-sm font-medium text-gray-500 mb-4">
+      <DataLabel className="mb-4">
         ABFI Rating Scale
-      </h4>
+      </DataLabel>
       <div className="space-y-2">
         {ratings.map(r => (
           <div key={r.rating} className="flex items-center gap-3">
@@ -167,20 +168,20 @@ export default function ForDevelopers() {
             </FadeInUp>
 
             <FadeInUp delay={0.1}>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
+              <H1 className="mb-6 leading-tight">
                 De-Risk Your Project With
                 <span className="block text-amber-300">
                   Bankable Supply Chains
                 </span>
-              </h1>
+              </H1>
             </FadeInUp>
 
             <FadeInUp delay={0.2}>
-              <p className="text-xl text-amber-100 mb-8 max-w-2xl">
+              <Body className="text-xl text-amber-100 mb-8 max-w-2xl">
                 Transform feedstock uncertainty into auditable, rated assets.
                 Give your lenders the confidence they need to fund your
                 bioenergy project.
-              </p>
+              </Body>
             </FadeInUp>
 
             <FadeInUp delay={0.3} className="flex flex-wrap gap-4">
@@ -230,15 +231,15 @@ export default function ForDevelopers() {
                 <AlertTriangle className="h-3 w-3 mr-1.5" />
                 The Problem
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">
+              <H2 className="mb-6">
                 Feedstock Risk Kills Bioenergy Deals
-              </h2>
+              </H2>
               <div className="space-y-4 text-gray-600">
-                <p>
+                <Body>
                   Lenders see biomass supply as the #1 risk factor in bioenergy
                   project finance. Without standardized assessment, every due
                   diligence is manual, inconsistent, and expensive.
-                </p>
+                </Body>
                 <ul className="space-y-3">
                   {[
                     "Supply agreements evaluated subjectively",
@@ -292,13 +293,13 @@ export default function ForDevelopers() {
             <Badge variant="outline" className="mb-4">
               5-Pillar Framework
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+            <H2 className="mb-4">
               Comprehensive Supply Chain Assessment
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            </H2>
+            <Body className="text-lg text-gray-600 max-w-2xl mx-auto">
               Each pillar is scored independently and weighted to produce your
               overall bankability rating.
-            </p>
+            </Body>
           </FadeInUp>
 
           <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
@@ -383,14 +384,14 @@ export default function ForDevelopers() {
               >
                 Institutional-Grade Ratings
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">
+              <H2 className="mb-6">
                 Ratings Lenders Understand
-              </h2>
-              <p className="text-lg text-gray-600 mb-6">
+              </H2>
+              <Body className="text-lg text-gray-600 mb-6">
                 Our AAA-CCC scale mirrors credit ratings that financial
                 institutions already use. No learning curve for your lending
                 team.
-              </p>
+              </Body>
               <ul className="space-y-4 mb-8">
                 {[
                   "Investment grade threshold at BBB",
@@ -423,12 +424,12 @@ export default function ForDevelopers() {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <FadeInUp className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+            <H2 className="mb-4">
               Your Path to Bankability
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            </H2>
+            <Body className="text-lg text-gray-600 max-w-2xl mx-auto">
               From supply discovery to lender-ready compliance packages.
-            </p>
+            </Body>
           </FadeInUp>
 
           <div className="max-w-4xl mx-auto">
@@ -482,11 +483,11 @@ export default function ForDevelopers() {
                     <div className="flex-1 pt-2">
                       <div className="flex items-center gap-3 mb-2">
                         <item.icon className="h-5 w-5 text-[#D4AF37]" />
-                        <h3 className="text-xl font-semibold">{item.title}</h3>
+                        <H3>{item.title}</H3>
                       </div>
-                      <p className="text-gray-600">
+                      <Body className="text-gray-600">
                         {item.description}
-                      </p>
+                      </Body>
                     </div>
                   </div>
                 </StaggerItem>
@@ -503,14 +504,14 @@ export default function ForDevelopers() {
             <Badge variant="outline" className="mb-4">
               Ongoing Compliance
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+            <H2 className="mb-4">
               Continuous Covenant Monitoring
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            </H2>
+            <Body className="text-lg text-gray-600 max-w-2xl mx-auto">
               Your bankability rating isn't just a point-in-time snapshot. We
               monitor continuously and alert you to changes before they become
               problems.
-            </p>
+            </Body>
           </FadeInUp>
 
           <StaggerContainer className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -559,28 +560,28 @@ export default function ForDevelopers() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold font-mono mb-2">
+              <MetricValue className="font-mono mb-2">
                 <AnimatedCounter value={45} suffix="+" />
-              </div>
-              <div className="text-amber-100">Projects Assessed</div>
+              </MetricValue>
+              <DataLabel className="text-amber-100">Projects Assessed</DataLabel>
             </div>
             <div>
-              <div className="text-4xl font-bold font-mono mb-2">
+              <MetricValue className="font-mono mb-2">
                 $<AnimatedCounter value={2.5} decimals={1} />B
-              </div>
-              <div className="text-amber-100">Financed Volume</div>
+              </MetricValue>
+              <DataLabel className="text-amber-100">Financed Volume</DataLabel>
             </div>
             <div>
-              <div className="text-4xl font-bold font-mono mb-2">
+              <MetricValue className="font-mono mb-2">
                 <AnimatedCounter value={92} suffix="%" />
-              </div>
-              <div className="text-amber-100">Lender Acceptance</div>
+              </MetricValue>
+              <DataLabel className="text-amber-100">Lender Acceptance</DataLabel>
             </div>
             <div>
-              <div className="text-4xl font-bold font-mono mb-2">
+              <MetricValue className="font-mono mb-2">
                 <AnimatedCounter value={30} suffix="%" />
-              </div>
-              <div className="text-amber-100">Faster Due Diligence</div>
+              </MetricValue>
+              <DataLabel className="text-amber-100">Faster Due Diligence</DataLabel>
             </div>
           </div>
         </div>
@@ -590,13 +591,13 @@ export default function ForDevelopers() {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <FadeInUp className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">
+            <H2 className="mb-6">
               Ready to Rate Your Supply Chain?
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
+            </H2>
+            <Body className="text-lg text-gray-600 mb-8">
               Start your bankability assessment today. Give your lenders the
               confidence they need.
-            </p>
+            </Body>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/bankability">
                 <Button

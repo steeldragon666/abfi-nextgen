@@ -27,6 +27,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Link } from "wouter";
+import { H1, H2, H3, Body, MetricValue } from "@/components/Typography";
 
 interface YieldRecord {
   year: number;
@@ -176,9 +177,9 @@ export default function ProducerProductionProfile() {
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Feedstock Type Selector */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                  <H3 className="text-[#0F3A5C]">
                     Feedstock Type *
-                  </h3>
+                  </H3>
                   <div className="grid gap-3 md:grid-cols-4">
                     {feedstockTypes.map(type => (
                       <button
@@ -202,9 +203,9 @@ export default function ProducerProductionProfile() {
 
                 {/* Current Season Status */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                  <H3 className="text-[#0F3A5C]">
                     Current Season (2024/25)
-                  </h3>
+                  </H3>
 
                   <div className="grid gap-4 md:grid-cols-3">
                     <div className="space-y-2">
@@ -279,9 +280,9 @@ export default function ProducerProductionProfile() {
                 {/* Historical Yield Data */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                    <H3 className="text-[#0F3A5C]">
                       Historical Yield Data
-                    </h3>
+                    </H3>
                     <Button
                       type="button"
                       variant="outline"
@@ -294,10 +295,10 @@ export default function ProducerProductionProfile() {
                     </Button>
                   </div>
 
-                  <p className="text-sm text-gray-600">
+                  <Body className="text-sm text-gray-600">
                     Provide at least 1 year of historical data. More years =
                     better buyer confidence.
-                  </p>
+                  </Body>
 
                   <div className="space-y-4">
                     {yieldHistory.map((record, index) => (
@@ -415,13 +416,13 @@ export default function ProducerProductionProfile() {
                     <div className="rounded-lg border border-[#F4C430]/30 bg-[#F4C430]/5 p-4">
                       <div className="flex items-center gap-2">
                         <TrendingUp className="h-5 w-5 text-[#F4C430]" />
-                        <span className="font-semibold text-[#0F3A5C]">
-                          Average Yield: {calculateAverageYield()} t/ha
-                        </span>
-                        <span className="text-sm text-gray-600">
+                        <Body className="font-semibold text-[#0F3A5C]">
+                          Average Yield: <MetricValue className="inline text-[#0F3A5C]">{calculateAverageYield()} t/ha</MetricValue>
+                        </Body>
+                        <Body className="text-sm text-gray-600">
                           (based on {yieldHistory.length}{" "}
                           {yieldHistory.length === 1 ? "year" : "years"})
-                        </span>
+                        </Body>
                       </div>
                     </div>
                   )}

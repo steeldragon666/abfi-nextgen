@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { AUSTRALIAN_STATES } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { PageLayout, PageContainer } from "@/components/layout";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 import {
   Search,
   Filter,
@@ -271,14 +272,14 @@ export default function FuturesMarketplace() {
               )}
             </div>
 
-            <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4">
+            <H1 className="mb-4">
               Futures Marketplace
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+            </H1>
+            <Body className="text-xl text-gray-600 mb-8 leading-relaxed">
               Secure long-term supply of sustainable perennial biomass. Browse
               verified futures listings and express interest in multi-year
               contracts with qualified growers.
-            </p>
+            </Body>
 
             <div className="flex flex-wrap gap-3">
               <Badge className="bg-white/10 text-black border-white/20 py-2 px-4">
@@ -298,30 +299,30 @@ export default function FuturesMarketplace() {
 
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-black">
+              <MetricValue className="text-black">
                 {totalListings}
-              </div>
-              <div className="text-sm text-gray-500 mt-1">Active Listings</div>
+              </MetricValue>
+              <DataLabel className="text-gray-500 mt-1">Active Listings</DataLabel>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-[#D4AF37]">
+              <MetricValue className="text-[#D4AF37]">
                 {(totalVolume / 1000).toFixed(0)}k
-              </div>
-              <div className="text-sm text-gray-500 mt-1">
+              </MetricValue>
+              <DataLabel className="text-gray-500 mt-1">
                 Tonnes Available
-              </div>
+              </DataLabel>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-black">
+              <MetricValue className="text-black">
                 ${avgPrice.toFixed(0)}
-              </div>
-              <div className="text-sm text-gray-500 mt-1">Avg Price/Tonne</div>
+              </MetricValue>
+              <DataLabel className="text-gray-500 mt-1">Avg Price/Tonne</DataLabel>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-black">
+              <MetricValue className="text-black">
                 {(totalHectares / 1000).toFixed(1)}k
-              </div>
-              <div className="text-sm text-gray-500 mt-1">Hectares</div>
+              </MetricValue>
+              <DataLabel className="text-gray-500 mt-1">Hectares</DataLabel>
             </div>
           </div>
         </PageContainer>
@@ -593,13 +594,13 @@ export default function FuturesMarketplace() {
             <CardContent className="py-8">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">
+                  <H3 className="mb-2">
                     Are you a biomass producer?
-                  </h3>
-                  <p className="text-gray-600">
+                  </H3>
+                  <Body className="text-gray-600">
                     List your perennial crop futures and connect with verified
                     buyers seeking long-term supply.
-                  </p>
+                  </Body>
                 </div>
                 <div className="flex gap-3">
                   <Button variant="outline" asChild>

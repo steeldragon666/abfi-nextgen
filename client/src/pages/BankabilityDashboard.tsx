@@ -32,6 +32,7 @@ import {
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { ScoreGauge } from "@/components/ScoreCard";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // Mock data for demonstration
 const MOCK_PROJECTS = [
@@ -230,13 +231,13 @@ export default function BankabilityDashboard() {
                 )}
               </div>
 
-              <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4">
+              <H1 className="text-4xl lg:text-5xl font-display font-bold mb-4">
                 Bankability Dashboard
-              </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
+              </H1>
+              <Body className="text-xl text-gray-600 leading-relaxed">
                 Manage bioenergy projects, track supply chain integrity, and
                 generate investment-grade bankability assessments.
-              </p>
+              </Body>
             </div>
 
             <div className="shrink-0">
@@ -255,28 +256,28 @@ export default function BankabilityDashboard() {
           {/* Stats Row */}
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-black">
+              <MetricValue className="text-3xl font-bold font-mono text-black">
                 {projects.length}
-              </div>
-              <div className="text-sm text-gray-500 mt-1">Active Projects</div>
+              </MetricValue>
+              <DataLabel className="text-sm text-gray-500 mt-1">Active Projects</DataLabel>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-blue-400">
+              <MetricValue className="text-3xl font-bold font-mono text-blue-400">
                 {totalCapacity}
-              </div>
-              <div className="text-sm text-gray-500 mt-1">Total MW</div>
+              </MetricValue>
+              <DataLabel className="text-sm text-gray-500 mt-1">Total MW</DataLabel>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-black">
+              <MetricValue className="text-3xl font-bold font-mono text-black">
                 {avgRating.toFixed(0)}
-              </div>
-              <div className="text-sm text-gray-500 mt-1">Avg Score</div>
+              </MetricValue>
+              <DataLabel className="text-sm text-gray-500 mt-1">Avg Score</DataLabel>
             </div>
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-              <div className="text-3xl font-bold font-mono text-black">
+              <MetricValue className="text-3xl font-bold font-mono text-black">
                 {totalSuppliers}
-              </div>
-              <div className="text-sm text-gray-500 mt-1">Suppliers</div>
+              </MetricValue>
+              <DataLabel className="text-sm text-gray-500 mt-1">Suppliers</DataLabel>
             </div>
           </div>
         </PageContainer>
@@ -383,56 +384,56 @@ export default function BankabilityDashboard() {
                     {/* Key Metrics */}
                     <div className="grid md:grid-cols-4 gap-4">
                       <div className="p-3 rounded-lg bg-muted/50">
-                        <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                        <DataLabel className="text-xs font-medium text-gray-600 uppercase tracking-wide">
                           Capacity
-                        </p>
-                        <p className="font-semibold font-mono text-lg mt-1">
+                        </DataLabel>
+                        <MetricValue className="font-semibold font-mono text-lg mt-1">
                           {project.nameplateCapacity?.toLocaleString()}{" "}
                           <span className="text-gray-600 text-sm">
                             MW
                           </span>
-                        </p>
+                        </MetricValue>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50">
-                        <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                        <DataLabel className="text-xs font-medium text-gray-600 uppercase tracking-wide">
                           Target COD
-                        </p>
-                        <p className="font-semibold text-lg mt-1">
+                        </DataLabel>
+                        <MetricValue className="font-semibold text-lg mt-1">
                           {project.targetCOD
                             ? new Date(project.targetCOD).toLocaleDateString(
                                 "en-AU",
                                 { month: "short", year: "numeric" }
                               )
                             : "TBD"}
-                        </p>
+                        </MetricValue>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50">
-                        <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                        <DataLabel className="text-xs font-medium text-gray-600 uppercase tracking-wide">
                           Debt Tenor
-                        </p>
-                        <p className="font-semibold font-mono text-lg mt-1">
+                        </DataLabel>
+                        <MetricValue className="font-semibold font-mono text-lg mt-1">
                           {project.debtTenor
                             ? `${project.debtTenor} years`
                             : "TBD"}
-                        </p>
+                        </MetricValue>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50">
-                        <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                        <DataLabel className="text-xs font-medium text-gray-600 uppercase tracking-wide">
                           Suppliers
-                        </p>
-                        <p className="font-semibold font-mono text-lg mt-1">
+                        </DataLabel>
+                        <MetricValue className="font-semibold font-mono text-lg mt-1">
                           {project.supplierCount || 0}
-                        </p>
+                        </MetricValue>
                       </div>
                     </div>
 
                     {/* Supply Position */}
                     <div className="p-4 rounded-xl bg-muted/30 border space-y-4">
                       <div className="flex justify-between items-center">
-                        <h4 className="font-semibold flex items-center gap-2">
+                        <H3 className="font-semibold flex items-center gap-2">
                           <Activity className="h-4 w-4 text-[#D4AF37]" />
                           Supply Position
-                        </h4>
+                        </H3>
                         <Badge variant="outline" className="text-xs">
                           Target: 150% coverage
                         </Badge>
@@ -441,59 +442,59 @@ export default function BankabilityDashboard() {
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">
+                            <DataLabel className="text-gray-600">
                               Primary Coverage (Tier 1)
-                            </span>
-                            <span className="font-medium font-mono">
+                            </DataLabel>
+                            <MetricValue className="font-medium font-mono">
                               {project.primaryCoverage || 0}% / 120%
-                            </span>
+                            </MetricValue>
                           </div>
                           <Progress
                             value={(project.primaryCoverage || 0) / 1.2}
                             className="h-2"
                           />
-                          <p className="text-xs text-gray-600">
+                          <Body className="text-xs text-gray-600">
                             Long-term take-or-pay contracts
-                          </p>
+                          </Body>
                         </div>
 
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">
+                            <DataLabel className="text-gray-600">
                               Secondary Coverage (Tier 2)
-                            </span>
-                            <span className="font-medium font-mono">
+                            </DataLabel>
+                            <MetricValue className="font-medium font-mono">
                               {project.secondaryCoverage || 0}% / 30%
-                            </span>
+                            </MetricValue>
                           </div>
                           <Progress
                             value={(project.secondaryCoverage || 0) / 0.3}
                             className="h-2"
                           />
-                          <p className="text-xs text-gray-600">
+                          <Body className="text-xs text-gray-600">
                             Contingent supply options
-                          </p>
+                          </Body>
                         </div>
                       </div>
 
                       <div className="pt-3 border-t flex items-center justify-between">
-                        <span className="text-sm text-gray-600">
+                        <DataLabel className="text-sm text-gray-600">
                           Total Contracted Volume
-                        </span>
-                        <span className="font-semibold font-mono text-[#D4AF37]">
+                        </DataLabel>
+                        <MetricValue className="font-semibold font-mono text-[#D4AF37]">
                           {(project.totalContracted || 0).toLocaleString()}{" "}
                           tonnes/year
-                        </span>
+                        </MetricValue>
                       </div>
                     </div>
 
                     {/* 5-Pillar Assessment */}
                     {project.bankabilityScore && (
                       <div className="p-4 rounded-xl border space-y-4">
-                        <h4 className="font-semibold flex items-center gap-2">
+                        <H3 className="font-semibold flex items-center gap-2">
                           <Shield className="h-4 w-4 text-[#D4AF37]" />
                           5-Pillar Bankability Assessment
-                        </h4>
+                        </H3>
                         <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                           <div className="text-center col-span-2 md:col-span-1">
                             <ScoreGauge
@@ -535,12 +536,12 @@ export default function BankabilityDashboard() {
                               key={pillar.label}
                               className="text-center p-3 rounded-lg bg-muted/30"
                             >
-                              <div className="text-2xl font-bold font-mono">
+                              <MetricValue className="text-2xl font-bold font-mono">
                                 {pillar.score || "--"}
-                              </div>
-                              <div className="text-xs text-gray-600">
+                              </MetricValue>
+                              <DataLabel className="text-xs text-gray-600">
                                 {pillar.label} ({pillar.weight})
-                              </div>
+                              </DataLabel>
                             </div>
                           ))}
                         </div>
@@ -609,13 +610,13 @@ export default function BankabilityDashboard() {
             <CardContent className="py-8">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">
+                  <H3 className="text-xl font-semibold mb-2">
                     Need to secure feedstock supply?
-                  </h3>
-                  <p className="text-gray-600">
+                  </H3>
+                  <Body className="text-gray-600">
                     Browse our marketplace of verified futures listings from
                     qualified growers across Australia.
-                  </p>
+                  </Body>
                 </div>
                 <div className="flex gap-3">
                   <Button variant="outline" asChild>

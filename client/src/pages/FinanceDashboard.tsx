@@ -48,6 +48,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // Quick stats
 const QUICK_STATS = [
@@ -206,7 +207,7 @@ export default function FinanceDashboard() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-2xl font-bold">{stat.value}</p>
+                    <MetricValue>{stat.value}</MetricValue>
                     <Badge
                       variant="outline"
                       className={cn(
@@ -224,7 +225,7 @@ export default function FinanceDashboard() {
                       {stat.change}
                     </Badge>
                   </div>
-                  <p className="text-xs text-gray-600">{stat.label}</p>
+                  <DataLabel>{stat.label}</DataLabel>
                 </div>
               </div>
             ))}
@@ -302,10 +303,10 @@ export default function FinanceDashboard() {
                                 )}
                               </div>
                               <div>
-                                <p className="font-medium text-sm">{alert.title}</p>
-                                <p className="text-xs text-gray-600 mt-0.5">
+                                <Body className="font-medium text-sm">{alert.title}</Body>
+                                <Body className="text-xs text-gray-600 mt-0.5">
                                   {alert.entity} · Score: {alert.entityScore}
-                                </p>
+                                </Body>
                               </div>
                             </div>
                             <div className="text-right shrink-0">
@@ -348,13 +349,13 @@ export default function FinanceDashboard() {
                             )}
                           />
                           <div>
-                            <p className="text-sm font-medium">{entity.name}</p>
-                            <p className="text-xs text-gray-600">{entity.signals} signals</p>
+                            <Body className="text-sm font-medium">{entity.name}</Body>
+                            <Body className="text-xs text-gray-600">{entity.signals} signals</Body>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm font-bold">{entity.score}</p>
-                          <p
+                          <MetricValue className="text-sm">{entity.score}</MetricValue>
+                          <Body
                             className={cn(
                               "text-xs",
                               entity.change > 0 ? "text-[#D4AF37]" : "text-red-600"
@@ -362,7 +363,7 @@ export default function FinanceDashboard() {
                           >
                             {entity.change > 0 ? "+" : ""}
                             {entity.change}
-                          </p>
+                          </Body>
                         </div>
                       </div>
                     ))}
@@ -381,7 +382,7 @@ export default function FinanceDashboard() {
 
             {/* Intelligence Tools */}
             <div>
-              <h2 className="text-lg font-semibold mb-4">Intelligence Tools</h2>
+              <H2 className="mb-4">Intelligence Tools</H2>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {INTELLIGENCE_TOOLS.map((tool) => (
                   <Link key={tool.id} href={tool.href}>
@@ -455,8 +456,8 @@ export default function FinanceDashboard() {
                               )}
                             </div>
                             <div>
-                              <p className="font-medium">{alert.title}</p>
-                              <p className="text-sm text-gray-600 mt-1">{alert.description}</p>
+                              <Body className="font-medium">{alert.title}</Body>
+                              <Body className="text-sm text-gray-600 mt-1">{alert.description}</Body>
                               <div className="flex items-center gap-3 mt-2 text-xs text-gray-600">
                                 <span className="flex items-center gap-1">
                                   <Building2 className="h-3 w-3" />
@@ -521,20 +522,20 @@ export default function FinanceDashboard() {
                           )}
                         />
                         <div>
-                          <p className="font-medium">{entity.name}</p>
-                          <p className="text-sm text-gray-600">{entity.signals} active signals</p>
+                          <Body className="font-medium">{entity.name}</Body>
+                          <Body className="text-sm text-gray-600">{entity.signals} active signals</Body>
                         </div>
                       </div>
                       <div className="flex items-center gap-6">
                         <div>
-                          <p className="text-sm text-gray-600">Score</p>
-                          <p className="text-lg font-bold">{entity.score}</p>
+                          <DataLabel className="text-sm">Score</DataLabel>
+                          <MetricValue className="text-lg">{entity.score}</MetricValue>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-600">Change</p>
-                          <p
+                          <DataLabel className="text-sm">Change</DataLabel>
+                          <MetricValue
                             className={cn(
-                              "text-lg font-bold flex items-center",
+                              "text-lg flex items-center",
                               entity.change > 0 ? "text-[#D4AF37]" : entity.change < 0 ? "text-red-600" : ""
                             )}
                           >
@@ -546,7 +547,7 @@ export default function FinanceDashboard() {
                               <Minus className="h-4 w-4" />
                             )}
                             {Math.abs(entity.change)}
-                          </p>
+                          </MetricValue>
                         </div>
                         <Progress value={entity.score} className="w-24" />
                         <Button variant="outline" size="sm">
@@ -605,10 +606,10 @@ export default function FinanceDashboard() {
                         <div className="flex items-center gap-3">
                           <FileText className="h-5 w-5 text-gray-600" />
                           <div>
-                            <p className="font-medium text-sm">{report.name}</p>
-                            <p className="text-xs text-gray-600">
+                            <Body className="font-medium text-sm">{report.name}</Body>
+                            <Body className="text-xs text-gray-600">
                               {report.type} · {report.date}
-                            </p>
+                            </Body>
                           </div>
                         </div>
                         <Button variant="ghost" size="sm">

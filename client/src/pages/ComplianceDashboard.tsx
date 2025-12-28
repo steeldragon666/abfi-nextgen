@@ -25,6 +25,7 @@ import {
   FileText,
   Download,
 } from "lucide-react";
+import { H1, H3, Body, MetricValue } from "@/components/Typography";
 
 export default function ComplianceDashboard() {
   const currentQuarter = trpc.complianceReporting.getCurrentQuarter.useQuery();
@@ -75,10 +76,10 @@ export default function ComplianceDashboard() {
   return (
     <div className="container py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Compliance Dashboard</h1>
-        <p className="text-gray-600">
+        <H1 className="text-3xl mb-2">Compliance Dashboard</H1>
+        <Body className="text-gray-600">
           Quarterly compliance reports with governance metrics
-        </p>
+        </Body>
       </div>
 
       {/* Period Selector */}

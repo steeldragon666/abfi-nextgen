@@ -15,6 +15,7 @@ import {
   Leaf,
   Shield,
 } from "lucide-react";
+import { H1, H2, H3, Body } from "@/components/Typography";
 
 export default function ProducerRegistration() {
   return (
@@ -48,16 +49,16 @@ export default function ProducerRegistration() {
       {/* Hero Section */}
       <section className="py-20">
         <div className="container mx-auto text-center">
-          <h1 className="mb-6 text-5xl font-bold text-black">
+          <H1 className="mb-6 text-black">
             Connect Your Feedstock to
             <br />
             <span className="text-[#F4C430]">Australia's Bioenergy Future</span>
-          </h1>
-          <p className="mx-auto mb-12 max-w-2xl text-xl text-black/80">
+          </H1>
+          <Body className="mx-auto mb-12 max-w-2xl text-xl text-black/80">
             Join Australia's premier bioenergy feedstock marketplace. Get
             verified ABFI ratings, connect with premium buyers, and secure
             long-term contracts.
-          </p>
+          </Body>
 
           <Link href="/producer-registration/account-setup">
             <Button
@@ -102,9 +103,9 @@ export default function ProducerRegistration() {
       {/* Value Propositions */}
       <section className="bg-white py-20">
         <div className="container mx-auto">
-          <h2 className="mb-12 text-center text-3xl font-bold text-[#0F3A5C]">
+          <H2 className="mb-12 text-center text-[#0F3A5C]">
             Why Join ABFI?
-          </h2>
+          </H2>
 
           <div className="grid gap-8 md:grid-cols-3">
             <Card className="border-[#F4C430]/20 hover:border-[#F4C430] transition-colors">
@@ -167,48 +168,48 @@ export default function ProducerRegistration() {
       {/* How It Works */}
       <section className="bg-gray-50 py-20">
         <div className="container mx-auto">
-          <h2 className="mb-12 text-center text-3xl font-bold text-[#0F3A5C]">
+          <H2 className="mb-12 text-center text-[#0F3A5C]">
             Get Started in 3 Simple Steps
-          </h2>
+          </H2>
 
           <div className="grid gap-8 md:grid-cols-3">
             <div className="text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#F4C430] text-2xl font-bold text-[#0F3A5C]">
                 1
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-[#0F3A5C]">
+              <H3 className="mb-2 text-[#0F3A5C]">
                 Register Your Property
-              </h3>
-              <p className="text-gray-600">
+              </H3>
+              <Body className="text-gray-600">
                 Provide basic details about your property, production capacity,
                 and agricultural practices.
-              </p>
+              </Body>
             </div>
 
             <div className="text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#F4C430] text-2xl font-bold text-[#0F3A5C]">
                 2
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-[#0F3A5C]">
+              <H3 className="mb-2 text-[#0F3A5C]">
                 Get Your ABFI Rating
-              </h3>
-              <p className="text-gray-600">
+              </H3>
+              <Body className="text-gray-600">
                 Our carbon calculator analyzes your practices and assigns a
                 sustainability rating (A+ to D).
-              </p>
+              </Body>
             </div>
 
             <div className="text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#F4C430] text-2xl font-bold text-[#0F3A5C]">
                 3
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-[#0F3A5C]">
+              <H3 className="mb-2 text-[#0F3A5C]">
                 Publish to Marketplace
-              </h3>
-              <p className="text-gray-600">
+              </H3>
+              <Body className="text-gray-600">
                 Set your pricing, contract terms, and start receiving inquiries
                 from verified buyers.
-              </p>
+              </Body>
             </div>
           </div>
 

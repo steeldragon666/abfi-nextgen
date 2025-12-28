@@ -25,6 +25,7 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 export default function BankabilityAssessment() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -282,13 +283,13 @@ export default function BankabilityAssessment() {
                         <Label className="font-semibold">
                           Volume Security (30%)
                         </Label>
-                        <p className="text-xs text-gray-600 mt-1">
+                        <Body className="text-xs text-gray-600 mt-1">
                           Tier 1 coverage, total secured volume, flex bands
-                        </p>
+                        </Body>
                       </div>
-                      <span className="text-sm font-medium">
+                      <MetricValue className="text-sm font-medium">
                         {volumeSecurityScore}/100
-                      </span>
+                      </MetricValue>
                     </div>
                     <Slider
                       value={[volumeSecurityScore]}
@@ -306,14 +307,14 @@ export default function BankabilityAssessment() {
                         <Label className="font-semibold">
                           Counterparty Quality (25%)
                         </Label>
-                        <p className="text-xs text-gray-600 mt-1">
+                        <Body className="text-xs text-gray-600 mt-1">
                           Grower qualifications, financial strength, track
                           record
-                        </p>
+                        </Body>
                       </div>
-                      <span className="text-sm font-medium">
+                      <MetricValue className="text-sm font-medium">
                         {counterpartyQualityScore}/100
-                      </span>
+                      </MetricValue>
                     </div>
                     <Slider
                       value={[counterpartyQualityScore]}
@@ -331,14 +332,14 @@ export default function BankabilityAssessment() {
                         <Label className="font-semibold">
                           Contract Structure (20%)
                         </Label>
-                        <p className="text-xs text-gray-600 mt-1">
+                        <Body className="text-xs text-gray-600 mt-1">
                           Take-or-pay terms, pricing mechanisms, security
                           packages
-                        </p>
+                        </Body>
                       </div>
-                      <span className="text-sm font-medium">
+                      <MetricValue className="text-sm font-medium">
                         {contractStructureScore}/100
-                      </span>
+                      </MetricValue>
                     </div>
                     <Slider
                       value={[contractStructureScore]}
@@ -356,14 +357,14 @@ export default function BankabilityAssessment() {
                         <Label className="font-semibold">
                           Concentration Risk (15%)
                         </Label>
-                        <p className="text-xs text-gray-600 mt-1">
+                        <Body className="text-xs text-gray-600 mt-1">
                           Supplier HHI, geographic diversity, single event
                           exposure
-                        </p>
+                        </Body>
                       </div>
-                      <span className="text-sm font-medium">
+                      <MetricValue className="text-sm font-medium">
                         {concentrationRiskScore}/100
-                      </span>
+                      </MetricValue>
                     </div>
                     <Slider
                       value={[concentrationRiskScore]}
@@ -381,13 +382,13 @@ export default function BankabilityAssessment() {
                         <Label className="font-semibold">
                           Operational Readiness (10%)
                         </Label>
-                        <p className="text-xs text-gray-600 mt-1">
+                        <Body className="text-xs text-gray-600 mt-1">
                           Project status, timeline, regulatory approvals
-                        </p>
+                        </Body>
                       </div>
-                      <span className="text-sm font-medium">
+                      <MetricValue className="text-sm font-medium">
                         {operationalReadinessScore}/100
-                      </span>
+                      </MetricValue>
                     </div>
                     <Slider
                       value={[operationalReadinessScore]}
@@ -468,35 +469,35 @@ export default function BankabilityAssessment() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center py-6">
-                  <div className={`text-6xl font-bold mb-2 ${rating.color}`}>
+                  <MetricValue className={`text-6xl font-bold mb-2 ${rating.color}`}>
                     {rating.rating}
-                  </div>
-                  <div className="text-sm text-gray-600 mb-1">
+                  </MetricValue>
+                  <DataLabel className="text-sm text-gray-600 mb-1">
                     Composite Score: {compositeScore}/100
-                  </div>
-                  <div className="text-sm font-medium">
+                  </DataLabel>
+                  <Body className="text-sm font-medium">
                     {rating.description}
-                  </div>
+                  </Body>
                 </div>
 
                 <div className="space-y-3 text-sm">
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-gray-600">
+                      <DataLabel className="text-gray-600">
                         Volume Security
-                      </span>
-                      <span className="font-medium">{volumeSecurityScore}</span>
+                      </DataLabel>
+                      <MetricValue className="font-medium">{volumeSecurityScore}</MetricValue>
                     </div>
                     <Progress value={volumeSecurityScore} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-gray-600">
+                      <DataLabel className="text-gray-600">
                         Counterparty Quality
-                      </span>
-                      <span className="font-medium">
+                      </DataLabel>
+                      <MetricValue className="font-medium">
                         {counterpartyQualityScore}
-                      </span>
+                      </MetricValue>
                     </div>
                     <Progress
                       value={counterpartyQualityScore}
@@ -505,34 +506,34 @@ export default function BankabilityAssessment() {
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-gray-600">
+                      <DataLabel className="text-gray-600">
                         Contract Structure
-                      </span>
-                      <span className="font-medium">
+                      </DataLabel>
+                      <MetricValue className="font-medium">
                         {contractStructureScore}
-                      </span>
+                      </MetricValue>
                     </div>
                     <Progress value={contractStructureScore} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-gray-600">
+                      <DataLabel className="text-gray-600">
                         Concentration Risk
-                      </span>
-                      <span className="font-medium">
+                      </DataLabel>
+                      <MetricValue className="font-medium">
                         {concentrationRiskScore}
-                      </span>
+                      </MetricValue>
                     </div>
                     <Progress value={concentrationRiskScore} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-gray-600">
+                      <DataLabel className="text-gray-600">
                         Operational Readiness
-                      </span>
-                      <span className="font-medium">
+                      </DataLabel>
+                      <MetricValue className="font-medium">
                         {operationalReadinessScore}
-                      </span>
+                      </MetricValue>
                     </div>
                     <Progress
                       value={operationalReadinessScore}
@@ -552,36 +553,36 @@ export default function BankabilityAssessment() {
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">
+                  <DataLabel className="text-gray-600">
                     Total Agreements
-                  </span>
-                  <span className="font-medium">
+                  </DataLabel>
+                  <MetricValue className="font-medium">
                     {supplyMetrics.totalAgreements}
-                  </span>
+                  </MetricValue>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Tier 1 Coverage</span>
-                  <span className="font-medium">
+                  <DataLabel className="text-gray-600">Tier 1 Coverage</DataLabel>
+                  <MetricValue className="font-medium">
                     {supplyMetrics.tier1Percent}%
-                  </span>
+                  </MetricValue>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Tier 2 Coverage</span>
-                  <span className="font-medium">
+                  <DataLabel className="text-gray-600">Tier 2 Coverage</DataLabel>
+                  <MetricValue className="font-medium">
                     {supplyMetrics.tier2Percent}%
-                  </span>
+                  </MetricValue>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Options</span>
-                  <span className="font-medium">
+                  <DataLabel className="text-gray-600">Options</DataLabel>
+                  <MetricValue className="font-medium">
                     {supplyMetrics.optionsPercent}%
-                  </span>
+                  </MetricValue>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">ROFR</span>
-                  <span className="font-medium">
+                  <DataLabel className="text-gray-600">ROFR</DataLabel>
+                  <MetricValue className="font-medium">
                     {supplyMetrics.rofrPercent}%
-                  </span>
+                  </MetricValue>
                 </div>
               </CardContent>
             </Card>
@@ -595,33 +596,33 @@ export default function BankabilityAssessment() {
                   <Badge className="bg-green-100 text-green-800 mb-1">
                     AAA-AA
                   </Badge>
-                  <p className="text-gray-600">
+                  <Body className="text-gray-600">
                     Exceptional to very strong (85-100)
-                  </p>
+                  </Body>
                 </div>
                 <div>
                   <Badge className="bg-blue-100 text-blue-800 mb-1">
                     A-BBB
                   </Badge>
-                  <p className="text-gray-600">
+                  <Body className="text-gray-600">
                     Strong to good (70-84)
-                  </p>
+                  </Body>
                 </div>
                 <div>
                   <Badge className="bg-yellow-100 text-yellow-800 mb-1">
                     BB
                   </Badge>
-                  <p className="text-gray-600">Adequate (60-69)</p>
+                  <Body className="text-gray-600">Adequate (60-69)</Body>
                 </div>
                 <div>
                   <Badge className="bg-orange-100 text-orange-800 mb-1">
                     B
                   </Badge>
-                  <p className="text-gray-600">Marginal (50-59)</p>
+                  <Body className="text-gray-600">Marginal (50-59)</Body>
                 </div>
                 <div>
                   <Badge className="bg-red-100 text-red-800 mb-1">CCC</Badge>
-                  <p className="text-gray-600">Weak (&lt;50)</p>
+                  <Body className="text-gray-600">Weak (&lt;50)</Body>
                 </div>
               </CardContent>
             </Card>

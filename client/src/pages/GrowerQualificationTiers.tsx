@@ -25,6 +25,7 @@ import {
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { PageLayout } from "@/components/layout";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // Grower Qualification Tier Component
 function GQTierCard({
@@ -151,14 +152,14 @@ export default function GrowerQualificationTiers() {
               <Shield className="h-3.5 w-3.5 mr-1.5" />
               Grower Qualification System
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-display font-bold mb-6">
+            <H1 className="text-4xl md:text-5xl font-display font-bold mb-6">
               GQ Tier System
-            </h1>
-            <p className="text-lg md:text-xl text-emerald-100 mb-8">
+            </H1>
+            <Body className="text-lg md:text-xl text-emerald-100 mb-8">
               Our standardized qualification framework helps growers demonstrate
               operational maturity and unlock better pricing, buyer access, and
               financing opportunities.
-            </p>
+            </Body>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/producer-registration">
                 <Button size="lg" className="bg-white text-emerald-800 hover:bg-white/90">
@@ -181,20 +182,20 @@ export default function GrowerQualificationTiers() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#D4AF37]">4</div>
-              <div className="text-sm text-gray-600">Qualification Tiers</div>
+              <MetricValue className="text-3xl font-bold text-[#D4AF37]">4</MetricValue>
+              <DataLabel className="text-sm text-gray-600">Qualification Tiers</DataLabel>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#D4AF37]">15%</div>
-              <div className="text-sm text-gray-600">Price Premium at GQ1</div>
+              <MetricValue className="text-3xl font-bold text-[#D4AF37]">15%</MetricValue>
+              <DataLabel className="text-sm text-gray-600">Price Premium at GQ1</DataLabel>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#D4AF37]">100+</div>
-              <div className="text-sm text-gray-600">Verified Growers</div>
+              <MetricValue className="text-3xl font-bold text-[#D4AF37]">100+</MetricValue>
+              <DataLabel className="text-sm text-gray-600">Verified Growers</DataLabel>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#D4AF37]">24hr</div>
-              <div className="text-sm text-gray-600">Verification Time</div>
+              <MetricValue className="text-3xl font-bold text-[#D4AF37]">24hr</MetricValue>
+              <DataLabel className="text-sm text-gray-600">Verification Time</DataLabel>
             </div>
           </div>
         </div>
@@ -204,13 +205,13 @@ export default function GrowerQualificationTiers() {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-display font-bold mb-4">
+            <H2 className="text-3xl font-display font-bold mb-4">
               Your Path to GQ1 Status
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            </H2>
+            <Body className="text-lg text-gray-600 max-w-2xl mx-auto">
               Progress through standardized tiers as you demonstrate operational
               maturity. Higher tiers unlock better pricing and buyer access.
-            </p>
+            </Body>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
@@ -295,13 +296,13 @@ export default function GrowerQualificationTiers() {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-display font-bold mb-4">
+            <H2 className="text-3xl font-display font-bold mb-4">
               How Qualification Works
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            </H2>
+            <Body className="text-lg text-gray-600 max-w-2xl mx-auto">
               Our assessment process is transparent and designed to help you
               progress through tiers efficiently.
-            </p>
+            </Body>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -310,11 +311,11 @@ export default function GrowerQualificationTiers() {
                 <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
                   <FileCheck className="h-6 w-6 text-[#D4AF37]" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">1. Register & Submit</h3>
-                <p className="text-sm text-gray-600">
+                <H3 className="text-lg font-semibold mb-2">1. Register & Submit</H3>
+                <Body className="text-sm text-gray-600">
                   Complete your producer registration with ABN verification,
                   property details, and initial documentation.
-                </p>
+                </Body>
               </CardContent>
             </Card>
             <Card>
@@ -322,11 +323,11 @@ export default function GrowerQualificationTiers() {
                 <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
                   <BarChart3 className="h-6 w-6 text-[#D4AF37]" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">2. Build Track Record</h3>
-                <p className="text-sm text-gray-600">
+                <H3 className="text-lg font-semibold mb-2">2. Build Track Record</H3>
+                <Body className="text-sm text-gray-600">
                   Deliver quality feedstock, maintain certifications, and
                   accumulate verified operational history.
-                </p>
+                </Body>
               </CardContent>
             </Card>
             <Card>
@@ -334,11 +335,11 @@ export default function GrowerQualificationTiers() {
                 <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
                   <TrendingUp className="h-6 w-6 text-[#D4AF37]" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">3. Progress & Unlock</h3>
-                <p className="text-sm text-gray-600">
+                <H3 className="text-lg font-semibold mb-2">3. Progress & Unlock</H3>
+                <Body className="text-sm text-gray-600">
                   As you meet tier requirements, automatically unlock better
                   pricing, buyer access, and financing options.
-                </p>
+                </Body>
               </CardContent>
             </Card>
           </div>
@@ -350,13 +351,13 @@ export default function GrowerQualificationTiers() {
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-2xl mx-auto">
             <Leaf className="h-12 w-12 mx-auto mb-6 text-emerald-300" />
-            <h2 className="text-3xl font-display font-bold mb-4">
+            <H2 className="text-3xl font-display font-bold mb-4">
               Ready to Get Qualified?
-            </h2>
-            <p className="text-lg text-emerald-100 mb-8">
+            </H2>
+            <Body className="text-lg text-emerald-100 mb-8">
               Join Australia's growing network of qualified biomass producers.
               Start your registration today and begin your path to GQ1 status.
-            </p>
+            </Body>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/producer-registration">
                 <Button size="lg" className="bg-white text-emerald-800 hover:bg-white/90">

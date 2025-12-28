@@ -93,6 +93,7 @@ import {
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { H1, Body, MetricValue } from "@/components/Typography";
 
 // Role definitions with icons and colors
 const ROLES = [
@@ -274,13 +275,13 @@ export default function AdminUserManagement() {
                 </Button>
               </Link>
               <div>
-                <h1 className="text-2xl font-bold flex items-center gap-2">
+                <H1 className="text-2xl flex items-center gap-2">
                   <Users className="h-6 w-6" />
                   User Management
-                </h1>
-                <p className="text-muted-foreground text-sm">
+                </H1>
+                <Body size="sm" className="text-muted-foreground">
                   Manage user accounts, roles, and permissions
-                </p>
+                </Body>
               </div>
             </div>
             <div className="flex gap-2">
@@ -366,8 +367,8 @@ export default function AdminUserManagement() {
                   <Users className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{stats.total}</p>
-                  <p className="text-sm text-muted-foreground">Total Users</p>
+                  <MetricValue size="md">{stats.total}</MetricValue>
+                  <Body size="sm" className="text-muted-foreground">Total Users</Body>
                 </div>
               </div>
             </CardContent>

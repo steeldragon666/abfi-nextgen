@@ -34,6 +34,7 @@ import {
 import { PageLayout } from "@/components/layout";
 import { trpc } from "@/lib/trpc";
 import { formatDate } from "@/const";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 import {
   ArrowLeft,
   Calendar,
@@ -713,9 +714,9 @@ export default function FuturesDetailSupplier() {
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-3 mb-2">
-                  <h1 className="text-3xl md:text-4xl font-bold">
+                  <H1 className="text-3xl md:text-4xl">
                     {futures.futuresId}
-                  </h1>
+                  </H1>
                   <Badge className={getStatusColor(futures.status)}>
                     {formatStatusLabel(futures.status)}
                   </Badge>
@@ -817,28 +818,28 @@ export default function FuturesDetailSupplier() {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-              <p className="text-emerald-200 text-sm mb-1">Total Projected</p>
-              <p className="text-2xl font-bold font-mono">
+              <DataLabel className="text-emerald-200 mb-1">Total Projected</DataLabel>
+              <MetricValue className="text-2xl">
                 {totalProjected.toLocaleString()}t
-              </p>
+              </MetricValue>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-              <p className="text-emerald-200 text-sm mb-1">Contracted</p>
-              <p className="text-2xl font-bold font-mono text-blue-300">
+              <DataLabel className="text-emerald-200 mb-1">Contracted</DataLabel>
+              <MetricValue className="text-2xl text-blue-300">
                 {totalContracted.toLocaleString()}t
-              </p>
+              </MetricValue>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-              <p className="text-emerald-200 text-sm mb-1">Available</p>
-              <p className="text-2xl font-bold font-mono text-emerald-300">
+              <DataLabel className="text-emerald-200 mb-1">Available</DataLabel>
+              <MetricValue className="text-2xl text-emerald-300">
                 {totalAvailable.toLocaleString()}t
-              </p>
+              </MetricValue>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-              <p className="text-emerald-200 text-sm mb-1">Pending EOIs</p>
-              <p className="text-2xl font-bold font-mono text-yellow-300">
+              <DataLabel className="text-emerald-200 mb-1">Pending EOIs</DataLabel>
+              <MetricValue className="text-2xl text-yellow-300">
                 {pendingEOIs.length}
-              </p>
+              </MetricValue>
             </div>
           </div>
         </div>
@@ -881,30 +882,30 @@ export default function FuturesDetailSupplier() {
                 <CardContent className="space-y-6">
                   <div className="grid md:grid-cols-3 gap-4">
                     <div className="bg-muted/50 rounded-xl p-5 text-center">
-                      <p className="text-sm text-gray-600 mb-1">
+                      <DataLabel className="text-gray-600 mb-1">
                         Total Projected
-                      </p>
-                      <p className="text-3xl font-bold font-mono">
+                      </DataLabel>
+                      <MetricValue className="text-3xl">
                         {totalProjected.toLocaleString()}t
-                      </p>
+                      </MetricValue>
                     </div>
                     <div className="bg-blue-50 rounded-xl p-5 text-center border border-blue-100">
-                      <p className="text-sm text-blue-600 mb-1">Contracted</p>
-                      <p className="text-3xl font-bold font-mono text-blue-700">
+                      <DataLabel className="text-blue-600 mb-1">Contracted</DataLabel>
+                      <MetricValue className="text-3xl text-blue-700">
                         {totalContracted.toLocaleString()}t
-                      </p>
-                      <p className="text-xs text-blue-500 mt-1">
+                      </MetricValue>
+                      <DataLabel className="text-blue-500 mt-1">
                         {contractedPercent.toFixed(1)}% of total
-                      </p>
+                      </DataLabel>
                     </div>
                     <div className="bg-emerald-50 rounded-xl p-5 text-center border border-emerald-100">
-                      <p className="text-sm text-[#D4AF37] mb-1">Available</p>
-                      <p className="text-3xl font-bold font-mono text-emerald-700">
+                      <DataLabel className="text-[#D4AF37] mb-1">Available</DataLabel>
+                      <MetricValue className="text-3xl text-emerald-700">
                         {totalAvailable.toLocaleString()}t
-                      </p>
-                      <p className="text-xs text-[#D4AF37] mt-1">
+                      </MetricValue>
+                      <DataLabel className="text-[#D4AF37] mt-1">
                         {availablePercent.toFixed(1)}% of total
-                      </p>
+                      </DataLabel>
                     </div>
                   </div>
                   <div>
@@ -1086,15 +1087,15 @@ export default function FuturesDetailSupplier() {
                         <div className="grid grid-cols-3 gap-3">
                           {futures.expectedCarbonIntensity && (
                             <div className="text-center p-2 bg-muted/30 rounded-lg">
-                              <p className="text-xs text-gray-600">
+                              <DataLabel className="text-gray-600">
                                 Carbon
-                              </p>
-                              <p className="font-semibold font-mono text-sm">
+                              </DataLabel>
+                              <MetricValue className="text-sm">
                                 {futures.expectedCarbonIntensity}
-                              </p>
-                              <p className="text-[10px] text-gray-600">
+                              </MetricValue>
+                              <DataLabel className="text-[10px] text-gray-600">
                                 kg CO₂e/t
-                              </p>
+                              </DataLabel>
                             </div>
                           )}
                           {futures.expectedMoistureContent && (

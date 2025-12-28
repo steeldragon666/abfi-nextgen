@@ -15,6 +15,7 @@ import { ArrowLeft, Leaf, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { Link, Redirect, useLocation, useSearch } from "wouter";
 import { toast } from "sonner";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 export default function SendInquiry() {
   const { user, isAuthenticated } = useAuth();
@@ -144,11 +145,11 @@ export default function SendInquiry() {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-2">
             <MessageSquare className="h-8 w-8 text-[#D4AF37]" />
-            <h1 className="text-4xl font-bold text-[#D4AF37]">
+            <H1 className="text-[#D4AF37]">
               Send Inquiry (RFQ)
-            </h1>
+            </H1>
           </div>
-          <p className="text-gray-600">Request a quote for this feedstock</p>
+          <Body className="text-gray-600">Request a quote for this feedstock</Body>
         </div>
 
         {/* Feedstock Summary */}
@@ -159,35 +160,35 @@ export default function SendInquiry() {
           <CardContent>
             <div className="grid md:grid-cols-3 gap-4">
               <div>
-                <p className="text-sm text-gray-600">Type</p>
-                <p className="font-medium">{feedstock.type}</p>
+                <DataLabel>Type</DataLabel>
+                <Body className="font-medium">{feedstock.type}</Body>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Category</p>
-                <p className="font-medium capitalize">{feedstock.category}</p>
+                <DataLabel>Category</DataLabel>
+                <Body className="font-medium capitalize">{feedstock.category}</Body>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Location</p>
-                <p className="font-medium">{feedstock.state}</p>
+                <DataLabel>Location</DataLabel>
+                <Body className="font-medium">{feedstock.state}</Body>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Annual Capacity</p>
-                <p className="font-medium">
+                <DataLabel>Annual Capacity</DataLabel>
+                <Body className="font-medium">
                   {feedstock.annualCapacityTonnes.toLocaleString()} tonnes
-                </p>
+                </Body>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Available Now</p>
-                <p className="font-medium">
+                <DataLabel>Available Now</DataLabel>
+                <Body className="font-medium">
                   {feedstock.availableVolumeCurrent.toLocaleString()} tonnes
-                </p>
+                </Body>
               </div>
               {feedstock.pricePerTonne && (
                 <div>
-                  <p className="text-sm text-gray-600">Price</p>
-                  <p className="font-medium">
+                  <DataLabel>Price</DataLabel>
+                  <Body className="font-medium">
                     ${feedstock.pricePerTonne.toLocaleString()}/tonne
-                  </p>
+                  </Body>
                 </div>
               )}
             </div>
@@ -255,15 +256,17 @@ export default function SendInquiry() {
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-900 mb-2">
+              <H3 className="text-blue-900 mb-2">
                 What Happens Next?
-              </h4>
-              <ul className="text-sm text-blue-800 space-y-1">
-                <li>• Your inquiry will be sent directly to the supplier</li>
-                <li>• The supplier will review your requirements</li>
-                <li>• You'll receive a response via the platform</li>
-                <li>• You can track all inquiries from your dashboard</li>
-              </ul>
+              </H3>
+              <Body className="text-sm text-blue-800">
+                <ul className="space-y-1">
+                  <li>• Your inquiry will be sent directly to the supplier</li>
+                  <li>• The supplier will review your requirements</li>
+                  <li>• You'll receive a response via the platform</li>
+                  <li>• You can track all inquiries from your dashboard</li>
+                </ul>
+              </Body>
             </div>
 
             <div className="flex justify-end gap-2 pt-4">

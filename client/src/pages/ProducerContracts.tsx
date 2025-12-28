@@ -27,6 +27,7 @@ import {
   FileText,
 } from "lucide-react";
 import { Link } from "wouter";
+import { H1, H2, H3, Body, MetricValue } from "@/components/Typography";
 
 interface Contract {
   id: string;
@@ -132,13 +133,13 @@ export default function ProducerContracts() {
                 {/* Initial Question */}
                 {hasContracts === null && (
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                    <H3 className="text-[#0F3A5C]">
                       Do you have existing supply contracts?
-                    </h3>
-                    <p className="text-sm text-gray-600">
+                    </H3>
+                    <Body className="text-sm text-gray-600">
                       These are contracts you've already signed with buyers for
                       future feedstock delivery.
-                    </p>
+                    </Body>
                     <div className="flex gap-4">
                       <Button
                         type="button"
@@ -167,13 +168,13 @@ export default function ProducerContracts() {
                 {hasContracts === false && (
                   <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center">
                     <FileText className="mx-auto mb-3 h-12 w-12 text-green-600" />
-                    <h3 className="mb-2 text-lg font-semibold text-green-900">
+                    <H3 className="mb-2 text-green-900">
                       Great! Your full supply is available
-                    </h3>
-                    <p className="text-sm text-green-700">
+                    </H3>
+                    <Body className="text-sm text-green-700">
                       Buyers will see that all your feedstock is available for
                       new contracts.
-                    </p>
+                    </Body>
                   </div>
                 )}
 
@@ -181,9 +182,9 @@ export default function ProducerContracts() {
                 {hasContracts === true && (
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-[#0F3A5C]">
+                      <H3 className="text-[#0F3A5C]">
                         Contract Details
-                      </h3>
+                      </H3>
                       <Button
                         type="button"
                         variant="outline"
@@ -348,13 +349,13 @@ export default function ProducerContracts() {
                     {contracts.length > 0 && (
                       <div className="rounded-lg border border-[#F4C430]/30 bg-[#F4C430]/5 p-4">
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold text-[#0F3A5C]">
+                          <Body className="font-semibold text-[#0F3A5C]">
                             Total Committed Volume:
-                          </span>
-                          <span className="text-lg font-bold text-[#0F3A5C]">
+                          </Body>
+                          <MetricValue className="text-[#0F3A5C]">
                             {calculateTotalCommitted().toLocaleString()}{" "}
                             tonnes/year
-                          </span>
+                          </MetricValue>
                         </div>
                       </div>
                     )}

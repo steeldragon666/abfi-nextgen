@@ -22,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageLayout } from "@/components/layout";
 import { AUSTRALIAN_STATES } from "@/const";
 import { trpc } from "@/lib/trpc";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 import {
   ArrowLeft,
   ArrowRight,
@@ -379,15 +380,15 @@ export default function FuturesCreate() {
               {editId ? "Edit Listing" : "New Listing"}
             </Badge>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+            <H1 className="mb-4 tracking-tight">
               {editId ? "Edit Futures" : "Create Futures"}
               <span className="block text-emerald-200">Listing</span>
-            </h1>
+            </H1>
 
-            <p className="text-lg text-emerald-100 max-w-xl">
+            <Body className="text-lg text-emerald-100 max-w-xl">
               Project your long-term perennial crop yields and connect with
               buyers seeking future supply agreements.
-            </p>
+            </Body>
           </div>
         </div>
       </section>
@@ -844,12 +845,12 @@ export default function FuturesCreate() {
               <CardContent className="space-y-6">
                 <div className="bg-teal-50 border border-teal-100 rounded-xl p-5 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                   <div>
-                    <p className="text-sm text-[#D4AF37] mb-1">
+                    <DataLabel className="text-[#D4AF37] mb-1">
                       Total Projected Volume
-                    </p>
-                    <p className="text-3xl font-bold text-teal-800 font-mono">
+                    </DataLabel>
+                    <MetricValue className="text-teal-800">
                       {totalProjectedTonnes.toLocaleString()} tonnes
-                    </p>
+                    </MetricValue>
                   </div>
                   <Button
                     variant="outline"
@@ -869,9 +870,9 @@ export default function FuturesCreate() {
                       className="border rounded-xl p-4 hover:border-teal-200 transition-colors"
                     >
                       <div className="flex items-center justify-between mb-3">
-                        <h4 className="font-bold text-lg">
+                        <H3 className="font-bold text-lg">
                           {projection.projectionYear}
-                        </h4>
+                        </H3>
                         <Badge
                           variant="outline"
                           className="border-teal-200 text-teal-700"
@@ -1155,59 +1156,59 @@ export default function FuturesCreate() {
                 {/* Summary Cards */}
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="bg-muted/50 rounded-xl p-5 space-y-2">
-                    <h4 className="font-semibold text-xs text-gray-600 uppercase tracking-wider">
+                    <DataLabel className="text-gray-600 uppercase tracking-wider">
                       CROP
-                    </h4>
-                    <p className="font-bold text-lg">
+                    </DataLabel>
+                    <H3 className="text-lg">
                       {CROP_TYPE_OPTIONS.find(c => c.value === cropType)?.label}
                       {cropVariety && ` - ${cropVariety}`}
-                    </p>
-                    <p className="text-sm text-gray-600">{title}</p>
+                    </H3>
+                    <Body className="text-sm text-gray-600">{title}</Body>
                   </div>
 
                   <div className="bg-muted/50 rounded-xl p-5 space-y-2">
-                    <h4 className="font-semibold text-xs text-gray-600 uppercase tracking-wider">
+                    <DataLabel className="text-gray-600 uppercase tracking-wider">
                       LOCATION
-                    </h4>
-                    <p className="font-bold text-lg">
+                    </DataLabel>
+                    <H3 className="text-lg">
                       {AUSTRALIAN_STATES.find(s => s.value === state)?.label}
                       {region && `, ${region}`}
-                    </p>
-                    <p className="text-sm text-gray-600">
+                    </H3>
+                    <Body className="text-sm text-gray-600">
                       {parseFloat(landAreaHectares).toLocaleString()} ha (
                       {
                         LAND_STATUS_OPTIONS.find(l => l.value === landStatus)
                           ?.label
                       }
                       )
-                    </p>
+                    </Body>
                   </div>
 
                   <div className="bg-muted/50 rounded-xl p-5 space-y-2">
-                    <h4 className="font-semibold text-xs text-gray-600 uppercase tracking-wider">
+                    <DataLabel className="text-gray-600 uppercase tracking-wider">
                       TIMELINE
-                    </h4>
-                    <p className="font-bold text-lg">
+                    </DataLabel>
+                    <H3 className="text-lg">
                       {projectionStartYear} - {projectionEndYear}
-                    </p>
-                    <p className="text-sm text-gray-600">
+                    </H3>
+                    <Body className="text-sm text-gray-600">
                       {parseInt(projectionEndYear) -
                         parseInt(projectionStartYear) +
                         1}{" "}
                       years
                       {firstHarvestYear &&
                         `, first harvest ${firstHarvestYear}`}
-                    </p>
+                    </Body>
                   </div>
 
                   <div className="bg-teal-50 border border-teal-100 rounded-xl p-5 space-y-2">
-                    <h4 className="font-semibold text-xs text-[#D4AF37] uppercase tracking-wider">
+                    <DataLabel className="text-[#D4AF37] uppercase tracking-wider">
                       VOLUME
-                    </h4>
-                    <p className="font-bold text-2xl text-teal-800 font-mono">
+                    </DataLabel>
+                    <MetricValue className="text-2xl text-teal-800">
                       {totalProjectedTonnes.toLocaleString()} t
-                    </p>
-                    <p className="text-sm text-[#D4AF37]">
+                    </MetricValue>
+                    <Body className="text-sm text-[#D4AF37]">
                       ~
                       {Math.round(
                         totalProjectedTonnes /
@@ -1216,7 +1217,7 @@ export default function FuturesCreate() {
                             1)
                       ).toLocaleString()}{" "}
                       tonnes/year average
-                    </p>
+                    </Body>
                   </div>
                 </div>
 

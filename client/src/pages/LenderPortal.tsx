@@ -27,6 +27,7 @@ import {
 import { RatingBadge, ScoreBreakdown } from "@/components/ScoreCard";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 const RATING_COLORS: Record<string, string> = {
   AAA: "bg-[#D4AF37] text-black",
@@ -128,24 +129,24 @@ export default function LenderPortal() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <Shield className="h-8 w-8 text-[#D4AF37]" />
-            <h1 className="text-3xl font-bold">Lender Portal</h1>
+            <H1 className="text-3xl font-bold">Lender Portal</H1>
           </div>
-          <p className="text-gray-600">
+          <Body className="text-gray-600">
             Read-only monitoring view for financed bioenergy projects
-          </p>
+          </Body>
         </div>
 
         {!projects || projects.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
               <Shield className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">
+              <H3 className="text-lg font-semibold mb-2">
                 No Projects Available
-              </h3>
-              <p className="text-sm text-gray-600">
+              </H3>
+              <Body className="text-sm text-gray-600">
                 You don't have access to any projects yet. Contact your
                 relationship manager.
-              </p>
+              </Body>
             </CardContent>
           </Card>
         ) : (
@@ -237,33 +238,33 @@ export default function LenderPortal() {
                         <CardContent className="space-y-4">
                           <div className="grid grid-cols-3 gap-4">
                             <div>
-                              <div className="text-sm text-gray-600 mb-1">
+                              <DataLabel className="text-sm text-gray-600 mb-1">
                                 Status
-                              </div>
+                              </DataLabel>
                               <Badge className={getStatusColor(project.status)}>
                                 {project.status}
                               </Badge>
                             </div>
                             <div>
-                              <div className="text-sm text-gray-600 mb-1">
+                              <DataLabel className="text-sm text-gray-600 mb-1">
                                 Bankability Rating
-                              </div>
-                              <span className="text-sm">Not assessed</span>
+                              </DataLabel>
+                              <Body className="text-sm">Not assessed</Body>
                             </div>
                             <div>
-                              <div className="text-sm text-gray-600 mb-1">
+                              <DataLabel className="text-sm text-gray-600 mb-1">
                                 Technology
-                              </div>
-                              <div className="text-sm font-medium">N/A</div>
+                              </DataLabel>
+                              <MetricValue className="text-sm font-medium">N/A</MetricValue>
                             </div>
                           </div>
 
                           {project.description && (
                             <div>
-                              <div className="text-sm text-gray-600 mb-1">
+                              <DataLabel className="text-sm text-gray-600 mb-1">
                                 Description
-                              </div>
-                              <p className="text-sm">{project.description}</p>
+                              </DataLabel>
+                              <Body className="text-sm">{project.description}</Body>
                             </div>
                           )}
                         </CardContent>
@@ -329,21 +330,21 @@ export default function LenderPortal() {
                           <div className="space-y-3">
                             <div>
                               <div className="flex justify-between text-sm mb-1">
-                                <span className="text-gray-600">
+                                <DataLabel className="text-gray-600">
                                   Tier 1 Coverage
-                                </span>
-                                <span className="font-medium">
+                                </DataLabel>
+                                <MetricValue className="font-medium">
                                   0% / {project.tier1Target || 80}%
-                                </span>
+                                </MetricValue>
                               </div>
                               <Progress value={0} className="h-2" />
                             </div>
                             <div>
                               <div className="flex justify-between text-sm mb-1">
-                                <span className="text-gray-600">
+                                <DataLabel className="text-gray-600">
                                   Total Primary Coverage
-                                </span>
-                                <span className="font-medium">0%</span>
+                                </DataLabel>
+                                <MetricValue className="font-medium">0%</MetricValue>
                               </div>
                               <Progress value={0} className="h-2" />
                             </div>
@@ -456,9 +457,9 @@ export default function LenderPortal() {
                           ) : (
                             <div className="text-center py-6">
                               <AlertTriangle className="h-8 w-8 text-gray-600 mx-auto mb-2" />
-                              <p className="text-sm text-gray-600 mb-3">
+                              <Body className="text-sm text-gray-600 mb-3">
                                 No stress tests have been run for this project
-                              </p>
+                              </Body>
                               <Link href="/stress-testing">
                                 <Button size="sm">
                                   <Zap className="h-4 w-4 mr-2" />
@@ -512,9 +513,9 @@ export default function LenderPortal() {
                 <Card>
                   <CardContent className="py-12 text-center">
                     <Shield className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-                    <p className="text-gray-600">
+                    <Body className="text-gray-600">
                       Select a project to view details
-                    </p>
+                    </Body>
                   </CardContent>
                 </Card>
               )}

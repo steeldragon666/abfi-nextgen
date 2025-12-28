@@ -10,6 +10,7 @@ import {
   Eye,
   Clock,
 } from "lucide-react";
+import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 export default function BankabilityExplainer() {
   const verificationSteps = [
@@ -190,7 +191,7 @@ export default function BankabilityExplainer() {
               BioFeed <span style={{ color: "var(--accent-gold)" }}>AU</span>
             </h1>
           </div>
-          <h2
+          <H1
             className="text-4xl mb-3"
             style={{
               fontFamily: "'DM Serif Display', serif",
@@ -199,8 +200,8 @@ export default function BankabilityExplainer() {
             }}
           >
             Bankability Assurance Framework
-          </h2>
-          <p
+          </H1>
+          <Body
             style={{
               color: "var(--text-secondary)",
               fontSize: "16px",
@@ -211,7 +212,7 @@ export default function BankabilityExplainer() {
           >
             Independent verification infrastructure that de-risks bioenergy
             project finance through immutable data provenance
-          </p>
+          </Body>
           <div
             className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-0.5"
             style={{
@@ -273,7 +274,7 @@ export default function BankabilityExplainer() {
         {/* Verification Pipeline */}
         <section className="mb-16">
           <div className="text-center mb-10">
-            <h3
+            <H2
               className="text-3xl mb-2"
               style={{
                 fontFamily: "'DM Serif Display', serif",
@@ -281,11 +282,11 @@ export default function BankabilityExplainer() {
               }}
             >
               5-Stage Verification Pipeline
-            </h3>
-            <p style={{ color: "var(--text-tertiary)", fontSize: "14px" }}>
+            </H2>
+            <Body style={{ color: "var(--text-tertiary)", fontSize: "14px" }}>
               Every data point passes through multiple validation layers before
               certification
-            </p>
+            </Body>
           </div>
 
           <div className="relative">
@@ -327,13 +328,13 @@ export default function BankabilityExplainer() {
                       </div>
                     </div>
                     <div className="text-center max-w-[160px]">
-                      <h4
+                      <H3
                         className="text-sm font-semibold mb-1.5"
                         style={{ color: "var(--text-[#D4AF37])" }}
                       >
                         {step.title}
-                      </h4>
-                      <p
+                      </H3>
+                      <Body
                         style={{
                           fontSize: "12px",
                           color: "var(--text-tertiary)",
@@ -341,7 +342,7 @@ export default function BankabilityExplainer() {
                         }}
                       >
                         {step.description}
-                      </p>
+                      </Body>
                     </div>
                   </div>
                 );
@@ -398,13 +399,13 @@ export default function BankabilityExplainer() {
                 >
                   {card.icon}
                 </div>
-                <h3
+                <H3
                   className="text-base font-semibold mb-2.5"
                   style={{ color: "var(--text-[#D4AF37])" }}
                 >
                   {card.title}
-                </h3>
-                <p
+                </H3>
+                <Body
                   style={{
                     fontSize: "13px",
                     color: "var(--text-secondary)",
@@ -414,7 +415,7 @@ export default function BankabilityExplainer() {
                   }}
                 >
                   {card.description}
-                </p>
+                </Body>
                 <ul className="space-y-1.5">
                   {card.checks.map((check, checkIdx) => (
                     <li
@@ -458,7 +459,7 @@ export default function BankabilityExplainer() {
               <Lock className="h-7 w-7" style={{ stroke: "#3b82f6" }} />
             </div>
             <div>
-              <h3
+              <H2
                 className="text-2xl mb-1"
                 style={{
                   fontFamily: "'DM Serif Display', serif",
@@ -466,11 +467,11 @@ export default function BankabilityExplainer() {
                 }}
               >
                 Immutable Data Provenance
-              </h3>
-              <p style={{ fontSize: "14px", color: "var(--text-tertiary)" }}>
+              </H2>
+              <Body style={{ fontSize: "14px", color: "var(--text-tertiary)" }}>
                 Blockchain-anchored audit trails ensure data integrity for
                 lender confidence
-              </p>
+              </Body>
             </div>
           </div>
 
@@ -512,7 +513,7 @@ export default function BankabilityExplainer() {
         {/* Certificate Preview */}
         <section className="mb-14">
           <div className="text-center mb-10">
-            <h3
+            <H2
               className="text-3xl mb-2"
               style={{
                 fontFamily: "'DM Serif Display', serif",
@@ -520,11 +521,11 @@ export default function BankabilityExplainer() {
               }}
             >
               Bankability Certificate
-            </h3>
-            <p style={{ color: "var(--text-tertiary)", fontSize: "14px" }}>
+            </H2>
+            <Body style={{ color: "var(--text-tertiary)", fontSize: "14px" }}>
               Instantly verifiable proof of supply chain integrity for lender
               due diligence
-            </p>
+            </Body>
           </div>
 
           <div className="grid grid-cols-5 gap-10 items-center">
@@ -691,13 +692,13 @@ export default function BankabilityExplainer() {
             border: "1px solid var(--border-subtle)",
           }}
         >
-          <h3
+          <H2
             className="text-2xl mb-3"
             style={{ fontFamily: "'DM Serif Display', serif", fontWeight: 400 }}
           >
             Ready to De-Risk Your Bioenergy Portfolio?
-          </h3>
-          <p
+          </H2>
+          <Body
             style={{
               color: "var(--text-secondary)",
               fontSize: "15px",
@@ -709,7 +710,7 @@ export default function BankabilityExplainer() {
           >
             Join leading financial institutions using BioFeed AU for project
             finance due diligence
-          </p>
+          </Body>
           <button
             className="px-8 py-3 rounded-lg font-semibold transition-all"
             style={{

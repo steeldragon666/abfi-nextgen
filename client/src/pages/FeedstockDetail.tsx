@@ -20,6 +20,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { FEEDSTOCK_CATEGORIES } from "@/const";
+import { H1, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 const FEEDSTOCK_TYPES: Record<
   string,
@@ -122,7 +123,7 @@ export default function FeedstockDetail() {
 
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2">{feedstock.abfiId}</h1>
+              <H1 className="text-3xl mb-2">{feedstock.abfiId}</H1>
               <p className="text-lg opacity-90">
                 {
                   FEEDSTOCK_CATEGORIES.find(c => c.value === feedstock.category)
