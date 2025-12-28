@@ -1,3 +1,24 @@
+/* ==========================================================================
+   ABFI Platform - Professional Finance Typography System
+   Fonts: Inter (body), JetBrains Mono (financial data), Poppins (display)
+   ========================================================================== */
+
+/* Import Fontsource packages - Self-hosted for performance */
+@import '@fontsource/inter/300.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/800.css';
+
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/jetbrains-mono/600.css';
+
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+@import '@fontsource/poppins/800.css';
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -106,11 +127,17 @@
   --space-24: 6rem;     /* 96px */
 
   /* ============================================
-     TYPOGRAPHY
+     TYPOGRAPHY - Professional Finance Stack
+     Inter: Gold standard for fintech (Stripe, Coinbase)
+     JetBrains Mono: Optimized for financial data
+     Poppins: Strong display font for headings
      ============================================ */
   --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-heading: "Plus Jakarta Sans", var(--font-sans);
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-heading: "Poppins", "Inter", system-ui, sans-serif;
+  --font-display: "Poppins", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Monaco, ui-monospace, monospace;
+  --font-numeric: "JetBrains Mono", monospace;
 
   /* Fluid Type Scale */
   --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
@@ -285,6 +312,49 @@ h1, h2, h3, h4, h5, h6 {
 .tabular-nums {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
+}
+
+/* Finance-specific typography utilities */
+.financial-data,
+.text-numeric {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: -0.01em;
+}
+
+.text-currency {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.text-percentage {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.text-balance-positive {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: hsl(var(--success));
+}
+
+.text-balance-negative {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: hsl(var(--destructive));
+}
+
+.text-metric {
+  font-family: var(--font-numeric);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
 }
 
 /* Code blocks */
