@@ -10,14 +10,17 @@
     },
     "api/trpc/routers/*.ts": {
       "maxDuration": 30,
-      "memory": 512
+      "memory": 512,
+      "includeFiles": "api/_lib/**"
     },
     "api/trpc/[trpc].ts": {
       "maxDuration": 60,
-      "memory": 1024
+      "memory": 1024,
+      "includeFiles": ["api/_lib/**", "server/**", "drizzle/**"]
     },
     "api/**/*.ts": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "includeFiles": "api/_lib/**"
     }
   },
   "rewrites": [
