@@ -188,9 +188,9 @@ export default function DeveloperDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col h-[calc(100vh-65px)] bg-background overflow-hidden">
       {/* Quick Stats Bar */}
-      <div className="border-b bg-card/50">
+      <div className="border-b bg-card/50 shrink-0">
         <div className="container mx-auto px-4 py-2">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {QUICK_STATS.map((stat, index) => (
@@ -209,7 +209,7 @@ export default function DeveloperDashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-col lg:flex-row h-[calc(100vh-160px)]">
+      <div className="flex flex-col lg:flex-row flex-1 min-h-0">
         {/* Left Sidebar - Search & Pipeline */}
         <div className="w-full lg:w-[420px] border-r bg-card/50 flex flex-col">
           {/* Search Bar */}
