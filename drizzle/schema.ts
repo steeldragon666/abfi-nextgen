@@ -12,7 +12,118 @@ import {
   index,
   unique,
   uniqueIndex,
+  float,
 } from "drizzle-orm/mysql-core";
+
+// ============================================================================
+// SHARED ENUMS FOR MARKET INTELLIGENCE MAP
+// ============================================================================
+
+/**
+ * Data Visibility Controls
+ * Controls who can see market-sensitive data
+ */
+export const dataVisibilityEnum = [
+  "PUBLIC",           // Visible to all authenticated users
+  "MARKET_WIDE",      // Visible to all market participants (not public)
+  "ROLE_RESTRICTED",  // Only visible to specific roles
+  "COUNTERPARTY",     // Only visible to direct transaction parties
+  "PRIVATE",          // Only visible to owner
+] as const;
+export type DataVisibility = typeof dataVisibilityEnum[number];
+
+export const matchStatusEnum = [
+  "SUGGESTED",
+  "VIEWED",
+  "NEGOTIATING",
+  "ACCEPTED",
+  "REJECTED",
+  "EXPIRED",
+] as const;
+export type MatchStatus = typeof matchStatusEnum[number];
+
+export const contractStatusEnum = [
+  "DRAFT",
+  "PENDING_GROWER",
+  "PENDING_BUYER",
+  "ACTIVE",
+  "DELIVERING",
+  "COMPLETED",
+  "DISPUTED",
+  "CANCELLED",
+] as const;
+export type ContractStatus = typeof contractStatusEnum[number];
+
+export const deliveryStatusEnum = [
+  "SCHEDULED",
+  "IN_TRANSIT",
+  "DELIVERED",
+  "QUALITY_VERIFIED",
+  "DISPUTED",
+  "SETTLED",
+] as const;
+export type DeliveryStatus = typeof deliveryStatusEnum[number];
+
+export const paymentTermsEnum = [
+  "UPFRONT",
+  "ON_DELIVERY",
+  "NET_30",
+  "MILESTONE",
+] as const;
+export type PaymentTerms = typeof paymentTermsEnum[number];
+
+export const priceSourceEnum = [
+  "CONTRACT_AVERAGE",   // Anonymized from executed contracts
+  "DEMAND_SIGNAL",      // From buyer price ranges
+  "GROWER_ASK",         // From grower listing prices
+  "EXTERNAL_INDEX",     // From commodity exchanges
+  "CALCULATED",         // Platform algorithm
+] as const;
+export type PriceSource = typeof priceSourceEnum[number];
+
+export const priceConfidenceEnum = [
+  "HIGH",       // 10+ data points
+  "MEDIUM",     // 3-9 data points
+  "LOW",        // 1-2 data points
+  "INDICATIVE", // Calculated/estimated
+] as const;
+export type PriceConfidence = typeof priceConfidenceEnum[number];
+
+export const priceAlertTypeEnum = [
+  "ABOVE_THRESHOLD",
+  "BELOW_THRESHOLD",
+  "PERCENT_CHANGE_UP",
+  "PERCENT_CHANGE_DOWN",
+] as const;
+export type PriceAlertType = typeof priceAlertTypeEnum[number];
+
+export const locationTypeEnum = [
+  "PROJECT",
+  "INTENTION",
+  "POWER_STATION",
+  "LOGISTICS_HUB",
+  "CUSTOM",
+] as const;
+export type LocationType = typeof locationTypeEnum[number];
+
+export const transportModeEnum = [
+  "ROAD",
+  "RAIL",
+  "ROAD_RAIL",  // Multimodal
+  "SHIP",
+] as const;
+export type TransportMode = typeof transportModeEnum[number];
+
+export const intentionStatusEnum = [
+  "DRAFT",
+  "PUBLISHED",
+  "MATCHED",
+  "CONTRACTED",
+  "IN_PROGRESS",
+  "COMPLETED",
+  "CANCELLED",
+] as const;
+export type IntentionStatus = typeof intentionStatusEnum[number];
 
 /**
  * ABFI Platform Database Schema

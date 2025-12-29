@@ -16,6 +16,11 @@ import { stealthRouter } from "./stealthRouter";
 import { sentimentRouter } from "./sentimentRouter";
 import { pricesRouter } from "./pricesRouter";
 import { policyRouter } from "./policyRouter";
+// ABFI v4.0 Market Intelligence Routers
+import { contractMatchingRouter } from "./contractMatchingRouter";
+import { priceIntelligenceRouter } from "./priceIntelligenceRouter";
+import { transportRouter } from "./transportRouter";
+import { unifiedMapRouter } from "./unifiedMapRouter";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import * as db from "./db";
@@ -83,6 +88,14 @@ export const appRouter = router({
   sentiment: sentimentRouter,
   prices: pricesRouter,
   policy: policyRouter,
+
+  // ============================================================================
+  // ABFI v4.0 MARKET INTELLIGENCE ROUTERS
+  // ============================================================================
+  contractMatching: contractMatchingRouter,
+  priceIntelligence: priceIntelligenceRouter,
+  transport: transportRouter,
+  unifiedMap: unifiedMapRouter,
 
   // ============================================================================
   // AUDIT & COMPLIANCE (Phase 8)
