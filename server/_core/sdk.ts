@@ -271,6 +271,32 @@ class SDKServer {
     const signedInAt = new Date();
     let user = await db.getUserByOpenId(sessionUserId);
 
+    // If user not in DB, try dev auth fallback in development mode
+    if (!user && process.env.NODE_ENV !== "production") {
+      // Dev auth fallback - create mock user from session data
+      const devUsers: Record<string, { id: number; role: string; email: string }> = {
+        "dev-user-1": { id: 1, role: "admin", email: "alice@dev.local" },
+        "dev-user-2": { id: 2, role: "supplier", email: "bob@dev.local" },
+        "dev-user-3": { id: 3, role: "buyer", email: "carol@dev.local" },
+        "dev-user-4": { id: 4, role: "auditor", email: "dan@dev.local" },
+      };
+
+      const devUser = devUsers[sessionUserId];
+      if (devUser) {
+        console.log("[Auth] Using dev auth fallback for:", session.name);
+        return {
+          id: devUser.id,
+          openId: sessionUserId,
+          name: session.name,
+          email: devUser.email,
+          role: devUser.role,
+          loginMethod: "dev",
+          lastSignedIn: signedInAt,
+          createdAt: signedInAt,
+        } as User;
+      }
+    }
+
     // If user not in DB, sync from OAuth server automatically
     if (!user) {
       try {
