@@ -11,3 +11,5 @@ export {
 export type { MapLayerType, MapEntity } from "./MarketIntelligenceMap";
 
 export { EntityDetailPanel } from "./EntityDetailPanel";
+
+export { UnifiedMap } from "./UnifiedMap";

@@ -100,8 +100,21 @@ const DIRECT_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const USE_PROXY = !!FORGE_API_KEY;
 const API_KEY = USE_PROXY ? FORGE_API_KEY : DIRECT_API_KEY;
 
-function loadMapScript() {
-  return new Promise((resolve, reject) => {
+// Track script loading state
+let scriptLoadPromise: Promise<void> | null = null;
+
+function loadMapScript(): Promise<void> {
+  // Return existing promise if script is already loading/loaded
+  if (scriptLoadPromise) {
+    return scriptLoadPromise;
+  }
+
+  // Check if Google Maps is already available
+  if (window.google?.maps) {
+    return Promise.resolve();
+  }
+
+  scriptLoadPromise = new Promise((resolve, reject) => {
     if (!API_KEY) {
       console.error(
         "No Google Maps API key configured. Set VITE_FRONTEND_FORGE_API_KEY or VITE_GOOGLE_MAPS_API_KEY."
@@ -110,19 +123,30 @@ function loadMapScript() {
       return;
     }
 
-    const script = document.createElement("script");
-    if (USE_PROXY) {
-      script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
-      script.crossOrigin = "anonymous";
-    } else {
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
-    }
-    script.async = true;
-    script.onload = () => {
-      resolve(null);
-      script.remove(); // Clean up immediately
+    // Create unique callback name
+    const callbackName = `initGoogleMaps_${Date.now()}`;
+
+    // Define callback function
+    (window as any)[callbackName] = () => {
+      delete (window as any)[callbackName];
+      resolve();
     };
+
+    const script = document.createElement("script");
+    const baseUrl = USE_PROXY
+      ? `${MAPS_PROXY_URL}/maps/api/js`
+      : "https://maps.googleapis.com/maps/api/js";
+
+    script.src = `${baseUrl}?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry&callback=${callbackName}`;
+
+    if (USE_PROXY) {
+      script.crossOrigin = "anonymous";
+    }
+
+    script.async = true;
     script.onerror = () => {
+      delete (window as any)[callbackName];
+      scriptLoadPromise = null;
       console.error(
         `Failed to load Google Maps script${USE_PROXY ? " via proxy" : ""}`
       );
@@ -130,6 +154,8 @@ function loadMapScript() {
     };
     document.head.appendChild(script);
   });
+
+  return scriptLoadPromise;
 }
 
 interface MapViewProps {

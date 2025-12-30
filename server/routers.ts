@@ -21,6 +21,7 @@ import { contractMatchingRouter } from "./contractMatchingRouter";
 import { priceIntelligenceRouter } from "./priceIntelligenceRouter";
 import { transportRouter } from "./transportRouter";
 import { unifiedMapRouter } from "./unifiedMapRouter";
+import { earthEngineRouter } from "./earthEngineRouter";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import * as db from "./db";
@@ -96,6 +97,11 @@ export const appRouter = router({
   priceIntelligence: priceIntelligenceRouter,
   transport: transportRouter,
   unifiedMap: unifiedMapRouter,
+
+  // ============================================================================
+  // SATELLITE INTELLIGENCE (Earth Engine)
+  // ============================================================================
+  earthEngine: earthEngineRouter,
 
   // ============================================================================
   // AUDIT & COMPLIANCE (Phase 8)
