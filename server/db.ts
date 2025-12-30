@@ -416,6 +416,135 @@ export async function updateFeedstock(
   await db.update(feedstocks).set(data).where(eq(feedstocks.id, id));
 }
 
+// Sample feedstock data for dev/demo mode when database is unavailable
+const SAMPLE_FEEDSTOCKS = [
+  {
+    id: 1,
+    abfiId: "ABFI-OIL-NSW-001",
+    supplierId: 1,
+    category: "oilseed",
+    type: "Canola",
+    sourceName: "Murray Valley Farms",
+    sourceAddress: "123 Farm Road, Wagga Wagga",
+    latitude: "-35.1082",
+    longitude: "147.3598",
+    state: "NSW",
+    region: "Riverina",
+    productionMethod: "crop",
+    annualCapacityTonnes: 50000,
+    availableVolumeCurrent: 12000,
+    carbonIntensityValue: 28,
+    abfiScore: 85,
+    traceabilityScore: 90,
+    certificationScore: 80,
+    supplyReliabilityScore: 85,
+    status: "active",
+    pricePerTonne: 680,
+    priceVisibility: "public",
+    description: "Premium canola from certified sustainable farms",
+  },
+  {
+    id: 2,
+    abfiId: "ABFI-UCO-VIC-001",
+    supplierId: 2,
+    category: "UCO",
+    type: "Used Cooking Oil",
+    sourceName: "Melbourne Collection Services",
+    sourceAddress: "45 Industrial Ave, Dandenong",
+    latitude: "-37.9847",
+    longitude: "145.2150",
+    state: "VIC",
+    region: "Melbourne Metro",
+    productionMethod: "waste",
+    annualCapacityTonnes: 25000,
+    availableVolumeCurrent: 8500,
+    carbonIntensityValue: 12,
+    abfiScore: 92,
+    traceabilityScore: 95,
+    certificationScore: 90,
+    supplyReliabilityScore: 92,
+    status: "active",
+    pricePerTonne: 850,
+    priceVisibility: "public",
+    description: "ISCC-certified UCO from commercial kitchens",
+  },
+  {
+    id: 3,
+    abfiId: "ABFI-TAL-QLD-001",
+    supplierId: 3,
+    category: "tallow",
+    type: "Beef Tallow",
+    sourceName: "Queensland Meat Processors",
+    sourceAddress: "78 Abattoir Road, Toowoomba",
+    latitude: "-27.5598",
+    longitude: "151.9507",
+    state: "QLD",
+    region: "Darling Downs",
+    productionMethod: "processing_byproduct",
+    annualCapacityTonnes: 35000,
+    availableVolumeCurrent: 15000,
+    carbonIntensityValue: 22,
+    abfiScore: 78,
+    traceabilityScore: 75,
+    certificationScore: 80,
+    supplyReliabilityScore: 78,
+    status: "active",
+    pricePerTonne: 720,
+    priceVisibility: "public",
+    description: "Category 3 tallow from AQIS-approved facilities",
+  },
+  {
+    id: 4,
+    abfiId: "ABFI-LIG-SA-001",
+    supplierId: 4,
+    category: "lignocellulosic",
+    type: "Wheat Straw",
+    sourceName: "Adelaide Plains Cooperative",
+    sourceAddress: "200 Harvest Lane, Port Pirie",
+    latitude: "-33.1858",
+    longitude: "138.0169",
+    state: "SA",
+    region: "Mid North",
+    productionMethod: "residue",
+    annualCapacityTonnes: 80000,
+    availableVolumeCurrent: 45000,
+    carbonIntensityValue: 8,
+    abfiScore: 72,
+    traceabilityScore: 70,
+    certificationScore: 68,
+    supplyReliabilityScore: 78,
+    status: "active",
+    pricePerTonne: 120,
+    priceVisibility: "public",
+    description: "Agricultural residue from grain harvesting",
+  },
+  {
+    id: 5,
+    abfiId: "ABFI-WAS-WA-001",
+    supplierId: 5,
+    category: "waste",
+    type: "Food Processing Waste",
+    sourceName: "Perth Organic Recovery",
+    sourceAddress: "56 Recycling Drive, Kwinana",
+    latitude: "-32.2374",
+    longitude: "115.7697",
+    state: "WA",
+    region: "Perth Metro",
+    productionMethod: "waste",
+    annualCapacityTonnes: 18000,
+    availableVolumeCurrent: 6000,
+    carbonIntensityValue: 15,
+    abfiScore: 88,
+    traceabilityScore: 92,
+    certificationScore: 85,
+    supplyReliabilityScore: 88,
+    status: "active",
+    pricePerTonne: 280,
+    priceVisibility: "public",
+    description: "Segregated organic waste streams",
+  },
+];
+
 export async function searchFeedstocks(filters: {
   category?: string[];
   type?: string[];
@@ -427,7 +556,29 @@ export async function searchFeedstocks(filters: {
   offset?: number;
 }) {
   const db = await getDb();
-  if (!db) return [];
+  if (!db) {
+    // Return sample data in dev/demo mode
+    let results = SAMPLE_FEEDSTOCKS.filter((f) => f.status === "active");
+
+    if (filters.category && filters.category.length > 0) {
+      results = results.filter((f) => filters.category!.includes(f.category));
+    }
+    if (filters.state && filters.state.length > 0) {
+      results = results.filter((f) => filters.state!.includes(f.state));
+    }
+    if (filters.minAbfiScore !== undefined) {
+      results = results.filter((f) => (f.abfiScore || 0) >= filters.minAbfiScore!);
+    }
+    if (filters.maxCarbonIntensity !== undefined) {
+      results = results.filter(
+        (f) => (f.carbonIntensityValue || 0) <= filters.maxCarbonIntensity!
+      );
+    }
+    if (filters.limit) {
+      results = results.slice(0, filters.limit);
+    }
+    return results;
+  }
 
   const conditions = [];
 

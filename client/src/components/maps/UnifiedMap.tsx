@@ -71,7 +71,7 @@ const DEFAULT_LAYERS: MapLayer[] = [
     label: 'Feedstock Supply',
     icon: Leaf,
     color: '#22c55e',
-    roles: ['buyer', 'admin', 'auditor', 'lender'],
+    roles: ['buyer', 'admin', 'auditor', 'lender', 'analyst', 'supplier', 'grower'],
     enabled: true,
   },
   {
@@ -182,6 +182,8 @@ export function UnifiedMap({
   const [selectedEntity, setSelectedEntity] = useState<any>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [satelliteCoords, setSatelliteCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [markerCount, setMarkerCount] = useState(0);
+  const [isMapReady, setIsMapReady] = useState(false);
 
   // Check if satellite layer is enabled
   const isSatelliteLayerEnabled = layers.find((l) => l.id === 'satellite')?.enabled ?? false;
@@ -261,6 +263,7 @@ export function UnifiedMap({
   const handleMapReady = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
     infoWindowRef.current = new google.maps.InfoWindow();
+    setIsMapReady(true);
 
     // Add click listener for satellite data
     map.addListener('click', (event: google.maps.MapMouseEvent) => {
@@ -413,7 +416,10 @@ export function UnifiedMap({
         }
       );
     }
-  }, [feedstocks, demandSignals, layers, onEntitySelect]);
+
+    // Update marker count for display
+    setMarkerCount(markersRef.current.length);
+  }, [feedstocks, demandSignals, layers, onEntitySelect, isMapReady]);
 
   // Create info window content
   const createInfoWindowContent = (entity: any): string => {
@@ -471,7 +477,7 @@ export function UnifiedMap({
     (maxCarbonIntensity < 100 ? 1 : 0);
 
   const isLoading = feedstocksLoading || demandLoading;
-  const totalMarkers = markersRef.current.length;
+  const totalMarkers = markerCount;
 
   return (
     <div className={cn('relative flex flex-col h-full', className)}>
