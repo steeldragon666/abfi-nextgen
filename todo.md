@@ -6,9 +6,9 @@
 
 ## Current Status
 
-**Version**: 3.4.0
-**Last Updated**: 2025-12-28
-**Focus**: Government API Integrations & Foundation
+**Version**: 3.5.0
+**Last Updated**: 2026-01-01
+**Focus**: Platform Hardening & Institutional Features
 
 ---
 
@@ -150,7 +150,69 @@
 
 ---
 
-## Phase 5: Real-time & Polish (Weeks 9-10)
+## Phase 5: Platform Hardening (Institutional-Grade)
+
+### Evidence & Score Explainability
+- [x] Evidence chain schema (evidence, evidence_linkages, certificate_snapshots)
+- [x] Evidence upload/supersession APIs
+- [ ] Certificate Snapshot Viewer UI
+- [ ] Score decomposition API (GET /api/scores/:id/decomposition)
+- [ ] Score sensitivity API (GET /api/scores/:id/sensitivity)
+- [ ] ScoreDecomposition component (Input → Weight → Contribution)
+- [ ] TornadoChart component (sensitivity visualization)
+
+### Temporal Versioning
+- [x] Versioning fields on feedstocks, certificates, agreements, assessments
+- [x] Time-aware query helpers (getAsOfDate, getHistory, getTimeline)
+- [ ] VersionTimeline UI component
+- [ ] AsOfDatePicker component for historical views
+- [ ] Add "View Historical" toggle to entity detail pages
+
+### Physical Reality & Supply Risk
+- [x] Yield estimates table (P50/P75/P90)
+- [x] Delivery events tracking
+- [x] Seasonality profiles
+- [x] Climate exposure records
+- [ ] Supplier sites table for multi-site operations
+- [ ] SiteMap component (geographic distribution)
+- [ ] Update Volume Security score with yield confidence
+
+### Bankability Stress Testing
+- [x] Stress scenarios schema
+- [x] Stress test results tracking
+- [x] Contract enforceability scoring
+- [x] "Loss of top supplier" scenario
+- [x] "Supply shortfall" scenario
+- [ ] "Regional event" scenario (all suppliers in region)
+- [ ] StressTestResults visualization component
+
+### Lender Portal (Institutional)
+- [x] Lender access grants
+- [x] Covenant breach events tracking
+- [x] Lender report schema
+- [ ] Enhanced dashboard with covenant traffic lights
+- [ ] PDF report generator for monthly reports
+- [ ] Evidence pack assembler with manifest
+- [ ] Daily covenant check improvements
+
+### Audit & Legal Compliance
+- [x] Audit logs table (append-only)
+- [x] Admin overrides tracking
+- [x] Certificate legal metadata
+- [ ] Audit Log Viewer (admin UI)
+- [ ] Tamper-evident checksums for log batches
+- [ ] Legal text templates (certificate disclaimers)
+- [ ] QR code with certificate verification URL
+
+### Buyer Procurement Tools
+- [ ] RFQ bundle system
+- [ ] Procurement scenario comparison
+- [ ] Buyer favorites/shortlist
+- [ ] Pricing normalization (AUD/t → AUD/GJ)
+
+---
+
+## Phase 6: Real-time & Polish
 
 ### Real-time Features
 - [x] SSE notification system
