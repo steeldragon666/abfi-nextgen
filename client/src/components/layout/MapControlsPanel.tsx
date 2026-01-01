@@ -77,11 +77,13 @@ export function MapControlsPanel({ className }: MapControlsPanelProps) {
 
   if (controlsPanelCollapsed) {
     return (
-      <div
+      <aside
         className={cn(
           'w-12 bg-white border-r border-gray-200 flex flex-col items-center py-3 gap-2 shrink-0',
           className
         )}
+        role="complementary"
+        aria-label="Map controls (collapsed)"
       >
         <Button
           variant="ghost"
@@ -127,16 +129,18 @@ export function MapControlsPanel({ className }: MapControlsPanelProps) {
         >
           <MapPin className="h-4 w-4" />
         </Button>
-      </div>
+      </aside>
     );
   }
 
   return (
-    <div
+    <aside
       className={cn(
         'w-64 bg-white border-r border-gray-200 flex flex-col shrink-0 overflow-hidden',
         className
       )}
+      role="complementary"
+      aria-label="Map controls"
     >
       {/* Header */}
       <div className="flex items-center justify-between h-12 px-3 border-b border-gray-200 bg-gray-50 shrink-0">
@@ -395,7 +399,7 @@ export function MapControlsPanel({ className }: MapControlsPanelProps) {
           )}
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
 

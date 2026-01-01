@@ -366,10 +366,65 @@ code, pre {
 }
 
 /* ============================================
-   WCAG 2.2 AA - FOCUS INDICATORS
-   Minimum touch target: 44x44px
-   Focus ring: 3px solid blue with offset (highly visible)
+   WCAG 2.2 AA - ACCESSIBILITY ESSENTIALS
+   Minimum touch target: 44x44px (WCAG 2.5.5)
+   Focus ring: 3px solid blue with offset
    ============================================ */
+
+/* Global Touch Targets - WCAG 2.5.5 AAA Target Size */
+button,
+[role="button"],
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+select,
+.clickable,
+[tabindex="0"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Inline links within text can be smaller but need adequate padding */
+p a,
+li a,
+span a,
+td a {
+  min-height: auto;
+  min-width: auto;
+  padding-block: 0.25rem;
+  display: inline-block;
+}
+
+/* Icon buttons - ensure adequate touch area */
+button:has(svg:only-child),
+[role="button"]:has(svg:only-child),
+a:has(svg:only-child) {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Navigation items */
+nav a,
+nav button,
+[role="navigation"] a,
+[role="navigation"] button,
+[role="menuitem"],
+[role="tab"] {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Dropdown menu items */
+[role="menu"] [role="menuitem"],
+[role="listbox"] [role="option"] {
+  min-height: 44px;
+  padding-inline: 1rem;
+}
 
 .skip-to-main {
   position: fixed;
