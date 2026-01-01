@@ -152,8 +152,6 @@ const CarbonIntensityAnalysis = lazy(() => import("./pages/CarbonIntensityAnalys
 const Landing = lazy(() => import("./pages/Landing"));
 const Explore = lazy(() => import("./pages/Explore"));
 const SimplifiedDashboard = lazy(() => import("./components/dashboard/SimplifiedDashboard").then(m => ({ default: m.SimplifiedDashboard })));
-const UnifiedDashboard = lazy(() => import("./pages/UnifiedDashboard"));
-const UnifiedMapPage = lazy(() => import("./pages/UnifiedMapPage"));
 const GrowerDashboard = lazy(() => import("./pages/GrowerDashboard"));
 const GrowerSettings = lazy(() => import("./pages/GrowerSettings"));
 const DeveloperDashboard = lazy(() => import("./pages/DeveloperDashboard"));
@@ -195,11 +193,11 @@ function Router() {
         <Route path="/" component={Landing} />
         <Route path="/explore" component={Explore} />
         <Route path="/welcome" component={SimplifiedDashboard} />
-        <Route path="/unified" component={UnifiedDashboard} />
+        <Route path="/unified" component={Dashboard} />
 
-        {/* Unified Map - Primary map experience */}
-        <Route path="/map" component={UnifiedMapPage} />
-        <Route path="/unified-map" component={UnifiedMapPage} />
+        {/* Map Routes - using existing MapView */}
+        <Route path="/map" component={MapView} />
+        <Route path="/unified-map" component={MapView} />
 
         {/* Legacy map routes -> redirect to unified map */}
         <Route path="/feedstock-map">
