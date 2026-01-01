@@ -44,7 +44,7 @@ export default function DevLogin() {
 
   useEffect(() => {
     // Fetch available dev users
-    fetch("/api/dev-auth/users")
+    fetch("/api/dev-auth/users", { credentials: "include" })
       .then(res => res.json())
       .then(data => {
         setUsers(data.users || []);
@@ -66,6 +66,7 @@ export default function DevLogin() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
+        credentials: "include",
       });
 
       const data = await res.json();
