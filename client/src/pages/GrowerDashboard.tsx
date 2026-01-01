@@ -153,6 +153,7 @@ export default function GrowerDashboard() {
   const progressPercent = (completedSteps / totalSteps) * 100;
 
   // Create markers for Leaflet map
+  // Use 'projects' layerId to associate with "My Projects" layer toggle
   const mapMarkers: MapMarker[] = MY_LISTINGS.map((listing) => ({
     id: listing.id,
     lat: listing.location.lat,
@@ -160,6 +161,7 @@ export default function GrowerDashboard() {
     title: listing.name,
     color: listing.status === "active" ? "#10b981" : "#f59e0b", // emerald for active, amber for pending
     onClick: () => setSelectedListing(listing.id),
+    layerId: "projects", // Associates with "My Projects" layer in MapControlsPanel
   }));
 
   const handleMapReady = useCallback((map: L.Map) => {

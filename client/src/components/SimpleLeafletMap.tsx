@@ -52,6 +52,8 @@ export interface MapMarker {
   title?: string;
   color?: string;
   onClick?: () => void;
+  /** Layer ID to associate this marker with a toggleable layer (e.g., 'feedstocks', 'demand', 'projects') */
+  layerId?: string;
 }
 
 interface SimpleLeafletMapProps {
@@ -156,7 +158,7 @@ export function SimpleLeafletMap({
     }
   }, [mapViewType, isReady]);
 
-  // Handle markers
+  // Handle markers - filter by enabled layers
   useEffect(() => {
     if (!mapRef.current || !isReady) return;
 
@@ -166,7 +168,20 @@ export function SimpleLeafletMap({
 
     const map = mapRef.current;
 
-    markers.forEach((markerData) => {
+    // Filter markers based on enabled layers
+    const filteredMarkers = markers.filter((markerData) => {
+      // If marker has no layerId, always show it
+      if (!markerData.layerId) return true;
+
+      // Check if the corresponding layer is enabled
+      const layer = layers.find((l) => l.id === markerData.layerId);
+      // If layer not found in context, show the marker (backwards compatibility)
+      if (!layer) return true;
+      // Show marker only if layer is enabled
+      return layer.enabled;
+    });
+
+    filteredMarkers.forEach((markerData) => {
       // Create custom colored icon
       const icon = L.divIcon({
         className: "custom-marker",
@@ -202,7 +217,7 @@ export function SimpleLeafletMap({
       marker.addTo(map);
       markersRef.current.push(marker);
     });
-  }, [isReady, markers]);
+  }, [isReady, markers, layers]);
 
   // Update center and zoom
   useEffect(() => {

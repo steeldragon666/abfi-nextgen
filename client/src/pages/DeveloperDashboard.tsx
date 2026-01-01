@@ -155,7 +155,7 @@ export default function DeveloperDashboard() {
 
   // Convert suppliers and deals to map markers
   const mapMarkers: MapMarker[] = [
-    // Registry suppliers (gray markers)
+    // Registry suppliers (gray markers) - associated with 'feedstocks' layer
     ...REGISTRY_SUPPLIERS.map((supplier) => ({
       id: supplier.id,
       lat: supplier.location.lat,
@@ -163,8 +163,9 @@ export default function DeveloperDashboard() {
       title: supplier.name,
       color: "#94a3b8", // slate-400
       onClick: () => setSelectedDeal(supplier.id),
+      layerId: "feedstocks", // Associates with "Feedstock Supply" layer in MapControlsPanel
     })),
-    // Pipeline deals (colored by stage)
+    // Pipeline deals (colored by stage) - associated with 'demand' layer
     ...DEAL_PIPELINE.filter(deal => deal.location).map((deal) => {
       const stageColors: Record<string, string> = {
         discovery: "#64748b", // slate-500
@@ -179,6 +180,7 @@ export default function DeveloperDashboard() {
         title: deal.name,
         color: stageColors[deal.stage] || "#3b82f6",
         onClick: () => setSelectedDeal(deal.id),
+        layerId: "demand", // Associates with "Demand Signals" layer in MapControlsPanel
       };
     }),
   ];
