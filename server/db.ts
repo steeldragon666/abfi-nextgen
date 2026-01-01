@@ -936,7 +936,12 @@ export async function getAuditLogs(filters?: {
   userId?: number;
   entityType?: string;
   entityId?: number;
+  action?: string;
+  startDate?: Date;
+  endDate?: Date;
+  search?: string;
   limit?: number;
+  offset?: number;
 }) {
   const db = await getDb();
   if (!db) return [];
@@ -955,14 +960,95 @@ export async function getAuditLogs(filters?: {
     conditions.push(eq(auditLogs.entityId, filters.entityId));
   }
 
+  if (filters?.action) {
+    conditions.push(eq(auditLogs.action, filters.action));
+  }
+
+  if (filters?.startDate) {
+    conditions.push(gte(auditLogs.createdAt, filters.startDate));
+  }
+
+  if (filters?.endDate) {
+    conditions.push(lte(auditLogs.createdAt, filters.endDate));
+  }
+
+  if (filters?.search) {
+    const searchTerm = `%${filters.search}%`;
+    conditions.push(
+      or(
+        like(auditLogs.action, searchTerm),
+        like(auditLogs.entityType, searchTerm),
+        like(auditLogs.ipAddress, searchTerm)
+      )
+    );
+  }
+
   const baseQuery = db.select().from(auditLogs);
   const whereQuery =
     conditions.length > 0 ? baseQuery.where(and(...conditions)) : baseQuery;
   const orderedQuery = whereQuery.orderBy(desc(auditLogs.createdAt));
   const limitValue = filters?.limit || 100;
-  const finalQuery = orderedQuery.limit(limitValue);
+  const offsetValue = filters?.offset || 0;
+  const finalQuery = orderedQuery.limit(limitValue).offset(offsetValue);
 
   return await finalQuery;
+}
+
+export async function countAuditLogs(filters?: {
+  userId?: number;
+  entityType?: string;
+  entityId?: number;
+  action?: string;
+  startDate?: Date;
+  endDate?: Date;
+  search?: string;
+}) {
+  const db = await getDb();
+  if (!db) return 0;
+
+  const conditions = [];
+
+  if (filters?.userId) {
+    conditions.push(eq(auditLogs.userId, filters.userId));
+  }
+
+  if (filters?.entityType) {
+    conditions.push(eq(auditLogs.entityType, filters.entityType));
+  }
+
+  if (filters?.entityId) {
+    conditions.push(eq(auditLogs.entityId, filters.entityId));
+  }
+
+  if (filters?.action) {
+    conditions.push(eq(auditLogs.action, filters.action));
+  }
+
+  if (filters?.startDate) {
+    conditions.push(gte(auditLogs.createdAt, filters.startDate));
+  }
+
+  if (filters?.endDate) {
+    conditions.push(lte(auditLogs.createdAt, filters.endDate));
+  }
+
+  if (filters?.search) {
+    const searchTerm = `%${filters.search}%`;
+    conditions.push(
+      or(
+        like(auditLogs.action, searchTerm),
+        like(auditLogs.entityType, searchTerm),
+        like(auditLogs.ipAddress, searchTerm)
+      )
+    );
+  }
+
+  const baseQuery = db.select({ count: sql<number>`count(*)` }).from(auditLogs);
+  const whereQuery =
+    conditions.length > 0 ? baseQuery.where(and(...conditions)) : baseQuery;
+
+  const result = await whereQuery;
+  return result[0]?.count || 0;
 }
 
 // ============================================================================

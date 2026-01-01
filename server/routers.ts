@@ -107,7 +107,7 @@ export const appRouter = router({
   // AUDIT & COMPLIANCE (Phase 8)
   // ============================================================================
   audit: router({
-    // Get audit logs with filtering
+    // Get audit logs with filtering and pagination
     getLogs: adminProcedure
       .input(
         z.object({
@@ -117,18 +117,35 @@ export const appRouter = router({
           action: z.string().optional(),
           startDate: z.string().optional(),
           endDate: z.string().optional(),
-          limit: z.number().min(1).max(500).default(100),
+          search: z.string().optional(),
+          limit: z.number().min(1).max(500).default(50),
           offset: z.number().min(0).default(0),
         })
       )
       .query(async ({ input }) => {
-        const logs = await db.getAuditLogs({
+        const filters = {
           userId: input.userId,
           entityType: input.entityType,
           entityId: input.entityId,
+          action: input.action,
+          startDate: input.startDate ? new Date(input.startDate) : undefined,
+          endDate: input.endDate ? new Date(input.endDate) : undefined,
+          search: input.search,
           limit: input.limit,
-        });
-        return logs;
+          offset: input.offset,
+        };
+
+        const [logs, total] = await Promise.all([
+          db.getAuditLogs(filters),
+          db.countAuditLogs(filters),
+        ]);
+
+        return {
+          logs,
+          total,
+          limit: input.limit,
+          offset: input.offset,
+        };
       }),
 
     // Get audit log statistics
@@ -139,6 +156,8 @@ export const appRouter = router({
       const actionCounts: Record<string, number> = {};
       const entityCounts: Record<string, number> = {};
       const userCounts: Record<string, number> = {};
+      let successCount = 0;
+      let failureCount = 0;
 
       for (const log of allLogs) {
         actionCounts[log.action] = (actionCounts[log.action] || 0) + 1;
@@ -147,10 +166,18 @@ export const appRouter = router({
           const userId = String(log.userId);
           userCounts[userId] = (userCounts[userId] || 0) + 1;
         }
+        // Track success/failure based on action type
+        if (log.action.includes('_failed') || log.action.includes('_error')) {
+          failureCount++;
+        } else {
+          successCount++;
+        }
       }
 
       return {
         totalLogs: allLogs.length,
+        successCount,
+        failureCount,
         actionCounts,
         entityCounts,
         userCounts,

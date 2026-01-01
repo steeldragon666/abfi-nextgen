@@ -199,7 +199,7 @@
 - [x] Audit logs table (append-only)
 - [x] Admin overrides tracking
 - [x] Certificate legal metadata
-- [ ] Audit Log Viewer (admin UI)
+- [x] Audit Log Viewer (admin UI)
 - [ ] Tamper-evident checksums for log batches
 - [ ] Legal text templates (certificate disclaimers)
 - [ ] QR code with certificate verification URL

@@ -104,6 +104,7 @@ const adminMenuItems = [
   { icon: Database, label: 'RSIE Dashboard', path: '/admin/rsie' },
   { icon: Clock, label: 'Monitoring Jobs', path: '/admin/monitoring-jobs' },
   { icon: Users, label: 'User Management', path: '/admin/users' },
+  { icon: FileText, label: 'Audit Logs', path: '/admin/audit-logs' },
   { icon: PieChart, label: 'Admin Dashboard', path: '/admin' },
 ];
 
