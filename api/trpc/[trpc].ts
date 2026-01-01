@@ -1,6 +1,7 @@
 /**
  * tRPC API Route Handler for Vercel Serverless
  * Self-contained with mock data for demo deployments
+ * Version: 2.0.0 - includes prices router
  */
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { initTRPC } from "@trpc/server";
@@ -238,8 +239,10 @@ const apiRouter = router({
       .input(z.object({ timestamp: z.number().min(0).optional() }).optional())
       .query(() => ({
         ok: true,
+        version: "2.0.0",
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || "production",
+        hasRouter: { prices: true },
       })),
   }),
   prices: pricesRouter,
