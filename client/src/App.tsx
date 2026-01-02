@@ -157,6 +157,7 @@ const GrowerDashboard = lazy(() => import("./pages/GrowerDashboard"));
 const GrowerSettings = lazy(() => import("./pages/GrowerSettings"));
 const DeveloperDashboard = lazy(() => import("./pages/DeveloperDashboard"));
 const FinanceDashboard = lazy(() => import("./pages/FinanceDashboard"));
+const GovernmentDashboard = lazy(() => import("./pages/GovernmentDashboard"));
 
 // Phase 2 Features
 const PriceDashboard = lazy(() => import("./pages/PriceDashboard"));
@@ -216,6 +217,7 @@ function Router() {
         <Route path="/grower/settings" component={GrowerSettings} />
         <Route path="/developer/dashboard" component={DeveloperDashboard} />
         <Route path="/finance/dashboard" component={FinanceDashboard} />
+        <Route path="/government/dashboard" component={GovernmentDashboard} />
 
         {/* Phase 2 Features */}
         <Route path="/price-dashboard" component={PriceDashboard} />
