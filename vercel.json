@@ -3,6 +3,14 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist/public",
   "installCommand": "pnpm install",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.abfi.io" }],
+      "destination": "https://abfi.io/:path*",
+      "permanent": true
+    }
+  ],
   "functions": {
     "api/health.ts": {
       "maxDuration": 5,
