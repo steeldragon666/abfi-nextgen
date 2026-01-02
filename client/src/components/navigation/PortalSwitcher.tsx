@@ -147,7 +147,8 @@ export function PortalSwitcher({ className, variant = "default" }: PortalSwitche
       {isOpen && (
         <div
           className={cn(
-            "absolute z-50 mt-2 w-72 rounded-lg border bg-popover shadow-lg",
+            "absolute z-50 mt-2 w-72 rounded-lg border shadow-lg",
+            "bg-white dark:bg-gray-900", // Solid background for legibility
             "animate-in fade-in-0 zoom-in-95"
           )}
         >

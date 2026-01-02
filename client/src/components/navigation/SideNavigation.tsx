@@ -34,7 +34,8 @@ export function SideNavigation({ className }: SideNavigationProps) {
     <TooltipProvider>
       <aside
         className={cn(
-          "flex flex-col h-full bg-background border-r transition-all duration-300",
+          "flex flex-col h-full border-r transition-all duration-300",
+          "bg-white dark:bg-gray-950", // Solid background for legibility
           sidebarCollapsed ? "w-16" : "w-64",
           className
         )}
@@ -163,7 +164,8 @@ export function MobileSideNavigation({ className }: MobileSideNavigationProps) {
       <TooltipProvider>
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-50 w-72 bg-background shadow-xl lg:hidden",
+            "fixed inset-y-0 left-0 z-50 w-72 shadow-xl lg:hidden",
+            "bg-white dark:bg-gray-950", // Solid background for legibility
             "animate-in slide-in-from-left duration-300",
             className
           )}

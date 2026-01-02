@@ -28,7 +28,8 @@ export function TopBar({ className }: TopBarProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 lg:px-6",
+        "sticky top-0 z-30 flex h-16 items-center gap-4 border-b px-4 lg:px-6",
+        "bg-white dark:bg-gray-950", // Solid background for legibility
         className
       )}
       role="banner"

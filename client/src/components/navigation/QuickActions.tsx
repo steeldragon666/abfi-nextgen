@@ -52,7 +52,7 @@ export function QuickActions({ className }: QuickActionsProps) {
       <div
         className={cn(
           "flex items-center gap-1 p-1.5 rounded-full",
-          "bg-background/95 backdrop-blur-sm border shadow-lg"
+          "bg-white dark:bg-gray-900 border shadow-lg" // Solid background for legibility
         )}
       >
         {quickActions.slice(0, 3).map((action) => {

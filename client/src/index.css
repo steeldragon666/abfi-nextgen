@@ -1178,7 +1178,7 @@ button[class*="rounded-full"],
 
 .mobile-nav-panel {
   @apply fixed inset-y-0 left-0 z-50 w-72;
-  @apply bg-[hsl(var(--background))] shadow-xl;
+  @apply bg-white dark:bg-gray-950 shadow-xl; /* Solid background for legibility */
   @apply lg:hidden;
 }
 
@@ -1186,7 +1186,7 @@ button[class*="rounded-full"],
 .quick-actions-bar {
   @apply fixed bottom-4 left-1/2 -translate-x-1/2 z-40;
   @apply flex items-center gap-1 p-1.5 rounded-full;
-  @apply bg-[hsl(var(--background)/0.95)] backdrop-blur-sm;
+  @apply bg-white dark:bg-gray-900; /* Solid background for legibility */
   @apply border border-[hsl(var(--border))] shadow-lg;
   @apply lg:hidden;
   @apply transition-all duration-300;
