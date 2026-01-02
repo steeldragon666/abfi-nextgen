@@ -267,7 +267,7 @@ export default function DeveloperDashboard() {
               {/* Deal Pipeline */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <H3 className="flex items-center gap-2">
+                  <H3 className="flex items-center gap-2 !text-sm">
                     <Target className="h-4 w-4 text-blue-600" />
                     Deal Pipeline
                   </H3>
@@ -348,7 +348,7 @@ export default function DeveloperDashboard() {
 
               {/* Intelligence Feeds */}
               <div>
-                <H3 className="mb-3 flex items-center gap-2">
+                <H3 className="mb-3 flex items-center gap-2 !text-sm">
                   <BarChart3 className="h-4 w-4 text-purple-600" />
                   Intelligence Feeds
                 </H3>
@@ -373,7 +373,7 @@ export default function DeveloperDashboard() {
 
               {/* Quick Actions */}
               <div>
-                <H3 className="mb-3">Quick Actions</H3>
+                <H3 className="mb-3 !text-sm">Quick Actions</H3>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/browse">
                     <Button variant="outline" size="sm" className="w-full justify-start">
@@ -424,7 +424,7 @@ export default function DeveloperDashboard() {
 
               {/* Map Legend */}
               <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur p-3 rounded-lg shadow-lg border">
-                <H3 className="mb-2">Supplier Network</H3>
+                <H3 className="mb-2 !text-sm">Supplier Network</H3>
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 text-xs">
                     <div className="h-3 w-3 rounded-full bg-blue-500" />
@@ -457,7 +457,7 @@ export default function DeveloperDashboard() {
                     <div className="p-3 border-b">
                       <div className="flex items-center gap-2">
                         <div className={cn("h-3 w-3 rounded-full", stage.color)} />
-                        <H3>{stage.label}</H3>
+                        <H3 className="!text-sm">{stage.label}</H3>
                         <Badge variant="secondary" className="ml-auto">
                           {getDealsForStage(stage.id).length}
                         </Badge>
