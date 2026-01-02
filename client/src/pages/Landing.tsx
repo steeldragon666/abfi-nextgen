@@ -288,13 +288,13 @@ export default function Landing() {
           </StaggerContainer>
 
           <FadeInUp delay={0.3} className="text-center mt-8">
-            <Link href="/finance/dashboard">
-              <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" asChild>
+              <Link href="/finance/dashboard">
                 <TrendingUp className="h-4 w-4 mr-2" />
                 Access Full Intelligence Suite
                 <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </FadeInUp>
         </div>
       </section>
@@ -383,18 +383,18 @@ export default function Landing() {
               intelligence features during early access.
             </Body>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/explore">
-                <Button size="lg" className="bg-[#D4AF37] text-black hover:bg-[#E5C158] font-semibold">
+              <Button size="lg" className="bg-[#D4AF37] text-black hover:bg-[#E5C158] font-semibold" asChild>
+                <Link href="/explore">
                   <Compass className="h-5 w-5 mr-2" />
                   Find Your Path
                   <ArrowRight className="h-5 w-5 ml-2" />
-                </Button>
-              </Link>
-              <Link href="/finance/dashboard">
-                <Button size="lg" variant="outline" className="border-[#D4AF37]/50 text-white hover:bg-[#D4AF37]/10 bg-transparent">
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="border-[#D4AF37]/50 text-white hover:bg-[#D4AF37]/10 bg-transparent" asChild>
+                <Link href="/finance/dashboard">
                   View Intelligence Suite
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </FadeInUp>
         </div>
