@@ -292,7 +292,7 @@ const lenderPortal: PortalConfig = {
     {
       id: "lender-intelligence",
       label: "Market Intel",
-      href: "/finance/intelligence",
+      href: "/market-intelligence",
       icon: LineChart,
       roles: ["buyer", "admin", "guest"],
       description: "Price trends and signals",
@@ -332,7 +332,7 @@ const lenderPortal: PortalConfig = {
     {
       id: "lender-quick-intel",
       label: "Market Intel",
-      href: "/finance/intelligence",
+      href: "/market-intelligence",
       icon: LineChart,
       roles: ["buyer", "admin", "guest"],
     },
@@ -466,14 +466,14 @@ export const GLOBAL_NAV_ITEMS: NavItem[] = [
   {
     id: "help",
     label: "Help",
-    href: "/help",
+    href: "/explainers",
     icon: HelpCircle,
     roles: ["supplier", "buyer", "admin", "guest"],
   },
   {
     id: "resources",
     label: "Resources",
-    href: "/resources",
+    href: "/platform-features",
     icon: BookOpen,
     roles: ["supplier", "buyer", "admin", "guest"],
   },

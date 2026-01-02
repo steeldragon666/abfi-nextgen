@@ -87,7 +87,7 @@ export function TopBar({ className }: TopBarProps) {
           className="min-h-[44px] min-w-[44px] hidden sm:flex"
           asChild
         >
-          <Link href="/help" aria-label="Help and support">
+          <Link href="/explainers" aria-label="Help and support">
             <HelpCircle className="h-5 w-5" aria-hidden="true" />
           </Link>
         </Button>
@@ -134,7 +134,7 @@ export function TopBar({ className }: TopBarProps) {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/help" className="w-full cursor-pointer">
+              <Link href="/explainers" className="w-full cursor-pointer">
                 Help & Support
               </Link>
             </DropdownMenuItem>
