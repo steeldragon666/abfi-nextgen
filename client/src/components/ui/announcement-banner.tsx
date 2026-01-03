@@ -2,7 +2,7 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X, Megaphone, Info, AlertTriangle, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "./button";
+import { Button } from "./Button";
 
 const announcementVariants = cva(
   "relative w-full px-4 py-3 text-sm flex items-center justify-between gap-4",

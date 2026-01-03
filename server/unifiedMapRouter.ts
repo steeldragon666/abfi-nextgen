@@ -205,7 +205,7 @@ export const unifiedMapRouter = router({
       };
 
       // Build response with sample data
-      const mapData: Record<string, any[]> = {
+      const mapData = {
         projects: enabledLayers.includes("projects") ? filterByFeedstock(SAMPLE_PROJECTS) : [],
         intentions: enabledLayers.includes("intentions") ? filterByFeedstock(SAMPLE_INTENTIONS) : [],
         demandSignals: enabledLayers.includes("demandSignals") ? filterByFeedstock(SAMPLE_DEMAND_SIGNALS) : [],
@@ -327,7 +327,7 @@ export const unifiedMapRouter = router({
       // Check if user can take actions
       const canAction = {
         canContact: mapRole === "BUYER" || mapRole === "ADMIN",
-        canMatch: mapRole === "BUYER" && entityType === "intention",
+        canMatch: mapRole === "BUYER" && (entityType as string) === "intention",
         canEdit: entity.userId === ctx.user.id || mapRole === "ADMIN",
         canCreateContract:
           mapRole === "ADMIN" ||
@@ -498,7 +498,7 @@ export const unifiedMapRouter = router({
           center: z.object({ lat: z.number(), lng: z.number() }),
           zoom: z.number(),
         }),
-        filters: z.record(z.any()).optional(),
+        filters: z.record(z.string(), z.any()).optional(),
         enabledLayers: z.array(z.string()),
       })
     )

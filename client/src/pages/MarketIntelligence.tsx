@@ -47,7 +47,7 @@ const FEEDSTOCK_CATEGORIES = [
 ];
 
 export default function MarketIntelligence() {
-  const { user, supplier, buyer } = useAuth();
+  const { user } = useAuth();
   const userRole = user?.role || "user";
 
   // Selected entity state
@@ -77,7 +77,6 @@ export default function MarketIntelligence() {
 
   // Handle entity action
   const handleEntityAction = useCallback((action: string, entity: MapEntity) => {
-    console.log("Entity action:", action, entity);
     // Handle different actions based on type
     switch (action) {
       case "interest_expressed":
@@ -232,8 +231,8 @@ export default function MarketIntelligence() {
                     className="h-[700px]"
                     userRole={userRole}
                     userId={user?.id}
-                    supplierId={supplier?.id}
-                    buyerId={buyer?.id}
+                    supplierId={undefined}
+                    buyerId={undefined}
                     feedstockFilter={feedstockFilter}
                     regionFilter={regionFilter}
                     onEntityClick={handleEntityClick}
@@ -251,8 +250,8 @@ export default function MarketIntelligence() {
                     entity={selectedEntity}
                     userRole={userRole}
                     userId={user?.id}
-                    supplierId={supplier?.id}
-                    buyerId={buyer?.id}
+                    supplierId={undefined}
+                    buyerId={undefined}
                     onClose={() => setSelectedEntity(null)}
                     onAction={handleEntityAction}
                   />

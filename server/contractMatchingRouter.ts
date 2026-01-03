@@ -292,7 +292,7 @@ export const contractMatchingRouter = router({
       // const matches = await db.getMatchesForDemandSignal(demandSignalId, { status, sortBy });
 
       // Apply visibility filtering to grower details
-      const visibilityContext = createVisibilityContext(ctx.user, null, buyer?.id);
+      const visibilityContext = createVisibilityContext(ctx.user, undefined, buyer?.id);
 
       // Return matches with transformed grower data
       return {

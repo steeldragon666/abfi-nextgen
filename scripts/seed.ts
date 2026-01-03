@@ -3,6 +3,17 @@
  * Populates the ABFI platform with realistic Australian bioenergy data
  */
 
+import * as dotenv from "dotenv";
+import * as path from "path";
+import { fileURLToPath } from "url";
+
+// ESM equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load .env.local for database connection
+dotenv.config({ path: path.resolve(__dirname, "../.env.local") });
+
 import { getDb } from "../server/db";
 import { sql } from "drizzle-orm";
 import {
@@ -22,6 +33,10 @@ import {
   supplyAgreements,
   growerQualifications,
   bankabilityAssessments,
+  lenderAccess,
+  stressTestResults,
+  stressScenarios,
+  covenantMonitoring,
 } from "../drizzle/schema";
 
 async function seed() {
@@ -34,7 +49,11 @@ async function seed() {
 
   // Clear existing data (in reverse dependency order)
   console.log("🗑️  Clearing existing data...");
+  await db.delete(stressTestResults);
+  await db.delete(stressScenarios);
+  await db.delete(covenantMonitoring);
   await db.delete(bankabilityAssessments);
+  await db.delete(lenderAccess);
   await db.delete(growerQualifications);
   await db.delete(supplyAgreements);
   await db.delete(projects);
@@ -369,6 +388,207 @@ async function seed() {
     console.log(`  ✓ Created project: ${project.name}`);
   }
 
+  // 6. Create Supply Agreements for Projects
+  console.log("📋 Creating supply agreements...");
+
+  const now = new Date();
+  const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+  const fiveYearsFromNow = new Date(now.getTime() + 5 * 365 * 24 * 60 * 60 * 1000);
+
+  // Brisbane SAF Facility supply agreements
+  await db.insert(supplyAgreements).values([
+    // Tier 1 - 60% of 100,000 = 60,000 tonnes (from Cane Farmers)
+    {
+      projectId: projectIds[0],
+      supplierId: supplierIds[0], // Queensland Cane Farmers
+      tier: "tier1",
+      annualVolume: 60000,
+      flexBandPercent: 10,
+      startDate: oneYearAgo,
+      endDate: fiveYearsFromNow,
+      termYears: 6,
+      pricingMechanism: "fixed_with_escalation",
+      basePrice: 8500, // $85/tonne in cents
+      escalationRate: "CPI+1%",
+      takeOrPayPercent: 90,
+      deliverOrPayPercent: 90,
+    },
+    // Tier 1 - 20% of 100,000 = 20,000 tonnes (from Forestry)
+    {
+      projectId: projectIds[0],
+      supplierId: supplierIds[2], // Victorian Forestry
+      tier: "tier1",
+      annualVolume: 20000,
+      flexBandPercent: 15,
+      startDate: oneYearAgo,
+      endDate: fiveYearsFromNow,
+      termYears: 6,
+      pricingMechanism: "fixed",
+      basePrice: 9200, // $92/tonne
+      takeOrPayPercent: 85,
+      deliverOrPayPercent: 85,
+    },
+    // Tier 2 - 15% of 100,000 = 15,000 tonnes (from Grain Growers)
+    {
+      projectId: projectIds[0],
+      supplierId: supplierIds[1], // NSW Grain Growers
+      tier: "tier2",
+      annualVolume: 15000,
+      flexBandPercent: 20,
+      startDate: oneYearAgo,
+      endDate: fiveYearsFromNow,
+      termYears: 6,
+      pricingMechanism: "index_linked",
+      basePrice: 7800, // $78/tonne
+      escalationRate: "CPI",
+      takeOrPayPercent: 70,
+      deliverOrPayPercent: 70,
+    },
+  ]);
+  console.log(`  ✓ Created 3 supply agreements for Brisbane SAF Facility`);
+
+  // Newcastle Biomass Power Plant supply agreements
+  await db.insert(supplyAgreements).values([
+    // Tier 1 - 50% of 75,000 = 37,500 tonnes
+    {
+      projectId: projectIds[1],
+      supplierId: supplierIds[1], // NSW Grain Growers
+      tier: "tier1",
+      annualVolume: 37500,
+      flexBandPercent: 10,
+      startDate: oneYearAgo,
+      endDate: fiveYearsFromNow,
+      termYears: 6,
+      pricingMechanism: "fixed_with_escalation",
+      basePrice: 7500, // $75/tonne
+      escalationRate: "CPI+0.5%",
+      takeOrPayPercent: 90,
+      deliverOrPayPercent: 90,
+    },
+    // Tier 2 - 25% of 75,000 = 18,750 tonnes
+    {
+      projectId: projectIds[1],
+      supplierId: supplierIds[2], // Victorian Forestry
+      tier: "tier2",
+      annualVolume: 18750,
+      flexBandPercent: 15,
+      startDate: oneYearAgo,
+      endDate: fiveYearsFromNow,
+      termYears: 6,
+      pricingMechanism: "index_linked",
+      basePrice: 8000, // $80/tonne
+      takeOrPayPercent: 75,
+      deliverOrPayPercent: 75,
+    },
+    // Option - 10,000 tonnes
+    {
+      projectId: projectIds[1],
+      supplierId: supplierIds[4], // Bamboo Australia
+      tier: "option",
+      annualVolume: 10000,
+      startDate: oneYearAgo,
+      endDate: fiveYearsFromNow,
+      termYears: 6,
+      pricingMechanism: "fixed",
+      strikePrice: 9500, // $95/tonne strike
+      optionFeePercent: 5,
+      exerciseWindowDays: 60,
+    },
+  ]);
+  console.log(`  ✓ Created 3 supply agreements for Newcastle Biomass Power Plant`);
+
+  // 7. Create Lender Access for Projects
+  console.log("🏦 Creating lender access...");
+
+  // Get Alice (admin user) for grantedBy
+  const [adminUser] = await db
+    .select()
+    .from(users)
+    .where(sql`${users.email} = 'alice@dev.local'`);
+
+  if (adminUser) {
+    const oneYearFromNow = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+
+    await db.insert(lenderAccess).values([
+      {
+        projectId: projectIds[0],
+        lenderName: "Commonwealth Bank of Australia",
+        lenderEmail: "alice@dev.local", // Use Alice's email so she can access
+        lenderContact: "Project Finance Division",
+        accessToken: "cba_brisbane_saf_" + Date.now().toString(36),
+        grantedBy: adminUser.id,
+        validFrom: now,
+        validUntil: oneYearFromNow,
+        status: "active",
+        canViewAgreements: true,
+        canViewAssessments: true,
+        canViewCovenants: true,
+        canDownloadReports: true,
+      },
+      {
+        projectId: projectIds[1],
+        lenderName: "National Australia Bank",
+        lenderEmail: "alice@dev.local", // Also give Alice access to this one
+        lenderContact: "Infrastructure Lending",
+        accessToken: "nab_newcastle_bio_" + Date.now().toString(36),
+        grantedBy: adminUser.id,
+        validFrom: now,
+        validUntil: oneYearFromNow,
+        status: "active",
+        canViewAgreements: true,
+        canViewAssessments: true,
+        canViewCovenants: true,
+        canDownloadReports: true,
+      },
+    ]);
+    console.log(`  ✓ Created 2 lender access records for Alice`);
+  } else {
+    console.log(`  ⚠ Admin user alice@dev.local not found, skipping lender access`);
+  }
+
+  // 8. Create Bankability Assessments for Projects
+  console.log("📊 Creating bankability assessments...");
+
+  await db.insert(bankabilityAssessments).values([
+    {
+      projectId: projectIds[0],
+      overallScore: 78,
+      tier1Coverage: 80, // 80,000 / 100,000 = 80%
+      tier2Coverage: 15, // 15,000 / 100,000 = 15%
+      optionsCoverage: 0,
+      rofrCoverage: 0,
+      averageContractTerm: 6,
+      supplierConcentration: 35,
+      priceStability: 82,
+      volumeFlexibility: 12,
+      assessmentDate: now,
+      status: "current",
+      recommendations: JSON.stringify([
+        "Consider adding ROFR agreements for additional supply security",
+        "Supplier concentration is within acceptable limits",
+      ]),
+    },
+    {
+      projectId: projectIds[1],
+      overallScore: 68,
+      tier1Coverage: 50, // 37,500 / 75,000 = 50%
+      tier2Coverage: 25, // 18,750 / 75,000 = 25%
+      optionsCoverage: 13.3, // 10,000 / 75,000 ≈ 13.3%
+      rofrCoverage: 0,
+      averageContractTerm: 6,
+      supplierConcentration: 40,
+      priceStability: 75,
+      volumeFlexibility: 15,
+      assessmentDate: now,
+      status: "current",
+      recommendations: JSON.stringify([
+        "Tier 1 coverage below 80% target - increase firm commitments",
+        "Consider converting options to tier 1 agreements",
+      ]),
+    },
+  ]);
+  console.log(`  ✓ Created 2 bankability assessments`);
+
   console.log("✅ Seed data generation complete!");
   console.log(`
 📊 Summary:
@@ -377,6 +597,9 @@ async function seed() {
   - ${feedstockIds.length} feedstock listings created
   - 5 inquiries created
   - ${projectIds.length} bioenergy projects created
+  - 6 supply agreements created
+  - 2 lender access records created
+  - 2 bankability assessments created
   `);
 }
 

@@ -486,7 +486,7 @@ export const riskAnalyticsRouter = router({
         const stressedValue = baselineValue * (1 - impactPct / 100);
 
         return {
-          scenario: scenario.name,
+          scenario: scenario.scenarioName,
           baselineValue,
           stressedValue,
           impactPct: Math.round(impactPct * 10) / 10,

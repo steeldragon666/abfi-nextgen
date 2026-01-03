@@ -110,7 +110,6 @@ export default function QuoteRequest() {
   const onSubmit = async (data: QuoteRequestFormData) => {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log("Quote request submitted:", data);
     setIsSubmitted(true);
   };
 

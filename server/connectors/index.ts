@@ -9,7 +9,7 @@ export { ArenaConnector } from "./arenaConnector";
 export { CEFCConnector } from "./cefcConnector";
 export { QldEpaConnector } from "./qldEpaConnector";
 export { IPAustraliaConnector } from "./ipAustraliaConnector";
-export { CarbonStandardsConnector, carbonStandardsConnector } from "./carbonStandardsConnector";
+export { CarbonStandardsConnector, carbonStandardsConnector, type CarbonStandardArticle } from "./carbonStandardsConnector";
 
 import { ConnectorConfig, ConnectorResult, RawSignal } from "./baseConnector";
 import { NSWPlanningConnector } from "./nswPlanningConnector";

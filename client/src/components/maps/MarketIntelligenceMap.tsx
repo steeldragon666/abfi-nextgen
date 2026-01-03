@@ -225,8 +225,8 @@ export function MarketIntelligenceMap({
   // Fetch market intelligence
   const { data: marketIntel } = trpc.unifiedMap.getMarketIntelligence.useQuery(
     {
-      feedstockCategories: filters.feedstockCategories.length > 0 ? filters.feedstockCategories : undefined,
-      regionIds: filters.regions.length > 0 ? filters.regions : undefined,
+      feedstockCategory: filters.feedstockCategories.length > 0 ? filters.feedstockCategories[0] : undefined,
+      state: filters.regions.length > 0 ? filters.regions[0] : undefined,
     },
     {
       refetchInterval: 300000, // Refresh every 5 minutes
@@ -851,31 +851,31 @@ export function MarketIntelligenceMap({
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
             <div>
               <div className="text-lg font-bold text-green-600">
-                {marketIntel.supplyMetrics?.totalVolume?.toLocaleString() || 0}
+                {marketIntel.totalProjectedSupply?.toLocaleString() || 0}
               </div>
               <div className="text-xs text-gray-500">Supply (tonnes)</div>
             </div>
             <div>
               <div className="text-lg font-bold text-blue-600">
-                {marketIntel.demandMetrics?.totalVolume?.toLocaleString() || 0}
+                {marketIntel.totalDemand?.toLocaleString() || 0}
               </div>
               <div className="text-xs text-gray-500">Demand (tonnes)</div>
             </div>
             <div>
               <div className="text-lg font-bold text-purple-600">
-                ${marketIntel.priceMetrics?.averageSpot?.toFixed(2) || "0.00"}
+                ${marketIntel.avgSpotPrice?.toFixed(2) || "0.00"}
               </div>
               <div className="text-xs text-gray-500">Avg Price/t</div>
             </div>
             <div>
               <div className="text-lg font-bold text-amber-600">
-                {marketIntel.activeContracts || 0}
+                {marketIntel.recentContractCount || 0}
               </div>
               <div className="text-xs text-gray-500">Active Contracts</div>
             </div>
             <div>
               <div className="text-lg font-bold text-cyan-600">
-                {marketIntel.pendingMatches || 0}
+                {marketIntel.recentMatchCount || 0}
               </div>
               <div className="text-xs text-gray-500">Pending Matches</div>
             </div>
@@ -985,7 +985,7 @@ export function MarketIntelligenceMap({
       )}
 
       {/* CSS for pulse animation */}
-      <style jsx global>{`
+      <style>{`
         @keyframes pulse {
           0% { transform: scale(1); opacity: 1; }
           50% { transform: scale(1.3); opacity: 0.5; }

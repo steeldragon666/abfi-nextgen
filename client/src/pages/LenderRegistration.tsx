@@ -129,7 +129,6 @@ const LenderRegistration: React.FC = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log('Registration Data:', formData);
     alert('Lender Registration Submitted! (Check console for data)');
     // In a real app, this would be an API call
   };

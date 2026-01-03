@@ -22,9 +22,10 @@ import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { H2, H3, Body } from "@/components/Typography";
+interface ProfilerOption {  id: string;  label: string;  description: string;  icon: React.FC<any>;  path?: string | null;}interface ProfilerQuestion {  id: string;  question: string;  options: ProfilerOption[];}
 
 // Profiler questions
-const PROFILER_QUESTIONS = [
+const PROFILER_QUESTIONS: ProfilerQuestion[] = [
   {
     id: "role",
     question: "What best describes your role?",

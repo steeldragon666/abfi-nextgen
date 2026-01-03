@@ -149,7 +149,7 @@ export default function PolicyCarbonDashboard() {
       acc[month].push(event);
       return acc;
     },
-    {} as Record<string, PolicyTimelineEvent[]>
+    {} as Record<string, typeof timeline[number][]>
   );
 
   if (loading && !kanban) {
@@ -420,9 +420,9 @@ export default function PolicyCarbonDashboard() {
                       <Skeleton key={i} className="h-24" />
                     ))}
                   </div>
-                ) : carbonNews && carbonNews.length > 0 ? (
+                ) : carbonNews && carbonNews.articles && carbonNews.articles.length > 0 ? (
                   <div className="space-y-3">
-                    {carbonNews.map((article) => (
+                    {carbonNews.articles.map((article: any) => (
                       <div
                         key={article.id}
                         className="p-4 rounded-lg border hover:bg-muted/50 transition-colors"
@@ -476,7 +476,7 @@ export default function PolicyCarbonDashboard() {
                               </span>
                               {article.keywords && article.keywords.length > 0 && (
                                 <div className="flex items-center gap-1">
-                                  {article.keywords.slice(0, 3).map((keyword, idx) => (
+                                  {article.keywords.slice(0, 3).map((keyword: string, idx: number) => (
                                     <span
                                       key={idx}
                                       className="text-xs px-1.5 py-0.5 rounded bg-gray-100 text-gray-600"

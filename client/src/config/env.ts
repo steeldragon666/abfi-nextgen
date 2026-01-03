@@ -155,8 +155,7 @@ if (isDev) {
     blockchain: !!import.meta.env.VITE_EVIDENCE_CONTRACT,
   };
 
-  console.log("🔧 Environment Configuration:", configured);
-}
+  }
 
 // Export individual config sections for easier imports
 export const authConfig = {

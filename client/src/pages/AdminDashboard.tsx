@@ -341,7 +341,7 @@ export default function AdminDashboard() {
                         </div>
                         <Badge variant="pending" className="shrink-0">
                           <Clock className="h-3 w-3 mr-1" />
-                          {formatDate(feedstock.createdAt)}
+                          {formatDate((feedstock as any).createdAt || (feedstock as any).updatedAt)}
                         </Badge>
                       </div>
                     </CardHeader>

@@ -2070,7 +2070,7 @@ australianDataRouter.get("/bom/fire-danger", async (req, res) => {
         totalDistricts: districts.length,
         byRating: ratingCounts,
         highestRating: Math.max(...districts.map((d) => d.rating)),
-        statesWithExtreme: [...new Set(districts.filter((d) => d.rating >= 3).map((d) => d.state))],
+        statesWithExtreme: Array.from(new Set(districts.filter((d) => d.rating >= 3).map((d) => d.state))),
       },
       ratingLegend: FIRE_DANGER_RATINGS,
       source: "Bureau of Meteorology - Australian Fire Danger Rating System",

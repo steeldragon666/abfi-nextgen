@@ -59,7 +59,7 @@ export default defineConfig(async ({ command }) => {
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
-          manualChunks(id) {
+          manualChunks(id: string) {
             // Core React - loaded on every page
             if (id.includes("node_modules/react/") ||
                 id.includes("node_modules/react-dom/") ||

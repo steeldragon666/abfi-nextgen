@@ -307,7 +307,6 @@ const Step4EvidenceUpload: React.FC<StepProps> = ({ formData, updateFormData, on
   const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     // Placeholder for file handling logic
-    console.log('Files dropped:', e.dataTransfer.files);
     // In a real implementation, you would update formData.evidenceFiles
   };
 
@@ -386,8 +385,7 @@ const GrowerRegistrationFlow: React.FC = () => {
     } else {
       // Final submission logic
       alert('Registration Submitted! (See console for data)');
-      console.log('Final Form Data:', formData);
-    }
+      }
   };
 
   const renderStep = () => {

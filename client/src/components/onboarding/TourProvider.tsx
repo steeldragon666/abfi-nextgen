@@ -89,35 +89,30 @@ export const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
         ),
         position: step.position,
       }))}
-      isOpen={isOpen}
-      onOpen={() => setIsOpen(true)}
-      onClose={handleClose}
+      // isOpen={isOpen} // TODO: Update to new @reactour/tour API
+      // onOpen={() => setIsOpen(true)}
+      // onClose={handleClose}
       currentStep={currentStep}
       setCurrentStep={setCurrentStep}
       showCloseButton={false}
       showNavigation={true}
       showBadge={true}
       styles={{
-        popover: (base) => ({
+        popover: (base: React.CSSProperties) => ({
           ...base,
           borderRadius: '12px',
           padding: '20px',
           maxWidth: '500px',
           background: '#ffffff',
         }),
-        helper: (base) => ({
-          ...base,
-          background: '#ffffff',
-          boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
-        }),
-        badge: (base) => ({
+        badge: (base: React.CSSProperties) => ({
           ...base,
           background: '#D4AF37',
           color: '#000000',
         }),
-        dot: (base, state) => ({
+        dot: (base: React.CSSProperties, state?: { current?: boolean }) => ({
           ...base,
-          background: state.current ? '#D4AF37' : '#e5e7eb',
+          background: state?.current ? '#D4AF37' : '#e5e7eb',
         }),
       }}
     >

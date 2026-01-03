@@ -10,6 +10,7 @@
  * - Land use classification
  */
 
+// @ts-ignore - no type definitions available
 import ee from "@google/earthengine";
 import path from "path";
 import fs from "fs";

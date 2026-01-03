@@ -119,9 +119,9 @@ async function seedACCUPrices(db: any) {
     const change = (Math.random() - 0.45) * 1.5;
     price = Math.max(20, Math.min(50, price + change));
 
-    const previousPrice = i < 180 ? prices[prices.length - 1]?.price || price : price;
-    const dailyChange = price - previousPrice;
-    const changePct = previousPrice !== 0 ? (dailyChange / previousPrice) * 100 : 0;
+    const previousPrice: number = i < 180 ? Number(prices[prices.length - 1]?.price) || price : price;
+    const dailyChange: number = price - previousPrice;
+    const changePct: number = previousPrice !== 0 ? (dailyChange / previousPrice) * 100 : 0;
 
     prices.push({
       date,

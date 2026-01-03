@@ -168,8 +168,7 @@ export default function GrowerDashboard() {
   const focusOnListing = (listing: (typeof MY_LISTINGS)[0]) => {
     setSelectedListing(listing.id);
     // UnifiedMap handles its own map state through MapControlsContext
-    console.log("Focus on listing:", listing.name, listing.location);
-  };
+    };
 
   return (
     <div className="min-h-screen bg-background">
@@ -489,8 +488,7 @@ export default function GrowerDashboard() {
               <UnifiedMap
                 className="w-full h-full"
                 onEntitySelect={(entity) => {
-                  console.log("Selected entity:", entity);
-                }}
+                  }}
               />
 
               {/* Map Legend */}

@@ -266,10 +266,12 @@ npm start
 
 ## Documentation
 
-- [Implementation Guide](./docs/IMPLEMENTATION_GUIDE.md)
-- [API Documentation](./docs/API.md)
-- [Design System](./design-system-biofeed.md)
+- [Design System](./docs/DESIGN_SYSTEM.md)
+- [Platform Features](./docs/PLATFORM_FEATURES.md)
+- [Strategic Vision](./docs/STRATEGIC_VISION.md)
+- [Value Propositions](./docs/VALUE_PROPOSITIONS.md)
 - [Deployment Guide](./DEPLOYMENT_GUIDE.md)
+- [OAuth Configuration](./OAUTH_CONFIGURATION_GUIDE.md)
 
 ---
 

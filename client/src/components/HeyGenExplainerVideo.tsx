@@ -53,7 +53,7 @@ export function HeyGenExplainerVideo({
 
       // Mark scene as completed when we reach near the end
       if (currentTime >= scene.endTime - 0.5) {
-        setCompletedScenes((prev) => new Set([...prev, scene.id]));
+        setCompletedScenes((prev) => new Set([...Array.from(prev), scene.id]));
       }
     }
   }, [currentTime, scenes]);

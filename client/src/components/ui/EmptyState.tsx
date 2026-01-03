@@ -63,15 +63,4 @@ const EmptyState: React.FC<EmptyStateProps> = ({ title, message, ctaText, onCtaC
   );
 };
 
-// Example usage with encouraging message
-const ExampleEmptyState = () => (
-  <EmptyState
-    title="You're all set to begin!"
-    message="It looks like you haven't created any assets yet. Start by creating your first one to unlock the full potential of the ABFI platform. We're here to help you succeed."
-    ctaText="Create First Asset"
-    onCtaClick={() => console.log('CTA Clicked')}
-  />
-);
-
 export default EmptyState;
-export { ExampleEmptyState };

@@ -152,8 +152,8 @@ const GhostButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ 
 );
 
 // Card Component
-const Card: React.FC<{ title: string; children: React.ReactNode; className?: string }> = ({ title, children, className }) => (
-  <div className={`bg-white border border-gray-200 shadow-sm hover:shadow-md rounded-xl p-6 transition-shadow duration-300 ${className}`}>
+const Card: React.FC<{ title: string; children: React.ReactNode; className?: string; id?: string }> = ({ title, children, className, id }) => (
+  <div id={id} className={`bg-white border border-gray-200 shadow-sm hover:shadow-md rounded-xl p-6 transition-shadow duration-300 ${className}`}>
     <h3 className="text-2xl font-semibold mb-6 text-black">{title}</h3>
     {children}
   </div>

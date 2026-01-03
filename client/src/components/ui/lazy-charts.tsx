@@ -38,7 +38,7 @@ type RechartsModule = typeof RechartsTypes;
 
 // Props for the lazy chart component
 interface LazyChartProps {
-  children: (recharts: RechartsModule) => ReactNode;
+  children: (recharts: RechartsModule) => React.ReactElement;
   height?: number;
   fallback?: ReactNode;
 }
@@ -93,7 +93,7 @@ export function LazyChart({ children, height = 300, fallback }: LazyChartProps) 
  * Convenience wrapper that includes ResponsiveContainer
  */
 interface LazyResponsiveChartProps {
-  children: (recharts: RechartsModule) => ReactNode;
+  children: (recharts: RechartsModule) => React.ReactElement;
   height?: number | string;
   width?: number | string;
   fallback?: ReactNode;

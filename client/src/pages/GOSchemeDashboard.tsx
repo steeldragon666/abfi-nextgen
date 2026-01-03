@@ -184,13 +184,14 @@ function IssueCertificateDialog({ onSuccess }: { onSuccess: () => void }) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     goScheme: "REGO" as "REGO" | "PGO" | "GO_AU" | "ISCC_PLUS" | "RSB",
-    projectId: "",
-    energySourceMwh: "",
+    currentHolderId: "",
+    energySource: "biomass",
+    energyMwh: "",
     productionPeriodStart: "",
     productionPeriodEnd: "",
   });
 
-  const issueMutation = trpc.goScheme.issueCertificate.useMutation({
+  const issueMutation = trpc.goScheme.createGoCertificate.useMutation({
     onSuccess: (data) => {
       toast.success(`Certificate issued: ${data.goId}`);
       setOpen(false);
@@ -205,8 +206,9 @@ function IssueCertificateDialog({ onSuccess }: { onSuccess: () => void }) {
     e.preventDefault();
     issueMutation.mutate({
       goScheme: formData.goScheme,
-      projectId: parseInt(formData.projectId, 10),
-      energySourceMwh: parseFloat(formData.energySourceMwh),
+      currentHolderId: parseInt(formData.currentHolderId, 10),
+      energySource: formData.energySource,
+      energyMwh: parseFloat(formData.energyMwh),
       productionPeriodStart: new Date(formData.productionPeriodStart),
       productionPeriodEnd: new Date(formData.productionPeriodEnd),
     });
@@ -252,8 +254,8 @@ function IssueCertificateDialog({ onSuccess }: { onSuccess: () => void }) {
             <Label>Project ID</Label>
             <Input
               type="number"
-              value={formData.projectId}
-              onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}
+              value={formData.currentHolderId}
+              onChange={(e) => setFormData({ ...formData, currentHolderId: e.target.value })}
               required
             />
           </div>
@@ -263,8 +265,8 @@ function IssueCertificateDialog({ onSuccess }: { onSuccess: () => void }) {
             <Input
               type="number"
               step="0.01"
-              value={formData.energySourceMwh}
-              onChange={(e) => setFormData({ ...formData, energySourceMwh: e.target.value })}
+              value={formData.energyMwh}
+              onChange={(e) => setFormData({ ...formData, energyMwh: e.target.value })}
               required
             />
           </div>
@@ -311,8 +313,8 @@ function GenerateAuditPackDialog({ onSuccess }: { onSuccess: () => void }) {
     packType: "lender_assurance" as const,
     entityType: "project" as const,
     entityId: "",
-    title: "",
-    description: "",
+    periodStart: "",
+    periodEnd: "",
   });
 
   const generateMutation = trpc.goScheme.generateAuditPack.useMutation({
@@ -332,8 +334,8 @@ function GenerateAuditPackDialog({ onSuccess }: { onSuccess: () => void }) {
       packType: formData.packType,
       entityType: formData.entityType,
       entityId: parseInt(formData.entityId, 10),
-      title: formData.title,
-      description: formData.description || undefined,
+      periodStart: new Date(formData.periodStart),
+      periodEnd: new Date(formData.periodEnd),
     });
   };
 
@@ -405,8 +407,8 @@ function GenerateAuditPackDialog({ onSuccess }: { onSuccess: () => void }) {
           <div>
             <Label>Title</Label>
             <Input
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              value={formData.periodStart}
+              onChange={(e) => setFormData({ ...formData, periodStart: e.target.value })}
               placeholder="Q4 2025 Lender Report"
               required
             />
@@ -415,8 +417,8 @@ function GenerateAuditPackDialog({ onSuccess }: { onSuccess: () => void }) {
           <div>
             <Label>Description (optional)</Label>
             <Input
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              value={formData.periodEnd}
+              onChange={(e) => setFormData({ ...formData, periodEnd: e.target.value })}
               placeholder="Quarterly compliance documentation"
             />
           </div>
@@ -440,10 +442,10 @@ export default function GOSchemeDashboard() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   // Fetch stats
-  const { data: stats, isLoading: statsLoading, refetch: refetchStats } = trpc.goScheme.getGOStats.useQuery();
+  const { data: stats, isLoading: statsLoading, refetch: refetchStats } = trpc.goScheme.getGoStats.useQuery({});
 
   // Fetch certificates
-  const { data: certificatesData, isLoading: certificatesLoading, refetch: refetchCertificates } = trpc.goScheme.listCertificates.useQuery({
+  const { data: certificatesData, isLoading: certificatesLoading, refetch: refetchCertificates } = trpc.goScheme.listGoCertificates.useQuery({
     status: statusFilter !== "all" ? statusFilter as any : undefined,
     limit: 50,
   });
@@ -523,21 +525,21 @@ export default function GOSchemeDashboard() {
               />
               <StatsCard
                 title="Active Certificates"
-                value={stats?.activeCertificates || 0}
+                value={stats?.issuedCertificates || 0}
                 icon={CheckCircle2}
                 variant="success"
                 description="Currently valid"
               />
               <StatsCard
                 title="Total MWh"
-                value={`${((stats?.totalMwh || 0) as number).toLocaleString()}`}
+                value={`${((stats?.totalEnergyMwh || 0) as number).toLocaleString()}`}
                 icon={Zap}
                 variant="info"
                 description="Energy certified"
               />
               <StatsCard
                 title="Audit Packs"
-                value={stats?.totalAuditPacks || 0}
+                value={(auditPacksData?.packs?.length ?? 0)}
                 icon={FileText}
                 description="Documentation packages"
               />

@@ -46,7 +46,7 @@ export function ExplainerCarousel({
       {/* Image Display */}
       <div className="relative">
         <div className="aspect-[16/9] overflow-hidden">
-          <img
+          <img loading="lazy"
             src={panels[currentIndex].src}
             alt={panels[currentIndex].alt}
             className="w-full h-full object-contain"
@@ -101,7 +101,7 @@ export function ExplainerCarousel({
               idx === currentIndex ? "ring-2 ring-offset-2 ring-amber-500" : "opacity-60 hover:opacity-100"
             }`}
           >
-            <img
+            <img loading="lazy"
               src={panel.src}
               alt={`Thumbnail ${idx + 1}`}
               className="w-full h-full object-cover"

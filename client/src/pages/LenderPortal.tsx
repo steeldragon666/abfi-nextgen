@@ -429,7 +429,7 @@ export default function LenderPortal() {
                                     "text-sm",
                                     latestStressTest.passesStressTest ? "text-green-700" : "text-red-700"
                                   )}>
-                                    Rating impact: {latestStressTest.baseRating} → {latestStressTest.stressRating} ({latestStressTest.ratingDelta >= 0 ? "+" : ""}{latestStressTest.ratingDelta} notches)
+                                    Rating impact: {latestStressTest.baseRating} → {latestStressTest.stressRating} ({latestStressTest.ratingDelta ?? 0 >= 0 ? "+" : ""}{latestStressTest.ratingDelta ?? 0} notches)
                                   </p>
                                 </div>
                               </div>
@@ -440,7 +440,7 @@ export default function LenderPortal() {
                                 </div>
                                 <div className="p-2 rounded bg-muted/50">
                                   <div className="text-xs text-gray-600">HHI Delta</div>
-                                  <div className="font-mono font-semibold">{latestStressTest.hhiDelta > 0 ? "+" : ""}{latestStressTest.hhiDelta}</div>
+                                  <div className="font-mono font-semibold">{latestStressTest.hhiDelta ?? 0 > 0 ? "+" : ""}{latestStressTest.hhiDelta ?? 0}</div>
                                 </div>
                                 <div className="p-2 rounded bg-muted/50">
                                   <div className="text-xs text-gray-600">Inv. Grade</div>

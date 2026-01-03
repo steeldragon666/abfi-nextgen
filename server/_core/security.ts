@@ -415,7 +415,7 @@ function getClientIP(req: Request): string {
 // Clean up expired entries periodically (every 5 minutes)
 setInterval(() => {
   const now = Date.now();
-  for (const [key, entry] of rateLimitStore.entries()) {
+  for (const [key, entry] of Array.from(rateLimitStore.entries())) {
     if (now > entry.resetTime) {
       rateLimitStore.delete(key);
     }

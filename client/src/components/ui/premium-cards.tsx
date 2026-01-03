@@ -33,7 +33,7 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
         ref={ref}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
         whileHover={hover ? { y: -2, transition: { duration: 0.2 } } : undefined}
         className={cn(
           "relative rounded-2xl border border-white/20",
@@ -158,7 +158,7 @@ export function StatsCardPremium({
     ? {
         initial: { opacity: 0, y: 20 },
         animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const },
         whileHover: { y: -2, transition: { duration: 0.2 } },
       }
     : {};
@@ -493,7 +493,7 @@ export function ProgressRing({
           className={colorStyles[color]}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as const }}
           style={{ strokeDasharray: circumference }}
         />
       </svg>

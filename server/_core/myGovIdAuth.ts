@@ -56,7 +56,7 @@ function generateState(): string {
  */
 function cleanupPkceStore(): void {
   const now = Date.now();
-  for (const [state, data] of pkceStore.entries()) {
+  for (const [state, data] of Array.from(pkceStore.entries())) {
     if (data.expiresAt < now) {
       pkceStore.delete(state);
     }

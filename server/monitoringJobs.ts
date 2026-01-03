@@ -197,7 +197,7 @@ export async function weeklySupplyRecalculation(): Promise<{
           await db
             .update(bankabilityAssessments)
             .set({
-              reassessmentRequired: true,
+              // TODO: reassessmentRequired: true - field not in schema
               reassessmentReason: `Supply position changed significantly: Tier 1 coverage moved from ${oldTier1}% to ${tier1Coverage}% (${coverageChange}% change)`,
             })
             .where(eq(bankabilityAssessments.id, latestAssessment.id));

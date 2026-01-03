@@ -89,12 +89,12 @@ export function EntityDetailPanel({
   const data = entity.data;
 
   // Mutations for actions
-  const expressInterest = trpc.contractMatching.expressInterest?.useMutation({
-    onSuccess: () => {
-      setShowInterestModal(false);
-      onAction?.("interest_expressed", entity);
-    },
-  });
+  //   const expressInterest = trpc.contractMatching.expressInterest?.useMutation({
+  //     onSuccess: () => {
+  //       setShowInterestModal(false);
+  //       onAction?.("interest_expressed", entity);
+  //     },
+  //   });
 
   const startNegotiation = trpc.contractMatching.startNegotiation?.useMutation({
     onSuccess: () => {
@@ -105,10 +105,8 @@ export function EntityDetailPanel({
 
   const calculateTransport = trpc.transport.calculateRoute?.useQuery(
     {
-      originLat: data.latitude,
-      originLng: data.longitude,
-      destLat: buyerId ? -33.8688 : -25.2744, // Default Sydney or center
-      destLng: buyerId ? 151.2093 : 133.7751,
+      origin: { lat: data.latitude, lng: data.longitude },
+      destination: { lat: buyerId ? -33.8688 : -25.2744, lng: buyerId ? 151.2093 : 133.7751 },
       feedstockCategory: data.feedstockCategory,
       volumeTonnes: data.projectedVolumeTonnes || data.volumeTonnes || 1000,
     },
@@ -830,31 +828,31 @@ export function EntityDetailPanel({
                   <div className="bg-gray-50 p-3 rounded">
                     <div className="text-gray-500 text-xs">Optimal Mode</div>
                     <div className="font-semibold text-lg">
-                      {calculateTransport.data.optimalMode || "ROAD"}
+                      {calculateTransport.data.recommendedMode || "ROAD"}
                     </div>
                   </div>
                   <div className="bg-blue-50 p-3 rounded col-span-2">
                     <div className="text-blue-700 text-xs">Total Cost</div>
                     <div className="font-bold text-2xl text-blue-600">
-                      ${calculateTransport.data.totalCost?.toFixed(2)}/t
+                      ${calculateTransport.data.costs?.totalCost?.toFixed(2)}/t
                     </div>
                   </div>
                 </div>
-                {calculateTransport.data.breakdown && (
+                {calculateTransport.data.costs && (
                   <div className="text-sm">
                     <div className="font-medium text-gray-700 mb-2">Cost Breakdown</div>
                     <div className="space-y-1">
                       <div className="flex justify-between">
                         <span className="text-gray-500">Transport</span>
-                        <span>${calculateTransport.data.breakdown.transportCost?.toFixed(2)}/t</span>
+                        <span>${calculateTransport.data.costs.baseCost?.toFixed(2)}/t</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-500">Loading</span>
-                        <span>${calculateTransport.data.breakdown.loadingCost?.toFixed(2)}/t</span>
+                        <span>${calculateTransport.data.costs.handlingCost?.toFixed(2)}/t</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-500">Unloading</span>
-                        <span>${calculateTransport.data.breakdown.unloadingCost?.toFixed(2)}/t</span>
+                        <span>${calculateTransport.data.costs.tollsCost?.toFixed(2)}/t</span>
                       </div>
                     </div>
                   </div>

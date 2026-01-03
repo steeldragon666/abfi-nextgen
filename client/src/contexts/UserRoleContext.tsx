@@ -95,7 +95,6 @@ export function UserRoleProvider({ children }: { children: ReactNode }) {
 
   const switchRole = useCallback((newRole: UserRole) => {
     // In a real app, this would update the user's role in the backend
-    console.log(`Switching role to: ${newRole}`);
     setLocation(roleDashboards[newRole]);
   }, [setLocation]);
 

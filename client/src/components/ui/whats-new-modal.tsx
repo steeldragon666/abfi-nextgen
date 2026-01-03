@@ -7,7 +7,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "./dialog";
-import { Button } from "./button";
+import { Button } from "./Button";
 import { Badge } from "./badge";
 import { ScrollArea } from "./scroll-area";
 import { Sparkles, Bug, Wrench, Shield, Zap, Gift } from "lucide-react";

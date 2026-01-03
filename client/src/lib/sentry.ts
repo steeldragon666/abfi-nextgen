@@ -209,7 +209,7 @@ export function withSentryErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
   options?: Parameters<typeof Sentry.withErrorBoundary>[1]
 ): React.ComponentType<P> {
-  return Sentry.withErrorBoundary(Component, options);
+  return Sentry.withErrorBoundary(Component, options || {});
 }
 
 // Re-export Sentry for direct access if needed

@@ -4,7 +4,7 @@ export type UserRole = 'first-time' | 'grower' | 'developer' | 'financier' | 'ad
 
 export function useUserRole(): UserRole {
   const { user } = useAuth();
-  
+
   // Check if first-time user
   if (typeof window !== 'undefined') {
     const hasSeenTour = localStorage.getItem('abfi-has-seen-tour');
@@ -14,20 +14,19 @@ export function useUserRole(): UserRole {
     }
   }
 
-  // Map user roles
+  // Map database roles to UI roles
+  // Database roles: user, admin, supplier, buyer, auditor
   if (!user) return 'first-time';
-  
+
   switch (user.role) {
     case 'admin':
       return 'admin';
-    case 'financier':
-    case 'lender':
+    case 'auditor':
       return 'financier';
-    case 'developer':
     case 'buyer':
       return 'developer';
-    case 'grower':
-    case 'producer':
+    case 'supplier':
+    case 'user':
     default:
       return 'grower';
   }

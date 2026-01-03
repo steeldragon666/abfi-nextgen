@@ -227,7 +227,7 @@ export const transportRouter = router({
       const costs = calculateTransportCost(straightLineKm, volumeTonnes, mode, feedstockCategory);
 
       // Also calculate alternatives
-      const alternatives = [
+      const alternatives: (ReturnType<typeof calculateTransportCost> & { mode: "ROAD" | "RAIL" | "ROAD_RAIL" | "SHIP" })[] = [
         { mode: "ROAD" as const, ...calculateTransportCost(straightLineKm, volumeTonnes, "ROAD", feedstockCategory) },
       ];
 

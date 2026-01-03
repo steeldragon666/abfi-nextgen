@@ -394,8 +394,7 @@ export default function DeveloperDashboard() {
                   <UnifiedMap
                     className="w-full h-full"
                     onEntitySelect={(entity) => {
-                      console.log("Selected entity:", entity);
-                    }}
+                      }}
                   />
 
                   {/* Search Registry Button */}
