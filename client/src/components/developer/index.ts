@@ -12,3 +12,4 @@ export { ConcentrationRiskAnalyzer } from "./ConcentrationRiskAnalyzer";
 export { CovenantComplianceEngine } from "./CovenantComplianceEngine";
 export { SupplyChainDashboard } from "./SupplyChainDashboard";
 export { VerifiedGrowerDirectory } from "./VerifiedGrowerDirectory";
+export { ContractLifecycleManager } from "./ContractLifecycleManager";
