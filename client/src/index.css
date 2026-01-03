@@ -1,26 +1,31 @@
 /* ==========================================================================
-   ABFI Platform - Professional Finance Typography System
-   Fonts: Inter (body), JetBrains Mono (financial data), Poppins (display)
+   ABFI Grower Portal - Design System
+   Spec: Forest Green (#2D5016), Queensland Gold (#FFB81C), Trust Blue (#003DA5)
+   Fonts: Merriweather (headings - serif), Source Sans Pro (body), JetBrains Mono (data)
    ========================================================================== */
 
 /* Import Fontsource packages - Latin-only for smaller bundle (~70% reduction)
    Includes font-display: swap by default for faster rendering */
-@import '@fontsource/inter/latin-300.css';
-@import '@fontsource/inter/latin-400.css';
-@import '@fontsource/inter/latin-500.css';
-@import '@fontsource/inter/latin-600.css';
-@import '@fontsource/inter/latin-700.css';
-@import '@fontsource/inter/latin-800.css';
-@import '@fontsource/inter/latin-ext-400.css';  /* Extended chars for European names */
-@import '@fontsource/inter/latin-ext-600.css';
 
+/* Body font: Source Sans Pro (clean, professional, highly readable) */
+@import '@fontsource/source-sans-pro/latin-300.css';
+@import '@fontsource/source-sans-pro/latin-400.css';
+@import '@fontsource/source-sans-pro/latin-600.css';
+@import '@fontsource/source-sans-pro/latin-700.css';
+
+/* Heading font: Merriweather (serif - trustworthy, agricultural heritage) */
+@import '@fontsource/merriweather/latin-400.css';
+@import '@fontsource/merriweather/latin-700.css';
+@import '@fontsource/merriweather/latin-900.css';
+
+/* Numeric/Code font: JetBrains Mono (tabular figures for financial data) */
 @import '@fontsource/jetbrains-mono/latin-400.css';
 @import '@fontsource/jetbrains-mono/latin-500.css';
 @import '@fontsource/jetbrains-mono/latin-600.css';
 
-@import '@fontsource/poppins/latin-600.css';
-@import '@fontsource/poppins/latin-700.css';
-@import '@fontsource/poppins/latin-800.css';
+/* Legacy fallback imports for Inter/Poppins if needed */
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-600.css';
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -34,49 +39,49 @@
 
 @theme inline {
   /* ============================================
-     COLOR SYSTEM - Professional Palette
-     Primary: Blue (Government/Finance trust)
-     Secondary: Green (Sustainability/Agriculture)
-     Accent: Amber (Warnings, highlights)
+     COLOR SYSTEM - ABFI Grower Portal Palette
+     Primary: Forest Green (#2D5016) - Agricultural trust
+     Secondary: Queensland Gold (#FFB81C) - Highlights, CTAs
+     Accent: Trust Blue (#003DA5) - Government/finance trust
      ============================================ */
 
-  /* Primary - Professional Blue */
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-  --color-primary-950: #172554;
+  /* Primary - Forest Green (Agricultural heritage, growth, sustainability) */
+  --color-primary-50: #f4f7f1;
+  --color-primary-100: #e5ebe0;
+  --color-primary-200: #c8d6bd;
+  --color-primary-300: #a5bc94;
+  --color-primary-400: #7d9c6a;
+  --color-primary-500: #5a7d48;
+  --color-primary-600: #456235;
+  --color-primary-700: #2D5016; /* Spec primary */
+  --color-primary-800: #233f11;
+  --color-primary-900: #1a2f0d;
+  --color-primary-950: #0f1c08;
 
-  /* Secondary - Green (Sustainability) */
-  --color-secondary-50: #f0fdf4;
-  --color-secondary-100: #dcfce7;
-  --color-secondary-200: #bbf7d0;
-  --color-secondary-300: #86efac;
-  --color-secondary-400: #4ade80;
-  --color-secondary-500: #22c55e;
-  --color-secondary-600: #16a34a;
-  --color-secondary-700: #15803d;
-  --color-secondary-800: #166534;
-  --color-secondary-900: #14532d;
-  --color-secondary-950: #052e16;
+  /* Secondary - Queensland Gold (Warmth, value, wheat fields) */
+  --color-secondary-50: #fffbeb;
+  --color-secondary-100: #fff4cc;
+  --color-secondary-200: #ffe999;
+  --color-secondary-300: #ffdc66;
+  --color-secondary-400: #ffc933;
+  --color-secondary-500: #FFB81C; /* Spec Queensland Gold */
+  --color-secondary-600: #cc9316;
+  --color-secondary-700: #996e11;
+  --color-secondary-800: #66490b;
+  --color-secondary-900: #332406;
+  --color-secondary-950: #1a1203;
 
-  /* Accent - Amber */
-  --color-accent-50: #fffbeb;
-  --color-accent-100: #fef3c7;
-  --color-accent-200: #fde68a;
-  --color-accent-300: #fcd34d;
-  --color-accent-400: #fbbf24;
-  --color-accent-500: #f59e0b;
-  --color-accent-600: #d97706;
-  --color-accent-700: #b45309;
-  --color-accent-800: #92400e;
-  --color-accent-900: #78350f;
+  /* Accent - Trust Blue (Government/finance credibility) */
+  --color-accent-50: #e6eef8;
+  --color-accent-100: #ccddf1;
+  --color-accent-200: #99bbe3;
+  --color-accent-300: #6699d5;
+  --color-accent-400: #3377c7;
+  --color-accent-500: #0055b9;
+  --color-accent-600: #003DA5; /* Spec Trust Blue */
+  --color-accent-700: #003184;
+  --color-accent-800: #002563;
+  --color-accent-900: #001942;
 
   /* Neutrals */
   --color-neutral-50: #fafafa;
@@ -130,15 +135,15 @@
   --space-24: 6rem;     /* 96px */
 
   /* ============================================
-     TYPOGRAPHY - Professional Finance Stack
-     Inter: Gold standard for fintech (Stripe, Coinbase)
-     JetBrains Mono: Optimized for financial data
-     Poppins: Strong display font for headings
+     TYPOGRAPHY - ABFI Grower Portal Stack
+     Merriweather: Serif headings (trust, heritage, agriculture)
+     Source Sans Pro: Body text (clean, readable, professional)
+     JetBrains Mono: Financial data (tabular figures)
      ============================================ */
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-heading: "Poppins", "Inter", system-ui, sans-serif;
-  --font-display: "Poppins", "Inter", system-ui, sans-serif;
+  --font-sans: "Source Sans Pro", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Source Sans Pro", system-ui, sans-serif;
+  --font-heading: "Merriweather", Georgia, "Times New Roman", serif;
+  --font-display: "Merriweather", Georgia, serif;
   --font-mono: "JetBrains Mono", "SF Mono", Monaco, ui-monospace, monospace;
   --font-numeric: "JetBrains Mono", monospace;
 
@@ -187,21 +192,21 @@
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 4%;
 
-  /* Primary - Blue */
-  --primary: 221 83% 53%;
+  /* Primary - Forest Green (#2D5016) */
+  --primary: 94 55% 20%;
   --primary-foreground: 0 0% 100%;
 
-  /* Secondary - Green */
-  --secondary: 142 76% 36%;
-  --secondary-foreground: 0 0% 100%;
+  /* Secondary - Queensland Gold (#FFB81C) */
+  --secondary: 43 100% 55%;
+  --secondary-foreground: 0 0% 0%;
 
   /* Muted */
   --muted: 240 5% 96%;
   --muted-foreground: 240 4% 46%;
 
-  /* Accent - Amber */
-  --accent: 38 92% 50%;
-  --accent-foreground: 0 0% 0%;
+  /* Accent - Trust Blue (#003DA5) */
+  --accent: 217 100% 32%;
+  --accent-foreground: 0 0% 100%;
 
   /* Destructive */
   --destructive: 0 84% 60%;
@@ -210,32 +215,32 @@
   /* Borders & Inputs */
   --border: 240 6% 90%;
   --input: 240 6% 90%;
-  --ring: 221 83% 53%;
+  --ring: 94 55% 20%;
 
   /* Semantic */
   --success: 142 76% 36%;
   --success-foreground: 0 0% 100%;
-  --warning: 38 92% 50%;
+  --warning: 43 100% 55%;
   --warning-foreground: 0 0% 0%;
-  --info: 221 83% 53%;
+  --info: 217 100% 32%;
   --info-foreground: 0 0% 100%;
 
-  /* Charts */
-  --chart-1: 221 83% 53%;
-  --chart-2: 142 76% 36%;
-  --chart-3: 38 92% 50%;
-  --chart-4: 280 65% 60%;
-  --chart-5: 340 75% 55%;
+  /* Charts - ABFI Palette */
+  --chart-1: 94 55% 20%;   /* Forest Green */
+  --chart-2: 43 100% 55%;  /* Queensland Gold */
+  --chart-3: 217 100% 32%; /* Trust Blue */
+  --chart-4: 142 76% 36%;  /* Success Green */
+  --chart-5: 0 84% 60%;    /* Alert Red */
 
-  /* Sidebar */
-  --sidebar: 0 0% 98%;
+  /* Sidebar - Forest Green theme */
+  --sidebar: 94 20% 98%;
   --sidebar-foreground: 240 10% 4%;
-  --sidebar-primary: 221 83% 53%;
+  --sidebar-primary: 94 55% 20%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 240 5% 96%;
+  --sidebar-accent: 94 15% 95%;
   --sidebar-accent-foreground: 240 10% 4%;
-  --sidebar-border: 240 6% 90%;
-  --sidebar-ring: 221 83% 53%;
+  --sidebar-border: 94 10% 90%;
+  --sidebar-ring: 94 55% 20%;
 }
 
 /* ============================================
@@ -252,33 +257,37 @@
   --popover: 240 10% 6%;
   --popover-foreground: 0 0% 98%;
 
-  --primary: 217 91% 60%;
+  /* Primary - Forest Green (lighter for dark mode) */
+  --primary: 94 55% 35%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 142 71% 45%;
-  --secondary-foreground: 0 0% 100%;
+  /* Secondary - Queensland Gold */
+  --secondary: 43 100% 55%;
+  --secondary-foreground: 0 0% 0%;
 
   --muted: 240 4% 16%;
   --muted-foreground: 240 5% 65%;
 
-  --accent: 38 92% 50%;
-  --accent-foreground: 0 0% 0%;
+  /* Accent - Trust Blue (lighter for dark mode) */
+  --accent: 217 100% 50%;
+  --accent-foreground: 0 0% 100%;
 
   --destructive: 0 63% 31%;
   --destructive-foreground: 0 0% 100%;
 
   --border: 240 4% 16%;
   --input: 240 4% 16%;
-  --ring: 217 91% 60%;
+  --ring: 94 55% 35%;
 
+  /* Sidebar - Dark theme with green accent */
   --sidebar: 240 10% 4%;
   --sidebar-foreground: 0 0% 98%;
-  --sidebar-primary: 217 91% 60%;
+  --sidebar-primary: 94 55% 35%;
   --sidebar-primary-foreground: 0 0% 100%;
   --sidebar-accent: 240 4% 16%;
   --sidebar-accent-foreground: 0 0% 98%;
   --sidebar-border: 240 4% 16%;
-  --sidebar-ring: 217 91% 60%;
+  --sidebar-ring: 94 55% 35%;
 }
 
 /* ============================================
@@ -487,7 +496,7 @@ button[aria-label*="remove" i],
 
 .skip-to-main:focus {
   top: 1rem;
-  outline: 3px solid hsl(221 83% 53%);
+  outline: 3px solid hsl(94 55% 20%);
   outline-offset: 2px;
 }
 
@@ -497,12 +506,12 @@ button[aria-label*="remove" i],
 }
 
 *:focus-visible {
-  outline: 3px solid hsl(221 83% 53%) !important;
+  outline: 3px solid hsl(94 55% 20%) !important;
   outline-offset: 2px !important;
   border-radius: 2px;
 }
 
-/* Interactive elements - enhanced focus ring */
+/* Interactive elements - enhanced focus ring (Forest Green) */
 button:focus-visible,
 [role="button"]:focus-visible,
 a:focus-visible,
@@ -511,17 +520,17 @@ textarea:focus-visible,
 select:focus-visible,
 [tabindex]:focus-visible,
 [tabindex="0"]:focus-visible {
-  outline: 3px solid hsl(221 83% 53%) !important;
+  outline: 3px solid hsl(94 55% 20%) !important;
   outline-offset: 2px !important;
-  box-shadow: 0 0 0 1px hsl(var(--background)), 0 0 8px hsl(221 83% 53% / 0.4);
+  box-shadow: 0 0 0 1px hsl(var(--background)), 0 0 8px hsl(94 55% 20% / 0.4);
 }
 
 /* Checkbox and radio - ring style */
 input[type="checkbox"]:focus-visible,
 input[type="radio"]:focus-visible {
-  outline: 3px solid hsl(221 83% 53%) !important;
+  outline: 3px solid hsl(94 55% 20%) !important;
   outline-offset: 2px !important;
-  box-shadow: 0 0 0 1px hsl(var(--background)), 0 0 8px hsl(221 83% 53% / 0.4);
+  box-shadow: 0 0 0 1px hsl(var(--background)), 0 0 8px hsl(94 55% 20% / 0.4);
 }
 
 /* Menu items - inset focus */
@@ -530,16 +539,16 @@ input[type="radio"]:focus-visible {
 [role="tab"]:focus-visible,
 [role="listbox"]:focus-visible,
 [role="combobox"]:focus-visible {
-  outline: 3px solid hsl(221 83% 53%) !important;
+  outline: 3px solid hsl(94 55% 20%) !important;
   outline-offset: -2px !important;
-  background-color: hsl(221 83% 53% / 0.1);
+  background-color: hsl(94 55% 20% / 0.1);
 }
 
 /* Cards and interactive panels */
 .card:focus-visible,
 [role="article"]:focus-visible,
 [role="region"]:focus-visible {
-  outline: 3px solid hsl(221 83% 53%) !important;
+  outline: 3px solid hsl(94 55% 20%) !important;
   outline-offset: 2px !important;
 }
 
@@ -1309,4 +1318,146 @@ button[class*="rounded-full"],
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* ============================================
+   ABFI GROWER PORTAL - Spec Color Utilities
+   Forest Green (#2D5016), Queensland Gold (#FFB81C), Trust Blue (#003DA5)
+   ============================================ */
+
+/* Forest Green - Primary brand color */
+.text-forest-green { color: #2D5016; }
+.bg-forest-green { background-color: #2D5016; }
+.border-forest-green { border-color: #2D5016; }
+.ring-forest-green { --tw-ring-color: #2D5016; }
+
+.text-forest-green-light { color: #5a7d48; }
+.bg-forest-green-light { background-color: #f4f7f1; }
+
+/* Queensland Gold - Accent/CTA color */
+.text-qld-gold { color: #FFB81C; }
+.bg-qld-gold { background-color: #FFB81C; }
+.border-qld-gold { border-color: #FFB81C; }
+.ring-qld-gold { --tw-ring-color: #FFB81C; }
+
+.text-qld-gold-dark { color: #cc9316; }
+.bg-qld-gold-light { background-color: #fffbeb; }
+
+/* Trust Blue - Government/finance credibility */
+.text-trust-blue { color: #003DA5; }
+.bg-trust-blue { background-color: #003DA5; }
+.border-trust-blue { border-color: #003DA5; }
+.ring-trust-blue { --tw-ring-color: #003DA5; }
+
+.text-trust-blue-light { color: #3377c7; }
+.bg-trust-blue-light { background-color: #e6eef8; }
+
+/* ABFI Button Variants */
+.btn-abfi-primary {
+  @apply inline-flex items-center justify-center gap-2;
+  @apply px-6 py-3 font-semibold rounded-lg;
+  @apply bg-[#2D5016] text-white;
+  @apply hover:bg-[#233f11] active:bg-[#1a2f0d];
+  @apply transition-all duration-200;
+  @apply shadow-md hover:shadow-lg;
+  min-height: 44px;
+}
+
+.btn-abfi-gold {
+  @apply inline-flex items-center justify-center gap-2;
+  @apply px-6 py-3 font-semibold rounded-lg;
+  @apply bg-[#FFB81C] text-[#1a2f0d];
+  @apply hover:bg-[#cc9316] active:bg-[#996e11];
+  @apply transition-all duration-200;
+  @apply shadow-md hover:shadow-lg;
+  min-height: 44px;
+}
+
+.btn-abfi-outline {
+  @apply inline-flex items-center justify-center gap-2;
+  @apply px-6 py-3 font-semibold rounded-lg;
+  @apply bg-transparent border-2 border-[#2D5016] text-[#2D5016];
+  @apply hover:bg-[#2D5016] hover:text-white;
+  @apply transition-all duration-200;
+  min-height: 44px;
+}
+
+/* ABFI Card Variants */
+.card-abfi {
+  @apply bg-white border border-gray-200 rounded-xl;
+  @apply shadow-sm hover:shadow-md transition-shadow duration-200;
+}
+
+.card-abfi-highlight {
+  @apply bg-white border-2 border-[#2D5016] rounded-xl;
+  @apply shadow-md;
+}
+
+.card-abfi-gold {
+  @apply bg-[#fffbeb] border border-[#FFB81C] rounded-xl;
+}
+
+/* ABFI Badge Variants */
+.badge-abfi-verified {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full;
+  @apply text-xs font-semibold;
+  @apply bg-[#f4f7f1] text-[#2D5016] border border-[#2D5016]/30;
+}
+
+.badge-abfi-gold {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full;
+  @apply text-xs font-semibold;
+  @apply bg-[#FFB81C] text-[#1a2f0d];
+}
+
+.badge-abfi-pending {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full;
+  @apply text-xs font-semibold;
+  @apply bg-amber-100 text-amber-800 border border-amber-300;
+}
+
+/* Grower Portal specific styles */
+.grower-portal {
+  --portal-primary: #2D5016;
+  --portal-secondary: #FFB81C;
+  --portal-accent: #003DA5;
+}
+
+.grower-portal .portal-header {
+  @apply bg-gradient-to-r from-[#2D5016] to-[#456235];
+  @apply text-white;
+}
+
+.grower-portal .portal-highlight {
+  @apply bg-[#FFB81C] text-[#1a2f0d];
+}
+
+/* Price Lock Component Urgency States */
+.price-lock-safe {
+  @apply border-2 border-green-500 bg-green-50;
+}
+
+.price-lock-warning {
+  @apply border-2 border-amber-500 bg-amber-50;
+}
+
+.price-lock-urgent {
+  @apply border-2 border-red-500 bg-red-50 animate-pulse;
+}
+
+/* Carbon Credit Indicator */
+.accu-positive {
+  @apply text-green-600 font-semibold;
+}
+
+.accu-neutral {
+  @apply text-gray-600;
+}
+
+.accu-market-up {
+  @apply text-green-600;
+}
+
+.accu-market-down {
+  @apply text-red-600;
 }
