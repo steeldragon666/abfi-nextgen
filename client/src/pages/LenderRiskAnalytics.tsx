@@ -49,76 +49,11 @@ import {
   Info,
   RefreshCw,
   Zap,
+  Loader2,
 } from "lucide-react";
 import { Link } from "wouter";
 import { LazyChart } from "@/components/ui/lazy-charts";
-
-// Mock data
-const concentrationMetrics = {
-  hhiIndex: 1850,
-  hhiStatus: "moderate", // low (<1000), moderate (1000-2500), high (>2500)
-  topSupplierShare: 18.5,
-  topThreeShare: 42.3,
-  numberOfSuppliers: 45,
-};
-
-const supplierConcentration = [
-  { name: "Murray Valley", share: 18.5, risk: "medium" },
-  { name: "Gippsland Green", share: 14.2, risk: "low" },
-  { name: "Darling Downs", share: 9.6, risk: "medium" },
-  { name: "Riverina Fuels", share: 8.8, risk: "low" },
-  { name: "Pilbara Power", share: 7.4, risk: "low" },
-  { name: "Others (40)", share: 41.5, risk: "low" },
-];
-
-const geographicRisk = [
-  { state: "NSW", exposure: 320000000, droughtRisk: 65, fireRisk: 45 },
-  { state: "VIC", exposure: 280000000, droughtRisk: 50, fireRisk: 55 },
-  { state: "QLD", exposure: 250000000, droughtRisk: 75, fireRisk: 40 },
-  { state: "SA", exposure: 180000000, droughtRisk: 80, fireRisk: 35 },
-  { state: "WA", exposure: 150000000, droughtRisk: 85, fireRisk: 30 },
-  { state: "TAS", exposure: 70000000, droughtRisk: 25, fireRisk: 60 },
-];
-
-const riskFactors = [
-  { factor: "Supply Security", score: 75 },
-  { factor: "Price Volatility", score: 60 },
-  { factor: "Counterparty", score: 80 },
-  { factor: "Regulatory", score: 85 },
-  { factor: "Climate", score: 55 },
-  { factor: "Technology", score: 70 },
-];
-
-const stressScenarios = [
-  {
-    name: "Drought (Severe)",
-    description: "25% reduction in feedstock availability",
-    portfolioImpact: -8.5,
-    projectsAffected: 18,
-    mitigated: true,
-  },
-  {
-    name: "Price Shock",
-    description: "30% drop in ethanol prices",
-    portfolioImpact: -12.2,
-    projectsAffected: 24,
-    mitigated: false,
-  },
-  {
-    name: "Policy Change",
-    description: "Carbon credit scheme revision",
-    portfolioImpact: -5.8,
-    projectsAffected: 35,
-    mitigated: true,
-  },
-  {
-    name: "Bushfire Event",
-    description: "Major fire in key supply region",
-    portfolioImpact: -6.4,
-    projectsAffected: 8,
-    mitigated: true,
-  },
-];
+import { trpc } from "@/lib/trpc";
 
 const formatCurrency = (value: number) => {
   if (value >= 1000000000) return `$${(value / 1000000000).toFixed(1)}B`;
@@ -141,6 +76,32 @@ const getHHILabel = (hhi: number) => {
 export default function LenderRiskAnalytics() {
   const [stressMultiplier, setStressMultiplier] = useState([1.0]);
 
+  // Fetch data from API
+  const { data: concentrationMetrics, isLoading: loadingConcentration, refetch: refetchConcentration } =
+    trpc.riskAnalytics.getConcentrationMetrics.useQuery();
+
+  const { data: supplierConcentration, isLoading: loadingSuppliers, refetch: refetchSuppliers } =
+    trpc.riskAnalytics.getSupplierConcentration.useQuery({ limit: 6 });
+
+  const { data: geographicRisk, isLoading: loadingGeographic, refetch: refetchGeographic } =
+    trpc.riskAnalytics.getGeographicRisk.useQuery();
+
+  const { data: riskFactors, isLoading: loadingFactors, refetch: refetchFactors } =
+    trpc.riskAnalytics.getRiskFactors.useQuery();
+
+  const { data: stressScenarios, isLoading: loadingScenarios, refetch: refetchScenarios } =
+    trpc.riskAnalytics.getStressScenarios.useQuery();
+
+  const isLoading = loadingConcentration || loadingSuppliers || loadingGeographic || loadingFactors || loadingScenarios;
+
+  const handleRefresh = () => {
+    refetchConcentration();
+    refetchSuppliers();
+    refetchGeographic();
+    refetchFactors();
+    refetchScenarios();
+  };
+
   return (
     <div className="min-h-screen bg-muted/30">
       {/* Header */}
@@ -161,8 +122,12 @@ export default function LenderRiskAnalytics() {
                 </p>
               </div>
             </div>
-            <Button variant="outline" size="sm">
-              <RefreshCw className="h-4 w-4 mr-2" />
+            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isLoading}>
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4 mr-2" />
+              )}
               Refresh Analysis
             </Button>
           </div>
@@ -188,20 +153,20 @@ export default function LenderRiskAnalytics() {
                     <span className="text-sm text-muted-foreground">HHI Index</span>
                     <ShieldAlert className="h-5 w-5 text-muted-foreground" />
                   </div>
-                  <div className={`text-3xl font-bold ${getHHIColor(concentrationMetrics.hhiIndex)}`}>
-                    {concentrationMetrics.hhiIndex.toLocaleString()}
+                  <div className={`text-3xl font-bold ${getHHIColor(concentrationMetrics?.hhiIndex ?? 0)}`}>
+                    {(concentrationMetrics?.hhiIndex ?? 0).toLocaleString()}
                   </div>
                   <Badge
                     variant="secondary"
                     className={
-                      concentrationMetrics.hhiStatus === "low"
+                      concentrationMetrics?.hhiStatus === "low"
                         ? "bg-green-100 text-green-800"
-                        : concentrationMetrics.hhiStatus === "moderate"
+                        : concentrationMetrics?.hhiStatus === "moderate"
                           ? "bg-amber-100 text-amber-800"
                           : "bg-red-100 text-red-800"
                     }
                   >
-                    {getHHILabel(concentrationMetrics.hhiIndex)}
+                    {getHHILabel(concentrationMetrics?.hhiIndex ?? 0)}
                   </Badge>
                 </CardContent>
               </Card>
@@ -213,9 +178,9 @@ export default function LenderRiskAnalytics() {
                     <Users className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div className="text-3xl font-bold">
-                    {concentrationMetrics.topSupplierShare}%
+                    {concentrationMetrics?.topSupplierShare ?? 0}%
                   </div>
-                  <Progress value={concentrationMetrics.topSupplierShare} className="mt-2" />
+                  <Progress value={concentrationMetrics?.topSupplierShare ?? 0} className="mt-2" />
                 </CardContent>
               </Card>
 
@@ -226,7 +191,7 @@ export default function LenderRiskAnalytics() {
                     <Users className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div className="text-3xl font-bold">
-                    {concentrationMetrics.topThreeShare}%
+                    {concentrationMetrics?.topThreeShare ?? 0}%
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
                     of total portfolio
@@ -247,13 +212,13 @@ export default function LenderRiskAnalytics() {
                   <LazyChart height={300}>
                     {({ ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, Cell }) => (
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={supplierConcentration} layout="vertical">
+                        <BarChart data={supplierConcentration ?? []} layout="vertical">
                           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                           <XAxis type="number" unit="%" fontSize={12} />
                           <YAxis dataKey="name" type="category" fontSize={12} width={120} />
                           <Tooltip formatter={(value: number) => [`${value}%`, "Share"]} />
                           <Bar dataKey="share" radius={[0, 4, 4, 0]}>
-                            {supplierConcentration.map((entry, index) => (
+                            {(supplierConcentration ?? []).map((entry, index) => (
                               <Cell
                                 key={`cell-${index}`}
                                 fill={
@@ -306,7 +271,7 @@ export default function LenderRiskAnalytics() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {geographicRisk.map((region) => {
+                    {(geographicRisk ?? []).map((region) => {
                       const combinedRisk = (region.droughtRisk + region.fireRisk) / 2;
                       return (
                         <TableRow key={region.state}>
@@ -366,7 +331,7 @@ export default function LenderRiskAnalytics() {
                   <LazyChart height={400}>
                     {({ ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Tooltip }) => (
                       <ResponsiveContainer width="100%" height="100%">
-                        <RadarChart data={riskFactors}>
+                        <RadarChart data={riskFactors ?? []}>
                           <PolarGrid stroke="#e5e7eb" />
                           <PolarAngleAxis dataKey="factor" fontSize={12} />
                           <PolarRadiusAxis angle={30} domain={[0, 100]} fontSize={10} />
@@ -388,7 +353,7 @@ export default function LenderRiskAnalytics() {
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {riskFactors.map((factor) => (
+              {(riskFactors ?? []).map((factor) => (
                 <Card key={factor.factor}>
                   <CardContent className="pt-6">
                     <div className="flex items-center justify-between mb-2">
@@ -460,7 +425,7 @@ export default function LenderRiskAnalytics() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {stressScenarios.map((scenario) => {
+                    {(stressScenarios ?? []).map((scenario) => {
                       const adjustedImpact = scenario.portfolioImpact * stressMultiplier[0];
                       return (
                         <TableRow key={scenario.name}>

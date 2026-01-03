@@ -56,7 +56,9 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
-import { SimpleLeafletMap, type MapMarker } from "@/components/SimpleLeafletMap";
+import { UnifiedMap } from "@/components/maps/UnifiedMap";
+import { MapControlsProvider } from "@/contexts/MapControlsContext";
+import { MapControlsPanel } from "@/components/layout/MapControlsPanel";
 import { H1, H2, H3, Body, MetricValue, DataLabel } from "@/components/Typography";
 
 // Pipeline stages
@@ -152,38 +154,6 @@ export default function DeveloperDashboard() {
   const [selectedFeedstock, setSelectedFeedstock] = useState<string>("all");
   const [selectedDeal, setSelectedDeal] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<"map" | "pipeline">("map");
-
-  // Convert suppliers and deals to map markers
-  const mapMarkers: MapMarker[] = [
-    // Registry suppliers (gray markers) - associated with 'feedstocks' layer
-    ...REGISTRY_SUPPLIERS.map((supplier) => ({
-      id: supplier.id,
-      lat: supplier.location.lat,
-      lng: supplier.location.lng,
-      title: supplier.name,
-      color: "#94a3b8", // slate-400
-      onClick: () => setSelectedDeal(supplier.id),
-      layerId: "feedstocks", // Associates with "Feedstock Supply" layer in MapControlsPanel
-    })),
-    // Pipeline deals (colored by stage) - associated with 'demand' layer
-    ...DEAL_PIPELINE.filter(deal => deal.location).map((deal) => {
-      const stageColors: Record<string, string> = {
-        discovery: "#64748b", // slate-500
-        outreach: "#3b82f6", // blue-500
-        negotiation: "#f59e0b", // amber-500
-        contracted: "#22c55e", // emerald-500
-      };
-      return {
-        id: deal.id,
-        lat: deal.location.lat,
-        lng: deal.location.lng,
-        title: deal.name,
-        color: stageColors[deal.stage] || "#3b82f6",
-        onClick: () => setSelectedDeal(deal.id),
-        layerId: "demand", // Associates with "Demand Signals" layer in MapControlsPanel
-      };
-    }),
-  ];
 
   const getDealsForStage = (stageId: string) => {
     return DEAL_PIPELINE.filter((deal) => deal.stage === stageId);
@@ -414,37 +384,30 @@ export default function DeveloperDashboard() {
         {/* Map/Pipeline Area */}
         <div className="flex-1 relative min-h-[400px] lg:min-h-0 overflow-hidden">
           {activeView === "map" ? (
-            <>
-              <SimpleLeafletMap
-                className="w-full h-full"
-                center={{ lat: -25.2744, lng: 133.7751 }}
-                zoom={4}
-                markers={mapMarkers}
-              />
+            <MapControlsProvider userRole="buyer">
+              <div className="flex h-full">
+                {/* Map Controls Panel */}
+                <MapControlsPanel className="hidden lg:flex" />
 
-              {/* Map Legend */}
-              <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur p-3 rounded-lg shadow-lg border">
-                <H3 className="mb-2 !text-sm">Supplier Network</H3>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="h-3 w-3 rounded-full bg-blue-500" />
-                    <span>In Pipeline ({DEAL_PIPELINE.length})</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="h-3 w-3 rounded-full bg-slate-400" />
-                    <span>Registry ({REGISTRY_SUPPLIERS.length})</span>
-                  </div>
+                {/* Map Area */}
+                <div className="flex-1 relative">
+                  <UnifiedMap
+                    className="w-full h-full"
+                    onEntitySelect={(entity) => {
+                      console.log("Selected entity:", entity);
+                    }}
+                  />
+
+                  {/* Search Registry Button */}
+                  <Link href="/browse">
+                    <Button className="absolute bottom-4 right-4 shadow-lg z-10" size="lg">
+                      <Search className="h-5 w-5 mr-2" />
+                      Search Registry
+                    </Button>
+                  </Link>
                 </div>
               </div>
-
-              {/* Search Registry Button */}
-              <Link href="/browse">
-                <Button className="absolute bottom-4 right-4 shadow-lg" size="lg">
-                  <Search className="h-5 w-5 mr-2" />
-                  Search Registry
-                </Button>
-              </Link>
-            </>
+            </MapControlsProvider>
           ) : (
             /* Pipeline Kanban View */
             <div className="h-full p-4 overflow-x-auto">

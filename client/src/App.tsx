@@ -61,7 +61,6 @@ const SupplyChainDashboard = lazy(() => import("./pages/SupplyChainDashboard"));
 const EmissionsCalculator = lazy(() => import("./pages/EmissionsCalculator"));
 const CredentialsDashboard = lazy(() => import("./pages/CredentialsDashboard"));
 const GOSchemeDashboard = lazy(() => import("./pages/GOSchemeDashboard"));
-const FeedstockMap = lazy(() => import("./pages/FeedstockMap"));
 const AustralianDataExplorer = lazy(() => import("./pages/AustralianDataExplorer"));
 const DevLogin = lazy(() => import("./pages/DevLogin"));
 const MyGovIdLogin = lazy(() => import("./pages/MyGovIdLogin"));

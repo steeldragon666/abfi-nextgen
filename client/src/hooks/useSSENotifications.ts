@@ -120,7 +120,9 @@ export function useSSENotifications({
       eventSourceRef.current = eventSource;
 
       eventSource.onopen = () => {
-        console.log("[SSE] Connection opened");
+        if (process.env.NODE_ENV === "development") {
+          console.log("[SSE] Connection opened");
+        }
         setIsConnected(true);
         setError(null);
         reconnectAttemptsRef.current = 0;
@@ -133,7 +135,9 @@ export function useSSENotifications({
 
           switch (message.type) {
             case "connected":
-              console.log("[SSE] Connected with client ID:", message.clientId);
+              if (process.env.NODE_ENV === "development") {
+                console.log("[SSE] Connected with client ID:", message.clientId);
+              }
               break;
 
             case "notification":
@@ -173,9 +177,11 @@ export function useSSENotifications({
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           reconnectAttemptsRef.current++;
           const delay = reconnectDelay * Math.pow(1.5, reconnectAttemptsRef.current - 1);
-          console.log(
-            `[SSE] Reconnecting in ${delay}ms (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts})`
-          );
+          if (process.env.NODE_ENV === "development") {
+            console.log(
+              `[SSE] Reconnecting in ${delay}ms (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts})`
+            );
+          }
 
           reconnectTimeoutRef.current = setTimeout(() => {
             connect();

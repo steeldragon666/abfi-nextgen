@@ -21,6 +21,9 @@ import {
   Clock,
   Building,
   TrendingUp,
+  Newspaper,
+  ExternalLink,
+  Filter,
 } from "lucide-react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
@@ -53,6 +56,7 @@ const EVENT_COLORS: Record<string, string> = {
 
 export default function PolicyCarbonDashboard() {
   const [activeTab, setActiveTab] = useState("policy");
+  const [newsSource, setNewsSource] = useState<"all" | "verra" | "gold_standard" | "cfi">("all");
 
   // Carbon calculator state
   const [calcInput, setCalcInput] = useState({
@@ -70,6 +74,7 @@ export default function PolicyCarbonDashboard() {
   const scenariosQuery = trpc.policy.getMandateScenarios.useQuery();
   const offtakeQuery = trpc.policy.getOfftakeMarket.useQuery();
   const accuQuery = trpc.policy.getACCUPrice.useQuery();
+  const carbonNewsQuery = trpc.policy.getCarbonStandardsNews.useQuery({ limit: 20, source: newsSource });
 
   // Carbon calculator mutation
   const calculateMutation = trpc.policy.calculateCarbon.useMutation();
@@ -80,6 +85,7 @@ export default function PolicyCarbonDashboard() {
   const mandateScenarios = scenariosQuery.data || [];
   const offtakeMarket = offtakeQuery.data || [];
   const accuPrice = accuQuery.data;
+  const carbonNews = carbonNewsQuery.data;
   const calcResult = calculateMutation.data;
 
   const loading =
@@ -88,7 +94,8 @@ export default function PolicyCarbonDashboard() {
     kanbanQuery.isLoading ||
     scenariosQuery.isLoading ||
     offtakeQuery.isLoading ||
-    accuQuery.isLoading;
+    accuQuery.isLoading ||
+    carbonNewsQuery.isLoading;
 
   const error =
     kpisQuery.error?.message ||
@@ -96,7 +103,8 @@ export default function PolicyCarbonDashboard() {
     kanbanQuery.error?.message ||
     scenariosQuery.error?.message ||
     offtakeQuery.error?.message ||
-    accuQuery.error?.message;
+    accuQuery.error?.message ||
+    carbonNewsQuery.error?.message;
 
   const loadData = () => {
     kpisQuery.refetch();
@@ -105,6 +113,7 @@ export default function PolicyCarbonDashboard() {
     scenariosQuery.refetch();
     offtakeQuery.refetch();
     accuQuery.refetch();
+    carbonNewsQuery.refetch();
   };
 
   const calculateCarbon = () => {
@@ -374,6 +383,133 @@ export default function PolicyCarbonDashboard() {
                 </Card>
               </div>
             </div>
+
+            {/* Carbon Standards News Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Newspaper className="h-5 w-5" />
+                      Carbon Standards News & Announcements
+                    </CardTitle>
+                    <CardDescription>
+                      Latest updates from Verra, Gold Standard, and Carbon Farming Initiative
+                    </CardDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-gray-400" />
+                    <Select value={newsSource} onValueChange={(v: "all" | "verra" | "gold_standard" | "cfi") => setNewsSource(v)}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Filter by source" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Sources</SelectItem>
+                        <SelectItem value="verra">Verra VCS</SelectItem>
+                        <SelectItem value="gold_standard">Gold Standard</SelectItem>
+                        <SelectItem value="cfi">Carbon Farming Initiative</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {carbonNewsQuery.isLoading ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <Skeleton key={i} className="h-24" />
+                    ))}
+                  </div>
+                ) : carbonNews && carbonNews.length > 0 ? (
+                  <div className="space-y-3">
+                    {carbonNews.map((article) => (
+                      <div
+                        key={article.id}
+                        className="p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Badge
+                                variant="outline"
+                                className={
+                                  article.source === "verra"
+                                    ? "bg-blue-100 text-blue-800 border-blue-300"
+                                    : article.source === "gold_standard"
+                                      ? "bg-yellow-100 text-yellow-800 border-yellow-300"
+                                      : "bg-green-100 text-green-800 border-green-300"
+                                }
+                              >
+                                {article.sourceName}
+                              </Badge>
+                              <Badge
+                                variant="outline"
+                                className={
+                                  article.relevance === "high"
+                                    ? "bg-red-100 text-red-800 border-red-300"
+                                    : article.relevance === "medium"
+                                      ? "bg-orange-100 text-orange-800 border-orange-300"
+                                      : "bg-gray-100 text-gray-800 border-gray-300"
+                                }
+                              >
+                                {article.relevance} relevance
+                              </Badge>
+                              <span className="text-xs text-gray-500">
+                                {article.category.replace("_", " ")}
+                              </span>
+                            </div>
+                            <h4 className="font-semibold text-sm mb-1">
+                              {article.title}
+                            </h4>
+                            {article.excerpt && (
+                              <p className="text-sm text-gray-600 line-clamp-2">
+                                {article.excerpt}
+                              </p>
+                            )}
+                            <div className="flex items-center gap-4 mt-2">
+                              <span className="text-xs text-gray-500">
+                                {new Date(article.publishedDate).toLocaleDateString("en-AU", {
+                                  day: "numeric",
+                                  month: "short",
+                                  year: "numeric",
+                                })}
+                              </span>
+                              {article.keywords && article.keywords.length > 0 && (
+                                <div className="flex items-center gap-1">
+                                  {article.keywords.slice(0, 3).map((keyword, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="text-xs px-1.5 py-0.5 rounded bg-gray-100 text-gray-600"
+                                    >
+                                      {keyword}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <a
+                            href={article.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="shrink-0"
+                          >
+                            <Button variant="outline" size="sm">
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-12 text-center text-gray-600">
+                    <Newspaper className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No news articles available</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Carbon Calculator Tab */}

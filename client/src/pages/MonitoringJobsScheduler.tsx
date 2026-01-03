@@ -38,7 +38,9 @@ export default function MonitoringJobsScheduler() {
   const triggerCovenantCheck =
     trpc.monitoringJobs.triggerCovenantCheck.useMutation({
       onSuccess: result => {
-        console.log("Covenant Check Complete:", result);
+        if (process.env.NODE_ENV === "development") {
+          console.log("Covenant Check Complete:", result);
+        }
         alert(
           `Covenant Check Complete: Checked ${result.projectsChecked} projects, detected ${result.breachesDetected} breaches`
         );
@@ -55,7 +57,9 @@ export default function MonitoringJobsScheduler() {
   const triggerSupplyRecalc =
     trpc.monitoringJobs.triggerSupplyRecalc.useMutation({
       onSuccess: result => {
-        console.log("Supply Recalculation Complete:", result);
+        if (process.env.NODE_ENV === "development") {
+          console.log("Supply Recalculation Complete:", result);
+        }
         alert(
           `Supply Recalculation Complete: Processed ${result.projectsProcessed} projects, updated ${result.agreementsUpdated} agreements`
         );
@@ -72,7 +76,9 @@ export default function MonitoringJobsScheduler() {
   const triggerRenewalAlerts =
     trpc.monitoringJobs.triggerRenewalAlerts.useMutation({
       onSuccess: result => {
-        console.log("Renewal Alerts Complete:", result);
+        if (process.env.NODE_ENV === "development") {
+          console.log("Renewal Alerts Complete:", result);
+        }
         alert(
           `Renewal Alerts Complete: Checked ${result.contractsChecked} contracts, generated ${result.alertsGenerated} alerts`
         );
@@ -88,7 +94,9 @@ export default function MonitoringJobsScheduler() {
 
   const triggerAllJobs = trpc.monitoringJobs.triggerAllJobs.useMutation({
     onSuccess: results => {
-      console.log("All Jobs Complete:", results);
+      if (process.env.NODE_ENV === "development") {
+        console.log("All Jobs Complete:", results);
+      }
       alert(
         `All Jobs Complete: Covenant: ${results.covenantCheck.breachesDetected} breaches | Supply: ${results.supplyRecalc.projectsProcessed} projects | Renewals: ${results.renewalAlerts.alertsGenerated} alerts`
       );

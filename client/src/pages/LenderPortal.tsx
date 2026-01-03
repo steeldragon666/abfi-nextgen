@@ -106,7 +106,7 @@ export default function LenderPortal() {
   ): { status: "compliant" | "warning" | "breach"; message: string } => {
     // Check Tier 1 covenant (typically 80% minimum)
     const tier1Target = project.tier1Target || 80;
-    const tier1Actual = 0; // TODO: Calculate from agreements
+    const tier1Actual = project.supplyPosition?.tier1Coverage ?? 0;
 
     if (tier1Actual < tier1Target * 0.9) {
       return {
@@ -334,19 +334,19 @@ export default function LenderPortal() {
                                   Tier 1 Coverage
                                 </DataLabel>
                                 <MetricValue className="font-medium">
-                                  0% / {project.tier1Target || 80}%
+                                  {project.supplyPosition?.tier1Coverage ?? 0}% / {project.tier1Target || 80}%
                                 </MetricValue>
                               </div>
-                              <Progress value={0} className="h-2" />
+                              <Progress value={Math.min(100, (project.supplyPosition?.tier1Coverage ?? 0) / (project.tier1Target || 80) * 100)} className="h-2" />
                             </div>
                             <div>
                               <div className="flex justify-between text-sm mb-1">
                                 <DataLabel className="text-gray-600">
                                   Total Primary Coverage
                                 </DataLabel>
-                                <MetricValue className="font-medium">0%</MetricValue>
+                                <MetricValue className="font-medium">{project.supplyPosition?.primaryCoverage ?? 0}%</MetricValue>
                               </div>
-                              <Progress value={0} className="h-2" />
+                              <Progress value={Math.min(100, project.supplyPosition?.primaryCoverage ?? 0)} className="h-2" />
                             </div>
                           </div>
                         </CardContent>
@@ -365,22 +365,22 @@ export default function LenderPortal() {
                             scores={[
                               {
                                 label: "Tier 1 (Core)",
-                                value: 0,
+                                value: project.supplyPosition?.tier1Coverage ?? 0,
                                 maxValue: 100,
                               },
                               {
                                 label: "Tier 2 (Supplementary)",
-                                value: 0,
+                                value: project.supplyPosition?.tier2Coverage ?? 0,
                                 maxValue: 100,
                               },
                               {
                                 label: "Options",
-                                value: 0,
+                                value: Math.round(((project.supplyPosition?.optionsVolume ?? 0) / (project.annualFeedstockVolume || 1)) * 100),
                                 maxValue: 100,
                               },
                               {
                                 label: "ROFR",
-                                value: 0,
+                                value: Math.round(((project.supplyPosition?.rofrVolume ?? 0) / (project.annualFeedstockVolume || 1)) * 100),
                                 maxValue: 100,
                               },
                             ]}

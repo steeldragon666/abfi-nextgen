@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/Button";
 import {
@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
+import { Slider } from "@/components/ui/slider";
 import {
   Leaf,
   ArrowLeft,
@@ -25,17 +26,152 @@ import {
   TrendingDown,
   TrendingUp,
   Info,
+  Sprout,
+  TreeDeciduous,
 } from "lucide-react";
 import { Link } from "wouter";
 import { Checkbox } from "@/components/ui/checkbox";
 import { H1, H2, H3, Body, MetricValue } from "@/components/Typography";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+// Carbon sequestration data by crop type (tons CO2/ha/year)
+const CROP_SEQUESTRATION_DATA = {
+  beema_bamboo: {
+    name: "Beema Bamboo",
+    category: "High Sequestration",
+    minTons: 40,
+    maxTons: 250,
+    description: "Giant clumping bamboo, fastest carbon capture",
+    certifications: ["Gold Standard", "Verra VCS"],
+  },
+  moso_bamboo: {
+    name: "Moso Bamboo",
+    category: "High Sequestration",
+    minTons: 25,
+    maxTons: 150,
+    description: "Traditional timber bamboo species",
+    certifications: ["Gold Standard", "Verra VCS"],
+  },
+  mallee_eucalyptus: {
+    name: "Mallee Eucalyptus",
+    category: "High Sequestration",
+    minTons: 15,
+    maxTons: 45,
+    description: "Native oil mallee for biofuel feedstock",
+    certifications: ["ACCU", "CFI"],
+  },
+  miscanthus: {
+    name: "Miscanthus (Elephant Grass)",
+    category: "Energy Crop",
+    minTons: 8,
+    maxTons: 25,
+    description: "Perennial grass for cellulosic ethanol",
+    certifications: ["ISCC", "RSB"],
+  },
+  switchgrass: {
+    name: "Switchgrass",
+    category: "Energy Crop",
+    minTons: 5,
+    maxTons: 18,
+    description: "Native prairie grass for bioenergy",
+    certifications: ["ISCC", "RSB"],
+  },
+  hemp: {
+    name: "Industrial Hemp",
+    category: "Annual Crop",
+    minTons: 8,
+    maxTons: 22,
+    description: "Fast-growing fiber and seed crop",
+    certifications: ["ISCC", "Verra VCS"],
+  },
+  sugarcane: {
+    name: "Sugarcane",
+    category: "Traditional Biofuel",
+    minTons: 6,
+    maxTons: 15,
+    description: "First-generation ethanol feedstock",
+    certifications: ["Bonsucro", "RSB", "ISCC"],
+  },
+  canola: {
+    name: "Canola/Rapeseed",
+    category: "Oilseed",
+    minTons: 2,
+    maxTons: 8,
+    description: "Biodiesel feedstock",
+    certifications: ["ISCC", "RSB"],
+  },
+  sorghum: {
+    name: "Sweet Sorghum",
+    category: "Energy Crop",
+    minTons: 4,
+    maxTons: 12,
+    description: "Dual-purpose food and fuel crop",
+    certifications: ["ISCC", "RSB"],
+  },
+  wheat_stubble: {
+    name: "Wheat (Stubble Retention)",
+    category: "Traditional Crop",
+    minTons: 1,
+    maxTons: 5,
+    description: "Cereal with carbon farming practices",
+    certifications: ["ACCU", "CFI"],
+  },
+  pongamia: {
+    name: "Pongamia",
+    category: "Tree Oilseed",
+    minTons: 10,
+    maxTons: 35,
+    description: "Nitrogen-fixing biodiesel tree",
+    certifications: ["Gold Standard", "Verra VCS"],
+  },
+  camelina: {
+    name: "Camelina",
+    category: "Oilseed",
+    minTons: 2,
+    maxTons: 6,
+    description: "SAF feedstock, drought tolerant",
+    certifications: ["ISCC", "RSB", "CORSIA"],
+  },
+} as const;
+
+// Fertilizer types with organic/non-organic classification
+const FERTILIZER_TYPES = {
+  organic: [
+    { value: "organic_compost", label: "Organic Compost", carbonImpact: -8 },
+    { value: "organic_manure", label: "Animal Manure (Composted)", carbonImpact: -6 },
+    { value: "organic_biochar", label: "Biochar", carbonImpact: -12 },
+    { value: "organic_seaweed", label: "Seaweed/Kelp Extract", carbonImpact: -5 },
+    { value: "organic_bone_meal", label: "Bone Meal", carbonImpact: -4 },
+    { value: "organic_green_manure", label: "Green Manure/Cover Crop", carbonImpact: -10 },
+  ],
+  synthetic: [
+    { value: "urea", label: "Urea", carbonImpact: 5 },
+    { value: "anhydrous_ammonia", label: "Anhydrous Ammonia", carbonImpact: 8 },
+    { value: "dap_map", label: "DAP/MAP", carbonImpact: 6 },
+    { value: "controlled_release", label: "Controlled Release", carbonImpact: 3 },
+    { value: "mixed_blend", label: "Mixed Blend", carbonImpact: 4 },
+    { value: "ammonium_nitrate", label: "Ammonium Nitrate", carbonImpact: 10 },
+  ],
+} as const;
+
+type CropType = keyof typeof CROP_SEQUESTRATION_DATA;
 
 export default function ProducerCarbonCalculator() {
   const [, setLocation] = useLocation();
   const [carbonData, setCarbonData] = useState({
+    // Crop Type & Sequestration
+    cropType: "" as CropType | "",
+    hectares: "",
+    sequestrationEstimate: 0,
     // Tillage
     tillagePractice: "",
     // Fertilizer
+    fertilizerCategory: "" as "organic" | "synthetic" | "",
     nitrogenKgPerHa: "",
     fertiliserType: "",
     applicationMethod: "",
@@ -62,6 +198,28 @@ export default function ProducerCarbonCalculator() {
     carbonProject: false,
   });
 
+  // Calculate sequestration based on crop type and hectares
+  const cropInfo = useMemo(() => {
+    if (!carbonData.cropType) return null;
+    return CROP_SEQUESTRATION_DATA[carbonData.cropType];
+  }, [carbonData.cropType]);
+
+  const sequestrationRange = useMemo(() => {
+    if (!cropInfo || !carbonData.hectares) return null;
+    const ha = parseFloat(carbonData.hectares) || 0;
+    return {
+      min: Math.round(cropInfo.minTons * ha),
+      max: Math.round(cropInfo.maxTons * ha),
+      avg: Math.round(((cropInfo.minTons + cropInfo.maxTons) / 2) * ha),
+    };
+  }, [cropInfo, carbonData.hectares]);
+
+  // Get available fertilizer options based on category
+  const availableFertilizers = useMemo(() => {
+    if (!carbonData.fertilizerCategory) return [];
+    return FERTILIZER_TYPES[carbonData.fertilizerCategory];
+  }, [carbonData.fertilizerCategory]);
+
   const [carbonScore, setCarbonScore] = useState({
     intensity: 0,
     rating: "",
@@ -72,18 +230,40 @@ export default function ProducerCarbonCalculator() {
   useEffect(() => {
     let score = 50; // Base score
 
+    // Crop type impact - high sequestration crops reduce score
+    if (carbonData.cropType && cropInfo) {
+      const avgSequestration = (cropInfo.minTons + cropInfo.maxTons) / 2;
+      if (avgSequestration >= 100) score -= 25; // Very high sequestration (bamboo)
+      else if (avgSequestration >= 30) score -= 15; // High sequestration
+      else if (avgSequestration >= 10) score -= 8; // Medium sequestration
+      else score -= 3; // Low sequestration
+    }
+
     // Tillage impact
     if (carbonData.tillagePractice === "no_till") score -= 10;
     else if (carbonData.tillagePractice === "minimum_till") score -= 5;
     else if (carbonData.tillagePractice === "multiple_passes") score += 10;
 
-    // Fertilizer impact
+    // Fertilizer category impact
+    if (carbonData.fertilizerCategory === "organic") {
+      score -= 10; // Organic fertilizers always reduce score
+    } else if (carbonData.fertilizerCategory === "synthetic") {
+      score += 5; // Synthetic fertilizers increase score
+    }
+
+    // Specific fertilizer impact
+    const fertilizerOption = [...FERTILIZER_TYPES.organic, ...FERTILIZER_TYPES.synthetic]
+      .find(f => f.value === carbonData.fertiliserType);
+    if (fertilizerOption) {
+      score += fertilizerOption.carbonImpact;
+    }
+
+    // Nitrogen application rate impact
     const nitrogen = parseFloat(carbonData.nitrogenKgPerHa) || 0;
     if (nitrogen > 200) score += 15;
     else if (nitrogen > 100) score += 8;
     else if (nitrogen < 50) score -= 5;
 
-    if (carbonData.fertiliserType === "organic_compost") score -= 8;
     if (carbonData.applicationMethod === "variable_rate") score -= 5;
     if (carbonData.soilTestingFrequency === "annual") score -= 3;
 
@@ -136,7 +316,7 @@ export default function ProducerCarbonCalculator() {
     }
 
     setCarbonScore({ intensity: score, rating, color });
-  }, [carbonData]);
+  }, [carbonData, cropInfo]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -195,6 +375,176 @@ export default function ProducerCarbonCalculator() {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* Crop Type & Sequestration */}
+                    <TooltipProvider>
+                      <div className="space-y-4">
+                        <H3 className="flex items-center gap-2 text-[#0F3A5C]">
+                          <TreeDeciduous className="h-5 w-5" />
+                          Crop Type & Carbon Sequestration
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Info className="h-4 w-4 text-gray-400" />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              Different crops sequester carbon at different rates.
+                              High-sequestration crops like bamboo can capture 40-250 tons CO₂/ha/year.
+                            </TooltipContent>
+                          </Tooltip>
+                        </H3>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label>Primary Crop Type *</Label>
+                            <Select
+                              value={carbonData.cropType}
+                              onValueChange={value => {
+                                setCarbonData(prev => ({
+                                  ...prev,
+                                  cropType: value as CropType,
+                                }));
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select crop type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="beema_bamboo" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Beema Bamboo</span>
+                                    <span className="text-xs text-gray-500">40-250 t CO₂/ha/yr • High Sequestration</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="moso_bamboo" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Moso Bamboo</span>
+                                    <span className="text-xs text-gray-500">25-150 t CO₂/ha/yr • High Sequestration</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="mallee_eucalyptus" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Mallee Eucalyptus</span>
+                                    <span className="text-xs text-gray-500">15-45 t CO₂/ha/yr • Native Biofuel</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="pongamia" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Pongamia</span>
+                                    <span className="text-xs text-gray-500">10-35 t CO₂/ha/yr • Biodiesel Tree</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="miscanthus" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Miscanthus (Elephant Grass)</span>
+                                    <span className="text-xs text-gray-500">8-25 t CO₂/ha/yr • Energy Crop</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="hemp" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Industrial Hemp</span>
+                                    <span className="text-xs text-gray-500">8-22 t CO₂/ha/yr • Annual Crop</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="sugarcane" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Sugarcane</span>
+                                    <span className="text-xs text-gray-500">6-15 t CO₂/ha/yr • Traditional Biofuel</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="switchgrass" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Switchgrass</span>
+                                    <span className="text-xs text-gray-500">5-18 t CO₂/ha/yr • Energy Crop</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="sorghum" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Sweet Sorghum</span>
+                                    <span className="text-xs text-gray-500">4-12 t CO₂/ha/yr • Dual-Purpose</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="canola" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Canola/Rapeseed</span>
+                                    <span className="text-xs text-gray-500">2-8 t CO₂/ha/yr • Biodiesel</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="camelina" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Camelina</span>
+                                    <span className="text-xs text-gray-500">2-6 t CO₂/ha/yr • SAF Feedstock</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="wheat_stubble" className="py-3">
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">Wheat (Stubble Retention)</span>
+                                    <span className="text-xs text-gray-500">1-5 t CO₂/ha/yr • Carbon Farming</span>
+                                  </div>
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Area Under Cultivation (ha) *</Label>
+                            <Input
+                              type="number"
+                              placeholder="e.g., 100"
+                              value={carbonData.hectares}
+                              onChange={e =>
+                                setCarbonData(prev => ({
+                                  ...prev,
+                                  hectares: e.target.value,
+                                }))
+                              }
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        {/* Sequestration Display */}
+                        {cropInfo && carbonData.hectares && (
+                          <div className="rounded-lg border-2 border-green-200 bg-green-50 p-4">
+                            <div className="flex items-start gap-3">
+                              <Sprout className="h-6 w-6 text-green-600 mt-0.5" />
+                              <div className="flex-1">
+                                <p className="font-semibold text-green-800">
+                                  Estimated Carbon Sequestration
+                                </p>
+                                <p className="text-sm text-green-700 mt-1">
+                                  {cropInfo.name} on {carbonData.hectares} hectares
+                                </p>
+                                <div className="mt-3 flex items-center gap-4">
+                                  <div className="text-center">
+                                    <p className="text-2xl font-bold text-green-700">
+                                      {sequestrationRange?.min?.toLocaleString()} - {sequestrationRange?.max?.toLocaleString()}
+                                    </p>
+                                    <p className="text-xs text-green-600">tons CO₂/year</p>
+                                  </div>
+                                  <div className="h-12 w-px bg-green-300" />
+                                  <div className="text-center">
+                                    <p className="text-lg font-semibold text-green-700">
+                                      ~{sequestrationRange?.avg?.toLocaleString()}
+                                    </p>
+                                    <p className="text-xs text-green-600">average estimate</p>
+                                  </div>
+                                </div>
+                                <div className="mt-3 flex flex-wrap gap-1">
+                                  {cropInfo.certifications.map(cert => (
+                                    <span
+                                      key={cert}
+                                      className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800"
+                                    >
+                                      {cert}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </TooltipProvider>
+
                     {/* Tillage Practices */}
                     <div className="space-y-4">
                       <H3 className="flex items-center gap-2 text-[#0F3A5C]">
@@ -240,6 +590,83 @@ export default function ProducerCarbonCalculator() {
                         Fertilizer Management
                       </H3>
 
+                      {/* Organic/Synthetic Toggle */}
+                      <div className="space-y-3">
+                        <Label>Fertilizer Category *</Label>
+                        <div className="flex gap-4">
+                          <button
+                            type="button"
+                            onClick={() => setCarbonData(prev => ({
+                              ...prev,
+                              fertilizerCategory: "organic",
+                              fertiliserType: "", // Reset type when category changes
+                            }))}
+                            className={`flex-1 rounded-lg border-2 p-4 text-left transition-all ${
+                              carbonData.fertilizerCategory === "organic"
+                                ? "border-green-500 bg-green-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`rounded-full p-2 ${
+                                carbonData.fertilizerCategory === "organic"
+                                  ? "bg-green-100"
+                                  : "bg-gray-100"
+                              }`}>
+                                <Leaf className={`h-5 w-5 ${
+                                  carbonData.fertilizerCategory === "organic"
+                                    ? "text-green-600"
+                                    : "text-gray-500"
+                                }`} />
+                              </div>
+                              <div>
+                                <p className={`font-semibold ${
+                                  carbonData.fertilizerCategory === "organic"
+                                    ? "text-green-800"
+                                    : "text-gray-700"
+                                }`}>Organic Fertilizers</p>
+                                <p className="text-xs text-gray-500">Lower carbon impact, soil health benefits</p>
+                              </div>
+                            </div>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setCarbonData(prev => ({
+                              ...prev,
+                              fertilizerCategory: "synthetic",
+                              fertiliserType: "", // Reset type when category changes
+                            }))}
+                            className={`flex-1 rounded-lg border-2 p-4 text-left transition-all ${
+                              carbonData.fertilizerCategory === "synthetic"
+                                ? "border-blue-500 bg-blue-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`rounded-full p-2 ${
+                                carbonData.fertilizerCategory === "synthetic"
+                                  ? "bg-blue-100"
+                                  : "bg-gray-100"
+                              }`}>
+                                <TrendingUp className={`h-5 w-5 ${
+                                  carbonData.fertilizerCategory === "synthetic"
+                                    ? "text-blue-600"
+                                    : "text-gray-500"
+                                }`} />
+                              </div>
+                              <div>
+                                <p className={`font-semibold ${
+                                  carbonData.fertilizerCategory === "synthetic"
+                                    ? "text-blue-800"
+                                    : "text-gray-700"
+                                }`}>Synthetic Fertilizers</p>
+                                <p className="text-xs text-gray-500">Higher yield potential, higher emissions</p>
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label>Nitrogen Application Rate (kg/ha) *</Label>
@@ -267,25 +694,31 @@ export default function ProducerCarbonCalculator() {
                                 fertiliserType: value,
                               }))
                             }
+                            disabled={!carbonData.fertilizerCategory}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="Select type" />
+                              <SelectValue placeholder={
+                                carbonData.fertilizerCategory
+                                  ? "Select type"
+                                  : "Select category first"
+                              } />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="urea">Urea</SelectItem>
-                              <SelectItem value="anhydrous_ammonia">
-                                Anhydrous Ammonia
-                              </SelectItem>
-                              <SelectItem value="dap_map">DAP/MAP</SelectItem>
-                              <SelectItem value="organic_compost">
-                                Organic Compost
-                              </SelectItem>
-                              <SelectItem value="controlled_release">
-                                Controlled Release
-                              </SelectItem>
-                              <SelectItem value="mixed_blend">
-                                Mixed Blend
-                              </SelectItem>
+                              {availableFertilizers.map(fert => (
+                                <SelectItem key={fert.value} value={fert.value}>
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span>{fert.label}</span>
+                                    <span className={`text-xs ${
+                                      fert.carbonImpact < 0
+                                        ? "text-green-600"
+                                        : "text-orange-600"
+                                    }`}>
+                                      {fert.carbonImpact < 0 ? "↓" : "↑"}
+                                      {Math.abs(fert.carbonImpact)} pts
+                                    </span>
+                                  </div>
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </div>

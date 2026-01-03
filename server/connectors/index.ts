@@ -9,6 +9,7 @@ export { ArenaConnector } from "./arenaConnector";
 export { CEFCConnector } from "./cefcConnector";
 export { QldEpaConnector } from "./qldEpaConnector";
 export { IPAustraliaConnector } from "./ipAustraliaConnector";
+export { CarbonStandardsConnector, carbonStandardsConnector } from "./carbonStandardsConnector";
 
 import { ConnectorConfig, ConnectorResult, RawSignal } from "./baseConnector";
 import { NSWPlanningConnector } from "./nswPlanningConnector";
@@ -16,6 +17,7 @@ import { ArenaConnector } from "./arenaConnector";
 import { CEFCConnector } from "./cefcConnector";
 import { QldEpaConnector } from "./qldEpaConnector";
 import { IPAustraliaConnector } from "./ipAustraliaConnector";
+import { CarbonStandardsConnector } from "./carbonStandardsConnector";
 
 // Default connector configurations
 export const CONNECTOR_CONFIGS: Record<string, ConnectorConfig> = {
@@ -41,6 +43,11 @@ export const CONNECTOR_CONFIGS: Record<string, ConnectorConfig> = {
   },
   ip_australia: {
     name: "IP Australia Patents",
+    enabled: true,
+    rateLimit: 10,
+  },
+  carbon_standards: {
+    name: "Carbon Standards (Verra, Gold Standard, CFI)",
     enabled: true,
     rateLimit: 10,
   },
@@ -73,6 +80,10 @@ export async function runAllConnectors(
     {
       key: "ip_australia",
       connector: new IPAustraliaConnector(CONNECTOR_CONFIGS.ip_australia),
+    },
+    {
+      key: "carbon_standards",
+      connector: new CarbonStandardsConnector(CONNECTOR_CONFIGS.carbon_standards),
     },
   ];
 
@@ -127,6 +138,7 @@ export async function runConnector(
     cefc: CEFCConnector,
     qld_epa: QldEpaConnector,
     ip_australia: IPAustraliaConnector,
+    carbon_standards: CarbonStandardsConnector,
   };
 
   const ConnectorClass = connectorMap[connectorName];

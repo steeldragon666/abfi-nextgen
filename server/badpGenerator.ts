@@ -439,15 +439,26 @@ export async function generateBADP(data: BADPAssetData): Promise<Buffer> {
 
 /**
  * Generate BADP Excel workbook with detailed data tables
- * (For future implementation - would include detailed financial models, sensitivity analysis, etc.)
+ *
+ * STATUS: Not yet implemented - requires exceljs dependency
+ *
+ * To implement:
+ * 1. Install exceljs: npm install exceljs @types/exceljs
+ * 2. Implement worksheets for:
+ *    - Executive Summary with key metrics
+ *    - Yield Projections (P10, P25, P50, P75, P90)
+ *    - Cash Flow Models (10-year projection)
+ *    - Sensitivity Analysis Tables
+ *    - Contract Schedules with renewal dates
+ *    - Risk Matrices with mitigation strategies
+ *    - Counterparty Analysis
+ *    - Carbon Performance Data
  */
 export async function generateBADPExcel(data: BADPAssetData): Promise<Buffer> {
-  // TODO: Implement Excel generation with openpyxl or similar
-  // Would include:
-  // - Yield projections (P10-P90)
-  // - Cash flow models
-  // - Sensitivity analysis tables
-  // - Contract schedules
-  // - Risk matrices
-  throw new Error("Excel generation not yet implemented");
+  // This function is a placeholder for future Excel export functionality
+  // Currently, BADP reports are generated as PDF via generateBADP()
+  throw new Error(
+    "Excel generation not yet implemented. Use generateBADP() for PDF output. " +
+    "To enable Excel export, install exceljs and implement the worksheets."
+  );
 }

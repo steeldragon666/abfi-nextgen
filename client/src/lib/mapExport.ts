@@ -86,9 +86,13 @@ export async function getFilteredFeatures(options: ExportOptions) {
  * Export filtered features as GeoJSON file
  */
 export async function exportAsGeoJSON(options: ExportOptions) {
-  console.log("[exportAsGeoJSON] Starting export with options:", options);
+  if (process.env.NODE_ENV === "development") {
+    console.log("[exportAsGeoJSON] Starting export with options:", options);
+  }
   const features = await getFilteredFeatures(options);
-  console.log("[exportAsGeoJSON] Fetched features:", features.length);
+  if (process.env.NODE_ENV === "development") {
+    console.log("[exportAsGeoJSON] Fetched features:", features.length);
+  }
 
   const geojson = {
     type: "FeatureCollection",
@@ -104,7 +108,9 @@ export async function exportAsGeoJSON(options: ExportOptions) {
   };
 
   const geojsonString = JSON.stringify(geojson, null, 2);
-  console.log("[exportAsGeoJSON] GeoJSON string length:", geojsonString.length);
+  if (process.env.NODE_ENV === "development") {
+    console.log("[exportAsGeoJSON] GeoJSON string length:", geojsonString.length);
+  }
   const blob = new Blob([geojsonString], {
     type: "application/json",
   });

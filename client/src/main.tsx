@@ -13,7 +13,16 @@ import "./index.css";
 // Initialize Sentry error tracking before React renders
 initSentry();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,  // 5 minutes - data is fresh for 5 min
+      gcTime: 1000 * 60 * 10,    // 10 minutes - cache garbage collection
+      refetchOnWindowFocus: false, // Don't refetch on tab focus
+      retry: 1, // Only retry once on failure
+    },
+  },
+});
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;

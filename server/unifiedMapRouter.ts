@@ -458,11 +458,10 @@ export const unifiedMapRouter = router({
 
       // Search demand signals
       if (!entityTypes || entityTypes.includes("demandSignal")) {
-        const signals = await db.searchDemandSignals({
+        const signals = await db.getAllDemandSignals({
           status: "published",
-          limit,
         });
-        // Note: Would filter by query match
+        // Note: Would filter by query match and apply limit
       }
 
       // Note: Other entity types would be searched similarly

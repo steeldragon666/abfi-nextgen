@@ -1421,7 +1421,52 @@ export async function getProjectsForLender(email: string) {
     .from(projects)
     .where(inArray(projects.id, projectIds));
 
-  return projectResults;
+  // Enrich projects with supply position data
+  const enrichedProjects = await Promise.all(
+    projectResults.map(async project => {
+      const agreements = await db
+        .select()
+        .from(supplyAgreements)
+        .where(
+          and(
+            eq(supplyAgreements.projectId, project.id),
+            eq(supplyAgreements.status, "active")
+          )
+        );
+
+      const annualDemand = project.annualFeedstockVolume || 1;
+      const tier1Volume = agreements
+        .filter(a => a.tier === "tier1")
+        .reduce((sum, a) => sum + (a.annualVolume || 0), 0);
+      const tier2Volume = agreements
+        .filter(a => a.tier === "tier2")
+        .reduce((sum, a) => sum + (a.annualVolume || 0), 0);
+      const optionsVolume = agreements
+        .filter(a => a.tier === "option")
+        .reduce((sum, a) => sum + (a.annualVolume || 0), 0);
+      const rofrVolume = agreements
+        .filter(a => a.tier === "rofr")
+        .reduce((sum, a) => sum + (a.annualVolume || 0), 0);
+
+      return {
+        ...project,
+        supplyPosition: {
+          tier1Volume,
+          tier2Volume,
+          optionsVolume,
+          rofrVolume,
+          tier1Coverage: Math.round((tier1Volume / annualDemand) * 100),
+          tier2Coverage: Math.round((tier2Volume / annualDemand) * 100),
+          primaryCoverage: Math.round(
+            ((tier1Volume + tier2Volume) / annualDemand) * 100
+          ),
+          totalAgreements: agreements.length,
+        },
+      };
+    })
+  );
+
+  return enrichedProjects;
 }
 
 export async function updateLenderAccess(

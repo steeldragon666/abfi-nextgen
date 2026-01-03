@@ -188,11 +188,20 @@ export async function weeklySupplyRecalculation(): Promise<{
         const coverageChange = Math.abs(tier1Coverage - oldTier1);
 
         if (coverageChange > 5) {
-          // More than 5% change
-          // TODO: Trigger bankability reassessment
+          // More than 5% change - trigger bankability reassessment
           console.log(
             `[MonitoringJob] Significant supply change for project ${project.id}: ${coverageChange}% change in Tier 1 coverage`
           );
+
+          // Mark existing assessment as needing reassessment
+          await db
+            .update(bankabilityAssessments)
+            .set({
+              reassessmentRequired: true,
+              reassessmentReason: `Supply position changed significantly: Tier 1 coverage moved from ${oldTier1}% to ${tier1Coverage}% (${coverageChange}% change)`,
+            })
+            .where(eq(bankabilityAssessments.id, latestAssessment.id));
+
           scoresRecalculated++;
         }
       }

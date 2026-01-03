@@ -182,21 +182,50 @@ export async function searchABBAByBiomassType(biomassType: string): Promise<CKAN
 
 /**
  * Get biomass availability for a specific SA2/SA4 region
- * This would typically query the ABBA database or cached data
+ *
+ * STATUS: Stub implementation - returns empty array
+ *
+ * To implement fully:
+ * 1. Query CKAN API for region-specific GeoJSON/CSV data
+ * 2. Cache results locally for performance
+ * 3. Parse biomass quantities from resource files
+ * 4. Aggregate by biomass type
+ *
+ * @param regionCode - SA2 or SA4 statistical area code
+ * @param biomassTypes - Optional filter for specific biomass types
+ * @returns Array of biomass data for the region (currently empty)
  */
 export async function getRegionBiomassAvailability(
   regionCode: string,
   biomassTypes?: string[]
 ): Promise<RegionBiomassData[]> {
-  // This would be implemented with actual API calls to ABBA data
-  // For now, return empty array - to be populated from CKAN resources
-  console.log(`Fetching biomass for region ${regionCode}`, biomassTypes);
+  // Stub: Would query ABBA data from CKAN resources
+  // Actual implementation requires parsing GeoJSON features or CSV data
+  // from fetchABBAResourceByName() results
+  if (process.env.NODE_ENV === "development") {
+    console.log(`[ABBA Stub] getRegionBiomassAvailability called for region ${regionCode}`, biomassTypes);
+  }
   return [];
 }
 
 /**
  * Calculate total biomass within a radius of a point
  * Used for 50km catchment calculations around biofuel projects
+ *
+ * STATUS: Stub implementation - returns empty array
+ *
+ * To implement fully:
+ * 1. Query ABBA WMS/GeoJSON layers for the bounding box
+ * 2. Filter features within the specified radius using Turf.js
+ * 3. Aggregate biomass quantities by type
+ * 4. Apply distance-weighted availability factors
+ * 5. Consider transport costs for economic viability
+ *
+ * @param lat - Latitude of project/center point
+ * @param lng - Longitude of project/center point
+ * @param radiusKm - Catchment radius in kilometers (default 50km)
+ * @param biomassTypes - Optional filter for specific biomass types
+ * @returns Array of biomass totals by type (currently empty)
  */
 export async function calculateBiomassInRadius(
   lat: number,
@@ -204,10 +233,9 @@ export async function calculateBiomassInRadius(
   radiusKm: number = 50,
   biomassTypes?: string[]
 ): Promise<{ type: string; quantity: number; unit: string }[]> {
-  // This would query ABBA spatial data and aggregate
-  // For now, return placeholder - actual implementation would use
-  // spatial queries against ABBA GeoJSON/WMS data
-  console.log(`Calculating biomass within ${radiusKm}km of ${lat}, ${lng}`, biomassTypes);
+  if (process.env.NODE_ENV === "development") {
+    console.log(`[ABBA Stub] calculateBiomassInRadius called: ${radiusKm}km radius at ${lat}, ${lng}`, biomassTypes);
+  }
   return [];
 }
 

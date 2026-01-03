@@ -8,7 +8,7 @@
  * - Real-time data integration
  */
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -49,9 +49,10 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
-import { SimpleLeafletMap, type MapMarker } from "@/components/SimpleLeafletMap";
+import { UnifiedMap } from "@/components/maps/UnifiedMap";
+import { MapControlsProvider } from "@/contexts/MapControlsContext";
+import { MapControlsPanel } from "@/components/layout/MapControlsPanel";
 import { H3, Body, MetricValue } from "@/components/Typography";
-import type L from "leaflet";
 import { OnboardingModal } from "@/components/OnboardingModal";
 
 // Onboarding checklist items
@@ -133,7 +134,6 @@ const QUICK_STATS = [
 ];
 
 export default function GrowerDashboard() {
-  const mapRef = useRef<L.Map | null>(null);
   const [selectedListing, setSelectedListing] = useState<string | null>(null);
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -152,21 +152,6 @@ export default function GrowerDashboard() {
   const totalSteps = ONBOARDING_CHECKLIST.length;
   const progressPercent = (completedSteps / totalSteps) * 100;
 
-  // Create markers for Leaflet map
-  // Use 'projects' layerId to associate with "My Projects" layer toggle
-  const mapMarkers: MapMarker[] = MY_LISTINGS.map((listing) => ({
-    id: listing.id,
-    lat: listing.location.lat,
-    lng: listing.location.lng,
-    title: listing.name,
-    color: listing.status === "active" ? "#10b981" : "#f59e0b", // emerald for active, amber for pending
-    onClick: () => setSelectedListing(listing.id),
-    layerId: "projects", // Associates with "My Projects" layer in MapControlsPanel
-  }));
-
-  const handleMapReady = useCallback((map: L.Map) => {
-    mapRef.current = map;
-  }, []);
 
   const toggleCardExpanded = (id: string) => {
     setExpandedCards((prev) => {
@@ -182,9 +167,8 @@ export default function GrowerDashboard() {
 
   const focusOnListing = (listing: (typeof MY_LISTINGS)[0]) => {
     setSelectedListing(listing.id);
-    if (mapRef.current && listing.location) {
-      mapRef.current.setView([listing.location.lat, listing.location.lng], 12);
-    }
+    // UnifiedMap handles its own map state through MapControlsContext
+    console.log("Focus on listing:", listing.name, listing.location);
   };
 
   return (
@@ -495,41 +479,48 @@ export default function GrowerDashboard() {
         </div>
 
         {/* Map Area */}
-        <div className="flex-1 relative min-h-[400px] lg:min-h-0">
-          <SimpleLeafletMap
-            className="w-full h-full"
-            center={{ lat: -33.8688, lng: 151.2093 }}
-            zoom={6}
-            markers={mapMarkers}
-            onMapReady={handleMapReady}
-          />
+        <MapControlsProvider userRole="supplier">
+          <div className="flex-1 relative min-h-[400px] lg:min-h-0 flex">
+            {/* Layer Controls Panel */}
+            <MapControlsPanel className="hidden lg:flex" />
 
-          {/* Map Legend */}
-          <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur p-3 rounded-lg shadow-lg border">
-            <h4 className="text-xs font-semibold mb-2">My Feedstocks</h4>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs">
-                <div className="h-3 w-3 rounded-full bg-[#D4AF37]" />
-                <span>Active ({MY_LISTINGS.filter((l) => l.status === "active").length})</span>
+            {/* Map */}
+            <div className="flex-1 relative">
+              <UnifiedMap
+                className="w-full h-full"
+                onEntitySelect={(entity) => {
+                  console.log("Selected entity:", entity);
+                }}
+              />
+
+              {/* Map Legend */}
+              <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur p-3 rounded-lg shadow-lg border">
+                <h4 className="text-xs font-semibold mb-2">My Feedstocks</h4>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className="h-3 w-3 rounded-full bg-emerald-500" />
+                    <span>Active ({MY_LISTINGS.filter((l) => l.status === "active").length})</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className="h-3 w-3 rounded-full bg-amber-500" />
+                    <span>Pending ({MY_LISTINGS.filter((l) => l.status === "pending").length})</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-xs">
-                <div className="h-3 w-3 rounded-full bg-[#D4AF37]" />
-                <span>Pending ({MY_LISTINGS.filter((l) => l.status === "pending").length})</span>
-              </div>
+
+              {/* Quick Add Button */}
+              <Link href="/feedstock/create">
+                <Button
+                  className="absolute bottom-4 right-4 shadow-lg"
+                  size="lg"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Add Feedstock
+                </Button>
+              </Link>
             </div>
           </div>
-
-          {/* Quick Add Button */}
-          <Link href="/feedstock/create">
-            <Button
-              className="absolute bottom-4 right-4 shadow-lg"
-              size="lg"
-            >
-              <Plus className="h-5 w-5 mr-2" />
-              Add Feedstock
-            </Button>
-          </Link>
-        </div>
+        </MapControlsProvider>
       </div>
     </div>
   );
