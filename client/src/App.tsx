@@ -158,6 +158,11 @@ const DeveloperDashboard = lazy(() => import("./pages/DeveloperDashboard"));
 const FinanceDashboard = lazy(() => import("./pages/FinanceDashboard"));
 const GovernmentDashboard = lazy(() => import("./pages/GovernmentDashboard"));
 
+// ABFI Portal Pages (Visual Guide Designs)
+const GrowerPortalPage = lazy(() => import("./pages/GrowerPortalPage"));
+const DeveloperPortalPage = lazy(() => import("./pages/DeveloperPortalPage"));
+const LenderPortalPage = lazy(() => import("./pages/LenderPortalPage"));
+
 // Phase 2 Features
 const PriceDashboard = lazy(() => import("./pages/PriceDashboard"));
 const SupplierDirectory = lazy(() => import("./pages/SupplierDirectory"));
@@ -217,6 +222,11 @@ function Router() {
         <Route path="/developer/dashboard" component={DeveloperDashboard} />
         <Route path="/finance/dashboard" component={FinanceDashboard} />
         <Route path="/government/dashboard" component={GovernmentDashboard} />
+
+        {/* ABFI Portal Pages (Visual Guide Designs) */}
+        <Route path="/grower-portal" component={GrowerPortalPage} />
+        <Route path="/developer-portal" component={DeveloperPortalPage} />
+        <Route path="/lender-portal-v2" component={LenderPortalPage} />
 
         {/* Phase 2 Features */}
         <Route path="/price-dashboard" component={PriceDashboard} />
